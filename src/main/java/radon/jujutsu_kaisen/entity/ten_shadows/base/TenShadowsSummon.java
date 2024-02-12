@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows.base;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -31,12 +29,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
@@ -76,10 +73,12 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     protected boolean shouldDespawn() {
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            if (!JJKAbilities.hasToggled(owner, this.getAbility())) {
-                return true;
-            }
+        if (owner == null) return true;
+
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (!data.hasToggled(this.getAbility())) {
+            return true;
         }
         return this.isDeadOrDying();
     }
@@ -170,9 +169,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     center.x + RITUAL_RANGE, center.y + RITUAL_RANGE, center.z + RITUAL_RANGE);
 
             for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
-                if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this)
-                    continue;
-                if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+                if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this) continue;
+
                 this.participants.add(participant.getUUID());
             }
         }
@@ -193,41 +191,43 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public void die(@NotNull DamageSource pCause) {
         super.die(pCause);
 
+        if (this.level().isClientSide) return;
+
         if (this.isClone()) return;
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null && !owner.level().isClientSide) {
-            ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        if (owner == null) return;
 
-            if (!this.isTame()) {
-                if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
-                    cap.tame(this.getType());
+        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        if (!this.isTame()) {
+            if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
+                data.tame(this.getType());
+
+                if (owner instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
+                }
+            }
+        } else {
+            Summon<?> ability = this.getAbility();
+
+            if (ability.isTotality()) {
+                for (EntityType<?> fusion : ability.getFusions()) {
+                    if (data.isDead(fusion)) continue;
+
+                    data.kill(fusion);
 
                     if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
+                        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
                     }
                 }
             } else {
-                Summon<?> ability = this.getAbility();
+                if (ability.canDie()) {
+                    data.kill(this.getType());
 
-                if (ability.isTotality()) {
-                    for (EntityType<?> fusion : ability.getFusions()) {
-                        if (cap.isDead(fusion)) continue;
-
-                        cap.kill(fusion);
-
-                        if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
-                        }
-                    }
-                } else {
-                    if (ability.canDie()) {
-                        cap.kill(this.getType());
-
-                        if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
-                        }
+                    if (owner instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
                     }
                 }
             }
@@ -252,6 +252,15 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public void tick() {
         LivingEntity owner = this.getOwner();
 
+        if (!this.level().isClientSide && owner != null && this.isClone()) {
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
+                this.discard();
+                return;
+            }
+        }
+
         if (this.isTame() && !this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.shouldDespawn())) {
             this.discard();
         } else {
@@ -270,10 +279,6 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             } else {
                 LivingEntity target = this.getTarget();
                 this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
-            }
-
-            if (owner != null && this.isClone() && !JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
-                this.discard();
             }
         }
     }
@@ -318,8 +323,9 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (owner == null) return 0.0F;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getExperience() * 0.5F;
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        return data.getExperience();
     }
 
     @Override

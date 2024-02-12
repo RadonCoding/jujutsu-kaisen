@@ -9,9 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.BindingVowListWidget;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -64,10 +64,10 @@ public class BindingVowTab extends JJKTab {
 
         if (this.minecraft.player == null) return;
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
-        if (this.vow != null && !cap.isCooldownDone(this.vow.get())) {
-            int seconds = cap.getRemainingCooldown(this.vow.get()) / 20;
+        if (this.vow != null && data != null && !data.isCooldownDone(this.vow.get())) {
+            int seconds = data.getRemainingCooldown(this.vow.get()) / 20;
 
             int minutes = seconds / 60;
             int remaining = seconds - (minutes * 60);
@@ -88,9 +88,11 @@ public class BindingVowTab extends JJKTab {
 
         if (this.minecraft.player == null) return;
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        this.add.active = this.vow != null && !cap.hasBindingVow(this.vow.get()) && cap.isCooldownDone(this.vow.get());
-        this.remove.active = this.vow != null && cap.hasBindingVow(this.vow.get()) && cap.isCooldownDone(this.vow.get());
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
+
+        this.add.active = this.vow != null && !data.hasBindingVow(this.vow.get()) && data.isCooldownDone(this.vow.get());
+        this.remove.active = this.vow != null && data.hasBindingVow(this.vow.get()) && data.isCooldownDone(this.vow.get());
     }
 
     @Override
@@ -109,30 +111,30 @@ public class BindingVowTab extends JJKTab {
         this.add = Button.builder(Component.translatable(String.format("gui.%s.binding_vow.add", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.vow == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
             PacketHandler.sendToServer(new AddBindingVowC2SPacket(this.vow.get()));
-            cap.addBindingVow(this.vow.get());
+            data.addBindingVow(this.vow.get());
 
-            this.add.active = !cap.hasBindingVow(this.vow.get());
-            this.remove.active = cap.hasBindingVow(this.vow.get());
+            this.add.active = !data.hasBindingVow(this.vow.get());
+            this.remove.active = data.hasBindingVow(this.vow.get());
 
-            cap.addBindingVowCooldown(this.vow.get());
+            data.addBindingVowCooldown(this.vow.get());
         }).size(61, 20).pos(xOffset + 86, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.add);
 
         this.remove = Button.builder(Component.translatable(String.format("gui.%s.binding_vow.remove", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.vow == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
             PacketHandler.sendToServer(new RemoveBindingVowC2SPacket(this.vow.get()));
-            cap.removeBindingVow(this.vow.get());
+            data.removeBindingVow(this.vow.get());
 
-            this.add.active = !cap.hasBindingVow(this.vow.get());
-            this.remove.active = cap.hasBindingVow(this.vow.get());
+            this.add.active = !data.hasBindingVow(this.vow.get());
+            this.remove.active = data.hasBindingVow(this.vow.get());
 
-            cap.addBindingVowCooldown(this.vow.get());
+            data.addBindingVowCooldown(this.vow.get());
         }).size(61, 20).pos(xOffset + 155, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.remove);
 

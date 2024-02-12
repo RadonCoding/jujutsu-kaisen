@@ -3,9 +3,7 @@ package radon.jujutsu_kaisen.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,7 +19,6 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -30,13 +27,12 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Slam;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -57,7 +53,7 @@ import java.util.List;
 
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class JJKEventHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onExplosion(ExplosionEvent.Detonate event) {
             Explosion explosion = event.getExplosion();
@@ -90,14 +86,13 @@ public class JJKEventHandler {
             if (!(event.getLevel() instanceof ServerLevel level)) return;
 
             for (ServerPlayer player : level.players()) {
-                if (player.isSleepingLongEnough()) {
-                    if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+                if (!player.isSleepingLongEnough()) continue;
 
-                    ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    cap.setEnergy(cap.getMaxEnergy());
+                ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
 
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                }
+                data.setEnergy(data.getMaxEnergy());
+
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
         }
 
@@ -128,13 +123,12 @@ public class JJKEventHandler {
 
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
 
-            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
             // If the target is dead we should not trigger any IAttack's
             if (victim.getHealth() - event.getAmount() <= 0.0F) return;
 
-            cap.attack(event.getSource(), victim);
+            data.attack(event.getSource(), victim);
 
             // If the target died from the IAttack's then cancel (yes this is very scuffed lmao)
             if (victim.isDeadOrDying()) event.setCanceled(true);
@@ -146,11 +140,13 @@ public class JJKEventHandler {
 
             if (owner.isDeadOrDying()) return;
 
-            if (JJKAbilities.hasTrait(owner, Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
             }
 
-            if (JJKAbilities.getType(owner) == JujutsuType.CURSE) {
+            if (data.getType() == JujutsuType.CURSE) {
                 if (owner instanceof Player player) {
                     player.getFoodData().setFoodLevel(20);
                 }
@@ -161,11 +157,13 @@ public class JJKEventHandler {
         public static void onLivingFall(LivingFallEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 event.setDistance(event.getDistance() * 0.5F);
             }
 
-            if (JJKAbilities.hasTrait(victim, Trait.HEAVENLY_RESTRICTION)) {
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 event.setDistance(event.getDistance() * 0.1F);
             }
 
@@ -186,23 +184,28 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
 
             if (ConfigHolder.SERVER.realisticCurses.get()) {
-                ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
+                ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
 
-                List<Item> stacks = new ArrayList<>();
-                stacks.add(stack.getItem());
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
-                        .stream().map(ItemStack::getItem).toList());
+                if (victimData != null && victimData.getType() == JujutsuType.CURSE) {
+                    ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
 
-                if (JJKAbilities.getType(victim) == JujutsuType.CURSE) {
+                    List<Item> stacks = new ArrayList<>();
+                    stacks.add(stack.getItem());
+                    stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                            .stream().map(ItemStack::getItem).toList());
+
                     boolean cursed = false;
 
                     if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
                         cursed = true;
                     } else if (DamageUtil.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                         cursed = true;
-                    } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        cursed = cap.getEnergy() > 0.0F;
+                    } else {
+                        ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
+
+                        if (attackerData != null) {
+                            cursed = attackerData.getEnergy() > 0.0F;
+                        }
                     }
 
                     if (!cursed) {
@@ -212,65 +215,26 @@ public class JJKEventHandler {
             }
         }
 
-        @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void onLivingHurt(LivingHurtEvent event) {
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
-
-            DamageSource source = event.getSource();
-
-            // Your own cursed energy doesn't do as much damage
-            if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                if (source.getEntity() == victim) {
-                    event.setAmount(event.getAmount() * 0.1F);
-                }
-            }
-
-            if (source.getEntity() instanceof LivingEntity attacker) {
-                if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
-                    if (DamageUtil.isMelee(source)) {
-                        event.setAmount(event.getAmount() * 2.0F);
-                    }
-                }
-            }
-
-            if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
-
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            float armor = cap.getExperience() * 0.002F;
-
-            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                armor *= 10.0F;
-            }
-            float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
-            event.setAmount(blocked);
-        }
-
         @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
 
-            switch (victimCap.getType()) {
+            switch (data.getType()) {
                 case SORCERER -> {
                     if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sorcererFleshRarity.get()) == 0) {
                         ItemStack stack = new ItemStack(JJKItems.SORCERER_FLESH.get());
-                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(victimCap.getExperience()));
+                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(data.getExperience()));
                         victim.spawnAtLocation(stack);
                     }
                 }
                 case CURSE -> {
                     if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseFleshRarity.get()) == 0) {
                         ItemStack stack = new ItemStack(JJKItems.CURSE_FLESH.get());
-                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(victimCap.getExperience()));
+                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(data.getExperience()));
                         victim.spawnAtLocation(stack);
                     }
                 }
@@ -281,7 +245,7 @@ public class JJKEventHandler {
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
             if (attacker instanceof ServerPlayer player) {
-                if (victim instanceof HeianSukunaEntity && victimCap.getFingers() == 20) {
+                if (victim instanceof HeianSukunaEntity && data.getFingers() == 20) {
                     PlayerUtil.giveAdvancement(player, "the_strongest_of_all_time");
                 }
             }
@@ -295,11 +259,11 @@ public class JJKEventHandler {
 
             LivingEntity owner = event.getEntity();
 
-            ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+            ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
             // Handling removal of absorbed techniques from curse manipulation
-            if (technique != null && cap.getAbsorbed().contains(technique)) {
-                cap.unabsorb(technique);
+            if (technique != null && data.getAbsorbed().contains(technique)) {
+                data.unabsorb(technique);
             }
         }
 
@@ -311,12 +275,12 @@ public class JJKEventHandler {
 
             LivingEntity owner = event.getEntity();
 
-            ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+            ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
             if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
                 // Handling removal of absorbed techniques from curse manipulation
-                if (technique != null && cap.getAbsorbed().contains(technique)) {
-                    cap.unabsorb(technique);
+                if (technique != null && data.getAbsorbed().contains(technique)) {
+                    data.unabsorb(technique);
                 }
             }
         }

@@ -13,8 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
 import radon.jujutsu_kaisen.util.DamageUtil;
@@ -53,7 +51,7 @@ public class CursedBud extends Ability {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class CursedBudForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
@@ -64,8 +62,6 @@ public class CursedBud extends Ability {
             LivingEntity victim = event.getEntity();
 
             if (!DamageUtil.isMelee(source)) return;
-
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
             if (!JJKAbilities.hasActiveTechnique(attacker, JJKCursedTechniques.DISASTER_PLANTS.get())) return;
 

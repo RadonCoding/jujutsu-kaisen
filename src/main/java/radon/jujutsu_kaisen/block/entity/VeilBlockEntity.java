@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -13,9 +12,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 
@@ -91,11 +90,10 @@ public class VeilBlockEntity extends BlockEntity {
 
         for (Modifier modifier : be.modifiers) {
             if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
-                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-                return cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
-                        cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
+                return data.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
+                        data.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
             }
         }
         return false;

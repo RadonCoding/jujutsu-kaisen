@@ -10,10 +10,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.util.SorcererUtil;
@@ -107,29 +107,29 @@ public class StatsTab extends JJKTab {
         drawRightArm(pGuiGraphics, this.minecraft.player.getSkin().texture(), xOffset, yOffset + 47, 6);
         drawLeftArm(pGuiGraphics, this.minecraft.player.getSkin().texture(), xOffset + 60, yOffset + 47, 6);
         
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
-        SorcererGrade grade = SorcererUtil.getGrade(cap.getExperience());
+        SorcererGrade grade = SorcererUtil.getGrade(data.getExperience());
         SorcererGrade next = SorcererGrade.values()[Math.min(SorcererGrade.values().length - 1, grade.ordinal() + 1)];
 
         MutableComponent component = Component.empty();
         component.append(Component.translatable(String.format("gui.%s.stats.grade", JujutsuKaisen.MOD_ID), grade.getName()));
         component.append("\n");
-        component.append(Component.translatable(String.format("gui.%s.stats.experience", JujutsuKaisen.MOD_ID), cap.getExperience(), next.getRequiredExperience()));
+        component.append(Component.translatable(String.format("gui.%s.stats.experience", JujutsuKaisen.MOD_ID), data.getExperience(), next.getRequiredExperience()));
         component.append("\n");
 
-        ICursedTechnique technique = cap.getTechnique();
+        ICursedTechnique technique = data.getTechnique();
 
         if (technique != null) {
             component.append(Component.translatable(String.format("gui.%s.stats.cursed_technique", JujutsuKaisen.MOD_ID), technique.getName()));
             component.append("\n");
         }
-        if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            component.append(Component.translatable(String.format("gui.%s.stats.cursed_energy_nature", JujutsuKaisen.MOD_ID), cap.getNature().getName()));
+        if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            component.append(Component.translatable(String.format("gui.%s.stats.cursed_energy_nature", JujutsuKaisen.MOD_ID), data.getNature().getName()));
             component.append("\n");
         }
         component.append(Component.translatable(String.format("gui.%s.stats.traits", JujutsuKaisen.MOD_ID),
-                cap.getTraits().stream().map(Trait::getName).map(Component::getString).collect(Collectors.joining(", "))));
+                data.getTraits().stream().map(Trait::getName).map(Component::getString).collect(Collectors.joining(", "))));
         component.append("\n");
 
         List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component, Style.EMPTY), WINDOW_INSIDE_WIDTH - 104));

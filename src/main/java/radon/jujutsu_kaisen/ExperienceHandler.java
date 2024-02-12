@@ -18,9 +18,9 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -52,31 +52,29 @@ public class ExperienceHandler {
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
             if (!victim.isAlive() || victim.isRemoved() || !attacker.isAlive() || attacker.isRemoved()) return;
 
-            if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> iter = battles.entrySet().iterator();
+            Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> iter = battles.entrySet().iterator();
 
-                boolean existing = false;
+            boolean existing = false;
 
-                // Find battles where the target is the victim and increase the total damage
-                while (iter.hasNext()) {
-                    for (BattleData battle : iter.next().getValue()) {
-                        if (battle.getTargetUUID() != victim.getUUID()) continue;
-                        battle.attack(attacker.getUUID(), event.getAmount());
-                        existing = true;
-                    }
-                }
-
-                while (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
-                    attacker = tamable.getOwner();
-
-                    if (attacker == null) return;
-                }
-
-                if (!existing) {
-                    BattleData battle = new BattleData(attacker.getUUID(), victim.getUUID());
-                    addBattle(attacker.getUUID(), battle);
+            // Find battles where the target is the victim and increase the total damage
+            while (iter.hasNext()) {
+                for (BattleData battle : iter.next().getValue()) {
+                    if (battle.getTargetUUID() != victim.getUUID()) continue;
                     battle.attack(attacker.getUUID(), event.getAmount());
+                    existing = true;
                 }
+            }
+
+            while (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
+                attacker = tamable.getOwner();
+
+                if (attacker == null) return;
+            }
+
+            if (!existing) {
+                BattleData battle = new BattleData(attacker.getUUID(), victim.getUUID());
+                addBattle(attacker.getUUID(), battle);
+                battle.attack(attacker.getUUID(), event.getAmount());
             }
         }
     }
@@ -93,30 +91,28 @@ public class ExperienceHandler {
 
         if (!(entity.level() instanceof ServerLevel level)) return;
 
-        if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.getExperience() > 0.0F) {
-            float penalty = (cap.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
-            cap.setExperience(Math.max(0.0F, cap.getExperience() - penalty));
+        if (data != null && data.getExperience() > 0.0F) {
+            float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
+            data.setExperience(Math.max(0.0F, data.getExperience() - penalty));
 
             int points = (int) Math.floor(penalty * 0.1F);
 
             if (points > 0) {
-                cap.setPoints(Math.max(0, cap.getPoints() - points));
+                data.setPoints(Math.max(0, data.getPoints() - points));
 
                 if (entity instanceof ServerPlayer player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.points_penalty", JujutsuKaisen.MOD_ID), points));
 
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
                 }
             }
 
             if (entity instanceof ServerPlayer player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience_penalty", JujutsuKaisen.MOD_ID), penalty));
 
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
         }
 
@@ -198,11 +194,12 @@ public class ExperienceHandler {
                 strength += pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);
             }
 
-            if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                strength += cap.getExperience() * 0.1F;
+            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-                if (cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get())) {
+            if (data != null) {
+                strength += data.getExperience() * 0.1F;
+
+                if (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get())) {
                     strength *= 1.25F;
                 }
             }
@@ -214,7 +211,7 @@ public class ExperienceHandler {
             if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
             if (this.damageDealtByOwner == 0.0F) return;
 
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
             float targetStrength = calculateStrength(target) * 1.5F;
             float ownerStrength = calculateStrength(owner);
@@ -225,7 +222,7 @@ public class ExperienceHandler {
 
             if (experience < 0.1F) return;
 
-            if (cap.addExperience(experience)) {
+            if (data.addExperience(experience)) {
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), experience));
                 }
@@ -234,7 +231,7 @@ public class ExperienceHandler {
             int points = (int) Math.floor(experience * 0.1F);
 
             if (points > 0) {
-                cap.addPoints(points);
+                data.addPoints(points);
 
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.points", JujutsuKaisen.MOD_ID), points));
@@ -242,7 +239,7 @@ public class ExperienceHandler {
             }
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
         }
 

@@ -76,7 +76,8 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
         return this.name.keyPressed(pKeyCode, pScanCode, pModifiers) || this.name.canConsumeInput() || super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
-    private void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
+    @Override
+    public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
         int i = pSlot.x;
         int j = pSlot.y;
         String s = null;

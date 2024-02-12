@@ -9,14 +9,13 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttack {
     @Override
@@ -41,8 +40,11 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() && JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get()) && super.isValid(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return false;
+
+        return data.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() && data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }
 
     @Override
@@ -70,22 +72,22 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
         if (owner.level().isClientSide) return false;
         if (!DamageUtil.isMelee(source)) return false;
 
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (ownerData == null || targetData == null) return false;
 
-        ICursedTechnique current = ownerCap.getTechnique();
-        ICursedTechnique copied = targetCap.getTechnique();
+        ICursedTechnique current = ownerData.getTechnique();
+        ICursedTechnique copied = targetData.getTechnique();
 
         if (copied == null || current == null || JJKAbilities.hasTechnique(owner, copied) || current == copied) return false;
 
         owner.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 
-        ownerCap.copy(copied);
+        ownerData.copy(copied);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerData.serializeNBT()), player);
         }
         return true;
     }

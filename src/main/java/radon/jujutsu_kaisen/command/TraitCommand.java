@@ -7,9 +7,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -26,16 +26,26 @@ public class TraitCommand {
     }
 
     public static int addTrait(ServerPlayer player, Trait trait) {
-        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.addTrait(trait);
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return 0;
+
+        data.addTrait(trait);
+
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+
         return 1;
     }
 
     public static int removeTrait(ServerPlayer player, Trait trait) {
-        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.removeTrait(trait);
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return 0;
+
+        data.removeTrait(trait);
+
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+
         return 1;
     }
 }

@@ -4,7 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
@@ -15,22 +17,24 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class CursedEnergyVisual implements IVisual {
     @Override
-    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null) return false;
 
-        return ConfigHolder.CLIENT.visibleCursedEnergy.get() && data.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get()) &&
-                (data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())));
+        ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
+        
+        return ConfigHolder.CLIENT.visibleCursedEnergy.get() && client.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get()) &&
+                (client.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (data.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())));
     }
 
     @Override
-    public void tick(LivingEntity entity, ClientVisualHandler.ClientData data) {
+    public void tick(LivingEntity entity, ClientVisualHandler.ClientData client) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.level == null) return;
 
-        float scale = data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() ? 1.5F : 1.0F;
+        float scale = client.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() ? 1.5F : 1.0F;
 
         for (int i = 0; i < 12 * scale; i++) {
             double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 1.5F * scale) - entity.getLookAngle().scale(0.35D).x;

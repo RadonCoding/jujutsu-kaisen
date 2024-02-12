@@ -52,7 +52,7 @@ public class ItemSwap extends Ability {
         Entity target = this.getTarget(owner);
 
         if (target != null) {
-            JJKAbilities.SWAP_SELF.get().run(owner, target);
+            SwapSelf.swap(owner, target);
         }
     }
 

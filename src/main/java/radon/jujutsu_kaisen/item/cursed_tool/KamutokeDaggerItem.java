@@ -16,13 +16,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.KamutokeDaggerRenderer;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
@@ -108,7 +109,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         } else if (result.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) result).getEntity();
             Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
-            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
         }
         return null;
     }
@@ -129,7 +130,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         super.onStopUsing(stack, entity, count);
 
-        if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
         BlockHitResult hit = this.getBlockHit(entity);
 
@@ -138,12 +139,10 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
             float f = this.getPowerForTime(i);
             float cost = RANGE_COST * f;
 
-            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
-                if (cap.getEnergy() < cost) return;
+                if (data.getEnergy() < cost) return;
 
-                cap.useEnergy(cost);
+                data.useEnergy(cost);
             }
 
             Vec3 pos = hit.getBlockPos().getCenter();

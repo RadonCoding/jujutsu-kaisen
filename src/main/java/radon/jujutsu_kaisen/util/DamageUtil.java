@@ -7,6 +7,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
@@ -47,8 +49,9 @@ public class DamageUtil {
 
         if (source.getEntity() == target) return false;
 
-        if (source.getEntity() instanceof LivingEntity living && isMelee(source)) {
-            return !JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+        if (source.getEntity() instanceof LivingEntity attacker && isMelee(source)) {
+            ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+            return data == null || !data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
         }
         return true;
     }

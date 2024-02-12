@@ -6,9 +6,9 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
 import javax.annotation.Nullable;
@@ -60,9 +60,8 @@ public class NearestAttackableHumanGoal extends TargetGoal {
     protected void findTarget() {
         this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
             if (!(entity instanceof TamableAnimal tamable && entity instanceof ISorcerer && tamable.isTame())) {
-                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                return cap.hasTrait(Trait.HEAVENLY_RESTRICTION);
+                ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+                return data.hasTrait(Trait.HEAVENLY_RESTRICTION);
             }
             return false;
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());

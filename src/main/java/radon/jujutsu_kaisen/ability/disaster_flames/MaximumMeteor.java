@@ -7,22 +7,37 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 
 public class MaximumMeteor extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) &&
-                !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()) &&
-                (cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        ICursedTechnique technique = data.getTechnique();
+
+        if (technique != null) {
+            Ability domain = technique.getDomain();
+
+            if (domain != null) {
+                if (data.hasToggled(domain)) {
+                    return false;
+                }
+            }
+        }
+        return (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
+                owner.getHealth() / owner.getMaxHealth() < 0.4F);
     }
 
     @Override
@@ -32,7 +47,7 @@ public class MaximumMeteor extends Ability {
 
     private static boolean canSpawn(LivingEntity owner, float power) {
         Vec3 offset = owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.getSize(power), 0.0D);
-        BlockHitResult hit = owner.level().clip(new ClipContext(owner.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+        BlockHitResult hit = owner.level().clip(new ClipContext(owner.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
         return hit.getType() != HitResult.Type.BLOCK;
     }
 

@@ -9,8 +9,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -49,8 +49,9 @@ public class ShadowStorage extends Ability {
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return;
 
-            ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.addShadowInventory(owner.getMainHandItem());
+            ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+            data.addShadowInventory(owner.getMainHandItem());
             owner.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         } else if (owner.level().isClientSide) {
             ClientWrapper.openShadowInventory();
@@ -59,12 +60,12 @@ public class ShadowStorage extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return Status.FAILURE;
         } else {
-            if (cap.getShadowInventory().isEmpty()) return Status.FAILURE;
+            if (data.getShadowInventory().isEmpty()) return Status.FAILURE;
         }
         return super.isTriggerable(owner);
     }

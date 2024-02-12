@@ -17,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 
@@ -33,22 +33,20 @@ public abstract class LivingEntityMixin {
         LivingEntity entity = (LivingEntity) (Object) this;
 
         if (entity.level().isClientSide) {
-            ClientVisualHandler.ClientData data = ClientVisualHandler.get((LivingEntity) (Object) this);
+            ClientVisualHandler.ClientData client = ClientVisualHandler.get((LivingEntity) (Object) this);
 
-            if (data == null) return;
+            if (client == null) return;
 
-            for (Ability ability : data.toggled) {
+            for (Ability ability : client.toggled) {
                 if (!(ability instanceof ITransformation transformation)) continue;
                 if (!transformation.getItem().canElytraFly(transformation.getItem().getDefaultInstance(), entity))
                     continue;
                 cir.setReturnValue(true);
             }
         } else {
-            if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            for (Ability ability : cap.getToggled()) {
+            for (Ability ability : data.getToggled()) {
                 if (!(ability instanceof ITransformation transformation)) continue;
                 if (!transformation.getItem().canElytraFly(transformation.getItem().getDefaultInstance(), entity))
                     continue;
@@ -59,8 +57,12 @@ public abstract class LivingEntityMixin {
 
     @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"))
     public float travel(BlockState instance, LevelReader levelReader, BlockPos blockPos, Entity entity) {
-        if (!(entity instanceof LivingEntity living) || !JJKAbilities.hasToggled(living, JJKAbilities.DISMANTLE_SKATING.get()) || !instance.getFluidState().isEmpty()) return instance.getFriction(levelReader, blockPos, entity);
-        return 1.0989F - 0.02F;
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data != null && data.hasToggled(JJKAbilities.DISMANTLE_SKATING.get()) && instance.getFluidState().isEmpty()) {
+            return 1.0989F - 0.02F;
+        }
+        return instance.getFriction(levelReader, blockPos, entity);
     }
 
     @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;travel(Lnet/minecraft/world/phys/Vec3;)V"))

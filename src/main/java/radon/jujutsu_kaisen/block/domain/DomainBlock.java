@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
@@ -40,14 +40,10 @@ public class DomainBlock extends Block implements EntityBlock {
             Entity entity = ctx.getEntity();
 
             if (entity != null) {
-                if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                        if (!pContext.isAbove(Shapes.block(), pPos, true)) {
-                            return Shapes.empty();
-                        }
-                    }
+                if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
+                    return Shapes.empty();
                 }
             }
         }
@@ -56,7 +52,7 @@ public class DomainBlock extends Block implements EntityBlock {
 
     @Override
     public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
-        Entity exploder = explosion.getExploder();
+        Entity exploder = explosion.getDirectSourceEntity();
 
         if (exploder != null && level instanceof ServerLevel && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();

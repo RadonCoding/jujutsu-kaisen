@@ -10,13 +10,9 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.DisasterCurse;
-import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -64,7 +60,7 @@ public class HanamiEntity extends DisasterCurse {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+        return List.of(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }
 
     @Override
@@ -75,12 +71,10 @@ public class HanamiEntity extends DisasterCurse {
 
         boolean wear = false;
 
-        if (target == null || !target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+        if (target == null) {
             wear = true;
         } else {
-            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (SorcererUtil.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) {
+            if (target.getMaxHealth() / this.getMaxHealth() >= 2) {
                 wear = true;
             }
         }

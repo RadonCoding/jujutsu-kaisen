@@ -12,11 +12,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public class RCTEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class RCTEventHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
@@ -38,14 +38,13 @@ public class RCTEventHandler {
 
             if (victim.getHealth() - event.getAmount() > 0.0F) return;
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
 
-            if (cap.isUnlocked(JJKAbilities.RCT1.get())) return;
+            if (data.isUnlocked(JJKAbilities.RCT1.get())) return;
             if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
-            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
-            if (cap.getType() != JujutsuType.SORCERER) return;
-            if (SorcererUtil.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) return;
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
+            if (data.getType() != JujutsuType.SORCERER) return;
+            if (SorcererUtil.getGrade(data.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) return;
 
             int chance = ConfigHolder.SERVER.reverseCursedTechniqueChance.get();
 
@@ -60,10 +59,10 @@ public class RCTEventHandler {
             if (HelperMethods.RANDOM.nextInt(chance) != 0) return;
 
             victim.setHealth(victim.getMaxHealth() / 2);
-            cap.unlock(JJKAbilities.RCT1.get());
+            data.unlock(JJKAbilities.RCT1.get());
 
             if (victim instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
             event.setCanceled(true);
         }

@@ -5,8 +5,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.MiniUzumakiProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -33,12 +33,11 @@ public class MiniUzumaki extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if (!cap.hasSummonOfClass(CursedSpirit.class)) {
-            return false;
-        }
-        return super.isValid(owner);
+        if (data == null) return false;
+
+        return data.hasSummonOfClass(CursedSpirit.class) && super.isValid(owner);
     }
 
     @Override

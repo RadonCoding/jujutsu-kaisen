@@ -16,10 +16,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
@@ -221,7 +222,7 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
         if (this.isVehicle()) return false;
 
         Vec3 offset = this.position().subtract(0.0D, MAX_IDLE_Y, 0.0D);
-        BlockHitResult hit = this.level().clip(new ClipContext(this.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
+        BlockHitResult hit = this.level().clip(new ClipContext(this.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty()));
 
         if (this.getTarget() == null && hit.getType() == HitResult.Type.MISS) return false;
 

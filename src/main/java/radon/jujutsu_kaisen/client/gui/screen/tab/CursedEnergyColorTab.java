@@ -10,8 +10,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
@@ -40,9 +40,10 @@ public class CursedEnergyColorTab extends JJKTab {
             if (this.minecraft != null && this.minecraft.player != null) {
                 int color = FastColor.ARGB32.color(255, Math.round(r), Math.round(g), Math.round(b));
 
-                ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
                 PacketHandler.sendToServer(new SetCursedEnergyColorC2SPacket(color));
-                cap.setCursedEnergyColor(color);
+                data.setCursedEnergyColor(color);
             }
             this.oldR = r;
             this.oldG = g;
@@ -71,9 +72,10 @@ public class CursedEnergyColorTab extends JJKTab {
     public void addWidgets() {
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
-        Vector3f color = Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
+
+        Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
 
         int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
         int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;

@@ -18,8 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -103,10 +103,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
                 1.0F, 1.0F);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
         for (int i = 1; i <= 20; i++) {
-            cap.delayTickEvent(() -> {
+            data.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
                             0.0D, 0.0D, 1.0D);
@@ -121,7 +122,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         }
 
         for (int i = 1; i <= 10; i++) {
-            cap.delayTickEvent(() -> {
+            data.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
                             1.0F, 1.0F);
@@ -129,7 +130,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             }, i * 2);
         }
 
-        cap.delayTickEvent(() -> {
+        data.delayTickEvent(() -> {
             float power = domain == null ? Ability.getPower(JJKAbilities.CLEAVE.get(), owner) : Ability.getPower(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
 
             float damage = calculateDamage(source, owner, target);

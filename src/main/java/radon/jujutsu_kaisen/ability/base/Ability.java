@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -15,9 +14,9 @@ import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -55,8 +54,8 @@ public abstract class Ability {
     }
 
     public static float getPower(Ability ability, LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getAbilityPower() * (1.0F + ChantHandler.getChant(owner, ability));
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        return data.getAbilityPower() * (1.0F + ChantHandler.getChant(owner, ability));
     }
 
     public float getPower(LivingEntity owner) {
@@ -68,6 +67,10 @@ public abstract class Ability {
     }
 
     protected boolean isNotDisabledFromDA() {
+        return false;
+    }
+
+    protected boolean isNotDisabledFromUV() {
         return false;
     }
 
@@ -86,17 +89,20 @@ public abstract class Ability {
     }
 
     public int getRealPointsCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if (cap.hasTrait(Trait.SIX_EYES)) {
+        if (data.hasTrait(Trait.SIX_EYES)) {
             return this.getPointsCost() / 2;
         }
         return this.getPointsCost();
     }
 
     public boolean isUnlocked(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.isUnlocked(this);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return data.isUnlocked(this);
     }
 
     public boolean canUnlock(LivingEntity owner) {
@@ -104,8 +110,11 @@ public abstract class Ability {
         if (owner instanceof Player player && player.getAbilities().instabuild) return true;
         if (!this.isUnlockable() || this.getPointsCost() == 0) return false;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getPoints() >= this.getRealPointsCost(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return data.getPoints() >= this.getRealPointsCost(owner);
     }
 
     public boolean isUnlockable() {
@@ -159,9 +168,11 @@ public abstract class Ability {
     }
 
     public int getRealCooldown(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if ((this.isMelee() && cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) || (this.getCost(owner) > 0.0F && cap.hasTrait(Trait.SIX_EYES))) {
+        if (data == null) return 0;
+
+        if ((this.isMelee() && data.hasTrait(Trait.HEAVENLY_RESTRICTION)) || (this.getCost(owner) > 0.0F && data.hasTrait(Trait.SIX_EYES))) {
             return this.getCooldown() / 2;
         }
         return this.getCooldown();
@@ -176,10 +187,12 @@ public abstract class Ability {
 
         if (this.isUnlockable() && !this.isUnlocked(owner)) return false;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if (this.isTechnique() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-            if (!this.isNotDisabledFromDA() || !cap.hasToggled(this)) {
+        if (data == null) return false;
+
+        if (this.isTechnique() && data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            if (!this.isNotDisabledFromDA() || !data.hasToggled(this)) {
                 return false;
             }
         }
@@ -191,36 +204,40 @@ public abstract class Ability {
     }
 
     private void addDuration(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
 
         if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
-            cap.addDuration(this);
+            data.addDuration(this);
         }
     }
 
     public void charge(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
         if (owner instanceof Player player && player.getAbilities().instabuild) return;
 
-        cap.useEnergy(this.getRealCost(owner));
+        data.useEnergy(this.getRealCost(owner));
 
         if (this.getRealCooldown(owner) == 0) return;
 
-        cap.addCooldown(this);
+        data.addCooldown(this);
     }
 
     public Status getStatus(LivingEntity owner) {
-        if (this != JJKAbilities.WHEEL.get() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
+        if (!this.isNotDisabledFromUV() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return Status.FAILURE;
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-            if (this.isTechnique() && cap.hasBurnout()) {
+            if (this.isTechnique() && data.hasBurnout()) {
                 return Status.BURNOUT;
             }
 
-            if (!cap.isCooldownDone(this)) {
+            if (!data.isCooldownDone(this)) {
                 return Status.COOLDOWN;
             }
 
@@ -263,11 +280,13 @@ public abstract class Ability {
     }
 
     public boolean checkCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return false;
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
             float cost = this.getRealCost(owner);
-            return cap.getEnergy() >= cost;
+            return data.getEnergy() >= cost;
         }
         return true;
     }
@@ -302,15 +321,16 @@ public abstract class Ability {
     public float getRealCost(LivingEntity owner) {
         float cost = this.getCost(owner);
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return cost;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return 0.0F;
 
-        ICursedTechnique copied = cap.getCurrentCopied();
+        ICursedTechnique copied = data.getCurrentCopied();
 
         if (copied != null && copied.getAbilities().contains(this)) {
             cost *= 1.5F;
         }
-        if (cap.hasTrait(Trait.SIX_EYES)) {
+        if (data.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable(owner) ? ChantHandler.getOutput(owner, this) : 1.0F)));
@@ -333,10 +353,12 @@ public abstract class Ability {
         default int getRealDuration(LivingEntity owner) {
             int duration = this.getDuration();
 
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+            if (data == null) return 0;
 
             if (duration > 0) {
-                duration = (int) (duration * cap.getRealPower());
+                duration = (int) (duration * data.getRealPower());
             }
             return duration;
         }
@@ -346,8 +368,11 @@ public abstract class Ability {
         default void onStop(LivingEntity owner) {}
 
         default int getCharge(LivingEntity owner) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            return cap.getCharge();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+            if (data == null) return 0;
+
+            return data.getCharge();
         }
     }
 
@@ -369,9 +394,5 @@ public abstract class Ability {
 
     public interface IAttack {
         boolean attack(DamageSource source, LivingEntity owner, LivingEntity target);
-    }
-
-    public interface IImbued {
-        void run(LivingEntity owner, Entity target);
     }
 }

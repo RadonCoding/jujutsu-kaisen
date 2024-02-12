@@ -91,7 +91,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class TwentyFourFrameRuleForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();

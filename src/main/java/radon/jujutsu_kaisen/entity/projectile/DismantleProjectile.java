@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -143,9 +143,9 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (entity == owner) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+        DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * this.getPower());
     }
 

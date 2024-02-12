@@ -15,8 +15,8 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -57,11 +57,12 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
 
         for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
             if (!(projectile.getOwner() instanceof LivingEntity living)) continue;
-            if (!living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
 
-            ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = living.getData(JJKAttachmentTypes.SORCERER);
 
-            DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+            if (data == null) continue;
+
+            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
             if (domain == null || !domain.isAffected(owner)) continue;
 
@@ -123,14 +124,16 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class FallingBlossomEmotionForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
 
             LivingEntity victim = event.getEntity();
 
-            if (!JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
             if (!(source.getDirectEntity() instanceof DomainExpansionEntity)) return;
 

@@ -6,7 +6,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,9 +26,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.util.DamageUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import software.bernie.geckolib.cache.AnimatableIdCache;
 
 import java.util.*;
 
@@ -129,11 +128,13 @@ public class Infinity extends Ability implements Ability.IToggled {
                     continue;
                 }
 
+                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
                 if (projectile == null) {
                     iter.remove();
                     this.setDirty();
                 } else {
-                    if (JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && owner.distanceTo(projectile) < 2.5F) {
+                    if (data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(projectile) < 2.5F) {
                         Vec3 original = nbt.getMovement();
                         projectile.setDeltaMovement(original.scale(Double.MIN_VALUE));
                         projectile.setNoGravity(true);
@@ -193,7 +194,7 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class InfinityForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLevelTick(TickEvent.LevelTickEvent event) {
             if (event.phase == TickEvent.Phase.START) return;
@@ -210,15 +211,17 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (!(hit.getEntity() instanceof LivingEntity owner)) return;
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
+            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
             Projectile projectile = event.getProjectile();
 
             if (!DamageUtil.isBlockable(owner, projectile)) return;
 
-            data.add(owner, projectile);
+            FrozenProjectileData frozen = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
+
+            frozen.add(owner, projectile);
 
             event.setCanceled(true);
         }
@@ -229,14 +232,16 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-            if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
+            if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
+
+            FrozenProjectileData frozen = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
             for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
                 if (!DamageUtil.isBlockable(owner, projectile)) continue;
 
-                data.add(owner, projectile);
+                frozen.add(owner, projectile);
             }
         }
 
@@ -246,7 +251,9 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (owner.level().isClientSide) return;
 
-            if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
             DamageSource source = event.getSource();
 

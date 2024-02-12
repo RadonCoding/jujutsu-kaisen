@@ -37,3 +37,7 @@
 /locate structure minecraft:village_plains
 /tp @s -6464 ~ 64
 /time set night
+/trait add @p SIX_EYES
+/settechnique @p jujutsu_kaisen:boogie_woogie
+/trait add @p VESSEL
+/settechnique @p jujutsu_kaisen:curse_manipulation

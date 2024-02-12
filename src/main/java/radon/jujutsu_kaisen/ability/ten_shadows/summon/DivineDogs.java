@@ -1,18 +1,14 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -33,7 +29,9 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (JJKAbilities.hasToggled(owner, this)) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data.hasToggled(this)) {
             return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
         }
         return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(10) == 0;
@@ -56,42 +54,42 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.isDead(JJKEntities.DIVINE_DOG_WHITE.get()) && cap.isDead(JJKEntities.DIVINE_DOG_BLACK.get());
+        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        return data.isDead(JJKEntities.DIVINE_DOG_WHITE.get()) && data.isDead(JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
     @Override
     public void spawn(LivingEntity owner, boolean clone) {
-        if (!owner.level().isClientSide) {
-            ITenShadowsData tenShadowsCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-            ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            if (!tenShadowsCap.isDead(JJKEntities.DIVINE_DOG_WHITE.get())) {
-                DivineDogWhiteEntity white = new DivineDogWhiteEntity(owner, false);
-                white.setClone(clone);
-                owner.level().addFreshEntity(white);
-                sorcererCap.addSummon(white);
-            }
-            if (!tenShadowsCap.isDead(JJKEntities.DIVINE_DOG_BLACK.get())) {
-                DivineDogBlackEntity black = new DivineDogBlackEntity(owner, false);
-                black.setClone(clone);
-                owner.level().addFreshEntity(black);
-                sorcererCap.addSummon(black);
-            }
+        if (tenShadowsData == null || sorcererData == null) return;
+
+        if (!tenShadowsData.isDead(JJKEntities.DIVINE_DOG_WHITE.get())) {
+            DivineDogWhiteEntity white = new DivineDogWhiteEntity(owner, false);
+            white.setClone(clone);
+            owner.level().addFreshEntity(white);
+            sorcererData.addSummon(white);
+        }
+        if (!tenShadowsData.isDead(JJKEntities.DIVINE_DOG_BLACK.get())) {
+            DivineDogBlackEntity black = new DivineDogBlackEntity(owner, false);
+            black.setClone(clone);
+            owner.level().addFreshEntity(black);
+            sorcererData.addSummon(black);
         }
     }
 
     @Override
     public void onDisabled(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-            cap.unsummonByClass(DivineDogWhiteEntity.class);
-            cap.unsummonByClass(DivineDogBlackEntity.class);
+            data.unsummonByClass(DivineDogWhiteEntity.class);
+            data.unsummonByClass(DivineDogBlackEntity.class);
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
         }
     }

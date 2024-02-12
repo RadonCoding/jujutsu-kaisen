@@ -25,11 +25,11 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     public void setupAnim(T pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get(pEntity);
+        ClientVisualHandler.ClientData client = ClientVisualHandler.get(pEntity);
 
-        if (data == null) return;
+        if (client == null) return;
 
-        if (PerfectBodyOverlay.shouldRenderExtraArms(pEntity, data)) {
+        if (PerfectBodyOverlay.shouldRenderExtraArms(pEntity, client)) {
             if (this.rightArmPose == HumanoidModel.ArmPose.EMPTY || this.rightArmPose == HumanoidModel.ArmPose.ITEM) {
                 this.rightArm.xRot += this.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
                 this.rightArm.zRot -= this.rightArm.zRot * 0.5F - ((float) Math.PI * 0.1F);

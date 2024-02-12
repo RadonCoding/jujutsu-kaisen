@@ -7,7 +7,7 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
+import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
 
 public class BindingVowListWidget extends JJKSelectionList<BindingVow, BindingVowListWidget.Entry> {
     public BindingVowListWidget(IBuilder<BindingVow, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y) {

@@ -11,15 +11,14 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -62,31 +61,35 @@ public class ReleaseCurse extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        if (this.getTarget(owner) instanceof CursedSpirit curse && curse.isTame() && curse.getOwner() == owner) {
-            owner.swing(InteractionHand.MAIN_HAND);
+        if (!(this.getTarget(owner) instanceof CursedSpirit curse) || !curse.isTame() || curse.getOwner() != owner) return;
 
-            ISorcererData ownerSorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ICurseManipulationData ownerCurseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        owner.swing(InteractionHand.MAIN_HAND);
 
-            ownerSorcererCap.removeSummon(curse);
+        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-            ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (ownerSorcererData == null || ownerCurseManipulationData == null) return;
 
-            if (curse instanceof AbsorbedPlayerEntity absorbed) {
-                ownerCurseManipulationCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT(), absorbed.getPlayer()));
-            } else {
-                ownerCurseManipulationCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT()));
-            }
+        ownerSorcererData.removeSummon(curse);
 
-            if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererCap.serializeNBT()), player);
-            }
+        ISorcererData curseData = curse.getData(JJKAttachmentTypes.SORCERER);
 
-            if (!owner.level().isClientSide) {
-                makePoofParticles(curse);
-            }
-            curse.discard();
+        if (curseData == null) return;
+
+        if (curse instanceof AbsorbedPlayerEntity absorbed) {
+            ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(), absorbed.getPlayer()));
+        } else {
+            ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT()));
         }
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerSorcererData.serializeNBT()), player);
+        }
+
+        if (!owner.level().isClientSide) {
+            makePoofParticles(curse);
+        }
+        curse.discard();
     }
 
     @Override
@@ -101,8 +104,6 @@ public class ReleaseCurse extends Ability {
     public float getCost(LivingEntity owner) {
         return 0;
     }
-
-
 
     @Override
     public MenuType getMenuType(LivingEntity owner) {

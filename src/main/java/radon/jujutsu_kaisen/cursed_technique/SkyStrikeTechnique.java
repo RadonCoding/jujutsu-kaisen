@@ -9,11 +9,6 @@ import java.util.Set;
 
 public class SkyStrikeTechnique implements ICursedTechnique {
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.SKY_STRIKE_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.SKY_STRIKE.get()));
     }

@@ -9,14 +9,12 @@ import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.util.DamageUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ParryHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ParryHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
@@ -24,8 +22,6 @@ public class ParryHandler {
             if (!DamageUtil.isMelee(source)) return;
 
             LivingEntity victim = event.getEntity();
-
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 

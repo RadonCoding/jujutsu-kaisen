@@ -24,7 +24,7 @@ public class CursedEnergyImbuedItemProjectile extends ItemEntity {
     public CursedEnergyImbuedItemProjectile(Entity owner, ItemStack stack) {
         super(JJKEntities.CURSED_ENERGY_IMBUED_ITEM.get(), owner.level());
 
-        this.setThrower(owner.getUUID());
+        this.setThrower(owner);
         this.setItem(stack);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);

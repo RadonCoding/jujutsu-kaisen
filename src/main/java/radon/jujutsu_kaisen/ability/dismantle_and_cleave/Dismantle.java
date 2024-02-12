@@ -6,10 +6,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -23,7 +24,11 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
 
-        if (JJKAbilities.isChanneling(owner, this)) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
         }
         return HelperMethods.RANDOM.nextInt(3) == 0;

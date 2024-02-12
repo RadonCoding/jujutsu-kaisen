@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
 public class Fly extends Ability implements Ability.IChannelened {
     private static final float SPEED = 0.05F;
@@ -35,7 +35,11 @@ public class Fly extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get());
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return data.hasToggled(JJKAbilities.INFINITY.get());
     }
 
     @Override

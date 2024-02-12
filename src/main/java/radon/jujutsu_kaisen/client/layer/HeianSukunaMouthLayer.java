@@ -20,11 +20,11 @@ public class HeianSukunaMouthLayer extends GeoRenderLayer<HeianSukunaEntity> {
 
     @Override
     public void render(PoseStack poseStack, HeianSukunaEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get(animatable);
+        ClientVisualHandler.ClientData client = ClientVisualHandler.get(animatable);
 
-        if (data == null) return;
+        if (client == null) return;
 
-        RenderType type = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/overlay/sukuna_mouth_%d.png", data.mouth + 1)));
+        RenderType type = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/overlay/sukuna_mouth_%d.png", client.mouth + 1)));
         this.getRenderer().reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, type,
                 bufferSource.getBuffer(type), partialTick, packedLight, OverlayTexture.NO_OVERLAY,
                 1.0F, 1.0F, 1.0F, 1.0F);

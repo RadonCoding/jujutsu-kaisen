@@ -14,9 +14,10 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 import java.util.List;
@@ -50,14 +51,14 @@ public abstract class CursedObjectItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getType() == JujutsuType.CURSE) {
-                cap.addExtraEnergy(this.getEnergy());
-            } else {
-                pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length)),
-                        Mth.floor(AMPLIFIER * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length))));
-            }
-        });
+        ISorcererData data = pEntityLiving.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data != null && data.getType() == JujutsuType.CURSE) {
+            data.addExtraEnergy(this.getEnergy());
+        } else {
+            pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length)),
+                    Mth.floor(AMPLIFIER * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length))));
+        }
         return stack;
     }
 }

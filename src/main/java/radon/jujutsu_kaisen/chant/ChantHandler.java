@@ -3,8 +3,8 @@ package radon.jujutsu_kaisen.chant;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
@@ -16,16 +16,21 @@ public class ChantHandler {
     }
 
     public static float getOutput(LivingEntity owner, Ability ability) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getOutput() + getChant(owner, ability);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return 0.0F;
+
+        return data.getOutput() + getChant(owner, ability);
     }
 
     public static float getChant(LivingEntity owner, Ability ability) {
         List<String> messages = owner.level().isClientSide ? ClientChantHandler.getMessages() : ServerChantHandler.getMessages(owner);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return 0.0F;
 
-        Set<String> chants = cap.getFirstChants(ability);
+        Set<String> chants = data.getFirstChants(ability);
 
         if (chants.isEmpty()) return 0.0F;
 
@@ -53,11 +58,14 @@ public class ChantHandler {
 
         if (messages.isEmpty()) return null;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Ability ability = cap.getAbility(messages.get(messages.size() - 1));
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return null;
+
+        Ability ability = data.getAbility(messages.get(messages.size() - 1));
 
         if (ability != null) {
-            List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
+            List<String> chants = new ArrayList<>(data.getFirstChants(ability));
 
             if (chants.size() == 1) return null;
 

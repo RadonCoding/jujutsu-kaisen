@@ -9,9 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
 public class PactRemovalDeclineCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -28,10 +28,12 @@ public class PactRemovalDeclineCommand {
 
         if (src == null) return 0;
 
-        ISorcererData dstCap = dst.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData dstData = dst.getData(JJKAttachmentTypes.SORCERER);
 
-        if (dstCap.hasRequestedPactRemoval(src.getUUID(), pact)) {
-            dstCap.removePactRemovalRequest(src.getUUID(), pact);
+        if (dstData == null) return 0;
+
+        if (dstData.hasRequestedPactRemoval(src.getUUID(), pact)) {
+            dstData.removePactRemovalRequest(src.getUUID(), pact);
 
             dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_removal_decline", JujutsuKaisen.MOD_ID), src.getName(), pact.getName().getString().toLowerCase()));
         } else {

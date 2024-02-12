@@ -1,15 +1,19 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 
-import java.util.function.Supplier;
+public class SetSizeC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "set_size_serverbound");
 
-public class SetSizeC2SPacket {
     private final int size;
 
     public SetSizeC2SPacket(int size) {
@@ -20,15 +24,9 @@ public class SetSizeC2SPacket {
         this(buf.readInt());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.size);
-    }
-
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
-
-            if (sender == null) return;
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             if (sender.containerMenu instanceof VeilRodMenu menu) {
                 if (!menu.stillValid(sender)) {
@@ -37,6 +35,15 @@ public class SetSizeC2SPacket {
                 menu.setSize(Mth.clamp(this.size, ConfigHolder.SERVER.minimumVeilSize.get(), ConfigHolder.SERVER.maximumVeilSize.get()));
             }
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeInt(this.size);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

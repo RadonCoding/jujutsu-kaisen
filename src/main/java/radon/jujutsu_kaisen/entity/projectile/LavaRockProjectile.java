@@ -13,8 +13,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -97,8 +97,9 @@ public class LavaRockProjectile extends JujutsuProjectile {
         if (entity == owner) return;
 
         if (this.isDomain()) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
         } else {
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
@@ -112,11 +113,11 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-                DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+                DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
-                if (domain == null || !domain.checkSureHitEffect() || !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get())) {
+                if (domain == null || !domain.checkSureHitEffect()) {
                     this.discard();
                 }
             }

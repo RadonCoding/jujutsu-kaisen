@@ -63,7 +63,7 @@ public class AllEncompassingUnequivocalLove extends DomainExpansion implements D
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class GenuineMutualLoveForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onItemStackedOnOther(ItemStackedOnOtherEvent event) {
             ItemStack stack = event.getCarriedItem();

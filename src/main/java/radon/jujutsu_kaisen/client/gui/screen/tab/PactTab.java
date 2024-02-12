@@ -11,9 +11,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.PactListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.PlayerListWidget;
@@ -100,11 +100,13 @@ public class PactTab extends JJKTab {
         this.create.active = false;
         this.remove.active = false;
 
-        if (this.player != null && this.pact != null) {
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            this.create.active = !cap.hasPact(this.player.get().getProfile().getId(), this.pact.get());
-            this.remove.active = cap.hasPact(this.player.get().getProfile().getId(), this.pact.get());
-        }
+        if (this.player == null || this.pact == null) return;
+
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
+
+        this.create.active = !data.hasPact(this.player.get().getProfile().getId(), this.pact.get());
+        this.remove.active = data.hasPact(this.player.get().getProfile().getId(), this.pact.get());
     }
 
     @Override
@@ -125,22 +127,22 @@ public class PactTab extends JJKTab {
         this.create = Button.builder(Component.translatable(String.format("gui.%s.pact.create", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.player == null || this.pact == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
             this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request_create", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
             PacketHandler.sendToServer(new QuestionCreatePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
-            cap.createPactCreationRequest(this.player.get().getProfile().getId(), this.pact.get());
+            data.createPactCreationRequest(this.player.get().getProfile().getId(), this.pact.get());
         }).size(40, 20).pos(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.create);
 
         this.remove = Button.builder(Component.translatable(String.format("gui.%s.pact.remove", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.player == null || this.pact == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
             this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request_remove", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
             PacketHandler.sendToServer(new QuestionRemovePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
-            cap.createPactRemovalRequest(this.player.get().getProfile().getId(), this.pact.get());
+            data.createPactRemovalRequest(this.player.get().getProfile().getId(), this.pact.get());
         }).size(40, 20).pos(xOffset + 176, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.remove);
 

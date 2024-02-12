@@ -9,7 +9,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
@@ -23,6 +22,7 @@ import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.command.JJKCommandArgumentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
@@ -41,9 +41,7 @@ import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 public class JujutsuKaisen {
     public static final String MOD_ID = "jujutsu_kaisen";
 
-    public JujutsuKaisen() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public JujutsuKaisen(IEventBus bus) {
         ModLoadingContext ctx = ModLoadingContext.get();
         ctx.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
         ctx.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
@@ -79,12 +77,9 @@ public class JujutsuKaisen {
 
         JJKCommandArgumentTypes.COMMAND_ARGUMENT_TYPES.register(bus);
 
-        bus.addListener(JujutsuKaisen::onCommonSetup);
-        bus.addListener(JujutsuKaisen::onClientSetup);
-    }
+        JJKAttachmentTypes.ATTACHMENT_TYPES.register(bus);
 
-    public static void onCommonSetup(FMLCommonSetupEvent event) {
-        PacketHandler.register();
+        bus.addListener(JujutsuKaisen::onClientSetup);
     }
 
     public static void onClientSetup(FMLClientSetupEvent event) {

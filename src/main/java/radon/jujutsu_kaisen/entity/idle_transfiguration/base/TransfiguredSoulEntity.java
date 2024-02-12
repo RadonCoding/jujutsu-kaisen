@@ -14,8 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
@@ -55,7 +57,15 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         LivingEntity owner = this.getOwner();
 
-        if (owner != null && pSource.getEntity() == owner && JJKAbilities.hasToggled(owner, JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+        if (owner == null) return super.hurt(pSource, pAmount);
+
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return super.hurt(pSource, pAmount);
+
+        if (pSource.getEntity() != owner) return super.hurt(pSource, pAmount);
+
+        if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
             IdleTransfiguration.absorb(owner, this);
         }
         return super.hurt(pSource, pAmount);

@@ -18,9 +18,9 @@ public abstract class EntityMixin {
 
     @Inject(method = "getTeamColor", at = @At("TAIL"), cancellable = true)
     public void getTeamColor(CallbackInfoReturnable<Integer> cir) {
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get((Entity) (Object) this);
+        ClientVisualHandler.ClientData client = ClientVisualHandler.get((Entity) (Object) this);
 
-        if (data == null || !data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+        if (client == null || !client.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
         Vector3f color = ParticleColors.getCursedEnergyColor((Entity) (Object) this);
 

@@ -14,9 +14,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -78,7 +78,11 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION) ? 0.0F : 30.0F;
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return 0.0F;
+
+        return data.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 0.0F : 30.0F;
     }
 
     public int getCooldown() {
@@ -118,6 +122,10 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public boolean onRelease(LivingEntity owner) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
         if (!owner.onGround()) return false;
 
         owner.swing(InteractionHand.MAIN_HAND);
@@ -129,9 +137,7 @@ public class Slam extends Ability implements Ability.ICharged {
             TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
         }
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        cap.delayTickEvent(() -> {
+        data.delayTickEvent(() -> {
             Vec3 target = this.getTarget(owner);
             owner.setDeltaMovement(owner.getDeltaMovement().add(target.subtract(owner.position()).normalize().scale(5.0D)));
         }, 20);

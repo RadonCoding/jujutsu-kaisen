@@ -10,7 +10,7 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.ChainOfAThousandMilesRenderer;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;

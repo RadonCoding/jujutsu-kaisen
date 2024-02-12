@@ -15,17 +15,16 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class IdleTransfiguration extends Ability implements Ability.IToggled, Ability.IAttack {
@@ -43,22 +42,24 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? ActivationType.INSTANT : ActivationType.TOGGLED;
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        return data.hasToggled(JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? ActivationType.INSTANT : ActivationType.TOGGLED;
     }
 
     public static float calculateStrength(LivingEntity entity) {
         float strength = entity.getHealth();
 
-        if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            if (entity.level().isClientSide) {
-                ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
+        if (entity.level().isClientSide) {
+            ClientVisualHandler.ClientData client = ClientVisualHandler.get(entity);
 
-                if (data != null) {
-                    strength += data.experience * 0.1F;
-                }
-            } else {
-                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                strength += cap.getExperience() * 0.1F;
+            if (client != null) {
+                strength += client.experience * 0.1F;
+            }
+        } else {
+            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data != null) {
+                strength += data.getExperience() * 0.1F;
             }
         }
         return strength;
@@ -74,16 +75,16 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     }
 
     public static boolean checkSukuna(LivingEntity owner, LivingEntity target) {
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (ownerData == null || targetData == null) return false;
 
-        if (!targetCap.hasTrait(Trait.VESSEL) || targetCap.getFingers() == 0) return false;
+        if (!targetData.hasTrait(Trait.VESSEL) || targetData.getFingers() == 0) return false;
 
-        float experience = targetCap.getFingers() * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) / 20);
+        float experience = targetData.getFingers() * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) / 20);
 
-        if (experience <= ownerCap.getExperience()) return false;
+        if (experience <= ownerData.getExperience()) return false;
 
         Cleave.perform(target, owner, null, JJKDamageSources.soulAttack(owner));
 
@@ -105,7 +106,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         target.addEffect(instance);
 
         if (!owner.level().isClientSide) {
-            PacketDistributor.TRACKING_ENTITY.with(() -> target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
+            PacketDistributor.TRACKING_ENTITY.with(target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
         }
 
         float attackerStrength = IdleTransfiguration.calculateStrength(owner);
@@ -159,10 +160,10 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if (cap.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
-            cap.toggle(JJKAbilities.SOUL_DECIMATION.get());
+        if (data.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
+            data.toggle(JJKAbilities.SOUL_DECIMATION.get());
         }
     }
 
@@ -202,6 +203,6 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public MenuType getMenuType(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? MenuType.MELEE : MenuType.RADIAL;
+        return this.getActivationType(owner) == ActivationType.INSTANT ? MenuType.MELEE : MenuType.RADIAL;
     }
 }

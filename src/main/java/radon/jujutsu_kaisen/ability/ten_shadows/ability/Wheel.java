@@ -1,18 +1,16 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsMode;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
@@ -35,14 +33,21 @@ public class Wheel extends Summon<WheelEntity> {
     }
 
     @Override
+    protected boolean isNotDisabledFromUV() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (owner instanceof MahoragaEntity) return true;
         if (target == null) return false;
 
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        if (data == null) return false;
 
         for (ICursedTechnique technique : JJKAbilities.getTechniques(target)) {
-            if (cap.isAdaptedTo(technique)) continue;
+            if (data.isAdaptedTo(technique)) continue;
 
             return true;
         }
@@ -52,10 +57,15 @@ public class Wheel extends Summon<WheelEntity> {
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        return !JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
-                cap.hasTamed(JJKEntities.MAHORAGA.get()) &&
-                (JJKAbilities.hasToggled(owner, this) || cap.getMode() == TenShadowsMode.ABILITY);
+
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        if (sorcererData == null || tenShadowsData == null) return false;
+
+        return !sorcererData.hasToggled(JJKAbilities.MAHORAGA.get()) &&
+                tenShadowsData.hasTamed(JJKEntities.MAHORAGA.get()) &&
+                (sorcererData.hasToggled(this) || tenShadowsData.getMode() == TenShadowsMode.ABILITY);
     }
 
     @Override

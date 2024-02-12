@@ -4,9 +4,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 
@@ -29,15 +29,19 @@ public class ParticleColors {
 
     public static Vector3f getCursedEnergyColor(Entity entity) {
         if (entity.level().isClientSide) {
-            ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
+            ClientVisualHandler.ClientData client = ClientVisualHandler.get(entity);
 
-            if (data == null) {
+            if (client == null) {
                 return Vec3.ZERO.toVector3f();
             }
-            return Vec3.fromRGB24(data.cursedEnergyColor).toVector3f();
+            return Vec3.fromRGB24(client.cursedEnergyColor).toVector3f();
         }
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
+
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return Vec3.ZERO.toVector3f();
+
+        return Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
     }
 
     public static Vector3f getCursedEnergyColorBright(LivingEntity entity) {

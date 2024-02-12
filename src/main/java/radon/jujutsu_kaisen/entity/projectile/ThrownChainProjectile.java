@@ -36,13 +36,13 @@ public class ThrownChainProjectile extends AbstractArrow {
     private Entity pulled;
 
     public ThrownChainProjectile(EntityType<? extends AbstractArrow> pType, Level pLevel) {
-        super(pType, pLevel);
+        super(pType, pLevel, ItemStack.EMPTY);
 
         this.noCulling = true;
     }
 
     public ThrownChainProjectile(LivingEntity pShooter, ItemStack stack) {
-        super(JJKEntities.THROWN_CHAIN.get(), pShooter, pShooter.level());
+        super(JJKEntities.THROWN_CHAIN.get(), pShooter, pShooter.level(), stack);
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
                 .add(RotationUtil.getTargetAdjustedLookAngle(pShooter));

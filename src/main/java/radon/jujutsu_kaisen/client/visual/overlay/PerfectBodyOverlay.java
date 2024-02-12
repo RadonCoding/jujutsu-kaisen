@@ -18,13 +18,11 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
-import radon.jujutsu_kaisen.client.visual.visual.PerfectBodyVisual;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
 import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -35,11 +33,11 @@ import java.util.Optional;
 
 public class PerfectBodyOverlay implements IOverlay {
     private static <T extends LivingEntity> void renderItems(T entity, HumanoidModel<T> model, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(entity);
+        Optional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(entity);
 
-        if (!optional.isPresent()) return;
+        if (optional.isEmpty()) return;
 
-        ICuriosItemHandler inventory = optional.resolve().orElseThrow();
+        ICuriosItemHandler inventory = optional.get();
 
         Optional<SlotResult> rightHand = inventory.findCurio("right_hand", 0);
         Optional<SlotResult> leftHand = inventory.findCurio("left_hand", 0);
@@ -77,26 +75,26 @@ public class PerfectBodyOverlay implements IOverlay {
         poseStack.popPose();
     }
 
-    public static boolean shouldRenderExtraArms(LivingEntity entity, ClientVisualHandler.ClientData data) {
+    public static boolean shouldRenderExtraArms(LivingEntity entity, ClientVisualHandler.ClientData client) {
         if (Minecraft.getInstance().player == entity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) return false;
 
-        for (Ability ability : data.toggled) {
+        for (Ability ability : client.toggled) {
             if (!(ability instanceof ITransformation transformation)) continue;
             if (transformation.getBodyPart() != ITransformation.Part.BODY || !transformation.isReplacement()) continue;
             return false;
         }
-        return data.traits.contains(Trait.PERFECT_BODY);
+        return client.traits.contains(Trait.PERFECT_BODY);
     }
 
     @Override
-    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        return shouldRenderExtraArms(entity, data);
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
+        return shouldRenderExtraArms(entity, client);
     }
 
     @Override
-    public <T extends LivingEntity> void render(T entity, ClientVisualHandler.ClientData data, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
+    public <T extends LivingEntity> void render(T entity, ClientVisualHandler.ClientData client, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
         VertexConsumer overlay = buffer.getBuffer(RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID,
-                String.format("textures/overlay/mouth_%d.png", data.mouth + 1))));
+                String.format("textures/overlay/mouth_%d.png", client.mouth + 1))));
         model.renderToBuffer(poseStack, overlay, packedLight, OverlayTexture.NO_OVERLAY,
                 1.0F, 1.0F, 1.0F, 1.0F);
 

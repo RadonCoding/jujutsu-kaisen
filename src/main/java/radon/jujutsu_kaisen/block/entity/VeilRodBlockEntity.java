@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
@@ -57,15 +57,13 @@ public class VeilRodBlockEntity extends BlockEntity {
         if (!(this.level instanceof ServerLevel serverLevel)) return false;
         if (this.ownerUUID == null) return false;
 
-        if (!(serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+        if (!(serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner))
             return false;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            float cost = COST * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
-
-            return cap.getEnergy() >= cost;
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            float cost = COST * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
+            return data.getEnergy() >= cost;
         }
         return true;
     }
@@ -79,20 +77,20 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         if (!pBlockEntity.isValid()) return;
 
-        if (pBlockEntity.ownerUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+        if (pBlockEntity.ownerUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner))
             return;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-            float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
+            float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
 
-            if (cap.getEnergy() < cost) return;
+            if (data.getEnergy() < cost) return;
 
-            cap.useEnergy(cost);
+            data.useEnergy(cost);
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
         }
 
@@ -123,10 +121,12 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                             if (opponent == null) continue;
 
-                            ISorcererData veilCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                            ISorcererData domainCap = opponent.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                            ISorcererData veilCasterData = owner.getData(JJKAttachmentTypes.SORCERER);
+                            ISorcererData domainCasterData = opponent.getData(JJKAttachmentTypes.SORCERER);
 
-                            if (domainCap.getAbilityPower() < veilCap.getAbilityPower()) continue;
+                            if (veilCasterData == null || domainCasterData == null) continue;
+
+                            if (domainCasterData.getAbilityPower() < veilCasterData.getAbilityPower()) continue;
 
                             if (domain.isInsideBarrier(pos)) {
                                 if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {

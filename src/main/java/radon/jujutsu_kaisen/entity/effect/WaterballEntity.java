@@ -15,8 +15,8 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -58,7 +58,8 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
     }
 
     private void createWave(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
         BlockPos center = owner.blockPosition();
 
@@ -75,7 +76,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
             int duration = (i + 1) / 2;
 
-            cap.delayTickEvent(() -> {
+            data.delayTickEvent(() -> {
                 for (int j = -HEIGHT; j < HEIGHT; j++) {
                     for (int x = -horizontal; x <= horizontal; x++) {
                         for (int z = -horizontal; z <= horizontal; z++) {

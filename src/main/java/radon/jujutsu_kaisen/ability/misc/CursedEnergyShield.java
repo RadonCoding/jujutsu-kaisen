@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 
 public class CursedEnergyShield extends Ability implements Ability.IChannelened {
@@ -35,7 +37,11 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.CURSED_ENERGY_FLOW.get()) && super.isValid(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && super.isValid(owner);
     }
 
     @Override

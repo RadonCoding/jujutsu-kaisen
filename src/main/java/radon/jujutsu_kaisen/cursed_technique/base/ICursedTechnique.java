@@ -14,8 +14,6 @@ public interface ICursedTechnique {
         return null;
     }
 
-    Ability getImbuement();
-
     Set<Ability> getAbilities();
 
     default Component getName() {

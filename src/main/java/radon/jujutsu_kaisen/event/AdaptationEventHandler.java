@@ -16,10 +16,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -30,17 +29,20 @@ import java.util.Set;
 
 public class AdaptationEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class AdaptationEventHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
+            ISorcererData sorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
+            ITenShadowsData tenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            ITenShadowsData cap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            if (sorcererData == null || tenShadowsData == null) return;
 
-            if (!cap.isAdaptedTo(event.getAbility())) {
-                cap.tryAdapt(event.getAbility());
+            if (!sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
+
+            if (!tenShadowsData.isAdaptedTo(event.getAbility())) {
+                tenShadowsData.tryAdapt(event.getAbility());
             }
         }
 
@@ -52,34 +54,37 @@ public class AdaptationEventHandler {
 
             DamageSource source = event.getSource();
 
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
+            ISorcererData sorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
+            ITenShadowsData tenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            ITenShadowsData cap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            if (sorcererData == null || tenShadowsData == null) return;
+
+            if (sorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             // Initiate / continue the adaptation process
-            if (!cap.isAdaptedTo(source)) cap.tryAdapt(source);
+            if (!tenShadowsData.isAdaptedTo(source)) tenShadowsData.tryAdapt(source);
 
-            if (victim instanceof MahoragaEntity) {
-                if (cap.isAdaptedTo(source)) {
-                    victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-                }
+            if (!(victim instanceof MahoragaEntity)) return;
 
-                float process = (1.0F - cap.getAdaptationProgress(source));
+            if (tenShadowsData.isAdaptedTo(source)) {
+                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+            }
 
-                switch (cap.getAdaptationType(source)) {
-                    case DAMAGE -> event.setAmount(event.getAmount() * process);
-                    case COUNTER -> {
-                        if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
-                            Entity attacker = source.getEntity();
+            float process = (1.0F - tenShadowsData.getAdaptationProgress(source));
 
-                            if (attacker != null) {
-                                victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
+            switch (tenShadowsData.getAdaptationType(source)) {
+                case DAMAGE -> event.setAmount(event.getAmount() * process);
+                case COUNTER -> {
+                    if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
+                        Entity attacker = source.getEntity();
 
-                                victim.swing(InteractionHand.MAIN_HAND);
+                        if (attacker != null) {
+                            victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
 
-                                if (victim.doHurtTarget(attacker)) {
-                                    victim.invulnerableTime = 0;
-                                }
+                            victim.swing(InteractionHand.MAIN_HAND);
+
+                            if (victim.doHurtTarget(attacker)) {
+                                victim.invulnerableTime = 0;
                             }
                         }
                     }
@@ -93,36 +98,39 @@ public class AdaptationEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
+
+            if (victimData == null) return;
 
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            if (!attacker.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
-            ITenShadowsData attackerCap = attacker.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData attackerSorcererData = attacker.getData(JJKAttachmentTypes.SORCERER);
+            ITenShadowsData attackerTenShadowsData = attacker.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            if (!JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get()) && JJKAbilities.hasToggled(attacker, JJKAbilities.WHEEL.get())) {
-                if (victimCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                    attackerCap.tryAdapt(JJKAbilities.INFINITY.get());
+            if (attackerSorcererData == null || attackerTenShadowsData == null) return;
+
+            if (!attackerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerSorcererData.hasToggled(JJKAbilities.WHEEL.get())) {
+                if (victimData.hasToggled(JJKAbilities.INFINITY.get())) {
+                    attackerTenShadowsData.tryAdapt(JJKAbilities.INFINITY.get());
                 }
-                if (victimCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
-                    attackerCap.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
+                if (victimData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                    attackerTenShadowsData.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
                 }
             }
 
             if (!event.isCanceled()) {
                 if (attacker instanceof MahoragaEntity) {
-                    Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+                    Set<Ability> toggled = new HashSet<>(victimData.getToggled());
 
                     for (Ability ability : toggled) {
-                        if (!attackerCap.isAdaptedTo(ability)) continue;
-                        victimCap.toggle(ability);
+                        if (!attackerTenShadowsData.isAdaptedTo(ability)) continue;
+                        victimData.toggle(ability);
                     }
 
                     if (victim instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimData.serializeNBT()), player);
                     }
                 }
             }

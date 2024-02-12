@@ -1,122 +1,161 @@
-[03Feb2024 03:58:09.743] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, 20.2.88, --assetIndex, asset-index, --assetsDir, C:\Users\Radon\.gradle\caches\minecraft\assets\1.20.2, --gameDir, ., --fml.neoForgeVersion, 20.2.88, --fml.fmlVersion, 1.0.16, --fml.mcVersion, 1.20.2, --fml.neoFormVersion, 20231019.002635]
-[03Feb2024 03:58:09.745] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.9 by Amazon.com Inc.; OS Windows 11 arch amd64 version 10.0
-[03Feb2024 03:58:09.825] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
-[03Feb2024 03:58:09.882] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
-[03Feb2024 03:58:09.934] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
-[03Feb2024 03:58:09.981] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/C:/Users/Radon/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23114!/ Service=ModLauncher Env=CLIENT
-[03Feb2024 03:58:10.007] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: AMD Radeon RX 6700 XT GL version 4.6.0 Core Profile Context 22.20.27.09.230823, ATI Technologies Inc.
-[03Feb2024 03:58:10.133] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Radon\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-minecraft\1.0.16\c1f7785ff7fc0b18aa6d2d4056dcff4fee1b32be\language-minecraft-1.0.16.jar is missing mods.toml file
-[03Feb2024 03:58:10.135] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Radon\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\core\1.0.16\6bab0913ca1635a8e272ef89c17befb52115a3c2\core-1.0.16.jar is missing mods.toml file
-[03Feb2024 03:58:10.137] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Radon\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-lowcode\1.0.16\e627c78870d4286826c4b14c0137319ff03b4e0\language-lowcode-1.0.16.jar is missing mods.toml file
-[03Feb2024 03:58:10.138] [main/WARN] [net.neoforged.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Radon\.gradle\caches\modules-2\files-2.1\net.neoforged.fancymodloader\language-java\1.0.16\2ddedcd8a488fd73e3e92a59949845e9c3a7d9f2\language-java-1.0.16.jar is missing mods.toml file
-[03Feb2024 03:58:10.147] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-minecraft-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@350b3a17
-[03Feb2024 03:58:10.147] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "core-1.0.16.jar" of type LIBRARY with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@350b3a17
-[03Feb2024 03:58:10.148] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-lowcode-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@350b3a17
-[03Feb2024 03:58:10.148] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "language-java-1.0.16.jar" of type LANGPROVIDER with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@350b3a17
-[03Feb2024 03:58:10.148] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "neoforge-20.2.88.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@350b3a17
-[03Feb2024 03:58:10.148] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "main" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@350b3a17
-[03Feb2024 03:58:10.148] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@350b3a17
-[03Feb2024 03:58:10.165] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "geckolib-neoforge-1.20.2-4.3.1.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@53b98ff6
-[03Feb2024 03:58:10.165] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "curios-neoforge-6.1.0+1.20.2.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@53b98ff6
-[03Feb2024 03:58:10.165] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "geckolib-neoforge-1.20.2-4.3.1.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@53b98ff6
-[03Feb2024 03:58:10.165] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "curios-neoforge-6.1.0+1.20.2.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@53b98ff6
-[03Feb2024 03:58:10.168] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "events-1.0.16.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.BuiltinGameLibraryLocator@99a65d3
-[03Feb2024 03:58:10.242] [main/INFO] [net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
-[03Feb2024 03:58:10.244] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "mixinextras-neoforge-0.3.1.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator@6f63c44f
-[03Feb2024 03:58:10.244] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "mclib-20.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator@6f63c44f
-[03Feb2024 03:58:11.010] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
-[03Feb2024 03:58:11.014] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, 20.2.88, --gameDir, ., --assetsDir, C:\Users\Radon\.gradle\caches\minecraft\assets\1.20.2, --assetIndex, asset-index]
-[03Feb2024 03:58:11.065] [main/WARN] [mixin/]: Reference map 'jujutsu_kaisen.refmap.json' for jujutsu_kaisen.mixins.json could not be read. If this is a development environment you can ignore this message
-[03Feb2024 03:58:11.066] [main/WARN] [mixin/]: Reference map 'curios.refmap.json' for curios.mixins.json could not be read. If this is a development environment you can ignore this message
-[03Feb2024 03:58:11.317] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.3.1).
-[03Feb2024 03:58:13.981] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 192 Datafixer optimizations took 104 milliseconds
-[03Feb2024 03:58:15.070] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Radon/Desktop/dev/jujutsu-kaisen/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.2.88/neoforge-20.2.88.jar%23192!/assets/.mcassetsroot' uses unexpected schema
-[03Feb2024 03:58:15.070] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Radon/Desktop/dev/jujutsu-kaisen/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.2.88/neoforge-20.2.88.jar%23192!/data/.mcassetsroot' uses unexpected schema
-[03Feb2024 03:58:15.089] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[accountsHost=https://api.mojang.com, sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
-[03Feb2024 03:58:15.104] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
-[03Feb2024 03:58:15.204] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.2+13
-[03Feb2024 03:58:15.377] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 20.2.88, for MC 1.20.2 with MCP 20231019.002635
-[03Feb2024 03:58:16.264] [Render thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
-[03Feb2024 03:58:16.488] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
-[03Feb2024 03:58:16.693] [Worker-Main-8/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
-[03Feb2024 03:58:17.106] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/domain_air.json' missing model for variant: 'jujutsu_kaisen:domain_air#'
-[03Feb2024 03:58:17.107] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=15'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=14'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=13'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=12'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=9'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=11'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=10'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=7'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=8'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=5'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=6'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=3'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=4'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=1'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=2'
-[03Feb2024 03:58:17.108] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=0'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=10'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=11'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=12'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=13'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=14'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=15'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=9'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=8'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=7'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=6'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=5'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=4'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=3'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=2'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=1'
-[03Feb2024 03:58:17.109] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=0'
-[03Feb2024 03:58:17.110] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:gun#inventory' referenced from: jujutsu_kaisen:gun#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/gun.json
-[03Feb2024 03:58:17.114] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:instant_body_of_distorted_killing#inventory' referenced from: jujutsu_kaisen:instant_body_of_distorted_killing#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/instant_body_of_distorted_killing.json
-[03Feb2024 03:58:17.116] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:wings#inventory' referenced from: jujutsu_kaisen:wings#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/wings.json
-[03Feb2024 03:58:17.119] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:arm_blade#inventory' referenced from: jujutsu_kaisen:arm_blade#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/arm_blade.json
-[03Feb2024 03:58:17.120] [Worker-Main-5/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:horse_legs#inventory' referenced from: jujutsu_kaisen:horse_legs#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/horse_legs.json
-[03Feb2024 03:58:17.772] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
-[03Feb2024 03:58:17.772] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[03Feb2024 03:58:17.790] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on Headset Earphone (HyperX Virtual Surround Sound)
-[03Feb2024 03:58:17.790] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
-[03Feb2024 03:58:17.842] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/blocks.png-atlas
-[03Feb2024 03:58:17.846] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
-[03Feb2024 03:58:17.847] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[03Feb2024 03:58:17.847] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[03Feb2024 03:58:17.848] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
-[03Feb2024 03:58:17.853] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
-[03Feb2024 03:58:17.853] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[03Feb2024 03:58:17.853] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[03Feb2024 03:58:17.853] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[03Feb2024 03:58:17.941] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[03Feb2024 03:58:17.982] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
-[03Feb2024 03:58:17.982] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[03Feb2024 03:58:17.983] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x128x0 minecraft:textures/atlas/mob_effects.png-atlas
-[03Feb2024 03:58:17.983] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
-[03Feb2024 03:59:15.881] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
-[03Feb2024 03:59:15.944] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1281 advancements
-[03Feb2024 03:59:15.949] [Render thread/INFO] [top.theillusivec4.curios.Curios/]: Loaded 12 curio slots
-[03Feb2024 03:59:15.951] [Render thread/INFO] [top.theillusivec4.curios.Curios/]: Loaded 2 curio entities
-[03Feb2024 03:59:15.956] [Render thread/WARN] [net.minecraft.core.MappedRegistry/]: Not all defined tags for registry ResourceKey[minecraft:root / minecraft:worldgen/biome] are present in data pack: neoforge:is_mountain, neoforge:no_mob_spawns
-[03Feb2024 03:59:16.210] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.2
-[03Feb2024 03:59:16.210] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
-[03Feb2024 03:59:16.764] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
-[03Feb2024 03:59:18.328] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[03Feb2024 03:59:18.328] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[03Feb2024 03:59:18.328] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[03Feb2024 03:59:18.328] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[03Feb2024 03:59:18.725] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
-[03Feb2024 03:59:18.732] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1957 ms
-[03Feb2024 03:59:18.819] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
-[03Feb2024 03:59:18.820] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
-[03Feb2024 03:59:19.395] [Netty Server IO #1/WARN] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Unknown custom packet payload: minecraft:brand
-[03Feb2024 03:59:19.432] [Render thread/INFO] [net.neoforged.neoforge.network.NetworkHooks/]: Connected to a modded server.
-[03Feb2024 03:59:19.470] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:e7f164de] logged in with entity id 1271 at (-6569.321865673208, 107.2130506768148, 43.000523572165044)
-[03Feb2024 03:59:19.518] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
-[03Feb2024 03:59:20.388] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 20 advancements
-[03Feb2024 04:00:36.076] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
-[03Feb2024 04:00:36.089] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
-[03Feb2024 04:00:36.096] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
-[03Feb2024 04:00:36.096] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[12Feb2024 04:45:47.390] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, 20.4.159-beta, --assetIndex, asset-index, --assetsDir, C:\Users\Radon\.gradle\caches\minecraft\assets\1.20.4, --gameDir, ., --fml.neoForgeVersion, 20.4.159-beta, --fml.fmlVersion, 2.0.11, --fml.mcVersion, 1.20.4, --fml.neoFormVersion, 20231207.154220]
+[12Feb2024 04:45:47.394] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.9 by Amazon.com Inc.; OS Windows 11 arch amd64 version 10.0
+[12Feb2024 04:45:47.475] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[12Feb2024 04:45:47.536] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[12Feb2024 04:45:47.598] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
+[12Feb2024 04:45:47.657] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/C:/Users/Radon/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23113!/ Service=ModLauncher Env=CLIENT
+[12Feb2024 04:45:47.677] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: AMD Radeon RX 6700 XT GL version 4.6.0 Core Profile Context 22.20.27.09.230823, ATI Technologies Inc.
+[12Feb2024 04:45:47.810] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "neoforge-20.4.159-beta.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@5fa47fea
+[12Feb2024 04:45:47.810] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "main" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@5fa47fea
+[12Feb2024 04:45:47.810] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "" of type MOD with provider net.neoforged.fml.loading.moddiscovery.MinecraftLocator@5fa47fea
+[12Feb2024 04:45:47.828] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "geckolib-neoforge-1.20.4-4.4.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@4925f4f5
+[12Feb2024 04:45:47.828] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "curios-neoforge-7.3.0+1.20.4.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@4925f4f5
+[12Feb2024 04:45:47.828] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "geckolib-neoforge-1.20.4-4.4.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@4925f4f5
+[12Feb2024 04:45:47.828] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "curios-neoforge-7.3.0+1.20.4.jar" of type MOD with provider net.neoforged.fml.loading.moddiscovery.ClasspathLocator@4925f4f5
+[12Feb2024 04:45:47.917] [main/INFO] [net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[12Feb2024 04:45:47.918] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "mclib-20.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator@4fe01805
+[12Feb2024 04:45:47.918] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file "mixinextras-neoforge-0.3.5.jar" of type GAMELIBRARY with provider net.neoforged.fml.loading.moddiscovery.JarInJarDependencyLocator@4fe01805
+[12Feb2024 04:45:48.714] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[12Feb2024 04:45:48.720] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, 20.4.159-beta, --gameDir, ., --assetsDir, C:\Users\Radon\.gradle\caches\minecraft\assets\1.20.4, --assetIndex, asset-index]
+[12Feb2024 04:45:48.771] [main/WARN] [mixin/]: Reference map 'jujutsu_kaisen.refmap.json' for jujutsu_kaisen.mixins.json could not be read. If this is a development environment you can ignore this message
+[12Feb2024 04:45:48.774] [main/WARN] [mixin/]: Reference map 'curios.refmap.json' for curios.neoforge.mixins.json could not be read. If this is a development environment you can ignore this message
+[12Feb2024 04:45:48.775] [main/WARN] [mixin/]: Reference map 'curios.refmap.json' for curios.mixins.json could not be read. If this is a development environment you can ignore this message
+[12Feb2024 04:45:49.016] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.3.5).
+[12Feb2024 04:45:51.805] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 198 Datafixer optimizations took 91 milliseconds
+[12Feb2024 04:45:53.289] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12Feb2024 04:45:53.290] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12Feb2024 04:45:53.291] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[12Feb2024 04:45:53.292] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[12Feb2024 04:45:53.293] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12Feb2024 04:45:53.362] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Radon/Desktop/dev/jujutsu-kaisen/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.4.159-beta/neoforge-20.4.159-beta.jar%23192!/assets/.mcassetsroot' uses unexpected schema
+[12Feb2024 04:45:53.362] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Radon/Desktop/dev/jujutsu-kaisen/.gradle/repositories/ng_dummy_ng/net/neoforged/neoforge/20.4.159-beta/neoforge-20.4.159-beta.jar%23192!/data/.mcassetsroot' uses unexpected schema
+[12Feb2024 04:45:53.386] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[12Feb2024 04:45:53.390] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[12Feb2024 04:45:53.448] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.2+13
+[12Feb2024 04:45:53.647] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 20.4.159-beta, for MC 1.20.4 with MCP 20231207.154220
+[12Feb2024 04:45:54.357] [Render thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
+[12Feb2024 04:45:54.530] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, mod:jujutsu_kaisen, mod:curios, mod:geckolib, mod:neoforge
+[12Feb2024 04:45:54.701] [Worker-Main-11/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.1.04.hex, loading
+[12Feb2024 04:45:55.227] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/domain_air.json' missing model for variant: 'jujutsu_kaisen:domain_air#'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/horizon_of_the_datativating_skandha_fill.json' missing model for variant: 'jujutsu_kaisen:horizon_of_the_datativating_skandha_fill#'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=15'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=14'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=13'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=12'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=9'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=11'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=10'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=7'
+[12Feb2024 04:45:55.228] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=8'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=5'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=6'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=3'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=4'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=1'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=2'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_duration.json' missing model for variant: 'jujutsu_kaisen:fake_water_duration#level=0'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=10'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=11'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=12'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=13'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=14'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=15'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=9'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=8'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=7'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=6'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=5'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=4'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=3'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=2'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=1'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Exception loading blockstate definition: 'jujutsu_kaisen:blockstates/fake_water_domain.json' missing model for variant: 'jujutsu_kaisen:fake_water_domain#level=0'
+[12Feb2024 04:45:55.229] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:gun#inventory' referenced from: jujutsu_kaisen:gun#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/gun.json
+[12Feb2024 04:45:55.230] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:instant_body_of_distorted_killing#inventory' referenced from: jujutsu_kaisen:instant_body_of_distorted_killing#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/instant_body_of_distorted_killing.json
+[12Feb2024 04:45:55.230] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:wings#inventory' referenced from: jujutsu_kaisen:wings#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/wings.json
+[12Feb2024 04:45:55.232] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:arm_blade#inventory' referenced from: jujutsu_kaisen:arm_blade#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/arm_blade.json
+[12Feb2024 04:45:55.232] [Worker-Main-14/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'jujutsu_kaisen:horse_legs#inventory' referenced from: jujutsu_kaisen:horse_legs#inventory: java.io.FileNotFoundException: jujutsu_kaisen:models/item/horse_legs.json
+[12Feb2024 04:45:55.850] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[12Feb2024 04:45:55.850] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[12Feb2024 04:45:55.882] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on Headset Earphone (HyperX Virtual Surround Sound)
+[12Feb2024 04:45:55.883] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[12Feb2024 04:45:55.941] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/blocks.png-atlas
+[12Feb2024 04:45:55.946] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[12Feb2024 04:45:55.946] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[12Feb2024 04:45:55.947] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[12Feb2024 04:45:55.949] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[12Feb2024 04:45:55.956] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[12Feb2024 04:45:55.956] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[12Feb2024 04:45:55.956] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[12Feb2024 04:45:55.956] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[12Feb2024 04:45:56.054] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[12Feb2024 04:45:56.090] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[12Feb2024 04:45:56.091] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[12Feb2024 04:45:56.091] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[12Feb2024 04:45:56.091] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[12Feb2024 04:45:59.871] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[12Feb2024 04:45:59.955] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1281 advancements
+[12Feb2024 04:45:59.958] [Render thread/INFO] [Curios API/]: Loaded 12 curio slots
+[12Feb2024 04:45:59.959] [Render thread/INFO] [Curios API/]: Loaded 2 curio entities
+[12Feb2024 04:45:59.961] [Render thread/WARN] [net.minecraft.core.MappedRegistry/]: Not all defined tags for registry ResourceKey[minecraft:root / minecraft:worldgen/biome] are present in data pack: neoforge:is_mountain, neoforge:no_mob_spawns
+[12Feb2024 04:46:00.234] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.4
+[12Feb2024 04:46:00.234] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[12Feb2024 04:46:00.829] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[12Feb2024 04:46:02.020] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[12Feb2024 04:46:02.040] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[12Feb2024 04:46:02.040] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[12Feb2024 04:46:02.348] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[12Feb2024 04:46:02.781] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[12Feb2024 04:46:02.786] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1949 ms
+[12Feb2024 04:46:02.832] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
+[12Feb2024 04:46:02.832] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
+[12Feb2024 04:46:03.228] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:bdeb81fb] logged in with entity id 817 at (-522.8351970184311, 63.0, 66.09770284969251)
+[12Feb2024 04:46:03.280] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[12Feb2024 04:46:03.467] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 11 advancements
+[12Feb2024 04:46:12.633] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[12Feb2024 04:46:12.646] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[12Feb2024 04:46:12.672] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[12Feb2024 04:46:12.683] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[12Feb2024 04:46:13.582] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[12Feb2024 04:46:13.593] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[12Feb2024 04:46:13.603] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[12Feb2024 04:46:13.607] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[12Feb2024 04:46:14.144] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: Disconnected
+[12Feb2024 04:46:14.144] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev left the game
+[12Feb2024 04:46:14.166] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
+[12Feb2024 04:46:14.182] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[12Feb2024 04:46:14.182] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[12Feb2024 04:46:14.182] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[12Feb2024 04:46:14.519] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[12Feb2024 04:46:15.087] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[12Feb2024 04:46:15.091] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[12Feb2024 04:46:15.102] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (New World): All chunks are saved
+[12Feb2024 04:46:15.102] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[12Feb2024 04:46:15.102] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[12Feb2024 04:46:15.102] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[12Feb2024 04:46:16.155] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[12Feb2024 04:46:16.177] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1281 advancements
+[12Feb2024 04:46:16.178] [Render thread/INFO] [Curios API/]: Loaded 12 curio slots
+[12Feb2024 04:46:16.179] [Render thread/INFO] [Curios API/]: Loaded 2 curio entities
+[12Feb2024 04:46:16.180] [Render thread/WARN] [net.minecraft.core.MappedRegistry/]: Not all defined tags for registry ResourceKey[minecraft:root / minecraft:worldgen/biome] are present in data pack: neoforge:is_mountain, neoforge:no_mob_spawns
+[12Feb2024 04:46:16.388] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.4
+[12Feb2024 04:46:16.388] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[12Feb2024 04:46:16.748] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[12Feb2024 04:46:17.142] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[12Feb2024 04:46:17.271] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[12Feb2024 04:46:17.784] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 20%
+[12Feb2024 04:46:17.891] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[12Feb2024 04:46:17.897] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
+[12Feb2024 04:46:17.897] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
+[12Feb2024 04:46:17.930] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1177 ms
+[12Feb2024 04:46:18.091] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:92e6b3bd] logged in with entity id 33595 at (-533.3179164240046, 63.0, 66.89958239602392)
+[12Feb2024 04:46:18.099] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[12Feb2024 04:46:18.259] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 11 advancements
+[12Feb2024 04:46:18.493] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[12Feb2024 04:46:18.502] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[12Feb2024 04:46:18.719] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[12Feb2024 04:46:18.728] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[12Feb2024 04:46:23.943] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[12Feb2024 04:46:23.952] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[12Feb2024 04:46:23.960] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[12Feb2024 04:46:23.965] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether

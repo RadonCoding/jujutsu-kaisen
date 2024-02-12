@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -11,9 +10,10 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsMode;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class NueLightning extends Ability implements Ability.IToggled, Ability.IAttack {
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 5.0F;
     private static final int STUN = 20;
 
     @Override
@@ -34,10 +34,15 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        return !JJKAbilities.hasToggled(owner, JJKAbilities.NUE.get()) &&
-                cap.hasTamed(JJKEntities.NUE.get()) &&
-                cap.getMode() == TenShadowsMode.ABILITY;
+
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        if (sorcererData == null || tenShadowsData == null) return false;
+
+        return !sorcererData.hasToggled(JJKAbilities.NUE.get()) &&
+                tenShadowsData.hasTamed(JJKEntities.NUE.get()) &&
+                tenShadowsData.getMode() == TenShadowsMode.ABILITY;
     }
 
     @Override

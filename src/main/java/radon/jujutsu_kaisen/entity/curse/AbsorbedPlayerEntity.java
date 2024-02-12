@@ -11,7 +11,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;

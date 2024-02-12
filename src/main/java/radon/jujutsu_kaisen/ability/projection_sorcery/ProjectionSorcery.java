@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -24,11 +25,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.projection_sorcery.IProjectionSorceryData;
-import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryData;
-import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.client.particle.ProjectionParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -55,7 +54,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
 
-        if (JJKAbilities.isChanneling(owner, this)) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
         }
         return HelperMethods.RANDOM.nextInt(5) == 0;
@@ -90,9 +93,9 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IProjectionSorceryData cap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
+        IProjectionSorceryData data = owner.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
 
-        List<AbstractMap.SimpleEntry<Vec3, Float>> frames = cap.getFrames();
+        List<AbstractMap.SimpleEntry<Vec3, Float>> frames = data.getFrames();
 
         if (frames.size() == 24) return;
 
@@ -120,7 +123,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             if (frames.size() + 1 < 24) {
                 Vec3 middle = current.add(next.subtract(current).scale(0.5D));
                 float middleYaw = getYaw(middle, next);
-                cap.addFrame(middle, middleYaw);
+                data.addFrame(middle, middleYaw);
 
                 if (owner instanceof ServerPlayer player) {
                     ParticleUtil.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), false, middle.x, middle.y, middle.z,
@@ -130,7 +133,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         } else {
             nextYaw = owner.getYRot();
         }
-        cap.addFrame(next, nextYaw);
+        data.addFrame(next, nextYaw);
 
         if (owner instanceof ServerPlayer player) {
             ParticleUtil.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), false, next.x, next.y, next.z,
@@ -149,7 +152,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     }
 
     private static boolean isGrounded(Level level, BlockPos pos) {
-        BlockHitResult hit = level.clip(new ClipContext(pos.getCenter(), pos.below(24).getCenter(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
+        BlockHitResult hit = level.clip(new ClipContext(pos.getCenter(), pos.below(24).getCenter(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty()));
         return hit.getType() == HitResult.Type.BLOCK;
     }
 
@@ -157,12 +160,14 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void onStop(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        IProjectionSorceryData projectionSorceryCap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        IProjectionSorceryData projectionSorceryData = owner.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
 
-        List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(projectionSorceryCap.getFrames());
+        if (sorcererData == null || projectionSorceryData == null) return;
 
-        projectionSorceryCap.resetFrames();
+        List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(projectionSorceryData.getFrames());
+
+        projectionSorceryData.resetFrames();
 
         if (frames.size() < 24) {
             return;
@@ -177,14 +182,14 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             Vec3 frame = entry.getKey();
             float yaw = entry.getValue();
 
-            sorcererCap.delayTickEvent(() -> {
+            sorcererData.delayTickEvent(() -> {
                 if (cancelled.get()) return;
 
                 owner.walkAnimation.setSpeed(2.0F);
 
                 boolean isOnGround = isGrounded(owner.level(), owner.blockPosition()) || (previous.get() != null && isGrounded(owner.level(), BlockPos.containing(previous.get())));
 
-                if ((!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 24.0D * (projectionSorceryCap.getSpeedStacks() + 1)) {
+                if ((!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 24.0D * (projectionSorceryData.getSpeedStacks() + 1)) {
                     cancelled.set(true);
 
                     owner.level().addFreshEntity(new ProjectionFrameEntity(owner, owner, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
@@ -224,11 +229,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 previous.set(frame);
             }, delay++);
         }
-        projectionSorceryCap.addSpeedStack();
+        projectionSorceryData.addSpeedStack();
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ProjectionSorceryForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();
@@ -238,11 +243,9 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
             if (victim.level().isClientSide) return;
 
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            IProjectionSorceryData data = attacker.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
 
-            IProjectionSorceryData cap = attacker.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (cap.getSpeedStacks() == 0) return;
+            if (data.getSpeedStacks() == 0) return;
 
             float speed = attacker.walkDist - attacker.walkDistO;
 

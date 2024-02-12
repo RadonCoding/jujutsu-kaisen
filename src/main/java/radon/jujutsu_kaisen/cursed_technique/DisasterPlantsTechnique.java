@@ -15,11 +15,6 @@ public class DisasterPlantsTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.DISASTER_PLANTS_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.FOREST_PLATFORM.get(),
                 JJKAbilities.FOREST_SPIKES.get(),

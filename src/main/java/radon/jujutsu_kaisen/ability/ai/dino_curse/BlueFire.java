@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.ai.dino_curse;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,20 +8,18 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.client.particle.FireParticle;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.curse.DinoCurseEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.MaxElephantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -47,8 +44,10 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
         if (owner.isVehicle()) {
-            return JJKAbilities.isChanneling(owner, this);
+            return data.isChanneling(this);
         }
         return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && RotationUtil.hasLineOfSight(calculateSpawnPos(owner), owner, target);
     }

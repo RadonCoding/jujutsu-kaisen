@@ -7,21 +7,18 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
-
-import java.util.Collection;
 
 // Attack non-sorcerers
 public class SuguruGetoEntity extends SorcererEntity {
@@ -53,18 +50,23 @@ public class SuguruGetoEntity extends SorcererEntity {
     @Nullable
     private AbsorbedCurse createCurse(EntityType<?> type) {
         if (!(type.create(this.level()) instanceof CursedSpirit curse)) return null;
-        ISorcererData cap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return new AbsorbedCurse(type.getDescription(), type, cap.serializeNBT());
+
+        ISorcererData data = curse.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return null;
+
+        return new AbsorbedCurse(type.getDescription(), type, data.serializeNBT());
     }
 
     private void tryAddCurse(EntityType<?> type) {
-        ICurseManipulationData cap = this.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData data = this.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+
 
         AbsorbedCurse curse = this.createCurse(type);
 
         if (curse == null) return;
 
-        cap.addCurse(curse);
+        data.addCurse(curse);
     }
 
     @Override

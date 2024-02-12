@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.event;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -18,8 +16,8 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
@@ -30,7 +28,7 @@ import java.util.List;
 
 public class MobEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class MobEventHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
@@ -81,23 +79,25 @@ public class MobEventHandler {
 
             if (victim.level().isClientSide) return;
 
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
             DamageSource source = event.getSource();
 
-            if (victim instanceof ISorcerer sorcerer && sorcerer.canChant()) {
-                if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                    if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
-                    }
+            if (!(victim instanceof ISorcerer sorcerer) || !sorcerer.canChant()) return;
 
-                    if (!JJKAbilities.isChanneling(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
-                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
-                    }
+            if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
 
-                    if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                        if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                            AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                        }
-                    }
+            if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
+            }
+
+            if (!data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
+                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
+            }
+
+            if (source instanceof JJKDamageSources.JujutsuDamageSource) {
+                if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }
         }
@@ -108,7 +108,7 @@ public class MobEventHandler {
 
             LivingEntity owner = event.getEntity();
 
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
             // Sukuna has multiple arms
             if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {
@@ -118,9 +118,9 @@ public class MobEventHandler {
             // Making mobs use chants
             if (owner.level() instanceof ServerLevel level) {
                 if (owner instanceof Mob) {
-                    List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
+                    List<String> chants = new ArrayList<>(data.getFirstChants(ability));
 
-                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * cap.getMaximumOutput()))) == 0) {
+                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * data.getMaximumOutput()))) == 0) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ServerChantHandler.onChant(owner, chants.get(i));
 

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 public interface IOverlay {
-    boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data);
+    boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client);
 
-    <T extends LivingEntity> void render(T entity, ClientVisualHandler.ClientData data, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight);
+    <T extends LivingEntity> void render(T entity, ClientVisualHandler.ClientData client, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight);
 }

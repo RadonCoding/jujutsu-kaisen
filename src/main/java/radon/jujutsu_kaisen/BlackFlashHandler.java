@@ -1,11 +1,9 @@
 package radon.jujutsu_kaisen;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -14,16 +12,15 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.ClearChantsC2SPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -33,7 +30,7 @@ import java.util.*;
 
 public class BlackFlashHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class BlackFlashHandlerForgeEvents {
+    public static class ForgeEvents {
         private static final float MAX_DAMAGE = 50.0F;
         private static final int CLEAR_INTERVAL = 5 * 20;
 
@@ -85,31 +82,30 @@ public class BlackFlashHandler {
 
             if (!DamageUtil.isMelee(source)) return;
 
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             if (attacker instanceof ISorcerer sorcerer && !sorcerer.hasArms()) return;
 
-            if (SorcererUtil.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal() ||
-                    (!(source instanceof JJKDamageSources.JujutsuDamageSource) && !cap.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !cap.hasToggled(JJKAbilities.BLUE_FISTS.get()))) return;
+            ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+
+            if (SorcererUtil.getGrade(data.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal() ||
+                    (!(source instanceof JJKDamageSources.JujutsuDamageSource) && !data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !data.hasToggled(JJKAbilities.BLUE_FISTS.get()))) return;
 
             int combo = COMBOS.getOrDefault(attacker.getUUID(), 0);
             COMBOS.put(attacker.getUUID(), ++combo);
             TIMERS.put(attacker.getUUID(), CLEAR_INTERVAL);
 
-            if (HelperMethods.RANDOM.nextInt(Math.max(1, ConfigHolder.SERVER.blackFlashChance.get() / (cap.isInZone() ? 2 : 1) - combo)) != 0) return;
+            if (HelperMethods.RANDOM.nextInt(Math.max(1, ConfigHolder.SERVER.blackFlashChance.get() / (data.isInZone() ? 2 : 1) - combo)) != 0) return;
 
             COMBOS.remove(attacker.getUUID());
 
-            long lastBlackFlashTime = cap.getLastBlackFlashTime();
+            long lastBlackFlashTime = data.getLastBlackFlashTime();
             int seconds = (int) (attacker.level().getGameTime() - lastBlackFlashTime) / 20;
 
             if (lastBlackFlashTime != 0 && seconds <= 1) return;
 
-            cap.onBlackFlash();
+            data.onBlackFlash();
 
             if (attacker instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
 
             event.setAmount(Math.min(MAX_DAMAGE, (float) Math.pow(event.getAmount(), 2.5D)));

@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -226,14 +226,14 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
         int result = PLAYFUL_CLOUD;
 
-        if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent() || target.getArmorCoverPercentage() > 0) {
+        if (target.getArmorCoverPercentage() > 0) {
             result = SPLIT_SOUL_KATANA;
         }
 
-        if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
 
-            for (Ability toggled : cap.getToggled()) {
+        if (data != null) {
+            for (Ability toggled : data.getToggled()) {
                 if (toggled.isTechnique()) {
                     result = INVERTED_SPEAR_OF_HEAVEN;
                     break;

@@ -11,8 +11,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityWidget;
 
@@ -69,9 +69,10 @@ public class AbilityTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
-        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.ability.points", JujutsuKaisen.MOD_ID), cap.getPoints()),
+
+        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.ability.points", JujutsuKaisen.MOD_ID), data.getPoints()),
                 xOffset, yOffset, 16777215, true);
     }
 

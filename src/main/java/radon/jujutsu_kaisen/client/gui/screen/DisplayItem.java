@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
 import java.util.AbstractMap;

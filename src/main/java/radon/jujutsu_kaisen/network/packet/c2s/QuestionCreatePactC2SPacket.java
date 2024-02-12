@@ -8,16 +8,20 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Pact;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class QuestionCreatePactC2SPacket {
+public class QuestionCreatePactC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "question_create_pact_serverbound");
+
     private final UUID identifier;
     private final Pact pact;
 
@@ -30,19 +34,13 @@ public class QuestionCreatePactC2SPacket {
         this(buf.readUUID(), buf.readEnum(Pact.class));
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUUID(this.identifier);
-        buf.writeEnum(this.pact);
-    }
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
+            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
 
-            if (sender == null) return;
-
-            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.createPactCreationRequest(this.identifier, this.pact);
+            data.createPactCreationRequest(this.identifier, this.pact);
 
             Player player = sender.serverLevel().getPlayerByUUID(this.identifier);
 
@@ -64,6 +62,16 @@ public class QuestionCreatePactC2SPacket {
                 player.sendSystemMessage(message);
             }
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeUUID(this.identifier);
+        pBuffer.writeEnum(this.pact);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

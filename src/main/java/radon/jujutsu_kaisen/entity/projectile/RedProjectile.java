@@ -16,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -122,8 +122,6 @@ public class RedProjectile extends JujutsuProjectile {
             } else if (this.getTime() >= DELAY) {
                 if (!this.level().isClientSide) {
                     if (this.chanted) {
-                        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
                         for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
                             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                                 if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner) != Ability.Status.SUCCESS) {
@@ -132,7 +130,8 @@ public class RedProjectile extends JujutsuProjectile {
                             }
 
                             if (owner instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
                             }
                             HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
                             this.level().addFreshEntity(explosion);

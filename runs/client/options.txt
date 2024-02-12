@@ -1,4 +1,4 @@
-version:3578
+version:3700
 autoJump:false
 operatorItemsTab:false
 autoSuggestions:true
@@ -21,6 +21,7 @@ toggleCrouch:false
 toggleSprint:false
 darkMojangStudiosBackground:false
 hideLightningFlashes:false
+hideSplashTexts:false
 mouseSensitivity:0.5
 fov:0.0
 screenEffectScale:1.0
@@ -130,7 +131,7 @@ key_key.jujutsu_kaisen.dash:key.keyboard.g
 key_key.jujutsu_kaisen.open_jujutsu_menu:key.keyboard.p
 key_key.jujutsu_kaisen.increase_output:key.keyboard.up
 key_key.jujutsu_kaisen.decrease_output:key.keyboard.down
-key_key.curios.open.desc:key.keyboard.unknown
+key_key.curios.open.desc:key.keyboard.g
 soundCategory_master:0.0
 soundCategory_music:0.0
 soundCategory_record:1.0

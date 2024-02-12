@@ -9,13 +9,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PlayerRideable;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -63,8 +63,16 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
-                !JJKAbilities.hasToggled(owner, JJKAbilities.EMBER_INSECT_FLIGHT.get()) || !this.isPassenger())) {
+        if (!this.level().isClientSide && owner != null) {
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.hasToggled(JJKAbilities.EMBER_INSECT_FLIGHT.get())) {
+                this.discard();
+                return;
+            }
+        }
+
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !this.isPassenger())) {
             this.discard();
         } else {
             super.tick();

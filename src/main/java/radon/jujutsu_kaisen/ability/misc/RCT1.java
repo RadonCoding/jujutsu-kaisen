@@ -7,9 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 
@@ -59,8 +59,11 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean canUnlock(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.SORCERER && super.canUnlock(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return false;
+
+        return data.getType() == JujutsuType.SORCERER && super.canUnlock(owner);
     }
 
     @Nullable
@@ -81,5 +84,16 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     protected int getMultiplier() {
         return 2;
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        if (data.getType() == JujutsuType.CURSE) return false;
+
+        return super.isValid(owner);
     }
 }

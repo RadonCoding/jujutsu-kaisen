@@ -79,7 +79,10 @@ public class ExplosionHandler {
 
             float diameter = explosion.radius * 2.0F;
 
-            Explosion current = new Explosion(event.level, explosion.instigator, 0.0D, 0.0D, 0.0D, 0.0F, List.of());
+            float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
+
+            Explosion current = new Explosion(event.level, explosion.instigator, explosion.position.x, explosion.position.y, explosion.position.z,
+                    radius, explosion.fire, Explosion.BlockInteraction.DESTROY);
 
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.x, explosion.position.y, explosion.position.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, diameter, 1.0F);
@@ -106,7 +109,7 @@ public class ExplosionHandler {
                 for (Entity entity : entities) {
                     if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && entity == explosion.instigator) continue;
 
-                    if (entity.ignoreExplosion()) continue;
+                    if (entity.ignoreExplosion(current)) continue;
 
                     double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
 
@@ -144,7 +147,6 @@ public class ExplosionHandler {
             if (explosion.instigator instanceof Player || event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
 
-                float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
                 int minX = Mth.floor(explosion.position.x - radius - 1.0F);
                 int maxX = Mth.floor(explosion.position.x + radius + 1.0F);
                 int minY = Mth.floor(explosion.position.y - radius - 1.0F);

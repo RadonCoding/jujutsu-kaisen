@@ -9,15 +9,15 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -31,7 +31,11 @@ import java.util.Optional;
 public class CuriosEventHandler {
     @SubscribeEvent
     public static void onCuriosEquip(CurioEquipEvent event) {
-        if (!JJKAbilities.hasTrait(event.getEntity(), Trait.PERFECT_BODY)) return;
+        LivingEntity entity = event.getEntity();
+
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+        if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 
         if (event.getSlotContext().identifier().equals("right_hand") || event.getSlotContext().identifier().equals("left_hand")) {
             event.setResult(Event.Result.ALLOW);
@@ -48,15 +52,17 @@ public class CuriosEventHandler {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        if (!JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) return;
+        ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+
+        if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 
         if (!DamageUtil.isMelee(source)) return;
 
-        LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(attacker);
+        Optional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(attacker);
 
-        if (!optional.isPresent()) return;
+        if (optional.isEmpty()) return;
 
-        ICuriosItemHandler inventory = optional.resolve().orElseThrow();
+        ICuriosItemHandler inventory = optional.get();
 
         Optional<SlotResult> rightHand = inventory.findCurio("right_hand", 0);
         Optional<SlotResult> leftHand = inventory.findCurio("left_hand", 0);

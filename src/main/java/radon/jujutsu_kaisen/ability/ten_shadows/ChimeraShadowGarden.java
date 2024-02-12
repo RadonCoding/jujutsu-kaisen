@@ -11,8 +11,8 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.domain.ChimeraShadowGardenEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -33,10 +33,12 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        int width = Math.round(this.getWidth() * cap.getDomainSize());
-        int height = Math.round(this.getHeight() * cap.getDomainSize());
+        if (data == null) return null;
+
+        int width = Math.round(this.getWidth() * data.getDomainSize());
+        int height = Math.round(this.getHeight() * data.getDomainSize());
 
         ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height);
         owner.level().addFreshEntity(domain);
@@ -44,7 +46,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
         if (owner.level() instanceof ServerLevel) {
             List<TenShadowsSummon> summons = new ArrayList<>();
 
-            for (Entity entity : cap.getSummons()) {
+            for (Entity entity : data.getSummons()) {
                 if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
             }
 
@@ -68,15 +70,17 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ChimeraShadowGardenForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
             LivingEntity owner = event.getEntity();
 
-            if (JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
-                if (event.getAbility() instanceof Summon<?> summon && summon.isTamed(owner)) {
-                    summon.spawn(owner, true);
-                }
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) return;
+
+            if (event.getAbility() instanceof Summon<?> summon && summon.isTamed(owner)) {
+                summon.spawn(owner, true);
             }
         }
     }

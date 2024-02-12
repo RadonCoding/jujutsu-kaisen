@@ -3,17 +3,20 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.function.Supplier;
+public class AddChantC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "add_chant_serverbound");
 
-public class AddChantC2SPacket {
     private final ResourceLocation key;
     private final String chant;
 
@@ -26,16 +29,9 @@ public class AddChantC2SPacket {
         this(buf.readResourceLocation(), buf.readUtf());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(this.key);
-        buf.writeUtf(this.chant);
-    }
-
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
-
-            if (sender == null) return;
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             if (this.chant.length() > ConfigHolder.SERVER.maximumChantLength.get()) return;
 
@@ -43,23 +39,33 @@ public class AddChantC2SPacket {
 
             if (ability == null || !ability.isScalable(sender) || !ability.isTechnique()) return;
 
-            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
 
             String text = this.chant.toLowerCase();
 
             if (!text.isEmpty() && !text.isBlank()) {
-                for (String chant : cap.getFirstChants(ability)) {
+                for (String chant : data.getFirstChants(ability)) {
                     if (HelperMethods.strcmp(chant, text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
                         return;
                     }
                 }
             }
 
-            if (cap.getFirstChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || text.isEmpty() || text.isBlank() || cap.hasChant(ability, text))
+            if (data.getFirstChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || text.isEmpty() || text.isBlank() || data.hasChant(ability, text))
                 return;
 
-            cap.addChant(ability, text);
+            data.addChant(ability, text);
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeResourceLocation(this.key);
+        pBuffer.writeUtf(this.chant);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

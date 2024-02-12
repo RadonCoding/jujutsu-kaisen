@@ -15,11 +15,6 @@ public class LimitlessTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.LIMITLESS_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.INFINITY.get(),
                 JJKAbilities.RED.get(),

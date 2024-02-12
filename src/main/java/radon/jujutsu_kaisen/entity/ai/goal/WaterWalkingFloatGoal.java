@@ -1,12 +1,13 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
 import java.util.EnumSet;
 
@@ -31,6 +32,8 @@ public class WaterWalkingFloatGoal extends Goal {
 
     @Override
     public void tick() {
+        ISorcererData data = this.mob.getData(JJKAttachmentTypes.SORCERER);
+
         Ability ability = JJKAbilities.CURSED_ENERGY_FLOW.get();
 
         boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());
@@ -40,10 +43,10 @@ public class WaterWalkingFloatGoal extends Goal {
                 this.mob.getJumpControl().jump();
             }
         } else if (success) {
-            if (!JJKAbilities.hasToggled(this.mob, ability)) {
+            if (!data.hasToggled(ability)) {
                 AbilityHandler.trigger(this.mob, ability);
             }
-        } else if (JJKAbilities.hasToggled(this.mob, ability)) {
+        } else if (data.hasToggled(ability)) {
             AbilityHandler.trigger(this.mob, ability);
         }
     }

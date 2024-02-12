@@ -7,9 +7,9 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 
@@ -62,9 +62,8 @@ public class NearestAttackableCurseGoal extends TargetGoal {
     protected void findTarget() {
         this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
             if (!(entity instanceof TamableAnimal tamable) || !tamable.isTame()) {
-                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                return entity instanceof SukunaEntity || entity instanceof HeianSukunaEntity || cap.getType() == JujutsuType.CURSE;
+                ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+                return entity instanceof SukunaEntity || entity instanceof HeianSukunaEntity || data.getType() == JujutsuType.CURSE;
             }
             return false;
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());

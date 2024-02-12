@@ -4,17 +4,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.WormCurseEntity;
-import radon.jujutsu_kaisen.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -29,8 +26,10 @@ public class WormCurseGrab extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
-        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasCurse(JJKEntities.WORM_CURSE.get());
+
+        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+
+        return data.hasCurse(JJKEntities.WORM_CURSE.get());
     }
 
     @Override
@@ -51,9 +50,10 @@ public class WormCurseGrab extends Ability {
 
         if (target == null) return;
 
-        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-        AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
+
+        AbsorbedCurse curse = data.getCurse(JJKEntities.WORM_CURSE.get());
 
         if (!(CurseManipulationUtil.summonCurse(owner, curse, false) instanceof WormCurseEntity worm)) return;
 
@@ -72,8 +72,11 @@ public class WormCurseGrab extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
-        AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
+        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+
+        if (data == null) return 0.0F;
+
+        AbsorbedCurse curse = data.getCurse(JJKEntities.WORM_CURSE.get());
         return curse == null ? 0.0F : CurseManipulationUtil.getCurseCost(curse);
     }
 

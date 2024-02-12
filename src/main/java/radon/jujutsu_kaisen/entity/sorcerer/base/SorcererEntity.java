@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity.sorcerer.base;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
@@ -23,8 +22,9 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.SorcererUtil;
@@ -178,7 +178,10 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         if (!this.isCustom()) this.createGoals();
 
-        this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(this::init);
+        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+
+        this.init(data);
     }
 
     @Override

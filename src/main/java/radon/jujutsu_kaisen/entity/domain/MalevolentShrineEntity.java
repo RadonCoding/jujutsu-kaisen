@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,8 +20,8 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -97,9 +96,9 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                     int horizontal = i;
                     int vertical = j;
 
-                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-                    cap.delayTickEvent(() -> {
+                    data.delayTickEvent(() -> {
                         if (this.isRemoved()) return;
 
                         for (int x = -horizontal; x <= horizontal; x++) {

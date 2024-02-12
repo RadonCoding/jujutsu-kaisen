@@ -5,8 +5,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 
 import java.util.ArrayList;
@@ -21,12 +21,13 @@ public class ReleaseShikigami extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) {
-            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+            if (data == null) return false;
 
             List<TenShadowsSummon> summons = new ArrayList<>();
 
-            for (Entity entity : cap.getSummons()) {
+            for (Entity entity : data.getSummons()) {
                 if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
             }
             return !summons.isEmpty();
@@ -43,12 +44,13 @@ public class ReleaseShikigami extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (Entity entity : cap.getSummons()) {
-                if (!(entity instanceof TenShadowsSummon summon && summon.isTame())) continue;
-                summon.discard();
-            }
-        });
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+
+        for (Entity entity : data.getSummons()) {
+            if (!(entity instanceof TenShadowsSummon summon && summon.isTame())) continue;
+            summon.discard();
+        }
     }
 
     @Override

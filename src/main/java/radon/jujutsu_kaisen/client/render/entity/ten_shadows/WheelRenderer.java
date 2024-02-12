@@ -50,9 +50,9 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
 
         if (owner == null) return;
 
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get(owner.getUUID());
+        ClientVisualHandler.ClientData client = ClientVisualHandler.get(owner.getUUID());
 
-        if (data != null && data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+        if (client != null && client.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
             red = 0.0F;
             green = 0.0F;
             blue = 0.0F;

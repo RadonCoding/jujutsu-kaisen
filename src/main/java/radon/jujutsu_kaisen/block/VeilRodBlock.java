@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -39,6 +40,8 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import javax.annotation.Nullable;
 
 public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterloggedBlock {
+    private static final MapCodec<VeilRodBlock> CODEC = simpleCodec(VeilRodBlock::new);
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public VeilRodBlock(BlockBehaviour.Properties pProperties) {
@@ -47,6 +50,11 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.UP)
                 .setValue(WATERLOGGED, Boolean.FALSE));
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends VeilRodBlock> codec() {
+        return CODEC;
     }
 
     @Override

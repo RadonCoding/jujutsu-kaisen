@@ -3,15 +3,18 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
-import java.util.function.Supplier;
+public class UnlockAbilityC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "unlock_ability_serverbound");
 
-public class UnlockAbilityC2SPacket {
     private final ResourceLocation key;
 
     public UnlockAbilityC2SPacket(ResourceLocation key) {
@@ -22,17 +25,11 @@ public class UnlockAbilityC2SPacket {
         this(buf.readResourceLocation());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(this.key);
-    }
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
-
-            if (sender == null) return;
-
-            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
 
             Ability ability = JJKAbilities.getValue(this.key);
 
@@ -40,11 +37,20 @@ public class UnlockAbilityC2SPacket {
 
             if (ability.canUnlock(sender)) {
                 if (!sender.getAbilities().instabuild) {
-                    cap.usePoints(ability.getRealPointsCost(sender));
+                    data.usePoints(ability.getRealPointsCost(sender));
                 }
-                cap.unlock(ability);
+                data.unlock(ability);
             }
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeResourceLocation(this.key);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

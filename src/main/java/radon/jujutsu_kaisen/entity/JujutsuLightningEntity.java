@@ -11,8 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
 import java.util.List;
@@ -103,12 +103,12 @@ public class JujutsuLightningEntity extends LightningBolt {
                 LivingEntity owner = this.getOwner();
 
                 if (owner != null) {
-                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
                     for (Entity entity : entities) {
                         if (entity == owner) continue;
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, null),
-                                this.damage * cap.getAbilityPower());
+                                this.damage * data.getAbilityPower());
                     }
                 }
             }

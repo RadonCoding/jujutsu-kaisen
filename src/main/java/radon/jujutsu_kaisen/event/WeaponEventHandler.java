@@ -21,9 +21,9 @@ import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -45,16 +45,18 @@ import java.util.stream.Collectors;
 
 public class WeaponEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class WeaponEventHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
+            ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
 
             List<Item> stacks = new ArrayList<>();
 
@@ -68,50 +70,24 @@ public class WeaponEventHandler {
 
             if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
-            if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
-                    if (victim.isDeadOrDying()) {
-                        event.setCanceled(true);
-                        return;
+            if (attackerData != null) {
+                if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                    if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
+                        if (victim.isDeadOrDying()) {
+                            event.setCanceled(true);
+                            return;
+                        }
                     }
                 }
-            }
 
-            if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
-                Vec3 pos = attacker.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(attacker));
-                attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x, pos.y, pos.z, 1.0F, false, Level.ExplosionInteraction.NONE);
-            }
-
-            if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                    List<Ability> remove = new ArrayList<>();
-
-                    for (Ability ability : victimCap.getToggled()) {
-                        if (!ability.isTechnique()) continue;
-
-                        remove.add(ability);
-                    }
-                    remove.forEach(victimCap::toggle);
-
-                    if (victim instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                    }
-                }
-            }
-
-            if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
-                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+                if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
                     if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                        float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                        if (attackerCap.getEnergy() < cost) return;
-                        attackerCap.useEnergy(cost);
+                        float cost = KamutokeDaggerItem.MELEE_COST * (attackerData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                        if (attackerData.getEnergy() < cost) return;
+                        attackerData.useEnergy(cost);
                     }
 
-                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
+                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerData.getRealPower())) {
                         if (victim.isDeadOrDying()) {
                             event.setCanceled(true);
                             return;
@@ -133,7 +109,31 @@ public class WeaponEventHandler {
                     }
 
                     if (attacker instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerData.serializeNBT()), player);
+                    }
+                }
+            }
+
+            if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
+                Vec3 pos = attacker.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(attacker));
+                attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x, pos.y, pos.z, 1.0F, false, Level.ExplosionInteraction.NONE);
+            }
+
+            if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
+
+                if (victimData != null) {
+                    List<Ability> remove = new ArrayList<>();
+
+                    for (Ability ability : victimData.getToggled()) {
+                        if (!ability.isTechnique()) continue;
+
+                        remove.add(ability);
+                    }
+                    remove.forEach(victimData::toggle);
+
+                    if (victim instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimData.serializeNBT()), player);
                     }
                 }
             }
@@ -149,6 +149,8 @@ public class WeaponEventHandler {
 
             if (victim.level().isClientSide) return;
 
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
             List<ItemStack> stacks = new ArrayList<>();
 
             if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
@@ -162,8 +164,8 @@ public class WeaponEventHandler {
             if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
             for (ItemStack stack : stacks) {
-                if (stack.is(JJKItems.DRAGON_BONE.get()) && (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
-                        JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
+                if (stack.is(JJKItems.DRAGON_BONE.get()) && (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
+                        data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
                     DragonBoneItem.addEnergy(stack, 10.0F);
                 }
             }

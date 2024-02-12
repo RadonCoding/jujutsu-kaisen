@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.client.gui.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
 import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
@@ -11,7 +10,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -78,9 +76,6 @@ public class AbilityOverlay {
         Minecraft mc = gui.getMinecraft();
 
         if (mc.player == null) return;
-
-        // DO NOT REMOVE
-        if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
         List<Component> lines = new ArrayList<>();
 

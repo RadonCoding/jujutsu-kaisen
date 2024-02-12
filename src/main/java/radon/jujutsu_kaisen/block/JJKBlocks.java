@@ -99,7 +99,7 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
-    public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
+    public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_datativating_skandha_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
@@ -171,7 +171,7 @@ public class JJKBlocks {
                     .noLootTable()));
 
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
-            new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+            new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
 
     public static DeferredHolder<Block, Block> DISPLAY_CASE = BLOCKS.register("display_case", () ->
             new DisplayCaseBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
@@ -196,9 +196,9 @@ public class JJKBlocks {
                     .noOcclusion()));
 
     public static DeferredHolder<Block, FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
-            new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+            new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
     public static DeferredHolder<Block, FakeWaterDomainBlock> FAKE_WATER_DOMAIN = BLOCKS.register("fake_water_domain", () ->
-            new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+            new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
 
     public static DeferredHolder<Block, FakeWoodBlock> FAKE_WOOD = BLOCKS.register("fake_wood", () ->
             new FakeWoodBlock(BlockBehaviour.Properties.of()

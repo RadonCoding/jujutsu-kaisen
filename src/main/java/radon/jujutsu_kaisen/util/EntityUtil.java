@@ -15,8 +15,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.RCT1;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
 import java.util.UUID;
 
@@ -88,11 +88,11 @@ public class EntityUtil {
 
     @Nullable
     public static RCT1 getRCTTier(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if (cap.isUnlocked(JJKAbilities.RCT3.get())) return JJKAbilities.RCT3.get();
-        if (cap.isUnlocked(JJKAbilities.RCT2.get())) return JJKAbilities.RCT2.get();
-        if (cap.isUnlocked(JJKAbilities.RCT1.get())) return JJKAbilities.RCT1.get();
+        if (data.isUnlocked(JJKAbilities.RCT3.get())) return JJKAbilities.RCT3.get();
+        if (data.isUnlocked(JJKAbilities.RCT2.get())) return JJKAbilities.RCT2.get();
+        if (data.isUnlocked(JJKAbilities.RCT1.get())) return JJKAbilities.RCT1.get();
 
         return null;
     }

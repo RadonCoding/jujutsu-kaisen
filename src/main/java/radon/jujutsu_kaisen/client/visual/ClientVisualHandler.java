@@ -18,13 +18,12 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
@@ -52,29 +51,27 @@ public class ClientVisualHandler {
 
     @Nullable
     public static ClientVisualHandler.ClientData get(Entity entity) {
-        if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
-
         Minecraft mc = Minecraft.getInstance();
 
-        assert mc.level != null && mc.player != null;
+        if (mc.level == null || mc.player == null) return null;
 
         if (synced.containsKey(entity.getUUID())) {
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
-            if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData sorcererCap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                ICurseManipulationData curseManipulationCap = mc.player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData sorcererData = mc.player.getData(JJKAttachmentTypes.SORCERER);
+            ICurseManipulationData curseManipulationData = mc.player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-                Set<ICursedTechnique> techniques = new HashSet<>();
+            if (sorcererData == null || curseManipulationData == null) return null;
 
-                if (sorcererCap.getTechnique() != null) techniques.add(sorcererCap.getTechnique());
-                if (sorcererCap.getCurrentCopied() != null) techniques.add(sorcererCap.getCurrentCopied());
-                if (curseManipulationCap.getCurrentAbsorbed() != null) techniques.add(curseManipulationCap.getCurrentAbsorbed());
-                if (sorcererCap.getAdditional() != null) techniques.add(sorcererCap.getAdditional());
+            Set<ICursedTechnique> techniques = new HashSet<>();
 
-                return new ClientData(sorcererCap.getToggled(), sorcererCap.getChanneled(), sorcererCap.getTraits(), techniques,
-                        sorcererCap.getTechnique(), sorcererCap.getType(), sorcererCap.getExperience(), sorcererCap.getCursedEnergyColor());
-            }
+            if (sorcererData.getTechnique() != null) techniques.add(sorcererData.getTechnique());
+            if (sorcererData.getCurrentCopied() != null) techniques.add(sorcererData.getCurrentCopied());
+            if (curseManipulationData.getCurrentAbsorbed() != null) techniques.add(curseManipulationData.getCurrentAbsorbed());
+            if (sorcererData.getAdditional() != null) techniques.add(sorcererData.getAdditional());
+
+            return new ClientData(sorcererData.getToggled(), sorcererData.getChanneled(), sorcererData.getTraits(), techniques,
+                    sorcererData.getTechnique(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
         }
         return null;
     }
@@ -85,24 +82,24 @@ public class ClientVisualHandler {
 
         if (!entity.level().isClientSide) return;
 
-        ClientData data = get(entity);
+        ClientData client = get(entity);
 
-        if (data == null) return;
+        if (client == null) return;
 
         for (IVisual visual : JJKVisuals.VISUALS) {
-            if (!visual.isValid(entity, data)) continue;
-            visual.tick(entity, data);
+            if (!visual.isValid(entity, client)) continue;
+            visual.tick(entity, client);
         }
     }
 
     public static <T extends LivingEntity> void renderOverlays(T entity, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
-        ClientData data = get(entity);
+        ClientData client = get(entity);
 
-        if (data == null) return;
+        if (client == null) return;
 
         for (IOverlay overlay : JJKOverlays.OVERLAYS) {
-            if (!overlay.isValid(entity, data)) continue;
-            overlay.render(entity, data, texture, model, poseStack, buffer, partialTicks, packedLight);
+            if (!overlay.isValid(entity, client)) continue;
+            overlay.render(entity, client, texture, model, poseStack, buffer, partialTicks, packedLight);
         }
     }
 
@@ -119,9 +116,9 @@ public class ClientVisualHandler {
 
         Entity entity = event.getEntity();
 
-        if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
-        }
+        if (!entity.hasData(JJKAttachmentTypes.SORCERER)) return;
+
+        PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
     }
 
     public static class ClientData {

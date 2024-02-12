@@ -17,8 +17,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -55,9 +55,10 @@ public class SimpleDomainEntity extends Entity {
 
         this.setPos(owner.position());
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        this.setRadius(Math.min(MAX_RADIUS, RADIUS * cap.getAbilityPower()));
-        this.setMaxHealth(STRENGTH * cap.getAbilityPower());
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        this.setRadius(Math.min(MAX_RADIUS, RADIUS * data.getAbilityPower()));
+        this.setMaxHealth(STRENGTH * data.getAbilityPower());
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
     }
 
@@ -125,25 +126,39 @@ public class SimpleDomainEntity extends Entity {
 
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()))) {
+        if (owner != null) {
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data != null && !data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                this.discard();
+                return;
+            }
+        }
+
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else if (owner != null) {
             super.tick();
 
+            ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (ownerData == null) return;
+
             this.setPos(owner.position());
 
             if (this.level() instanceof ServerLevel level) {
-                ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
                 for (DomainExpansionEntity domain : VeilHandler.getDomains(level, owner.blockPosition())) {
-                    if (domain.checkSureHitEffect()) {
-                        LivingEntity target = domain.getOwner();
+                    if (!domain.checkSureHitEffect()) continue;
 
-                        if (target != null) {
-                            ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                            this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), DAMAGE * (1.0F + Math.max(0.0F, targetCap.getAbilityPower() - ownerCap.getAbilityPower())));
-                        }
-                    }
+                    LivingEntity target = domain.getOwner();
+
+                    if (target == null) continue;
+
+                    ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+
+                    if (targetData == null) continue;
+
+                    this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), DAMAGE * (1.0F + Math.max(0.0F, targetData.getAbilityPower() - ownerData.getAbilityPower())));
                 }
             }
 

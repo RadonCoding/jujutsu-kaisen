@@ -2,14 +2,21 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
 
-public class SetTojiBountyC2SPacket {
+public class SetTojiBountyC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "set_toji_bounty_serverbound");
+
     private final CharSequence target;
 
     public SetTojiBountyC2SPacket(CharSequence target) {
@@ -20,16 +27,9 @@ public class SetTojiBountyC2SPacket {
         this(buf.readCharSequence(buf.readInt(), Charset.defaultCharset()));
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.target.length());
-        buf.writeCharSequence(this.target, Charset.defaultCharset());
-    }
-
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
-
-            if (sender == null) return;
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             if (sender.containerMenu instanceof BountyMenu menu) {
                 if (!menu.stillValid(sender)) {
@@ -46,6 +46,16 @@ public class SetTojiBountyC2SPacket {
                 }
             }
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeInt(this.target.length());
+        pBuffer.writeCharSequence(this.target, Charset.defaultCharset());
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

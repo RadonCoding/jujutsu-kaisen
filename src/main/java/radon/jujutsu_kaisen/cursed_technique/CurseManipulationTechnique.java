@@ -9,11 +9,6 @@ import java.util.Set;
 
 public class CurseManipulationTechnique implements ICursedTechnique {
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.CURSE_MANIPULATION_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.CURSE_ABSORPTION.get(),
                 JJKAbilities.RELEASE_CURSE.get(),

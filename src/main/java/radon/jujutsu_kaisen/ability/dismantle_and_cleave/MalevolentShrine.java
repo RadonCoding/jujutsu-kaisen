@@ -5,8 +5,8 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
@@ -47,10 +47,12 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return null;
 
-        int width = Math.round(this.getWidth() * cap.getDomainSize());
-        int height = Math.round(this.getHeight() * cap.getDomainSize());
+        int width = Math.round(this.getWidth() * data.getDomainSize());
+        int height = Math.round(this.getHeight() * data.getDomainSize());
 
         MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, width, height);
         owner.level().addFreshEntity(domain);

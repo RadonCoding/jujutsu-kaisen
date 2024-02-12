@@ -22,14 +22,13 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -89,25 +88,26 @@ public class SukunaEntity extends SorcererEntity {
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        if (JJKAbilities.hasActiveTechnique(this, JJKCursedTechniques.TEN_SHADOWS.get())) {
-            ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!JJKAbilities.hasActiveTechnique(this, JJKCursedTechniques.TEN_SHADOWS.get())) return;
 
-            for (Entity entity : cap.getSummons()) {
-                if (entity instanceof TenShadowsSummon) return;
-            }
+        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
 
-            Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
 
-            if (!mahoraga.isTamed(this)) {
-                AbilityHandler.trigger(this, mahoraga);
-                return;
-            }
+        for (Entity entity : data.getSummons()) {
+            if (entity instanceof TenShadowsSummon) return;
+        }
 
-            for (Ability ability : JJKCursedTechniques.TEN_SHADOWS.get().getAbilities()) {
-                if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
+        Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
 
-                AbilityHandler.trigger(this, ability);
-            }
+        if (!mahoraga.isTamed(this)) {
+            AbilityHandler.trigger(this, mahoraga);
+            return;
+        }
+
+        for (Ability ability : JJKCursedTechniques.TEN_SHADOWS.get().getAbilities()) {
+            if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
+
+            AbilityHandler.trigger(this, ability);
         }
     }
 
@@ -166,7 +166,8 @@ public class SukunaEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return this.fingers * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) / 20);
+        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.0F;
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() + (this.fingers * (max / 20));
     }
 
     @Override
@@ -176,7 +177,7 @@ public class SukunaEntity extends SorcererEntity {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
+        return List.of(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
                 JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get());
     }
 
@@ -251,18 +252,22 @@ public class SukunaEntity extends SorcererEntity {
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            ISorcererData sorcererSrc = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ITenShadowsData tenShadowsSrc = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        if (owner == null) return;
 
-            ISorcererData sorcererDst = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ITenShadowsData tenShadowsDst = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererSrc = owner.getData(JJKAttachmentTypes.SORCERER);
+        ITenShadowsData tenShadowsSrc = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            sorcererDst.setTraits(sorcererSrc.getTraits());
-            sorcererDst.setAdditional(sorcererSrc.getTechnique());
-            tenShadowsDst.setTamed(tenShadowsSrc.getTamed());
-            tenShadowsDst.setDead(tenShadowsSrc.getDead());
-        }
+        if (sorcererSrc == null || tenShadowsSrc == null) return;
+
+        ISorcererData sorcererDst = this.getData(JJKAttachmentTypes.SORCERER);
+        ITenShadowsData tenShadowsDst = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        if (sorcererDst == null || tenShadowsDst == null) return;
+
+        sorcererDst.setTraits(sorcererSrc.getTraits());
+        sorcererDst.setAdditional(sorcererSrc.getTechnique());
+        tenShadowsDst.setTamed(tenShadowsSrc.getTamed());
+        tenShadowsDst.setDead(tenShadowsSrc.getDead());
     }
 
     @Override
@@ -271,17 +276,19 @@ public class SukunaEntity extends SorcererEntity {
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            if (owner instanceof ServerPlayer player) {
-                player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
-            }
+        if (owner == null) return;
 
-            ITenShadowsData src = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-            ITenShadowsData dst = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-
-            dst.setTamed(src.getTamed());
-            dst.setDead(src.getDead());
+        if (owner instanceof ServerPlayer player) {
+            player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
         }
+
+        ITenShadowsData srcData = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        ITenShadowsData dstData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        if (srcData == null || dstData == null) return;
+
+        dstData.setTamed(srcData.getTamed());
+        dstData.setDead(srcData.getDead());
     }
 
     @Override

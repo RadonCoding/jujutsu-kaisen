@@ -3,10 +3,9 @@ package radon.jujutsu_kaisen.effect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.effect.base.JJKEffect;
 
 import java.util.HashMap;
@@ -28,11 +27,9 @@ public class CursedBudEffect extends JJKEffect {
     public void onEffectStarted(@NotNull LivingEntity pLivingEntity, int pAmplifier) {
         super.onEffectStarted(pLivingEntity, pAmplifier);
 
-        if (!pLivingEntity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        ISorcererData data = pLivingEntity.getData(JJKAttachmentTypes.SORCERER);
 
-        ISorcererData cap = pLivingEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        AMOUNTS.put(pLivingEntity.getUUID(), cap.getEnergy());
+        AMOUNTS.put(pLivingEntity.getUUID(), data.getEnergy());
     }
 
     @Override
@@ -43,8 +40,7 @@ public class CursedBudEffect extends JJKEffect {
 
         if (pLivingEntity.isDeadOrDying()) return;
 
-        if (!pLivingEntity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-        ISorcererData cap = pLivingEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = pLivingEntity.getData(JJKAttachmentTypes.SORCERER);
 
         MobEffectInstance instance = pLivingEntity.getEffect(this);
 
@@ -52,11 +48,11 @@ public class CursedBudEffect extends JJKEffect {
             AMOUNTS.remove(pLivingEntity.getUUID());
         }
 
-        float previous = AMOUNTS.getOrDefault(pLivingEntity.getUUID(), cap.getEnergy());
+        float previous = AMOUNTS.getOrDefault(pLivingEntity.getUUID(), data.getEnergy());
 
-        if (previous > cap.getEnergy()) {
-            pLivingEntity.hurt(pLivingEntity.level().damageSources().generic(), (previous - cap.getEnergy()) * 0.5F);
+        if (previous > data.getEnergy()) {
+            pLivingEntity.hurt(pLivingEntity.level().damageSources().generic(), (previous - data.getEnergy()) * 0.5F);
         }
-        AMOUNTS.put(pLivingEntity.getUUID(), cap.getEnergy());
+        AMOUNTS.put(pLivingEntity.getUUID(), data.getEnergy());
     }
 }

@@ -5,8 +5,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
 public class TransfiguredSoulItem extends Item {
     public TransfiguredSoulItem(Properties pProperties) {
@@ -16,9 +16,10 @@ public class TransfiguredSoulItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData cap = pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.increaseTransfiguredSouls();
+        ISorcererData data = pEntityLiving.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data != null) {
+            data.increaseTransfiguredSouls();
         }
         return stack;
     }

@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.item.cursed_object;
 
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 
 public class CursedCompassItem extends CursedObjectItem {

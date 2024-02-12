@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.util;
 
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 
 public class SorcererUtil {
     public static SorcererGrade getGrade(float experience) {

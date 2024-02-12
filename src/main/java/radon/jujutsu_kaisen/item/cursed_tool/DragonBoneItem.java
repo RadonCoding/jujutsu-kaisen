@@ -19,9 +19,9 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.DragonBoneRenderer;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
@@ -70,27 +70,28 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
+        ISorcererData data = pPlayer.getData(JJKAttachmentTypes.SORCERER);
+
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         float charge = getEnergy(stack) / MAX_ENERGY;
 
-        if (charge > 0.0F) {
-            if (RotationUtil.getLookAtHit(pPlayer, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity entity) {
-                pPlayer.teleportTo(entity.getX(), entity.getY(), entity.getZ());
+        if (charge == 0.0F) super.use(pLevel, pPlayer, pUsedHand);
 
-                Vec3 pos = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+        if (RotationUtil.getLookAtHit(pPlayer, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity entity) {
+            pPlayer.teleportTo(entity.getX(), entity.getY(), entity.getZ());
 
-                if (pPlayer.level() instanceof ServerLevel level) {
-                    level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                }
-                entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            Vec3 pos = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
 
-                ISorcererData cap = pPlayer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                entity.hurt(JJKDamageSources.jujutsuAttack(pPlayer, null), this.getDamage() * cap.getRealPower() * charge);
-
-                pPlayer.swing(InteractionHand.MAIN_HAND);
-
-                resetEnergy(stack);
+            if (pPlayer.level() instanceof ServerLevel level) {
+                level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             }
+            entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+
+            entity.hurt(JJKDamageSources.jujutsuAttack(pPlayer, null), this.getDamage() * data.getRealPower() * charge);
+
+            pPlayer.swing(InteractionHand.MAIN_HAND);
+
+            resetEnergy(stack);
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

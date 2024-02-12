@@ -6,9 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.data.sorcerer.*;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -40,11 +39,13 @@ public interface ISorcerer {
     default SorcererGrade getGrade() {
         Entity entity = (Entity) this;
 
-        if (!entity.isAddedToWorld()) {
-            return SorcererUtil.getGrade(this.getExperience());
-        }
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return SorcererUtil.getGrade(cap.getExperience());
+        if (!entity.isAddedToWorld()) return SorcererUtil.getGrade(this.getExperience());
+
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return SorcererGrade.GRADE_4;
+
+        return SorcererUtil.getGrade(data.getExperience());
     }
 
     @Nullable ICursedTechnique getTechnique();

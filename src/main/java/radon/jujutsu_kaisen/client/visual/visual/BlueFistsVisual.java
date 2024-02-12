@@ -45,12 +45,12 @@ public class BlueFistsVisual implements IVisual {
     }
 
     @Override
-    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        return data.toggled.contains(JJKAbilities.BLUE_FISTS.get());
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
+        return client.toggled.contains(JJKAbilities.BLUE_FISTS.get());
     }
 
     @Override
-    public void tick(LivingEntity entity, ClientVisualHandler.ClientData data) {
+    public void tick(LivingEntity entity, ClientVisualHandler.ClientData client) {
         Minecraft mc = Minecraft.getInstance();
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
         EntityRenderer<?> renderer = dispatcher.getRenderer(entity);

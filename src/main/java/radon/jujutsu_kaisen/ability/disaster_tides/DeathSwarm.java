@@ -2,14 +2,13 @@ package radon.jujutsu_kaisen.ability.disaster_tides;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
@@ -41,7 +40,8 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
     }
 
     private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
         for (int i = 0; i < 12; i++) {
             float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
@@ -57,7 +57,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
             int delay = i * 2;
 
-            cap.delayTickEvent(() -> {
+            data.delayTickEvent(() -> {
                 if (target.isAlive() && !target.isRemoved()) {
                     FishShikigamiProjectile projectile = projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)];
                     projectile.setDomain(domain != null);

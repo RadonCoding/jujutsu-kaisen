@@ -15,13 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 
 import java.util.List;
 
@@ -59,15 +57,14 @@ public class CursedSpiritOrbItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ICurseManipulationData cap = pEntityLiving.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (!JJKAbilities.hasActiveTechnique(pEntityLiving, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-                pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
-                return stack;
-            }
-            cap.addCurse(getAbsorbed(pStack));
+        if (!JJKAbilities.hasActiveTechnique(pEntityLiving, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+            pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
+            return stack;
         }
+
+        ICurseManipulationData data = pEntityLiving.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        data.addCurse(getAbsorbed(pStack));
+
         return stack;
     }
 }

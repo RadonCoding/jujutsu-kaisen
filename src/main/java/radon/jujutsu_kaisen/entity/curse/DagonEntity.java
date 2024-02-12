@@ -43,7 +43,7 @@ public class DagonEntity extends DisasterCurse {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), JJKAbilities.SIMPLE_DOMAIN.get());
+        return List.of(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get());
     }
 
     private PlayState walkRunPredicate(AnimationState<DagonEntity> animationState) {

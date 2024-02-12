@@ -22,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
@@ -165,8 +165,16 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
-                (!this.isDeadOrDying() && !JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get())))) {
+        if (!this.level().isClientSide && owner != null) {
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.hasToggled(JJKAbilities.RIKA.get())) {
+                this.discard();
+                return;
+            }
+        }
+
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -230,10 +238,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     public float getExperience() {
         LivingEntity owner = this.getOwner();
 
-        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return 0.0F;
+        if (owner == null) return 0.0F;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getExperience();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        return data.getExperience();
     }
 
     @Override

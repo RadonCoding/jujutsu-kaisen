@@ -17,8 +17,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -103,7 +103,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class SimpleDomainForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource)) return;
@@ -124,11 +124,13 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
             LivingEntity victim = event.getEntity();
 
-            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.SIMPLE_DOMAIN.get())) return;
+            if (victim.level().isClientSide) return;
 
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
 
-            SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
+            if (!data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
+
+            SimpleDomainEntity domain = data.getSummonByClass(SimpleDomainEntity.class);
 
             if (domain != null) {
                 domain.hurt(event.getSource(), event.getAmount());

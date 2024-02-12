@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -35,24 +35,28 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
     private @Nullable CursedSpirit getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
             if (curse.getOwner() != owner) return null;
-            if (!curse.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
 
-            ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (ownerData == null) return null;
 
             float experience;
 
             if (owner.level().isClientSide) {
-                ClientVisualHandler.ClientData data = ClientVisualHandler.get(curse);
+                ClientVisualHandler.ClientData client = ClientVisualHandler.get(curse);
 
-                if (data == null) return null;
+                if (client == null) return null;
 
-                experience = data.experience;
+                experience = client.experience;
             } else {
-                ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                experience = curseCap.getExperience();
+                ISorcererData curseData = curse.getData(JJKAttachmentTypes.SORCERER);
+
+                if (curseData == null) return null;
+
+                experience = curseData.getExperience();
             }
 
-            if (experience >= ownerCap.getExperience() || experience == ConfigHolder.SERVER.maximumExperienceAmount.get()) return null;
+            if (experience >= ownerData.getExperience() || experience == ConfigHolder.SERVER.maximumExperienceAmount.get()) return null;
 
             return curse;
         }
@@ -89,12 +93,14 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
         if (target == null) return;
 
-        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.addExperience(20.0F);
+        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+
+
+        data.addExperience(20.0F);
 
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.enhance_curse", JujutsuKaisen.MOD_ID),
-                    cap.getExperience(), ConfigHolder.SERVER.maximumExperienceAmount.get()), false), player);
+                    data.getExperience(), ConfigHolder.SERVER.maximumExperienceAmount.get()), false), player);
         }
     }
 

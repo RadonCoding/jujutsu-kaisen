@@ -6,10 +6,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
-import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -28,29 +27,35 @@ public class Refill extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        float amount = ownerCap.getMaxEnergy() - ownerCap.getEnergy();
+        if (ownerData == null) return;
 
-        RikaEntity rika = ownerCap.getSummonByClass(RikaEntity.class);
+        float amount = ownerData.getMaxEnergy() - ownerData.getEnergy();
+
+        RikaEntity rika = ownerData.getSummonByClass(RikaEntity.class);
 
         if (rika == null) return;
 
-        ISorcererData summonCap = rika.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData summonData = rika.getData(JJKAttachmentTypes.SORCERER);
 
-        if (summonCap.getEnergy() > amount && ownerCap.getEnergy() < ownerCap.getMaxEnergy()) {
-            ownerCap.addEnergy(amount);
-            summonCap.useEnergy(amount);
+        if (summonData.getEnergy() > amount && ownerData.getEnergy() < ownerData.getMaxEnergy()) {
+            ownerData.addEnergy(amount);
+            summonData.useEnergy(amount);
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerData.serializeNBT()), player);
             }
         }
     }
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get()) && super.isValid(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }
 
     @Override

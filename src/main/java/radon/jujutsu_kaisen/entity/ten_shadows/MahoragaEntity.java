@@ -14,12 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -178,10 +177,11 @@ public class MahoragaEntity extends TenShadowsSummon {
         if (result) {
             if (!(pEntity instanceof LivingEntity living)) return true;
 
-            if (!pEntity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return true;
-            ISorcererData cap = pEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = pEntity.getData(JJKAttachmentTypes.SORCERER);
 
-            if (cap.getType() == JujutsuType.CURSE) {
+            if (data == null) return true;
+
+            if (data.getType() == JujutsuType.CURSE) {
                 pEntity.hurt(this.damageSources().mobAttack(this), living.getMaxHealth());
             }
         }
@@ -249,15 +249,15 @@ public class MahoragaEntity extends TenShadowsSummon {
         if (this.isTame()) {
             LivingEntity owner = this.getOwner();
 
-            if (owner != null) {
-                if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
+            if (owner == null) return;
 
-                ITenShadowsData src = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-                ITenShadowsData dst = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData srcData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            ITenShadowsData dstData = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-                dst.addAdapted(src.getAdapted());
-                dst.addAdapting(src.getAdapting());
-            }
+            if (srcData == null || dstData == null) return;
+
+            dstData.addAdapted(srcData.getAdapted());
+            dstData.addAdapting(srcData.getAdapting());
         } else {
             this.playSound(JJKSounds.WOLF_HOWLING.get(), 3.0F, 1.0F);
 
@@ -286,13 +286,13 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         if (owner == null) return;
 
-        if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
+        ITenShadowsData srcData = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        ITenShadowsData dstData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-        ITenShadowsData src = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        ITenShadowsData dst = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        if (srcData == null || dstData == null) return;
 
-        dst.addAdapted(src.getAdapted());
-        dst.addAdapting(src.getAdapting());
+        dstData.addAdapted(srcData.getAdapted());
+        dstData.addAdapting(srcData.getAdapting());
     }
 
     public void onAdaptation() {
