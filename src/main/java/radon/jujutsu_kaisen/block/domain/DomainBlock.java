@@ -39,12 +39,14 @@ public class DomainBlock extends Block implements EntityBlock {
         if (pContext instanceof EntityCollisionContext ctx) {
             Entity entity = ctx.getEntity();
 
-            if (entity != null) {
-                ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+            if (entity == null) return super.getCollisionShape(pState, pLevel, pPos, pContext);
 
-                if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
-                    return Shapes.empty();
-                }
+            if (!entity.hasData(JJKAttachmentTypes.SORCERER)) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+
+            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
+                return Shapes.empty();
             }
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
