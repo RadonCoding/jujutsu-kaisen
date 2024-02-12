@@ -99,7 +99,7 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
-    public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_datativating_skandha_fill", () ->
+    public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)

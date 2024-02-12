@@ -45,7 +45,7 @@ public class ReceiveVisualDataS2CPacket implements CustomPacketPayload {
     }
 
     @Override
-    public ResourceLocation id() {
+    public @NotNull ResourceLocation id() {
         return IDENTIFIER;
     }
 }
