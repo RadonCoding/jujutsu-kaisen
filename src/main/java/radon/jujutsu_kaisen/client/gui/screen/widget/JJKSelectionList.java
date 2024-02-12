@@ -21,7 +21,7 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
     private final int y1;
 
     public JJKSelectionList(PactListWidget.IBuilder<T, E> builder, PactListWidget.ICallback<E> callback, Minecraft minecraft, int width, int height, int x, int y) {
-        super(minecraft, width, height, x, minecraft.font.lineHeight * 2 - 2);
+        super(minecraft, width, height, y, minecraft.font.lineHeight * 2 - 2);
 
         this.x0 = x;
         this.y0 = y;
@@ -34,6 +34,11 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
         this.refreshList();
 
         this.callback = callback;
+    }
+
+    @Override
+    public int getX() {
+        return this.x0;
     }
 
     @Nullable

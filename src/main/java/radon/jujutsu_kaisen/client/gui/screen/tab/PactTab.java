@@ -121,7 +121,7 @@ public class PactTab extends JJKTab {
         this.addRenderableWidget(new PlayerListWidget(this::buildPlayerList, this::setSelectedPlayer, this.minecraft, 56, 85,
                 xOffset, yOffset + this.minecraft.font.lineHeight + 1));
         this.addRenderableWidget(new PactListWidget(this::buildPactList, this::setSelectedPact, this.minecraft, 56, 85,
-                xOffset + 64, yOffset + this.minecraft.font.lineHeight + 1, this));
+                xOffset + 64, yOffset + this.minecraft.font.lineHeight + 1));
 
         this.create = Button.builder(Component.translatable(String.format("gui.%s.pact.create", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.player == null || this.pact == null) return;
