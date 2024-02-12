@@ -14,6 +14,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
@@ -65,16 +67,20 @@ public class ReleaseCurse extends Ability {
 
         owner.swing(InteractionHand.MAIN_HAND);
 
-        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerSorcererData == null || ownerCurseManipulationData == null) return;
+        if (ownerJujutsuCap == null) return;
+
+        ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownerJujutsuCap.getCurseManipulationData();
 
         ownerSorcererData.removeSummon(curse);
 
-        ISorcererData curseData = curse.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability curseJujutsuCap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (curseData == null) return;
+        if (curseJujutsuCap == null) return;
+
+        ISorcererData curseData = curseJujutsuCap.getSorcererData();
 
         if (curse instanceof AbsorbedPlayerEntity absorbed) {
             ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(), absorbed.getPlayer()));

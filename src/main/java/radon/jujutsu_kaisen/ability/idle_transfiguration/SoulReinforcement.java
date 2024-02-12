@@ -16,6 +16,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -69,18 +71,24 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             DamageSource source = event.getSource();
 
-            ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimData == null) return;
+            if (victimJujutsuCap == null) return;
+
+            ISorcererData victimData = victimJujutsuCap.getSorcererData();
 
             if (!victimData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
 
             if (DamageUtil.isMelee(source)) {
                 if (source.getEntity() instanceof LivingEntity attacker) {
-                    ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
+                    IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    if (attackerData != null && (attackerData.hasTrait(Trait.VESSEL) || attackerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))) {
-                        return;
+                    if (attackerJujutsuCap != null) {
+                        ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
+
+                        if (attackerData.hasTrait(Trait.VESSEL) || attackerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            return;
+                        }
                     }
                 }
             }

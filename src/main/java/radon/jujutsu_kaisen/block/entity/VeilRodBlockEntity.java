@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -61,7 +63,11 @@ public class VeilRodBlockEntity extends BlockEntity {
             return false;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return false;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
             float cost = COST * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
             return data.getEnergy() >= cost;
         }
@@ -81,7 +87,11 @@ public class VeilRodBlockEntity extends BlockEntity {
             return;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
 
@@ -121,8 +131,17 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                             if (opponent == null) continue;
 
-                            ISorcererData veilCasterData = owner.getData(JJKAttachmentTypes.SORCERER);
-                            ISorcererData domainCasterData = opponent.getData(JJKAttachmentTypes.SORCERER);
+                            IJujutsuCapability veilCasterJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                            if (veilCasterJujutsuCap == null) continue;
+
+                            ISorcererData veilCasterData = veilCasterJujutsuCap.getSorcererData();
+
+                            IJujutsuCapability domainCasterJujutsuCap = opponent.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                            if (domainCasterJujutsuCap == null) continue;
+
+                            ISorcererData domainCasterData = domainCasterJujutsuCap.getSorcererData();
 
                             if (domainCasterData.getAbilityPower() <= veilCasterData.getAbilityPower()) continue;
 

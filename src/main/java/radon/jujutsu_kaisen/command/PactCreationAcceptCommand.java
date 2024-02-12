@@ -11,6 +11,8 @@ import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -30,8 +32,17 @@ public class PactCreationAcceptCommand {
 
         if (src == null) return 0;
 
-        ISorcererData srcData = src.getData(JJKAttachmentTypes.SORCERER);
-        ISorcererData dstData = dst.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability srcJujutsuCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (srcJujutsuCap == null) return 0;
+
+        ISorcererData srcData = srcJujutsuCap.getSorcererData();
+
+        IJujutsuCapability dstJujutsuCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (dstJujutsuCap == null) return 0;
+
+        ISorcererData dstData = dstJujutsuCap.getSorcererData();
 
         if (srcData == null || dstData == null) return 0;
 

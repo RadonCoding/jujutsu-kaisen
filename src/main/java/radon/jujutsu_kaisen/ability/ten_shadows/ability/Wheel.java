@@ -8,6 +8,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
@@ -42,9 +44,11 @@ public class Wheel extends Summon<WheelEntity> {
         if (owner instanceof MahoragaEntity) return true;
         if (target == null) return false;
 
-        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
         for (ICursedTechnique technique : JJKAbilities.getTechniques(target)) {
             if (data.isAdaptedTo(technique)) continue;
@@ -58,10 +62,12 @@ public class Wheel extends Summon<WheelEntity> {
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || tenShadowsData == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        ITenShadowsData tenShadowsData = jujutsuCap.getTenShadowsData();
 
         return !sorcererData.hasToggled(JJKAbilities.MAHORAGA.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.MAHORAGA.get()) &&

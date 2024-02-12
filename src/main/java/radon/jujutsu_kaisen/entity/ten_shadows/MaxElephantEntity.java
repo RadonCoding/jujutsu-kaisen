@@ -23,6 +23,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -225,7 +227,11 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         this.entityData.set(DATA_SHOOTING, data.isChanneling(JJKAbilities.WATER.get()));
@@ -246,7 +252,11 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         if (this.level().isClientSide) return;
         if (this.tickCount - this.riding < 20) return;
 
-        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         boolean channelling = data.isChanneling(JJKAbilities.WATER.get());

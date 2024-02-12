@@ -9,6 +9,8 @@ import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -31,7 +33,11 @@ public class DomainCustomizationTab extends JJKTab {
 
         if (size != this.oldSize) {
             if (this.minecraft != null && this.minecraft.player != null) {
-                ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
                 PacketHandler.sendToServer(new SetDomainSizeC2SPacket(size));
                 data.setDomainSize(size);
@@ -54,7 +60,11 @@ public class DomainCustomizationTab extends JJKTab {
     public void addWidgets() {
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;

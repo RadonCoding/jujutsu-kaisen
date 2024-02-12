@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -49,7 +51,11 @@ public class ShadowStorage extends Ability {
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return;
 
-            ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
             data.addShadowInventory(owner.getMainHandItem());
             owner.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
@@ -60,7 +66,11 @@ public class ShadowStorage extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Status.FAILURE;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return Status.FAILURE;

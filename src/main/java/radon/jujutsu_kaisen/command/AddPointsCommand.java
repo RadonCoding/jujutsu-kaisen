@@ -9,6 +9,8 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -23,9 +25,11 @@ public class AddPointsCommand {
     }
 
     public static int addPoints(ServerPlayer player, int points) {
-        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return 0;
+        if (jujutsuCap == null) return 0;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         data.addPoints(points);
 

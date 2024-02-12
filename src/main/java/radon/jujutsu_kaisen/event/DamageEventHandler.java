@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.misc.CursedEnergyFlow;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.DamageUtil;
@@ -35,7 +37,11 @@ public class DamageEventHandler {
 
             // Perfect body generic melee increase
             if (source.getEntity() instanceof LivingEntity attacker) {
-                ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
                 if (data != null && data.hasTrait(Trait.PERFECT_BODY)) {
                     if (DamageUtil.isMelee(source)) {
@@ -46,7 +52,11 @@ public class DamageEventHandler {
 
             // Lessen damage for sorcerers
             if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
                 if (data != null) {
                     float armor = data.getExperience() * 0.002F;

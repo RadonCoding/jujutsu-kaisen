@@ -24,6 +24,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -90,7 +92,11 @@ public class SukunaEntity extends SorcererEntity {
 
         if (!JJKAbilities.hasActiveTechnique(this, JJKCursedTechniques.TEN_SHADOWS.get())) return;
 
-        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         for (Entity entity : data.getSummons()) {
@@ -254,15 +260,19 @@ public class SukunaEntity extends SorcererEntity {
 
         if (owner == null) return;
 
-        ISorcererData sorcererSrc = owner.getData(JJKAttachmentTypes.SORCERER);
-        ITenShadowsData tenShadowsSrc = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuSrc = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererSrc == null || tenShadowsSrc == null) return;
+        if (jujutsuSrc == null) return;
 
-        ISorcererData sorcererDst = this.getData(JJKAttachmentTypes.SORCERER);
-        ITenShadowsData tenShadowsDst = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        ISorcererData sorcererSrc = jujutsuSrc.getSorcererData();
+        ITenShadowsData tenShadowsSrc = jujutsuSrc.getTenShadowsData();
 
-        if (sorcererDst == null || tenShadowsDst == null) return;
+        IJujutsuCapability jujutsuDst = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuDst == null) return;
+
+        ISorcererData sorcererDst = jujutsuDst.getSorcererData();
+        ITenShadowsData tenShadowsDst = jujutsuDst.getTenShadowsData();
 
         sorcererDst.setTraits(sorcererSrc.getTraits());
         sorcererDst.setAdditional(sorcererSrc.getTechnique());
@@ -282,10 +292,17 @@ public class SukunaEntity extends SorcererEntity {
             player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
         }
 
-        ITenShadowsData srcData = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
-        ITenShadowsData dstData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability srcJujutsu = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (srcData == null || dstData == null) return;
+        if (srcJujutsu == null) return;
+
+        ITenShadowsData srcData = srcJujutsu.getTenShadowsData();
+
+        IJujutsuCapability dstJujutsu = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (dstJujutsu == null) return;
+
+        ITenShadowsData dstData = dstJujutsu.getTenShadowsData();
 
         dstData.setTamed(srcData.getTamed());
         dstData.setDead(srcData.getDead());

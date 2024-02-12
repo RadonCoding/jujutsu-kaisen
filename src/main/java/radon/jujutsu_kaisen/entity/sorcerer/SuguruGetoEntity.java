@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
@@ -51,7 +53,11 @@ public class SuguruGetoEntity extends SorcererEntity {
     private AbsorbedCurse createCurse(EntityType<?> type) {
         if (!(type.create(this.level()) instanceof CursedSpirit curse)) return null;
 
-        ISorcererData data = curse.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsu = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsu == null) return null;
+
+        ISorcererData data = jujutsu.getSorcererData();
 
         if (data == null) return null;
 
@@ -59,8 +65,11 @@ public class SuguruGetoEntity extends SorcererEntity {
     }
 
     private void tryAddCurse(EntityType<?> type) {
-        ICurseManipulationData data = this.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsu = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
+        if (jujutsu == null) return;
+
+        ICurseManipulationData data = jujutsu.getCurseManipulationData();
 
         AbsorbedCurse curse = this.createCurse(type);
 

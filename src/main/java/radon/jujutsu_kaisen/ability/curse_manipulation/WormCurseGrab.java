@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -27,7 +31,11 @@ public class WormCurseGrab extends Ability {
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
 
         return data.hasCurse(JJKEntities.WORM_CURSE.get());
     }
@@ -50,7 +58,11 @@ public class WormCurseGrab extends Ability {
 
         if (target == null) return;
 
-        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
 
 
         AbsorbedCurse curse = data.getCurse(JJKEntities.WORM_CURSE.get());
@@ -72,7 +84,11 @@ public class WormCurseGrab extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
 
         if (data == null) return 0.0F;
 

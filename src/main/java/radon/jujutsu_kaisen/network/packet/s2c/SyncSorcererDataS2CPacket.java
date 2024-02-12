@@ -15,6 +15,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
 import java.util.HashSet;
@@ -39,7 +41,11 @@ public class SyncSorcererDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            ISorcererData old = player.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData old = jujutsuCap.getSorcererData();
 
             Set<Ability> oldToggled = old.getToggled();
             Set<Ability> newToggled = new HashSet<>();

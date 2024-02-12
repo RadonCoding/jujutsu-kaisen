@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -27,11 +29,13 @@ public class AbilityScreen extends RadialScreen {
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
-        ISorcererData sorcererData = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData curseManipulationData = this.minecraft.player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || curseManipulationData == null) return List.of();
+        if (jujutsuCap == null) return List.of();
 
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType(this.minecraft.player) != MenuType.RADIAL);
 
@@ -62,11 +66,13 @@ public class AbilityScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
-        ISorcererData sorcererData = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData curseManipulationData = this.minecraft.player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || curseManipulationData == null) return;
+        if (jujutsuCap == null) return;
 
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        
         DisplayItem item = this.getCurrent().get(this.hovered);
 
         switch (item.type) {

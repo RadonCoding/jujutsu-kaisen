@@ -9,6 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -24,9 +26,11 @@ public class SetGradeCommand {
     }
 
     public static int setGrade(ServerPlayer player, SorcererGrade grade) {
-        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return 0;
+        if (jujutsuCap == null) return 0;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         data.setGrade(grade);
 

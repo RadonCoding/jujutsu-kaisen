@@ -1,8 +1,12 @@
 package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.world.entity.LivingEntity;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 import java.util.ArrayList;
 
@@ -13,7 +17,11 @@ public abstract class Transformation extends Ability implements Ability.IToggled
             return Status.FAILURE;
         }
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Status.FAILURE;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         for (Ability ability : new ArrayList<>(data.getToggled())) {
             if (!(ability instanceof ITransformation transformation) || ability == this) continue;

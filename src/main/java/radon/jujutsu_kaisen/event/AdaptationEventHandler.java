@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -34,8 +36,12 @@ public class AdaptationEventHandler {
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
-            ISorcererData sorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
-            ITenShadowsData tenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            IJujutsuCapability jujutsu = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsu == null) return;
+
+            ISorcererData sorcererData = jujutsu.getSorcererData();
+            ITenShadowsData tenShadowsData = jujutsu.getTenShadowsData();
 
             if (!sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
@@ -52,8 +58,12 @@ public class AdaptationEventHandler {
 
             DamageSource source = event.getSource();
 
-            ISorcererData sorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
-            ITenShadowsData tenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            IJujutsuCapability jujutsu = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsu == null) return;
+
+            ISorcererData sorcererData = jujutsu.getSorcererData();
+            ITenShadowsData tenShadowsData = jujutsu.getTenShadowsData();
 
             if (sorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
@@ -95,14 +105,22 @@ public class AdaptationEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability victimJujutsu = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (victimJujutsu == null) return;
+
+            ISorcererData victimData = victimJujutsu.getSorcererData();
 
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            ISorcererData attackerSorcererData = attacker.getData(JJKAttachmentTypes.SORCERER);
-            ITenShadowsData attackerTenShadowsData = attacker.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            IJujutsuCapability attackerJujutsu = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (attackerJujutsu == null) return;
+
+            ISorcererData attackerSorcererData = attackerJujutsu.getSorcererData();
+            ITenShadowsData attackerTenShadowsData = attackerJujutsu.getTenShadowsData();
 
             if (!attackerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerSorcererData.hasToggled(JJKAbilities.WHEEL.get())) {
                 if (victimData.hasToggled(JJKAbilities.INFINITY.get())) {

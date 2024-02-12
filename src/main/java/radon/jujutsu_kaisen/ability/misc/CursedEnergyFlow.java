@@ -23,8 +23,12 @@ import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
@@ -99,8 +103,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         float scale = data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
 
@@ -145,7 +152,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         if (data == null) return 0.0F;
 
@@ -180,7 +191,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Status.FAILURE;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         if (data == null) return Status.FAILURE;
 
@@ -199,15 +214,17 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (attackerData == null) return;
+        if (jujutsuCap == null) return;
 
-        if (!attackerData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+        ISorcererData data = jujutsuCap.getSorcererData();
 
-        float increase = attackerData.getExperience() * 0.005F;
+        if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
-        switch (attackerData.getNature()) {
+        float increase = data.getExperience() * 0.005F;
+
+        switch (data.getNature()) {
             case ROUGH -> increase *= 1.5F;
             case LIGHTNING -> {
                 increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
@@ -227,7 +244,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             case DIVERGENT -> {
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
 
-                attackerData.delayTickEvent(() -> {
+                data.delayTickEvent(() -> {
                     victim.invulnerableTime = 0;
 
                     Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
@@ -236,7 +253,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                         victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-                        victim.setDeltaMovement(look.scale(1.0F + (attackerData.getAbilityPower() * 0.1F)));
+                        victim.setDeltaMovement(look.scale(1.0F + (data.getAbilityPower() * 0.1F)));
                         victim.hurtMarked = true;
                     }
                 }, 5);
@@ -244,14 +261,14 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         };
 
         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-            float cost = increase * (attackerData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            float cost = increase * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
-            if (attackerData.getEnergy() < cost) return;
+            if (data.getEnergy() < cost) return;
 
-            attackerData.useEnergy(cost);
+            data.useEnergy(cost);
 
             if (attacker instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerData.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
         }
         event.setAmount(amount + increase);
@@ -269,14 +286,17 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
         if (data.getNature() == CursedEnergyNature.LIGHTNING) {
             if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
-                    jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
+                    jujutsuCap.getAbility() != null && jujutsuCap.getAbility().getClassification() == Classification.LIGHTNING)) {
                 event.setCanceled(true);
             }
         }

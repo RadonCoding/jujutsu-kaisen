@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
@@ -29,7 +31,11 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data.hasToggled(this)) {
             return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
@@ -54,15 +60,23 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
-        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
         return data.isDead(JJKEntities.DIVINE_DOG_WHITE.get()) && data.isDead(JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
     @Override
     public void spawn(LivingEntity owner, boolean clone) {
-        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        ITenShadowsData tenShadowsData = jujutsuCap.getTenShadowsData();
 
         if (tenShadowsData == null || sorcererData == null) return;
 
@@ -83,7 +97,11 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     @Override
     public void onDisabled(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             data.unsummonByClass(DivineDogWhiteEntity.class);
             data.unsummonByClass(DivineDogBlackEntity.class);

@@ -9,6 +9,8 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
@@ -62,8 +64,11 @@ public class NearestAttackableCurseGoal extends TargetGoal {
     protected void findTarget() {
         this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
             if (!(entity instanceof TamableAnimal tamable) || !tamable.isTame()) {
-                if (!entity.hasData(JJKAttachmentTypes.SORCERER)) return false;
-                ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
                 return entity instanceof SukunaEntity || entity instanceof HeianSukunaEntity || data.getType() == JujutsuType.CURSE;
             }
             return false;

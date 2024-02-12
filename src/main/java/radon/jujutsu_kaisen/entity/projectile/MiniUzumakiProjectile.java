@@ -12,6 +12,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.base.BeamEntity;
@@ -35,10 +37,12 @@ public class MiniUzumakiProjectile extends BeamEntity {
         this.setOwner(owner);
         this.setPower(power);
 
-        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerSorcererData == null || ownerCurseManipulationData == null) return;
+        if (jujutsuCap == null) return;
+
+        ISorcererData ownerSorcererData = jujutsuCap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = jujutsuCap.getCurseManipulationData();
 
         Entity weakest = null;
 
@@ -50,19 +54,27 @@ public class MiniUzumakiProjectile extends BeamEntity {
                 continue;
             }
 
-            ISorcererData weakestData = weakest.getData(JJKAttachmentTypes.SORCERER);
-            ISorcererData currentData = current.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability weakestJujutsuCap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (weakestData == null || currentData == null) continue;
+            if (weakestJujutsuCap == null) continue;
+
+            IJujutsuCapability currentJujutsuCap = current.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (currentJujutsuCap == null) continue;
+
+            ISorcererData weakestData = weakestJujutsuCap.getSorcererData();
+            ISorcererData currentData = currentJujutsuCap.getSorcererData();
 
             if (currentData.getExperience() < weakestData.getExperience()) weakest = current;
         }
 
         if (weakest == null) return;
 
-        ISorcererData weakestData = weakest.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability weakestJujutsuCap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (weakestData == null) return;
+        if (weakestJujutsuCap == null) return;
+
+        ISorcererData weakestData = weakestJujutsuCap.getSorcererData();
 
         this.setPower(SorcererUtil.getPower(weakestData.getExperience()));
 

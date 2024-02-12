@@ -15,6 +15,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
@@ -32,9 +34,11 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return data.getType() == JujutsuType.CURSE;
     }
@@ -45,8 +49,17 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     }
 
     private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
-        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (ownerJujutsuCap == null) return false;
+
+        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+
+        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (targetJujutsuCap == null) return false;
+
+        ISorcererData targetData = targetJujutsuCap.getSorcererData();
 
         if (ownerData == null || targetData == null) return false;
 
@@ -81,14 +94,19 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
         if (!canAbsorb(attacker, victim)) return;
 
-        ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
+        if (attackerJujutsuCap == null) return;
 
-        if (!data.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
+        ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
 
-        ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (victimData == null) return;
+        if (victimJujutsuCap == null) return;
+
+        ISorcererData victimData = victimJujutsuCap.getSorcererData();
+
+        if (!attackerData.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
 
         attacker.swing(InteractionHand.MAIN_HAND, true);
 

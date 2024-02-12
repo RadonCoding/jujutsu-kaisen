@@ -12,8 +12,12 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -47,9 +51,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public boolean isDisplayed(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         ICursedTechnique technique = data.getTechnique();
         return technique != null && technique.getDomain() != null && super.isDisplayed(owner);
@@ -57,9 +63,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         ICursedTechnique technique = data.getTechnique();
         return technique != null && technique.getDomain() != null && technique.getDomain().isValid(owner) && super.isValid(owner);
@@ -68,7 +76,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Override
     public Status isTriggerable(LivingEntity owner) {
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return Status.FAILURE;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data == null) return Status.FAILURE;
 
@@ -87,7 +99,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     public void run(LivingEntity owner) {
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
 
         data.delayTickEvent(() -> {
@@ -124,7 +140,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return null;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null) return null;
 

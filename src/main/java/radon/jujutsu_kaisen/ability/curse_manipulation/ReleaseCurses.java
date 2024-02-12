@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
@@ -48,17 +50,23 @@ public class ReleaseCurses extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (ownerJujutsuCap == null) return;
+
+        ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownerJujutsuCap.getCurseManipulationData();
 
         for (Entity summon : ownerSorcererData.getSummons()) {
             if (!(summon instanceof CursedSpirit curse)) continue;
 
             ownerSorcererData.removeSummon(curse);
 
-            ISorcererData curseData = curse.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability curseJujutsuCap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (curseData == null) continue;
+            if (curseJujutsuCap == null) continue;
+
+            ISorcererData curseData = curseJujutsuCap.getSorcererData();
 
             if (curse instanceof AbsorbedPlayerEntity absorbed) {
                 ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(), absorbed.getPlayer()));

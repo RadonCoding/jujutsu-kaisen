@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.DragonBoneRenderer;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -70,7 +72,11 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        ISorcererData data = pPlayer.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = pPlayer.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return super.use(pLevel, pPlayer, pUsedHand);
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         float charge = getEnergy(stack) / MAX_ENERGY;

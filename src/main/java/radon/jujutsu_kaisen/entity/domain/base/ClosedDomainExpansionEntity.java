@@ -23,8 +23,12 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -239,7 +243,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2;
 
-                    ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+                    IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                    if (jujutsuCap == null) return;
+
+                    ISorcererData data = jujutsuCap.getSorcererData();
 
                     if (instant) {
                         this.createBlock(radius - delay, pos, radius, distance);
@@ -263,7 +271,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         for (LivingEntity entity : this.getAffected()) {
-            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) continue;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 this.ability.onHitBlock(this, owner, entity.blockPosition());
@@ -319,7 +331,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (owner == null) return;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         data.setBurnout(DomainExpansion.BURNOUT);
 

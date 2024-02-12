@@ -9,6 +9,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -28,9 +30,11 @@ public class SukunaFingerItem extends CursedObjectItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        ISorcererData data = pPlayer.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = pPlayer.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data != null) {
+        if (jujutsuCap != null) {
+            ISorcererData data = jujutsuCap.getSorcererData();
+
             ItemStack stack = pPlayer.getItemInHand(pUsedHand);
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
@@ -46,9 +50,11 @@ public class SukunaFingerItem extends CursedObjectItem {
 
     @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
-        ISorcererData data = pEntityLiving.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data != null) {
+        if (jujutsuCap != null) {
+            ISorcererData data = jujutsuCap.getSorcererData();
+
             if (data.getType() == JujutsuType.CURSE) {
                 return super.finishUsingItem(pStack, pLevel, pEntityLiving);
             }

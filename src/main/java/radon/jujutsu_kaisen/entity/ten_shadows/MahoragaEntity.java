@@ -16,6 +16,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
@@ -177,7 +179,11 @@ public class MahoragaEntity extends TenShadowsSummon {
         if (result) {
             if (!(pEntity instanceof LivingEntity living)) return true;
 
-            ISorcererData data = pEntity.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsu = pEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsu == null) return true;
+
+            ISorcererData data = jujutsu.getSorcererData();
 
             if (data == null) return true;
 
@@ -251,10 +257,17 @@ public class MahoragaEntity extends TenShadowsSummon {
 
             if (owner == null) return;
 
-            ITenShadowsData srcData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
-            ITenShadowsData dstData = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            IJujutsuCapability srcJujutsu = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (srcData == null || dstData == null) return;
+            if (srcJujutsu == null) return;
+
+            ITenShadowsData srcData = srcJujutsu.getTenShadowsData();
+
+            IJujutsuCapability dstJujutsu = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (dstJujutsu == null) return;
+
+            ITenShadowsData dstData = dstJujutsu.getTenShadowsData();
 
             dstData.addAdapted(srcData.getAdapted());
             dstData.addAdapting(srcData.getAdapting());
@@ -286,10 +299,17 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         if (owner == null) return;
 
-        ITenShadowsData srcData = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
-        ITenShadowsData dstData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability srcJujutsu = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (srcData == null || dstData == null) return;
+        if (srcJujutsu == null) return;
+
+        ITenShadowsData srcData = srcJujutsu.getTenShadowsData();
+
+        IJujutsuCapability dstJujutsu = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (dstJujutsu == null) return;
+
+        ITenShadowsData dstData = dstJujutsu.getTenShadowsData();
 
         dstData.addAdapted(srcData.getAdapted());
         dstData.addAdapting(srcData.getAdapting());

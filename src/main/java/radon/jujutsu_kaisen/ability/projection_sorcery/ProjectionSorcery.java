@@ -28,6 +28,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.client.particle.ProjectionParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -52,11 +54,13 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
@@ -93,7 +97,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IProjectionSorceryData data = owner.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        IProjectionSorceryData data = jujutsuCap.getProjectionSorceryData();
 
         List<AbstractMap.SimpleEntry<Vec3, Float>> frames = data.getFrames();
 
@@ -160,10 +168,12 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void onStop(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        IProjectionSorceryData projectionSorceryData = owner.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || projectionSorceryData == null) return;
+        if (jujutsuCap == null) return;
+
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        IProjectionSorceryData projectionSorceryData = jujutsuCap.getProjectionSorceryData();
 
         List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(projectionSorceryData.getFrames());
 
@@ -243,7 +253,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
             if (victim.level().isClientSide) return;
 
-            IProjectionSorceryData data = attacker.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+            IJujutsuCapability jujutsu = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsu == null) return;
+
+            IProjectionSorceryData data = jujutsu.getProjectionSorceryData();
 
             if (data.getSpeedStacks() == 0) return;
 

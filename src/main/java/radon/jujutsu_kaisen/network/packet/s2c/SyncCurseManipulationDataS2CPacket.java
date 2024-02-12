@@ -9,6 +9,8 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
@@ -31,7 +33,11 @@ public class SyncCurseManipulationDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            ICurseManipulationData data = player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+            IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsu == null) return;
+
+ICurseManipulationData data = jujutsu.getCurseManipulationData();
 
             data.deserializeNBT(this.nbt);
         });

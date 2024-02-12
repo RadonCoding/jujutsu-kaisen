@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
@@ -47,7 +49,11 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     private void updateAdaptation() {
-        ISorcererData data = this.owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) return;
 
@@ -178,7 +184,7 @@ public class TenShadowsData implements ITenShadowsData {
         RegistryAccess registry = this.owner.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null);
+                source instanceof JJKDamageSources.JujutsuDamageSource jujutsuCap ? jujutsuCap.getAbility() : null);
     }
 
     @Override
@@ -261,7 +267,7 @@ public class TenShadowsData implements ITenShadowsData {
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
 
         Adaptation adaptation = new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null);
+                source instanceof JJKDamageSources.JujutsuDamageSource jujutsuCap ? jujutsuCap.getAbility() : null);
 
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);

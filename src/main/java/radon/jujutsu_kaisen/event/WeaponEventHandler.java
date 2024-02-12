@@ -23,6 +23,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -56,8 +58,6 @@ public class WeaponEventHandler {
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
-
             List<Item> stacks = new ArrayList<>();
 
             if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
@@ -70,7 +70,11 @@ public class WeaponEventHandler {
 
             if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
-            if (attackerData != null) {
+            IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (attackerJujutsuCap != null) {
+                ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
+
                 if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
                         if (victim.isDeadOrDying()) {
@@ -120,9 +124,11 @@ public class WeaponEventHandler {
             }
 
             if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (victimData != null) {
+                if (victimJujutsuCap != null) {
+                    ISorcererData victimData = victimJujutsuCap.getSorcererData();
+
                     List<Ability> remove = new ArrayList<>();
 
                     for (Ability ability : victimData.getToggled()) {
@@ -149,7 +155,11 @@ public class WeaponEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             List<ItemStack> stacks = new ArrayList<>();
 

@@ -15,6 +15,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -84,7 +86,11 @@ public class BlackFlashHandler {
 
             if (attacker instanceof ISorcerer sorcerer && !sorcerer.hasArms()) return;
 
-            ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             if (SorcererUtil.getGrade(data.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal() ||
                     (!(source instanceof JJKDamageSources.JujutsuDamageSource) && !data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !data.hasToggled(JJKAbilities.BLUE_FISTS.get()))) return;

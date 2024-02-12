@@ -12,6 +12,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -36,9 +38,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
             if (curse.getOwner() != owner) return null;
 
-            ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (ownerData == null) return null;
+            if (ownerJujutsuCap == null) return null;
+
+            ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
 
             float experience;
 
@@ -49,9 +53,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
                 experience = client.experience;
             } else {
-                ISorcererData curseData = curse.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability curseJujutsuCap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (curseData == null) return null;
+                if (curseJujutsuCap == null) return null;
+
+                ISorcererData curseData = curseJujutsuCap.getSorcererData();
 
                 experience = curseData.getExperience();
             }
@@ -93,8 +99,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
         if (target == null) return;
 
-        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         data.addExperience(20.0F);
 

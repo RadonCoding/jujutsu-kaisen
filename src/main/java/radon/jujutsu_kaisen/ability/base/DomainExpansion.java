@@ -18,8 +18,12 @@ import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -46,7 +50,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data.hasToggled(this)) {
             if (target != null) {
@@ -90,20 +98,32 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     public static float getStrength(LivingEntity owner, boolean instant) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         return ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - data.getDomainSize()) * (instant ? 0.5F : 1.0F);
     }
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         return data.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && super.isValid(owner);
     }
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return Status.FAILURE;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (!data.hasSummonOfClass(DomainExpansionEntity.class)) {
                 return Status.FAILURE;
@@ -121,7 +141,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public void onEnabled(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         DomainExpansionEntity domain = this.createBarrier(owner);
         data.addSummon(domain);
@@ -135,7 +159,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public void onDisabled(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         data.unsummonByClass(DomainExpansionEntity.class);
 
         if (owner instanceof ServerPlayer player) {
@@ -173,7 +201,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public boolean isDisplayed(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         ICursedTechnique technique = data.getTechnique();
         return technique != null && technique.getDomain() == this && super.isDisplayed(owner);
     }
@@ -206,7 +238,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         }
 
         default float getRadius(LivingEntity owner) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return 0.0F;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
             return this.getSize() * data.getDomainSize();
         }
 

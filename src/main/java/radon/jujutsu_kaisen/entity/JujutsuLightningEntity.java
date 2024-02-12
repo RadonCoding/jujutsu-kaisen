@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
 import java.util.List;
@@ -103,7 +105,11 @@ public class JujutsuLightningEntity extends LightningBolt {
                 LivingEntity owner = this.getOwner();
 
                 if (owner != null) {
-                    ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+                    IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
                     for (Entity entity : entities) {
                         if (entity == owner) continue;

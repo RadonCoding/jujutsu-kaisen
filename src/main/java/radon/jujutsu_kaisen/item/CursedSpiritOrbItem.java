@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
@@ -62,7 +64,11 @@ public class CursedSpiritOrbItem extends Item {
             return stack;
         }
 
-        ICurseManipulationData data = pEntityLiving.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsu = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsu == null) return stack;
+
+        ICurseManipulationData data = jujutsu.getCurseManipulationData();
         data.addCurse(getAbsorbed(pStack));
 
         return stack;

@@ -17,6 +17,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.RCT1;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 import java.util.UUID;
 
@@ -88,7 +90,11 @@ public class EntityUtil {
 
     @Nullable
     public static RCT1 getRCTTier(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return null;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data.isUnlocked(JJKAbilities.RCT3.get())) return JJKAbilities.RCT3.get();
         if (data.isUnlocked(JJKAbilities.RCT2.get())) return JJKAbilities.RCT2.get();

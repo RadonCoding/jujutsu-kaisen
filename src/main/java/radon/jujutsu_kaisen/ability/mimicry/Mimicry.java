@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -40,9 +42,11 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return false;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return data.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() && data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }
@@ -72,10 +76,17 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
         if (owner.level().isClientSide) return false;
         if (!DamageUtil.isMelee(source)) return false;
 
-        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerData == null || targetData == null) return false;
+        if (ownerJujutsuCap == null) return false;
+
+        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+
+        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (targetJujutsuCap == null) return false;
+
+        ISorcererData targetData = targetJujutsuCap.getSorcererData();
 
         ICursedTechnique current = ownerData.getTechnique();
         ICursedTechnique copied = targetData.getTechnique();

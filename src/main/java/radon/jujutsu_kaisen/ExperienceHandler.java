@@ -21,6 +21,8 @@ import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
@@ -92,7 +94,11 @@ public class ExperienceHandler {
 
         if (!(entity.level() instanceof ServerLevel level)) return;
 
-        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data != null && data.getExperience() > 0.0F) {
             float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
@@ -204,7 +210,11 @@ public class ExperienceHandler {
                 strength += pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);
             }
 
-            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data != null) {
                 strength += data.getExperience() * 0.1F;
@@ -221,7 +231,11 @@ public class ExperienceHandler {
             if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
             if (this.damageDealtByOwner == 0.0F) return;
 
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             float targetStrength = calculateStrength(target) * 1.5F;
             float ownerStrength = calculateStrength(owner);

@@ -5,8 +5,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -61,7 +65,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return true;
 
-        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
         for (EntityType<?> type : this.getTypes()) {
             if (data.hasTamed(type)) return true;
@@ -80,10 +88,12 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || tenShadowsData == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        ITenShadowsData tenShadowsData = jujutsuCap.getTenShadowsData();
 
         if (!sorcererData.hasToggled(this) && this.isTenShadows()) {
             if (tenShadowsData.getMode() != TenShadowsMode.SUMMON) return false;
@@ -134,7 +144,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
         if (!this.canDie()) return false;
 
-        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
         return data.isDead(type);
     }
@@ -155,7 +169,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Status.FAILURE;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if ((this.isTenShadows() || this.getActivationType(owner) == ActivationType.TOGGLED) && data.hasSummonOfClass(this.clazz)) {
             return Status.FAILURE;
@@ -166,7 +184,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     @Override
     public Status isStillUsable(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return Status.FAILURE;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (!data.hasSummonOfClass(this.clazz)) {
                 return Status.FAILURE;
@@ -178,7 +200,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     protected abstract T summon(LivingEntity owner);
 
     public void spawn(LivingEntity owner, boolean clone) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         T summon = this.summon(owner);
 
@@ -203,7 +229,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (this.shouldRemove()) {
             data.unsummonByClass(this.clazz);
@@ -218,7 +248,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public float getRealCost(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         return this.isTenShadows() && this.isTamed(owner) && data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 0.0F : super.getRealCost(owner);
     }
 }

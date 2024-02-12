@@ -8,15 +8,19 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererData;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -25,22 +29,34 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TenShadowsDataProvider {
     @SubscribeEvent
+    public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
+        if (!(entity instanceof ISorcerer) && !(entity instanceof Player)) return;
+        entity.setData(JJKAttachmentTypes.TEN_SHADOWS, new TenShadowsData(entity));
+    }
+
+    @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
-        if (!owner.hasData(JJKAttachmentTypes.TEN_SHADOWS)) return;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        if (jujutsuCap == null) return;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
         data.tick();
     }
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player original = event.getOriginal();
         Player clone = event.getEntity();
 
+        IJujutsuCapability jujutsuCap = clone.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
         if (event.isWasDeath()) {
-            ITenShadowsData data = original.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
             if (!ConfigHolder.SERVER.realisticShikigami.get()) {
                 data.revive(false);
@@ -52,7 +68,7 @@ public class TenShadowsDataProvider {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        ITenShadowsData data = player.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        ITenShadowsData data = playerREPLACEMETEN_SHADOWS);
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
     }
 
@@ -60,7 +76,7 @@ public class TenShadowsDataProvider {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        ITenShadowsData data = player.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        ITenShadowsData data = playerREPLACEMETEN_SHADOWS);
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
     }
 

@@ -14,8 +14,12 @@ import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -54,7 +58,11 @@ public abstract class Ability {
     }
 
     public static float getPower(Ability ability, LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         return data.getAbilityPower() * (1.0F + ChantHandler.getChant(owner, ability));
     }
 
@@ -89,7 +97,11 @@ public abstract class Ability {
     }
 
     public int getRealPointsCost(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data.hasTrait(Trait.SIX_EYES)) {
             return this.getPointsCost() / 2;
@@ -98,7 +110,11 @@ public abstract class Ability {
     }
 
     public boolean isUnlocked(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         return data.isUnlocked(this);
     }
 
@@ -107,7 +123,11 @@ public abstract class Ability {
         if (owner instanceof Player player && player.getAbilities().instabuild) return true;
         if (!this.isUnlockable() || this.getPointsCost() == 0) return false;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return data.getPoints() >= this.getRealPointsCost(owner);
     }
@@ -163,7 +183,11 @@ public abstract class Ability {
     }
 
     public int getRealCooldown(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null) return 0;
 
@@ -182,9 +206,11 @@ public abstract class Ability {
 
         if (this.isUnlockable() && !this.isUnlocked(owner)) return false;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (this.isTechnique() && data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
             if (!this.isNotDisabledFromDA() || !data.hasToggled(this)) {
@@ -199,7 +225,11 @@ public abstract class Ability {
     }
 
     private void addDuration(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
 
         if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
@@ -208,8 +238,12 @@ public abstract class Ability {
     }
 
     public void charge(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
+
 
         if (owner instanceof Player player && player.getAbilities().instabuild) return;
 
@@ -223,8 +257,12 @@ public abstract class Ability {
     public Status getStatus(LivingEntity owner) {
         if (!this.isNotDisabledFromUV() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Status.FAILURE;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
+
         if (data == null) return Status.FAILURE;
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
@@ -275,9 +313,11 @@ public abstract class Ability {
     }
 
     public boolean checkCost(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return false;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
             float cost = this.getRealCost(owner);
@@ -316,8 +356,12 @@ public abstract class Ability {
     public float getRealCost(LivingEntity owner) {
         float cost = this.getCost(owner);
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
+
         if (data == null) return 0.0F;
 
         ICursedTechnique copied = data.getCurrentCopied();
@@ -348,8 +392,12 @@ public abstract class Ability {
         default int getRealDuration(LivingEntity owner) {
             int duration = this.getDuration();
 
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return 0;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
+
             if (data == null) return 0;
 
             if (duration > 0) {
@@ -363,8 +411,12 @@ public abstract class Ability {
         default void onStop(LivingEntity owner) {}
 
         default int getCharge(LivingEntity owner) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return 0;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
+
             if (data == null) return 0;
 
             return data.getCharge();

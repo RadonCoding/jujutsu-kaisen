@@ -9,6 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -26,9 +28,11 @@ public class TraitCommand {
     }
 
     public static int addTrait(ServerPlayer player, Trait trait) {
-        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return 0;
+        if (jujutsuCap == null) return  0;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         data.addTrait(trait);
 
@@ -38,9 +42,11 @@ public class TraitCommand {
     }
 
     public static int removeTrait(ServerPlayer player, Trait trait) {
-        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return 0;
+        if (jujutsuCap == null) return 0;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         data.removeTrait(trait);
 

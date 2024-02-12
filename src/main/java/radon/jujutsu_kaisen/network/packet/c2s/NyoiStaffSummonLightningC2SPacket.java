@@ -8,6 +8,8 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.ConnectedLightningEntity;
 import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 
@@ -33,7 +35,11 @@ public class NyoiStaffSummonLightningC2SPacket implements CustomPacketPayload {
             if (!(sender.serverLevel().getEntity(this.identifier) instanceof NyoiStaffEntity staff)) return;
             if (!staff.isCharged() || staff.getOwner() != sender) return;
 
-            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             sender.level().addFreshEntity(new ConnectedLightningEntity(sender, data.getAbilityPower(), sender.position().add(0.0D, sender.getBbHeight() / 2.0F, 0.0D),
                     staff.position()));

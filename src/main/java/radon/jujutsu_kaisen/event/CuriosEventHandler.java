@@ -17,6 +17,8 @@ import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -33,7 +35,11 @@ public class CuriosEventHandler {
     public static void onCuriosEquip(CurioEquipEvent event) {
         LivingEntity entity = event.getEntity();
 
-        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 
@@ -52,7 +58,11 @@ public class CuriosEventHandler {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 

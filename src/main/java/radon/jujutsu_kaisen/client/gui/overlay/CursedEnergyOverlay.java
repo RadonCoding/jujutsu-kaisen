@@ -13,6 +13,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 
@@ -29,8 +31,11 @@ public class CursedEnergyOverlay {
 
         if (mc.player == null) return;
 
-        ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         graphics.pose().pushPose();
         graphics.pose().scale(SCALE, SCALE, SCALE);

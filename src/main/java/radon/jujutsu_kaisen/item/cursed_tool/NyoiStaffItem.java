@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.NyoiStaffRenderer;
@@ -50,20 +52,24 @@ public class NyoiStaffItem extends CursedToolItem implements GeoItem {
         ItemStack stack = ctx.getItemInHand();
         NyoiStaffEntity staff = new NyoiStaffEntity(player, stack, Vec3.atLowerCornerWithOffset(ctx.getClickedPos(), 0.5D, 0.0D, 0.5D));
 
-        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data != null && data.getNature() == CursedEnergyNature.LIGHTNING) {
-            float cost = JJKAbilities.LIGHTNING.get().getRealCost(player) * 0.5F;
+        if (jujutsuCap != null) {
+            ISorcererData data = jujutsuCap.getSorcererData();
 
-            boolean success = player.getAbilities().instabuild;
+            if (data.getNature() == CursedEnergyNature.LIGHTNING) {
+                float cost = JJKAbilities.LIGHTNING.get().getRealCost(player) * 0.5F;
 
-            if (!player.getAbilities().instabuild) {
-                if (data.getEnergy() >= cost) {
-                    data.useEnergy(cost);
-                    success = true;
+                boolean success = player.getAbilities().instabuild;
+
+                if (!player.getAbilities().instabuild) {
+                    if (data.getEnergy() >= cost) {
+                        data.useEnergy(cost);
+                        success = true;
+                    }
                 }
+                staff.setCharged(success);
             }
-            staff.setCharged(success);
         }
         stack.shrink(1);
         ctx.getLevel().addFreshEntity(staff);

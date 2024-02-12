@@ -6,6 +6,8 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -22,7 +24,11 @@ public class CursedEnergyVisual implements IVisual {
 
         if (mc.player == null) return false;
 
-        ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         return ConfigHolder.CLIENT.visibleCursedEnergy.get() && client.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get()) &&
                 (client.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (data.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())));

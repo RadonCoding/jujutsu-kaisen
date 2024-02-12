@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -37,17 +39,19 @@ public class SorcererGoal extends Goal {
     public void tick() {
         List<Ability> abilities = JJKAbilities.getAbilities(this.mob);
 
-        ISorcererData sorcererData = this.mob.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData curseManipulationData = this.mob.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability ownerJujutsu = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || curseManipulationData == null) return;
+        if (ownerJujutsu == null) return;
 
-        if (sorcererData.hasToggled(JJKAbilities.RIKA.get())) {
-            if (sorcererData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
-                List<ICursedTechnique> copied = new ArrayList<>(sorcererData.getCopied());
+        ISorcererData ownerSorcererData = ownerJujutsu.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownerJujutsu.getCurseManipulationData();
+
+        if (ownerSorcererData.hasToggled(JJKAbilities.RIKA.get())) {
+            if (ownerSorcererData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
+                List<ICursedTechnique> copied = new ArrayList<>(ownerSorcererData.getCopied());
 
                 if (!copied.isEmpty()) {
-                    sorcererData.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
+                    ownerSorcererData.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
                 }
             }
         }
@@ -56,11 +60,13 @@ public class SorcererGoal extends Goal {
             LivingEntity target = this.mob.getTarget();
 
             if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {
-                List<AbsorbedCurse> curses = curseManipulationData.getCurses();
+                List<AbsorbedCurse> curses = ownerCurseManipulationData.getCurses();
 
-                ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability targetJujutsu = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (targetData != null) {
+                if (targetJujutsu != null) {
+                    ISorcererData targetData = targetJujutsu.getSorcererData();
+
                     AbsorbedCurse closest = null;
 
                     for (AbsorbedCurse curse : curses) {
@@ -83,13 +89,13 @@ public class SorcererGoal extends Goal {
 
             if (stack.is(JJKItems.CURSED_SPIRIT_ORB.get())) {
                 this.mob.playSound(this.mob.getEatingSound(stack), 1.0F, 1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.4F);
-                curseManipulationData.addCurse(CursedSpiritOrbItem.getAbsorbed(stack));
+                ownerCurseManipulationData.addCurse(CursedSpiritOrbItem.getAbsorbed(stack));
                 this.mob.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             }
         }
 
-        if (sorcererData.hasSummonOfClass(RikaEntity.class)) {
-            RikaEntity rika = sorcererData.getSummonByClass(RikaEntity.class);
+        if (ownerSorcererData.hasSummonOfClass(RikaEntity.class)) {
+            RikaEntity rika = ownerSorcererData.getSummonByClass(RikaEntity.class);
 
             if (rika != null) {
                 rika.changeTarget(this.mob.getTarget());
@@ -101,18 +107,18 @@ public class SorcererGoal extends Goal {
 
             if (ability.getActivationType(this.mob) == Ability.ActivationType.TOGGLED) {
                 if (success) {
-                    if (!sorcererData.hasToggled(ability)) {
+                    if (!ownerSorcererData.hasToggled(ability)) {
                         AbilityHandler.trigger(this.mob, ability);
                     }
-                } else if (sorcererData.hasToggled(ability)) {
+                } else if (ownerSorcererData.hasToggled(ability)) {
                     AbilityHandler.untrigger(this.mob, ability);
                 }
             } else if (ability.getActivationType(this.mob) == Ability.ActivationType.CHANNELED) {
                 if (success) {
-                    if (!sorcererData.isChanneling(ability)) {
+                    if (!ownerSorcererData.isChanneling(ability)) {
                         AbilityHandler.trigger(this.mob, ability);
                     }
-                } else if (sorcererData.isChanneling(ability)) {
+                } else if (ownerSorcererData.isChanneling(ability)) {
                     AbilityHandler.untrigger(this.mob, ability);
                 }
             } else if (success) {
