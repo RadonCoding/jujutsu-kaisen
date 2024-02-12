@@ -120,24 +120,13 @@ public class ImbuementHandler {
 
             if (technique == null) return;
 
-            ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack held = owner.getItemInHand(InteractionHand.MAIN_HAND);
 
-            if (stack.isEmpty()) return;
+            if (held.isEmpty()) return;
 
-            if (!(stack.getItem() instanceof SwordItem)) return;
+            if (!(held.getItem() instanceof SwordItem)) return;
 
-            increaseImbuementAmount(stack, technique, amount);
-        }
-
-        @SubscribeEvent
-        public static void onAbilityTrigger(AbilityTriggerEvent event) {
-            Ability ability = event.getAbility();
-
-            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
-
-            if (technique == null) return;
-
-            LivingEntity owner = event.getEntity();
+            increaseImbuementAmount(held, technique, amount);
 
             List<ItemStack> stacks = new ArrayList<>();
             stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
