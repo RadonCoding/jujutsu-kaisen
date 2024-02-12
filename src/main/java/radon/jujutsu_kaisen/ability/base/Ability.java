@@ -99,9 +99,6 @@ public abstract class Ability {
 
     public boolean isUnlocked(LivingEntity owner) {
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-
-        if (data == null) return false;
-
         return data.isUnlocked(this);
     }
 
@@ -111,8 +108,6 @@ public abstract class Ability {
         if (!this.isUnlockable() || this.getPointsCost() == 0) return false;
 
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-
-        if (data == null) return false;
 
         return data.getPoints() >= this.getRealPointsCost(owner);
     }

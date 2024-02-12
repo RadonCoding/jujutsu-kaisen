@@ -37,8 +37,6 @@ public class AdaptationEventHandler {
             ISorcererData sorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
             ITenShadowsData tenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            if (sorcererData == null || tenShadowsData == null) return;
-
             if (!sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             if (!tenShadowsData.isAdaptedTo(event.getAbility())) {
@@ -57,8 +55,6 @@ public class AdaptationEventHandler {
             ISorcererData sorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
             ITenShadowsData tenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            if (sorcererData == null || tenShadowsData == null) return;
-
             if (sorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             // Initiate / continue the adaptation process
@@ -66,14 +62,15 @@ public class AdaptationEventHandler {
 
             if (!(victim instanceof MahoragaEntity)) return;
 
-            if (tenShadowsData.isAdaptedTo(source)) {
-                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-            }
-
             float process = (1.0F - tenShadowsData.getAdaptationProgress(source));
 
             switch (tenShadowsData.getAdaptationType(source)) {
-                case DAMAGE -> event.setAmount(event.getAmount() * process);
+                case DAMAGE -> {
+                    if (tenShadowsData.isAdaptedTo(source)) {
+                        victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+                    }
+                    event.setAmount(event.getAmount() * process);
+                }
                 case COUNTER -> {
                     if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
                         Entity attacker = source.getEntity();
@@ -100,16 +97,12 @@ public class AdaptationEventHandler {
 
             ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
 
-            if (victimData == null) return;
-
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
             ISorcererData attackerSorcererData = attacker.getData(JJKAttachmentTypes.SORCERER);
             ITenShadowsData attackerTenShadowsData = attacker.getData(JJKAttachmentTypes.TEN_SHADOWS);
-
-            if (attackerSorcererData == null || attackerTenShadowsData == null) return;
 
             if (!attackerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerSorcererData.hasToggled(JJKAbilities.WHEEL.get())) {
                 if (victimData.hasToggled(JJKAbilities.INFINITY.get())) {

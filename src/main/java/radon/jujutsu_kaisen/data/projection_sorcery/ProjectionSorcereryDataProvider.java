@@ -40,8 +40,6 @@ public class ProjectionSorcereryDataProvider {
         Player original = event.getOriginal();
         Player clone = event.getEntity();
 
-        if (!original.hasData(JJKAttachmentTypes.PROJECTION_SORCERY) || !clone.hasData(JJKAttachmentTypes.PROJECTION_SORCERY)) return;
-
         if (event.isWasDeath()) {
             IProjectionSorceryData data = original.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
             data.resetSpeedStacks();

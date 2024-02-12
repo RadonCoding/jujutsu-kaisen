@@ -48,8 +48,6 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return null;
 
         int width = Math.round(this.getWidth() * data.getDomainSize());
         int height = Math.round(this.getHeight() * data.getDomainSize());
