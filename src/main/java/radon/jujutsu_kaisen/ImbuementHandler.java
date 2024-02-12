@@ -10,6 +10,7 @@ import net.minecraft.world.item.SwordItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -120,13 +121,24 @@ public class ImbuementHandler {
 
             if (technique == null) return;
 
-            ItemStack held = owner.getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
 
-            if (held.isEmpty()) return;
+            if (stack.isEmpty()) return;
 
-            if (!(held.getItem() instanceof SwordItem)) return;
+            if (!(stack.getItem() instanceof SwordItem)) return;
 
-            increaseImbuementAmount(held, technique, amount);
+            increaseImbuementAmount(stack, technique, amount);
+        }
+
+        @SubscribeEvent
+        public static void onAbilityStop(AbilityStopEvent event) {
+            Ability ability = event.getAbility();
+
+            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
+
+            if (technique == null) return;
+
+            LivingEntity owner = event.getEntity();
 
             List<ItemStack> stacks = new ArrayList<>();
             stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
