@@ -62,6 +62,7 @@ public class NearestAttackableCurseGoal extends TargetGoal {
     protected void findTarget() {
         this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
             if (!(entity instanceof TamableAnimal tamable) || !tamable.isTame()) {
+                if (!entity.hasData(JJKAttachmentTypes.SORCERER)) return false;
                 ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
                 return entity instanceof SukunaEntity || entity instanceof HeianSukunaEntity || data.getType() == JujutsuType.CURSE;
             }
