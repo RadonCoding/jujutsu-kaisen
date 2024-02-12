@@ -1,0 +1,57 @@
+package radon.jujutsu_kaisen.ability.curse_manipulation;
+
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.projectile.MaximumUzumakiProjectile;
+
+public class MaximumUzumaki extends Ability {
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) &&
+                (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.INSTANT;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
+        MaximumUzumakiProjectile uzumaki = new MaximumUzumakiProjectile(owner, this.getPower(owner));
+        owner.level().addFreshEntity(uzumaki);
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return data.hasSummonOfClass(CursedSpirit.class) && super.isValid(owner);
+    }
+
+    @Override
+    public float getCost(LivingEntity owner) {
+        return 0;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 60 * 20;
+    }
+}

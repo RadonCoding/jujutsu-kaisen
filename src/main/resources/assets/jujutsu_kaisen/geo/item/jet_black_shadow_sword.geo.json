@@ -1,0 +1,27 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.black_blade",
+				"texture_width": 32,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 4,
+				"visible_bounds_offset": [0, 1, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-1.53125, -1.11813, -2.3365], "size": [3, 1, 4], "uv": [0, 0]},
+						{"origin": [-0.5, -11.11813, -1.48885], "size": [1, 10, 2], "pivot": [0, -2.61813, -0.82635], "rotation": [2.5, 0, 0], "uv": [12, 4]},
+						{"origin": [-1.03125, -13.31813, -0.60974], "size": [2, 3, 2], "pivot": [-0.03125, -10.61813, -1.09724], "rotation": [-2.5, 0, 0], "uv": [16, 0]},
+						{"origin": [0.03125, -0.11813, -3.3365], "size": [0, 24, 6], "uv": [0, 0]}
+					]
+				}
+			]
+		}
+	]
+}

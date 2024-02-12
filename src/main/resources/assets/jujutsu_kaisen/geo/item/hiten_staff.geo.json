@@ -1,0 +1,42 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.hiten_staff",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 6,
+				"visible_bounds_offset": [0, 1, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-0.86485, -29.65, 0.54613], "size": [1, 36, 1], "uv": [22, 0]},
+						{"origin": [-1.36485, 6.35, 0.04613], "size": [2, 1, 2], "uv": [0, 0]},
+						{"origin": [-0.36485, 7.15, -0.45387], "size": [0, 9, 3], "uv": [28, -3]},
+						{"origin": [-0.32735, 7.15, -0.21637], "size": [0, 9, 3], "pivot": [-0.22735, 7.25, 1.14613], "rotation": [0, -90, 0], "uv": [28, -3]},
+						{"origin": [-0.36485, 6.15, -4.45387], "size": [0, 10, 11], "uv": [0, 5]}
+					]
+				},
+				{
+					"name": "cloth_1",
+					"pivot": [0, 22.6, 1.1625],
+					"cubes": [
+						{"origin": [-0.25138, 0.8, -5.12361], "size": [0, 2, 6], "pivot": [-1.25138, 1.35, 1.78889], "rotation": [52.64168, 7.15102, 2.26708], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "cloth_2",
+					"pivot": [0, 21.3, 1.3625],
+					"cubes": [
+						{"origin": [0.0644, -0.59188, -4.26935], "size": [0, 3, 6], "pivot": [-1.25138, 0.05, 1.98889], "rotation": [64.25806, 1.64768, -17.45849], "uv": [0, 2]}
+					]
+				}
+			]
+		}
+	]
+}
