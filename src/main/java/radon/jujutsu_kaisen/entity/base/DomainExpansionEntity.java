@@ -200,6 +200,8 @@ public abstract class DomainExpansionEntity extends Entity {
             return false;
         }
 
+        if (!owner.canAttack(victim)) return false;
+
         if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
         ITenShadowsData victimTenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);

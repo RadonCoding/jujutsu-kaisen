@@ -103,7 +103,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         for (LivingEntity entity : this.getAffected()) {
             ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-            if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 this.ability.onHitBlock(this, owner, entity.blockPosition());
             } else {
                 this.ability.onHitEntity(this, owner, entity, false);
