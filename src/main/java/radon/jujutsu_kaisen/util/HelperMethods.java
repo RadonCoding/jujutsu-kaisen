@@ -12,11 +12,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -36,20 +40,17 @@ public class HelperMethods {
         return FastColor.ARGB32.color(255, Math.round(rgb.x * 255.0F), Math.round(rgb.y * 255.0F), Math.round(rgb.z * 255.0F));
     }
 
-    public static boolean isDestroyable(BlockGetter getter, @Nullable LivingEntity source, BlockPos pos) {
+    public static boolean isDestroyable(Level level, @Nullable LivingEntity source, BlockPos pos) {
         if (!ConfigHolder.SERVER.destruction.get()) return false;
 
         if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return false;
 
-        BlockState state = getter.getBlockState(pos);
-        boolean destroyable = !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
+        Vec3 center = pos.getCenter();
 
-        if (!destroyable && source != null && source.level() instanceof ServerLevel level && getter.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-            UUID identifier = be.getIdentifier();
-            destroyable = identifier == null || !(level.getEntity(identifier) instanceof DomainExpansionEntity domain) ||
-                    !domain.isInsideBarrier(source.blockPosition());
-        }
-        return destroyable;
+        if (!VeilHandler.canDestroy(source, level, center.x, center.y, center.z)) return false;
+
+        BlockState state = level.getBlockState(pos);
+        return !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
     }
 
     public static <E> E getWeightedRandom(Map<E, Double> weights, RandomSource random) {
