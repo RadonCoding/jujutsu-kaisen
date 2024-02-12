@@ -64,6 +64,8 @@ public abstract class RadialScreen extends Screen {
     protected void init() {
         super.init();
 
+        this.pages.clear();
+
         List<DisplayItem> items = this.getItems();
 
         int count = items.size() / 12;
@@ -147,6 +149,8 @@ public abstract class RadialScreen extends Screen {
                 if (item.type == DisplayItem.Type.COPIED) {
                     PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
                     data.uncopy(item.copied);
+
+                    this.init();
                 }
             }
         }
