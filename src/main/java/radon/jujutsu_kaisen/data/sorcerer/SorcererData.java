@@ -945,6 +945,9 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void uncopy(ICursedTechnique technique) {
+        if (this.currentCopied == technique) {
+            this.currentCopied = null;
+        }
         this.copied.remove(technique);
     }
 
