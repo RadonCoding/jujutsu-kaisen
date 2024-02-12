@@ -13,20 +13,8 @@ import radon.jujutsu_kaisen.client.gui.screen.tab.PactTab;
 import java.util.Objects;
 
 public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.Entry> {
-    public PactListWidget(IBuilder<Pact, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y, PactTab parent) {
+    public PactListWidget(IBuilder<Pact, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y) {
         super(builder, callback, minecraft, width, height, x, y);
-    }
-
-    @Override
-    protected void renderItem(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-        var e = this.getEntry(pIndex);
-
-        e.renderBack(pGuiGraphics, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, Objects.equals(this.getHovered(), e), pPartialTick);
-
-        if (this.isSelectedItem(pIndex)) {
-            pGuiGraphics.renderOutline(pLeft - 2, pTop - 2, pWidth, pHeight + 3, -1);
-        }
-        e.render(pGuiGraphics, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, Objects.equals(this.getHovered(), e), pPartialTick);
     }
 
     @Override
