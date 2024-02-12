@@ -33,10 +33,10 @@ public class UncopyAbilityC2SPacket implements CustomPacketPayload {
 
             IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+            if (jujutsuCap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
-            
+            ISorcererData data = jujutsuCap.getSorcererData();
+
             data.uncopy(this.technique);
         });
     }
