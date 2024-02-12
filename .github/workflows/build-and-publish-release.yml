@@ -25,7 +25,7 @@ jobs:
         
     - name: build jar
       run: |
-#        ./gradlew build
+        ./gradlew build
         
     - name: create release
       uses: softprops/action-gh-release@v1

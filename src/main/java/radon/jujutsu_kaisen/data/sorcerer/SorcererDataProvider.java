@@ -36,7 +36,6 @@ public class SorcererDataProvider {
 
         if (event.isWasDeath()) {
             ISorcererData data = original.getData(JJKAttachmentTypes.SORCERER);
-
             data.setEnergy(data.getMaxEnergy());
             data.clearToggled();
             data.resetCooldowns();
@@ -44,11 +43,23 @@ public class SorcererDataProvider {
             data.resetBurnout();
             data.resetExtraEnergy();
             data.resetBlackFlash();
-
-            if (clone instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-            }
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
     }
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, ISorcererData> {

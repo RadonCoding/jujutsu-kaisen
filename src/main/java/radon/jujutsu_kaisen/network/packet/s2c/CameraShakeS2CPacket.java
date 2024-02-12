@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.CameraShakeHandler;
@@ -25,7 +25,7 @@ public class CameraShakeS2CPacket implements CustomPacketPayload {
         this(buf.readFloat(), buf.readFloat(), buf.readInt());
     }
 
-    public void handle(ConfigurationPayloadContext ctx) {
+    public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
     }
 

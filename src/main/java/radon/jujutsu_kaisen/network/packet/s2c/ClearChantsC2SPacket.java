@@ -8,9 +8,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
@@ -26,7 +26,7 @@ public class ClearChantsC2SPacket implements CustomPacketPayload {
     public ClearChantsC2SPacket(FriendlyByteBuf ignored) {
     }
 
-    public void handle(ConfigurationPayloadContext ctx) {
+    public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> ClientChantHandler.remove());
     }
 

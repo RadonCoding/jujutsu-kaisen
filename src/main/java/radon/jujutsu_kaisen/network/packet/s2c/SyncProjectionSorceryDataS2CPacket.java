@@ -5,7 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -25,7 +25,7 @@ public class SyncProjectionSorceryDataS2CPacket implements CustomPacketPayload {
         this(buf.readNbt());
     }
 
-    public void handle(ConfigurationPayloadContext ctx) {
+    public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> {
             Player player = ClientWrapper.getPlayer();
 

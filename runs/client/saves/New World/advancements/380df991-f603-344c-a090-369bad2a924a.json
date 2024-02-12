@@ -13,6 +13,7 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "minecraft:frozen_ocean": "2024-02-12 13:48:50 +0200",
       "minecraft:snowy_taiga": "2024-02-12 04:43:10 +0200"
     },
     "done": false
