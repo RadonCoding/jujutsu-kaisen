@@ -87,7 +87,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.FLYING_SPEED)
-                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
+                .add(Attributes.MAX_HEALTH, 10 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE);
     }
