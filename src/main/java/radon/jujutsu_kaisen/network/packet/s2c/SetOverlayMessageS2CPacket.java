@@ -34,7 +34,7 @@ public class SetOverlayMessageS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> ClientWrapper.setOverlayMessage(this.component, this.animate));
+        ctx.workHandler().execute(() -> ClientWrapper.setOverlayMessage(this.component, this.animate));
     }
 
     @Override

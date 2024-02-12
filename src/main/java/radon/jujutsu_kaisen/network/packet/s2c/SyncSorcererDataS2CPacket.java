@@ -31,7 +31,7 @@ public class SyncSorcererDataS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> {
+        ctx.workHandler().execute(() -> {
             Player player = ClientWrapper.getPlayer();
 
             if (player == null) return;

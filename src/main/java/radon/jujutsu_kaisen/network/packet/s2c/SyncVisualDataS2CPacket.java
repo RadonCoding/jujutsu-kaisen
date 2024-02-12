@@ -35,7 +35,7 @@ public class SyncVisualDataS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> ClientVisualHandler.receive(this.src, this.nbt));
+        ctx.workHandler().execute(() -> ClientVisualHandler.receive(this.src, this.nbt));
     }
 
     @Override

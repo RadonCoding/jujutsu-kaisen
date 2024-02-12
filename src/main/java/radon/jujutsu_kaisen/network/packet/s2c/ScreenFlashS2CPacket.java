@@ -22,7 +22,7 @@ public class ScreenFlashS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(ScreenFlashOverlay::flash);
+        ctx.workHandler().execute(ScreenFlashOverlay::flash);
     }
 
     @Override

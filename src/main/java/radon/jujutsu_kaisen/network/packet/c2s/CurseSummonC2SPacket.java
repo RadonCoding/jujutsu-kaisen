@@ -25,7 +25,7 @@ public class CurseSummonC2SPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> {
+        ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             if (JJKAbilities.hasActiveTechnique(sender, JJKCursedTechniques.CURSE_MANIPULATION.get())) {

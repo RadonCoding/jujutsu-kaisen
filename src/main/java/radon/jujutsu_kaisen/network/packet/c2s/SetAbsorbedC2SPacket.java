@@ -26,7 +26,7 @@ public class SetAbsorbedC2SPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> {
+        ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             ICurseManipulationData data = sender.getData(JJKAttachmentTypes.CURSE_MANIPULATION);

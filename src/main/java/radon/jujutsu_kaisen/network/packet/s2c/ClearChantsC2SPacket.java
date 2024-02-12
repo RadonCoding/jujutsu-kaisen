@@ -27,7 +27,7 @@ public class ClearChantsC2SPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> ClientChantHandler.remove());
+        ctx.workHandler().execute(() -> ClientChantHandler.remove());
     }
 
     @Override

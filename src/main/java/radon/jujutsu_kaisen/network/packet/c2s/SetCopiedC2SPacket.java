@@ -27,7 +27,7 @@ public class SetCopiedC2SPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> {
+        ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
