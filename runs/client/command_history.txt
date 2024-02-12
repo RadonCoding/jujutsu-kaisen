@@ -1,4 +1,3 @@
-/advancement grant @p everything
 /effect clear
 /settechnique @p jujutsu_kaisen:disaster_flames
 /settechnique @p jujutsu_kaisen:idle_transfiguration
@@ -45,3 +44,7 @@
 /settechnique @s jujutsu_kaisen:boogie_woogie
 /settechnique @p jujutsu_kaisen:curse_manipulation
 /kill @p
+/settechnique @p jujutsu_kaisen:limitless
+/setexperience @p 10000
+/trait add @p SIX_EYES
+/setnature @p LIGHTNING
