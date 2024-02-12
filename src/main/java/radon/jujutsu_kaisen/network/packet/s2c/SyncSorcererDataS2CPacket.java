@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -9,12 +10,14 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class SyncSorcererDataS2CPacket implements CustomPacketPayload {
@@ -38,11 +41,12 @@ public class SyncSorcererDataS2CPacket implements CustomPacketPayload {
 
             ISorcererData old = player.getData(JJKAttachmentTypes.SORCERER);
 
-            ISorcererData tmp = new SorcererData(null);
-            tmp.deserializeNBT(this.nbt);
-
             Set<Ability> oldToggled = old.getToggled();
-            Set<Ability> newToggled = tmp.getToggled();
+            Set<Ability> newToggled = new HashSet<>();
+
+            for (Tag key : this.nbt.getList("toggled", Tag.TAG_STRING)) {
+                newToggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
+            }
 
             oldToggled.removeAll(newToggled);
 
