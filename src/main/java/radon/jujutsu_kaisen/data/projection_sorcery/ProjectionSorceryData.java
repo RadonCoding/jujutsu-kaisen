@@ -79,11 +79,6 @@ public class ProjectionSorceryData implements IProjectionSorceryData {
     }
 
     @Override
-    public void init(LivingEntity owner) {
-        this.owner = owner;
-    }
-
-    @Override
     public int getSpeedStacks() {
         return this.speedStacks;
     }

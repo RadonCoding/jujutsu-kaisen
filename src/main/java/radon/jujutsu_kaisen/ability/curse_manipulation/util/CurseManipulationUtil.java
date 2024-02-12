@@ -50,7 +50,7 @@ public class CurseManipulationUtil {
     }
 
     public static float getCurseExperience(AbsorbedCurse curse) {
-        ISorcererData data = new SorcererData();
+        ISorcererData data = new SorcererData(null);
         data.deserializeNBT(curse.getData());
         return data.getExperience();
     }

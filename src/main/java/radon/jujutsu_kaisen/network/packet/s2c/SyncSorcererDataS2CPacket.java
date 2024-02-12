@@ -38,7 +38,7 @@ public class SyncSorcererDataS2CPacket implements CustomPacketPayload {
 
             ISorcererData old = player.getData(JJKAttachmentTypes.SORCERER);
 
-            ISorcererData tmp = new SorcererData();
+            ISorcererData tmp = new SorcererData(null);
             tmp.deserializeNBT(this.nbt);
 
             Set<Ability> oldToggled = old.getToggled();
