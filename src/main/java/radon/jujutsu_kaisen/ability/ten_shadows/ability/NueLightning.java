@@ -37,12 +37,12 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ITenShadowsData tenShadowsData = jujutsuCap.getTenShadowsData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
         return !sorcererData.hasToggled(JJKAbilities.NUE.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.NUE.get()) &&

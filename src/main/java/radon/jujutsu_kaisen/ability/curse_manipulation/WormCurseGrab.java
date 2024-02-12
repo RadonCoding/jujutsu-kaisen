@@ -31,11 +31,11 @@ public class WormCurseGrab extends Ability {
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
         return data.hasCurse(JJKEntities.WORM_CURSE.get());
     }
@@ -58,11 +58,11 @@ public class WormCurseGrab extends Ability {
 
         if (target == null) return;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
 
         AbsorbedCurse curse = data.getCurse(JJKEntities.WORM_CURSE.get());
@@ -84,11 +84,11 @@ public class WormCurseGrab extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
         if (data == null) return 0.0F;
 

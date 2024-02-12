@@ -30,11 +30,11 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return ActivationType.TOGGLED;
+        if (cap == null) return ActivationType.TOGGLED;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null) return ActivationType.TOGGLED;
 
@@ -108,11 +108,11 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
 
         if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {

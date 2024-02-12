@@ -139,7 +139,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
 
         if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
+            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, this.canFly()));
 
             this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
             this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
@@ -217,11 +217,11 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
         if (!this.isCustom()) this.createGoals();
 
-        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
         this.init(data);
 
         if (this.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {

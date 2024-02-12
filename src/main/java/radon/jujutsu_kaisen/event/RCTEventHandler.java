@@ -40,11 +40,11 @@ public class RCTEventHandler {
 
             if (victim.getHealth() - event.getAmount() > 0.0F) return;
 
-            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             if (data.isUnlocked(JJKAbilities.RCT1.get())) return;
             if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;

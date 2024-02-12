@@ -13,11 +13,11 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 public class AbilityHandler {
     public static void untrigger(LivingEntity owner,Ability ability) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             if (data.hasToggled(ability)) {
@@ -31,11 +31,11 @@ public class AbilityHandler {
     }
 
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Ability.Status.FAILURE;
+        if (cap == null) return Ability.Status.FAILURE;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         Ability.Status status = ability.isTriggerable(owner);
 

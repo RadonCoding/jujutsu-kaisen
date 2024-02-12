@@ -180,11 +180,11 @@ public class AbilityWidget {
 
         if (this.ability.isCursedEnergyColor()) {
             if (this.minecraft.player != null) {
-                IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
                     Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
@@ -215,11 +215,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
@@ -287,11 +287,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
         if (this.ability.isCursedEnergyColor()) {
             if (this.minecraft.player != null) {
-                IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
                     Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();

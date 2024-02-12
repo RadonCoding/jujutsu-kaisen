@@ -35,11 +35,11 @@ public class CuriosEventHandler {
     public static void onCuriosEquip(CurioEquipEvent event) {
         LivingEntity entity = event.getEntity();
 
-        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 
@@ -58,11 +58,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 

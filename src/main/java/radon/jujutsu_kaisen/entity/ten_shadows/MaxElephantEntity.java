@@ -227,11 +227,11 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         this.entityData.set(DATA_SHOOTING, data.isChanneling(JJKAbilities.WATER.get()));
@@ -252,11 +252,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
         if (this.level().isClientSide) return;
         if (this.tickCount - this.riding < 20) return;
 
-        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         boolean channelling = data.isChanneling(JJKAbilities.WATER.get());

@@ -94,11 +94,11 @@ public class ExperienceHandler {
 
         if (!(entity.level() instanceof ServerLevel level)) return;
 
-        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
         if (data != null && data.getExperience() > 0.0F) {
             float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
@@ -210,10 +210,10 @@ ISorcererData data = jujutsuCap.getSorcererData();
                 strength += pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);
             }
 
-            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap != null) {
-                ISorcererData data = jujutsuCap.getSorcererData();
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
                 strength += data.getExperience() * 0.1F;
 
                 if (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get())) {
@@ -228,11 +228,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
             if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
             if (this.damageDealtByOwner == 0.0F) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             float targetStrength = calculateStrength(target) * 1.5F;
             float ownerStrength = calculateStrength(owner);

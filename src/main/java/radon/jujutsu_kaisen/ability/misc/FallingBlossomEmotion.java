@@ -60,11 +60,11 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
         for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
             if (!(projectile.getOwner() instanceof LivingEntity living)) continue;
 
-            IJujutsuCapability jujutsuCap = living.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = living.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
@@ -135,11 +135,11 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
 
             LivingEntity victim = event.getEntity();
 
-            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 

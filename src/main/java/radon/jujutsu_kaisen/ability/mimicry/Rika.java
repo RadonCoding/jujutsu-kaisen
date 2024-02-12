@@ -28,22 +28,22 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return false;
+        if (ownercap == null) return false;
 
-        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+        ISorcererData ownerData = ownercap.getSorcererData();
 
         if (ownerData.hasToggled(this)) return target != null;
 
         if (target != null) {
             if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
 
-            IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (targetJujutsuCap == null) return false;
+            if (targetcap == null) return false;
 
-            ISorcererData targetData = targetJujutsuCap.getSorcererData();
+            ISorcererData targetData = targetcap.getSorcererData();
 
             return SorcererUtil.getGrade(targetData.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
         }

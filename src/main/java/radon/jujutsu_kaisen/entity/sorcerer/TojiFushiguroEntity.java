@@ -232,10 +232,10 @@ public class TojiFushiguroEntity extends SorcererEntity {
             result = SPLIT_SOUL_KATANA;
         }
 
-        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap != null) {
-            ISorcererData data = jujutsuCap.getSorcererData();
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
 
             for (Ability toggled : data.getToggled()) {
                 if (toggled.isTechnique()) {

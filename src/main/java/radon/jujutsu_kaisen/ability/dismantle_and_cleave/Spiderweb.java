@@ -65,11 +65,11 @@ public class Spiderweb extends Ability {
         BlockHitResult hit = this.getBlockHit(owner);
 
         if (hit != null) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             float radius = Math.max(MIN_EXPLOSIVE_POWER, Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner)));
             float real = (radius % 2 == 0) ? radius + 1 : radius;

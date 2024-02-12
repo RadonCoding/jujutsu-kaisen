@@ -12,12 +12,10 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -49,11 +47,11 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     private void updateAdaptation() {
-        IJujutsuCapability jujutsuCap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) return;
 
@@ -184,7 +182,7 @@ public class TenShadowsData implements ITenShadowsData {
         RegistryAccess registry = this.owner.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsuCap ? jujutsuCap.getAbility() : null);
+                source instanceof JJKDamageSources.JujutsuDamageSource cap ? cap.getAbility() : null);
     }
 
     @Override
@@ -267,7 +265,7 @@ public class TenShadowsData implements ITenShadowsData {
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
 
         Adaptation adaptation = new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsuCap ? jujutsuCap.getAbility() : null);
+                source instanceof JJKDamageSources.JujutsuDamageSource cap ? cap.getAbility() : null);
 
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);

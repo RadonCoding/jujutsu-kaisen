@@ -29,12 +29,12 @@ public class AbilityScreen extends RadialScreen {
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return List.of();
+        if (cap == null) return List.of();
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
         
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType(this.minecraft.player) != MenuType.RADIAL);
@@ -66,12 +66,12 @@ public class AbilityScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
         
         DisplayItem item = this.getCurrent().get(this.hovered);
 

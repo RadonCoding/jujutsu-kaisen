@@ -43,11 +43,11 @@ public interface ISorcerer {
 
         if (!entity.isAddedToWorld()) return SorcererUtil.getGrade(this.getExperience());
 
-        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return SorcererGrade.GRADE_4;
+        if (cap == null) return SorcererGrade.GRADE_4;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null) return SorcererGrade.GRADE_4;
 

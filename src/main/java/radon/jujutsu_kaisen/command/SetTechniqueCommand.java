@@ -25,11 +25,11 @@ public class SetTechniqueCommand {
     }
 
     public static int setTechnique(ServerPlayer player, ICursedTechnique technique) {
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0;
+        if (cap == null) return 0;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         data.setTechnique(technique);
         data.clearToggled();

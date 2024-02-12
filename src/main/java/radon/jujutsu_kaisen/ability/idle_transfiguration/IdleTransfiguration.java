@@ -46,11 +46,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return ActivationType.TOGGLED;
+        if (cap == null) return ActivationType.TOGGLED;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         return data.hasToggled(JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? ActivationType.INSTANT : ActivationType.TOGGLED;
     }
 
@@ -64,10 +64,10 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
                 strength += client.experience * 0.1F;
             }
         } else {
-            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap != null) {
-                ISorcererData data = jujutsuCap.getSorcererData();
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
                 strength += data.getExperience() * 0.1F;
             }
         }
@@ -84,17 +84,17 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     }
 
     public static boolean checkSukuna(LivingEntity owner, LivingEntity target) {
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return false;
+        if (ownercap == null) return false;
 
-        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+        ISorcererData ownerData = ownercap.getSorcererData();
 
-        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetJujutsuCap == null) return false;
+        if (targetcap == null) return false;
 
-        ISorcererData targetData = targetJujutsuCap.getSorcererData();
+        ISorcererData targetData = targetcap.getSorcererData();
 
         if (!targetData.hasTrait(Trait.VESSEL) || targetData.getFingers() == 0) return false;
 
@@ -176,11 +176,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
             data.toggle(JJKAbilities.SOUL_DECIMATION.get());

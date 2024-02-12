@@ -81,11 +81,11 @@ public class MobEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             DamageSource source = event.getSource();
 
@@ -114,11 +114,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
             LivingEntity owner = event.getEntity();
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             // Sukuna has multiple arms
             if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {

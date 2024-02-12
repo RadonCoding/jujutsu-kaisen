@@ -128,11 +128,11 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
             if (victim.level().isClientSide) return;
 
-            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
 

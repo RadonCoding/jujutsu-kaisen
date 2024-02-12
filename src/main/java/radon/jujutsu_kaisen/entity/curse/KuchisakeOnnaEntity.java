@@ -147,11 +147,11 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         this.entityData.set(DATA_OPEN, false);
         this.entityData.set(DATA_TARGET, Optional.empty());
 
-        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data != null && data.hasToggled(JJKAbilities.SCISSORS.get())) {
             AbilityHandler.trigger(this, JJKAbilities.SCISSORS.get());
@@ -190,11 +190,11 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
             if (target == null) return;
 
-            IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * data.getAbilityPower());
         });
@@ -221,11 +221,11 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         this.getCurrent().ifPresent(identifier -> {
             if (!(((ServerLevel) this.level()).getEntity(identifier) instanceof LivingEntity target)) return;
 
-            IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
 
@@ -239,10 +239,10 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap != null) {
-                ISorcererData data = jujutsuCap.getSorcererData();
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
 
                 if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
             }

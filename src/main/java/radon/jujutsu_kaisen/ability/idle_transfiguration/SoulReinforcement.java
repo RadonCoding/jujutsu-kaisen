@@ -71,20 +71,20 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             DamageSource source = event.getSource();
 
-            IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimJujutsuCap == null) return;
+            if (victimcap == null) return;
 
-            ISorcererData victimData = victimJujutsuCap.getSorcererData();
+            ISorcererData victimData = victimcap.getSorcererData();
 
             if (!victimData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
 
             if (DamageUtil.isMelee(source)) {
                 if (source.getEntity() instanceof LivingEntity attacker) {
-                    IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    if (attackerJujutsuCap != null) {
-                        ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
+                    if (attackercap != null) {
+                        ISorcererData attackerData = attackercap.getSorcererData();
 
                         if (attackerData.hasTrait(Trait.VESSEL) || attackerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                             return;

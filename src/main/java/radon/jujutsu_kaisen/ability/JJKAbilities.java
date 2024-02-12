@@ -214,12 +214,12 @@ public class JJKAbilities {
     }
 
     public static Set<ICursedTechnique> getTechniques(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Set.of();
+        if (cap == null) return Set.of();
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
@@ -232,35 +232,35 @@ public class JJKAbilities {
     }
 
     public static boolean hasTechnique(LivingEntity owner, ICursedTechnique technique) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         return sorcererData.getTechnique() == technique || sorcererData.getAdditional() == technique || sorcererData.getCopied().contains(technique) ||
                 curseManipulationData.getAbsorbed().contains(technique);
     }
 
     public static boolean hasActiveTechnique(LivingEntity owner, ICursedTechnique technique) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         return sorcererData.getTechnique() == technique || sorcererData.getAdditional() == technique || sorcererData.getCurrentCopied() == technique ||
                 curseManipulationData.getCurrentAbsorbed() == technique;
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return List.of();
+        if (cap == null) return List.of();
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null) return List.of();
 

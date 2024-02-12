@@ -33,11 +33,11 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     public void onEnabled(LivingEntity owner) {
         super.onEnabled(owner);
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
 
         if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {

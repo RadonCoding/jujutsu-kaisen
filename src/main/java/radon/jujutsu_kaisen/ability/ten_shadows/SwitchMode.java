@@ -27,16 +27,16 @@ public class SwitchMode extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return false;
+        if (ownercap == null) return false;
 
-        ITenShadowsData ownerData = ownerJujutsuCap.getTenShadowsData();
+        ITenShadowsData ownerData = ownercap.getTenShadowsData();
 
-        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetJujutsuCap != null) {
-            ISorcererData targetData = targetJujutsuCap.getSorcererData();
+        if (targetcap != null) {
+            ISorcererData targetData = targetcap.getSorcererData();
 
             if (ownerData.hasTamed(JJKEntities.MAHORAGA.get())) {
                 if (ownerData.getMode() == TenShadowsMode.SUMMON) {
@@ -68,11 +68,11 @@ public class SwitchMode extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ITenShadowsData data = jujutsuCap.getTenShadowsData();
+        ITenShadowsData data = cap.getTenShadowsData();
 
 
         data.setMode(data.getMode() == TenShadowsMode.SUMMON ? TenShadowsMode.ABILITY : TenShadowsMode.SUMMON);

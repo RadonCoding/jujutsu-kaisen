@@ -28,11 +28,11 @@ public class SummonAll extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
                 owner.getHealth() / owner.getMaxHealth() < 0.4F);
@@ -47,11 +47,11 @@ public class SummonAll extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
         List<AbsorbedCurse> curses = data.getCurses();
 
@@ -62,11 +62,11 @@ public class SummonAll extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Status.FAILURE;
+        if (cap == null) return Status.FAILURE;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
         if (data.getCurses().isEmpty()) {
             return Status.FAILURE;
@@ -76,11 +76,11 @@ public class SummonAll extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
         List<AbsorbedCurse> curses = data.getCurses();
 

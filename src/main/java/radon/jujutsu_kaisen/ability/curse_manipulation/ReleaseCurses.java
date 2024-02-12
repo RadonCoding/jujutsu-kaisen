@@ -50,23 +50,23 @@ public class ReleaseCurses extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return;
+        if (ownercap == null) return;
 
-        ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
-        ICurseManipulationData ownerCurseManipulationData = ownerJujutsuCap.getCurseManipulationData();
+        ISorcererData ownerSorcererData = ownercap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownercap.getCurseManipulationData();
 
         for (Entity summon : ownerSorcererData.getSummons()) {
             if (!(summon instanceof CursedSpirit curse)) continue;
 
             ownerSorcererData.removeSummon(curse);
 
-            IJujutsuCapability curseJujutsuCap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cursecap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (curseJujutsuCap == null) continue;
+            if (cursecap == null) continue;
 
-            ISorcererData curseData = curseJujutsuCap.getSorcererData();
+            ISorcererData curseData = cursecap.getSorcererData();
 
             if (curse instanceof AbsorbedPlayerEntity absorbed) {
                 ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(), absorbed.getPlayer()));

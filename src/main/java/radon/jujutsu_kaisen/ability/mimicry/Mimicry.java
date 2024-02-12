@@ -42,11 +42,11 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return data.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() && data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }
@@ -76,17 +76,17 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
         if (owner.level().isClientSide) return false;
         if (!DamageUtil.isMelee(source)) return false;
 
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return false;
+        if (ownercap == null) return false;
 
-        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+        ISorcererData ownerData = ownercap.getSorcererData();
 
-        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetJujutsuCap == null) return false;
+        if (targetcap == null) return false;
 
-        ISorcererData targetData = targetJujutsuCap.getSorcererData();
+        ISorcererData targetData = targetcap.getSorcererData();
 
         ICursedTechnique current = ownerData.getTechnique();
         ICursedTechnique copied = targetData.getTechnique();

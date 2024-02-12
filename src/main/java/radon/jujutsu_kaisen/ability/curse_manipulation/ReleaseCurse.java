@@ -67,20 +67,20 @@ public class ReleaseCurse extends Ability {
 
         owner.swing(InteractionHand.MAIN_HAND);
 
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return;
+        if (ownercap == null) return;
 
-        ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
-        ICurseManipulationData ownerCurseManipulationData = ownerJujutsuCap.getCurseManipulationData();
+        ISorcererData ownerSorcererData = ownercap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownercap.getCurseManipulationData();
 
         ownerSorcererData.removeSummon(curse);
 
-        IJujutsuCapability curseJujutsuCap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cursecap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (curseJujutsuCap == null) return;
+        if (cursecap == null) return;
 
-        ISorcererData curseData = curseJujutsuCap.getSorcererData();
+        ISorcererData curseData = cursecap.getSorcererData();
 
         if (curse instanceof AbsorbedPlayerEntity absorbed) {
             ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(), absorbed.getPlayer()));

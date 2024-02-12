@@ -74,11 +74,11 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                 int horizontal = i;
                 int vertical = j;
 
-                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
 
                 int death = width - i;

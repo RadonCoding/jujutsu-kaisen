@@ -53,11 +53,11 @@ public class SuguruGetoEntity extends SorcererEntity {
     private AbsorbedCurse createCurse(EntityType<?> type) {
         if (!(type.create(this.level()) instanceof CursedSpirit curse)) return null;
 
-        IJujutsuCapability jujutsu = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return null;
+        if (cap == null) return null;
 
-        ISorcererData data = jujutsu.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null) return null;
 
@@ -65,11 +65,11 @@ public class SuguruGetoEntity extends SorcererEntity {
     }
 
     private void tryAddCurse(EntityType<?> type) {
-        IJujutsuCapability jujutsu = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return;
+        if (cap == null) return;
 
-        ICurseManipulationData data = jujutsu.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
         AbsorbedCurse curse = this.createCurse(type);
 

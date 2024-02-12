@@ -35,11 +35,11 @@ public class NyoiStaffSummonLightningC2SPacket implements CustomPacketPayload {
             if (!(sender.serverLevel().getEntity(this.identifier) instanceof NyoiStaffEntity staff)) return;
             if (!staff.isCharged() || staff.getOwner() != sender) return;
 
-            IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             sender.level().addFreshEntity(new ConnectedLightningEntity(sender, data.getAbilityPower(), sender.position().add(0.0D, sender.getBbHeight() / 2.0F, 0.0D),
                     staff.position()));

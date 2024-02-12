@@ -90,11 +90,11 @@ public class JJKEventHandler {
             for (ServerPlayer player : level.players()) {
                 if (!player.isSleepingLongEnough()) continue;
 
-                IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (jujutsuCap == null) continue;
+                if (cap == null) continue;
 
-                ISorcererData data = jujutsuCap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 data.setEnergy(data.getMaxEnergy());
 
@@ -129,11 +129,11 @@ public class JJKEventHandler {
 
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             // If the target is dead we should not trigger any IAttack's
             if (victim.getHealth() - event.getAmount() <= 0.0F) return;
@@ -150,11 +150,11 @@ public class JJKEventHandler {
 
             if (owner.isDeadOrDying()) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
@@ -171,11 +171,11 @@ public class JJKEventHandler {
         public static void onLivingFall(LivingFallEvent event) {
             LivingEntity victim = event.getEntity();
 
-            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 event.setDistance(event.getDistance() * 0.5F);
@@ -202,10 +202,10 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
 
             if (ConfigHolder.SERVER.realisticCurses.get()) {
-                IJujutsuCapability victimJujutsu = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (victimJujutsu != null) {
-                    ISorcererData victimData = victimJujutsu.getSorcererData();
+                if (victimcap != null) {
+                    ISorcererData victimData = victimcap.getSorcererData();
 
                     if (victimData.getType() == JujutsuType.CURSE) {
                         ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
@@ -222,10 +222,10 @@ public class JJKEventHandler {
                         } else if (DamageUtil.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                             cursed = true;
                         } else {
-                            IJujutsuCapability attackerJujutsu = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                            if (attackerJujutsu != null) {
-                                ISorcererData attackerData = attackerJujutsu.getSorcererData();
+                            if (attackercap != null) {
+                                ISorcererData attackerData = attackercap.getSorcererData();
                                 cursed = attackerData.getEnergy() > 0.0F;
                             }
                         }
@@ -244,11 +244,11 @@ public class JJKEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             switch (data.getType()) {
                 case SORCERER -> {
@@ -286,11 +286,11 @@ public class JJKEventHandler {
 
             LivingEntity owner = event.getEntity();
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+            ICurseManipulationData data = cap.getCurseManipulationData();
 
             // Handling removal of absorbed techniques from curse manipulation
             if (technique != null && data.getAbsorbed().contains(technique)) {
@@ -306,11 +306,11 @@ public class JJKEventHandler {
 
             LivingEntity owner = event.getEntity();
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+            ICurseManipulationData data = cap.getCurseManipulationData();
 
             if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
                 // Handling removal of absorbed techniques from curse manipulation

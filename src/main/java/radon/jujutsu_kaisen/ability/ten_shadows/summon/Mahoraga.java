@@ -32,12 +32,12 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ITenShadowsData tenShadowsData = jujutsuCap.getTenShadowsData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
         if (!this.isTamed(owner)) {
             return target.getHealth() > owner.getHealth() * 4 || owner.getHealth() / owner.getMaxHealth() <= 0.1F;

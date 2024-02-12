@@ -24,11 +24,11 @@ public class MergedFleshItem extends CursedEnergyFleshItem {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        IJujutsuCapability jujutsuCap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return stack;
+        if (cap == null) return stack;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return stack;
 

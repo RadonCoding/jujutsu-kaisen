@@ -52,11 +52,11 @@ public class DamageUtil {
         if (source.getEntity() == target) return false;
 
         if (source.getEntity() instanceof LivingEntity attacker && isMelee(source)) {
-            IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return true;
+            if (cap == null) return true;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
             return !data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
         }
         return true;
@@ -64,7 +64,7 @@ public class DamageUtil {
 
     public static boolean isMelee(DamageSource source) {
         return !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SPLIT_SOUL_KATANA)) ||
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsuCap && jujutsuCap.getAbility() != null && jujutsuCap.getAbility().isMelee();
+                source instanceof JJKDamageSources.JujutsuDamageSource cap && cap.getAbility() != null && cap.getAbility().isMelee();
     }
 
 }

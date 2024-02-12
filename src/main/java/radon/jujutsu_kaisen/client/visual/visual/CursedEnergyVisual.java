@@ -24,11 +24,11 @@ public class CursedEnergyVisual implements IVisual {
 
         if (mc.player == null) return false;
 
-        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         return ConfigHolder.CLIENT.visibleCursedEnergy.get() && client.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get()) &&
                 (client.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (data.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())));

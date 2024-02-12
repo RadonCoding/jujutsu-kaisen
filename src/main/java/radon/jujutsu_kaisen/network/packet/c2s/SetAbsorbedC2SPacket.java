@@ -31,11 +31,11 @@ public class SetAbsorbedC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            IJujutsuCapability jujutsu = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            ICurseManipulationData data = jujutsu.getCurseManipulationData();
+            ICurseManipulationData data = cap.getCurseManipulationData();
 
             if (!JJKAbilities.hasActiveTechnique(sender, JJKCursedTechniques.CURSE_MANIPULATION.get())) return;
 

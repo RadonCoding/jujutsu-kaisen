@@ -41,11 +41,11 @@ public class SyncSorcererDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData old = jujutsuCap.getSorcererData();
+            ISorcererData old = cap.getSorcererData();
 
             Set<Ability> oldToggled = old.getToggled();
             Set<Ability> newToggled = new HashSet<>();

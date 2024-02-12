@@ -38,11 +38,11 @@ public class OutputRCT extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
 
-        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return false;
+if (cap == null) return false;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
         if (data == null) return false;
 
@@ -92,11 +92,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
         if (target == null) return;
 
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return;
+        if (ownercap == null) return;
 
-        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+        ISorcererData ownerData = ownercap.getSorcererData();
 
         for (int i = 0; i < 8; i++) {
             ownerData.delayTickEvent(() -> {
@@ -113,11 +113,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
         float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 5 * 20.0F;
 
-        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetJujutsuCap == null) return;
+        if (targetcap == null) return;
 
-        ISorcererData targetData = targetJujutsuCap.getSorcererData();
+        ISorcererData targetData = targetcap.getSorcererData();
 
         if (targetData != null && targetData.getType() == JujutsuType.CURSE) {
             target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount);
@@ -148,11 +148,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null || data.getType() == JujutsuType.CURSE) return false;
 

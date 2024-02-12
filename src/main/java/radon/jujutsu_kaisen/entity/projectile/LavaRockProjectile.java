@@ -99,11 +99,11 @@ public class LavaRockProjectile extends JujutsuProjectile {
         if (entity == owner) return;
 
         if (this.isDomain()) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
             DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
@@ -119,11 +119,11 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
                 DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 

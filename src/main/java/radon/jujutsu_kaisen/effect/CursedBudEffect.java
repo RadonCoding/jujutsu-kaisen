@@ -29,11 +29,11 @@ public class CursedBudEffect extends JJKEffect {
     public void onEffectStarted(@NotNull LivingEntity pLivingEntity, int pAmplifier) {
         super.onEffectStarted(pLivingEntity, pAmplifier);
 
-        IJujutsuCapability jujutsu = pLivingEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pLivingEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsu.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         AMOUNTS.put(pLivingEntity.getUUID(), data.getEnergy());
     }
@@ -46,11 +46,11 @@ public class CursedBudEffect extends JJKEffect {
 
         if (pLivingEntity.isDeadOrDying()) return;
 
-        IJujutsuCapability jujutsu = pLivingEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pLivingEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsu.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         MobEffectInstance instance = pLivingEntity.getEffect(this);
 

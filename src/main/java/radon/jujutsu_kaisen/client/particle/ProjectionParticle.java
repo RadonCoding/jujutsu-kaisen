@@ -60,11 +60,11 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             this.position = living.walkAnimation.position();
             this.speed = living.walkAnimation.speed();
         } else {
-            IJujutsuCapability jujutsu = this.entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = this.entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsu.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (!data.isChanneling(JJKAbilities.PROJECTION_SORCERY.get())) {
                 this.remove();

@@ -103,11 +103,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         float scale = data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
 
@@ -152,11 +152,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         if (data == null) return 0.0F;
 
@@ -191,11 +191,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Status.FAILURE;
+        if (cap == null) return Status.FAILURE;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         if (data == null) return Status.FAILURE;
 
@@ -214,11 +214,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
@@ -286,11 +286,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 

@@ -33,11 +33,11 @@ public class SyncProjectionSorceryDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            IProjectionSorceryData data = jujutsu.getProjectionSorceryData();
+            IProjectionSorceryData data = cap.getProjectionSorceryData();
             data.deserializeNBT(this.nbt);
         });
     }

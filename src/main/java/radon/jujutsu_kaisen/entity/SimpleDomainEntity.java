@@ -59,11 +59,11 @@ public class SimpleDomainEntity extends Entity {
 
         this.setPos(owner.position());
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         this.setRadius(Math.min(MAX_RADIUS, RADIUS * data.getAbilityPower()));
         this.setMaxHealth(STRENGTH * data.getAbilityPower());
@@ -135,11 +135,11 @@ public class SimpleDomainEntity extends Entity {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             if (data != null && !data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                 this.discard();
@@ -152,11 +152,11 @@ public class SimpleDomainEntity extends Entity {
         } else if (owner != null) {
             super.tick();
 
-            IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (ownerJujutsuCap == null) return;
+            if (ownercap == null) return;
 
-            ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+            ISorcererData ownerData = ownercap.getSorcererData();
 
             this.setPos(owner.position());
 
@@ -168,11 +168,11 @@ public class SimpleDomainEntity extends Entity {
 
                     if (target == null) continue;
                     
-                    IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    if (targetJujutsuCap == null) continue;
+                    if (targetcap == null) continue;
 
-                    ISorcererData targetData = targetJujutsuCap.getSorcererData();
+                    ISorcererData targetData = targetcap.getSorcererData();
 
                     this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), DAMAGE * (1.0F + Math.max(0.0F, targetData.getAbilityPower() - ownerData.getAbilityPower())));
                 }

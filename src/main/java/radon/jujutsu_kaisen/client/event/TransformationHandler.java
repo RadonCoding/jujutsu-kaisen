@@ -43,11 +43,11 @@ public class TransformationHandler {
 
         if (mc.player == null || !mc.player.getItemInHand(event.getHand()).isEmpty()) return;
 
-        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         boolean translated = false;
 

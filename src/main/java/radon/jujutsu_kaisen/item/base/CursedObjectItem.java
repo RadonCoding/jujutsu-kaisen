@@ -53,10 +53,10 @@ public abstract class CursedObjectItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        IJujutsuCapability jujutsuCap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap != null) {
-            ISorcererData data = jujutsuCap.getSorcererData();
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
 
             if (data.getType() == JujutsuType.CURSE) {
                 data.addExtraEnergy(this.getEnergy());

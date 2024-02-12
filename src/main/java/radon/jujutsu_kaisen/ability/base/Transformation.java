@@ -17,11 +17,11 @@ public abstract class Transformation extends Ability implements Ability.IToggled
             return Status.FAILURE;
         }
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Status.FAILURE;
+        if (cap == null) return Status.FAILURE;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         for (Ability ability : new ArrayList<>(data.getToggled())) {
             if (!(ability instanceof ITransformation transformation) || ability == this) continue;

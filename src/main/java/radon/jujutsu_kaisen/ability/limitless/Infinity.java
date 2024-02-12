@@ -130,11 +130,11 @@ public class Infinity extends Ability implements Ability.IToggled {
                     continue;
                 }
 
-                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
                 if (projectile == null) {
                     iter.remove();
@@ -217,11 +217,11 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (!(hit.getEntity() instanceof LivingEntity owner)) return;
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
@@ -242,11 +242,11 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
@@ -265,11 +265,11 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (owner.level().isClientSide) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
 

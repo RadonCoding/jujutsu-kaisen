@@ -33,11 +33,11 @@ public class SyncCurseManipulationDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsu == null) return;
+if (cap == null) return;
 
-ICurseManipulationData data = jujutsu.getCurseManipulationData();
+ICurseManipulationData data = cap.getCurseManipulationData();
 
             data.deserializeNBT(this.nbt);
         });

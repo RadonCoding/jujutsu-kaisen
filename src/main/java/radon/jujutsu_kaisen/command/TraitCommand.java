@@ -28,11 +28,11 @@ public class TraitCommand {
     }
 
     public static int addTrait(ServerPlayer player, Trait trait) {
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return  0;
+        if (cap == null) return  0;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         data.addTrait(trait);
 
@@ -42,11 +42,11 @@ public class TraitCommand {
     }
 
     public static int removeTrait(ServerPlayer player, Trait trait) {
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0;
+        if (cap == null) return 0;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         data.removeTrait(trait);
 

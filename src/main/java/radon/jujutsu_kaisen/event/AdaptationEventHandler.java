@@ -36,12 +36,12 @@ public class AdaptationEventHandler {
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
-            IJujutsuCapability jujutsu = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            ISorcererData sorcererData = jujutsu.getSorcererData();
-            ITenShadowsData tenShadowsData = jujutsu.getTenShadowsData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
             if (!sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
@@ -58,12 +58,12 @@ public class AdaptationEventHandler {
 
             DamageSource source = event.getSource();
 
-            IJujutsuCapability jujutsu = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            ISorcererData sorcererData = jujutsu.getSorcererData();
-            ITenShadowsData tenShadowsData = jujutsu.getTenShadowsData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
             if (sorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
@@ -105,22 +105,22 @@ public class AdaptationEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            IJujutsuCapability victimJujutsu = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimJujutsu == null) return;
+            if (victimcap == null) return;
 
-            ISorcererData victimData = victimJujutsu.getSorcererData();
+            ISorcererData victimData = victimcap.getSorcererData();
 
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            IJujutsuCapability attackerJujutsu = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (attackerJujutsu == null) return;
+            if (attackercap == null) return;
 
-            ISorcererData attackerSorcererData = attackerJujutsu.getSorcererData();
-            ITenShadowsData attackerTenShadowsData = attackerJujutsu.getTenShadowsData();
+            ISorcererData attackerSorcererData = attackercap.getSorcererData();
+            ITenShadowsData attackerTenShadowsData = attackercap.getTenShadowsData();
 
             if (!attackerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerSorcererData.hasToggled(JJKAbilities.WHEEL.get())) {
                 if (victimData.hasToggled(JJKAbilities.INFINITY.get())) {

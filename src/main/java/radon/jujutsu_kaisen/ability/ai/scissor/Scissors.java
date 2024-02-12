@@ -50,11 +50,11 @@ public class Scissors extends Ability {
 
             if (target == null) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
                 ScissorEntity scissor = new ScissorEntity(owner, this.getPower(owner), target);

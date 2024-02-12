@@ -51,11 +51,11 @@ public class ShadowStorage extends Ability {
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return;
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ITenShadowsData data = jujutsuCap.getTenShadowsData();
+            ITenShadowsData data = cap.getTenShadowsData();
 
             data.addShadowInventory(owner.getMainHandItem());
             owner.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
@@ -66,11 +66,11 @@ public class ShadowStorage extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Status.FAILURE;
+        if (cap == null) return Status.FAILURE;
 
-        ITenShadowsData data = jujutsuCap.getTenShadowsData();
+        ITenShadowsData data = cap.getTenShadowsData();
 
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return Status.FAILURE;

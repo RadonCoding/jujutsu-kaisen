@@ -33,11 +33,11 @@ public class DomainCustomizationTab extends JJKTab {
 
         if (size != this.oldSize) {
             if (this.minecraft != null && this.minecraft.player != null) {
-                IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
                 PacketHandler.sendToServer(new SetDomainSizeC2SPacket(size));
                 data.setDomainSize(size);
@@ -60,11 +60,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
     public void addWidgets() {
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;

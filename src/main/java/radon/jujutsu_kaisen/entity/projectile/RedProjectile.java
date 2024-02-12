@@ -132,11 +132,11 @@ public class RedProjectile extends JujutsuProjectile {
                             }
 
                             if (owner instanceof ServerPlayer player) {
-                                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
                             }
                             HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));

@@ -23,11 +23,11 @@ public class SixEyesOverlay {
 
         assert mc.level != null && mc.player != null;
 
-        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasTrait(Trait.SIX_EYES)) return;
 

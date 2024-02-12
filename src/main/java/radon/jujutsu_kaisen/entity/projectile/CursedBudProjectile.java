@@ -66,11 +66,11 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
             if (victim == owner) return;
 
             if (victim.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * this.getPower())) {
-                IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
                 if (data != null && (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) || data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
                     victim.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * this.getPower()), 0));

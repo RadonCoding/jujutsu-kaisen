@@ -32,11 +32,11 @@ public class ServerChantHandler {
     }
 
     public static void onChant(LivingEntity owner, String word) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         Ability ability = data.getAbility(word);
 
@@ -101,11 +101,11 @@ public class ServerChantHandler {
 
                 if (owner == null) continue;
 
-                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
 
                 Ability ability = data.getAbility(new LinkedHashSet<>(MESSAGES.get(entry.getKey())));

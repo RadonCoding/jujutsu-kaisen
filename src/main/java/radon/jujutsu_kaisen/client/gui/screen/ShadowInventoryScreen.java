@@ -62,11 +62,11 @@ public class ShadowInventoryScreen extends Screen {
     private @Nullable List<ItemStack> getItems() {
         if (this.minecraft == null || this.minecraft.player == null) return null;
 
-        IJujutsuCapability jujutsu = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return null;
+        if (cap == null) return null;
 
-        ITenShadowsData data = jujutsu.getTenShadowsData();
+        ITenShadowsData data = cap.getTenShadowsData();
         return data.getShadowInventory();
     }
 
@@ -187,7 +187,7 @@ public class ShadowInventoryScreen extends Screen {
         double mouseAngle = Math.atan2(pMouseY - centerY, pMouseX - centerX);
         double mousePos = Math.sqrt(Math.pow(pMouseX - centerX, 2.0D) + Math.pow(pMouseY - centerY, 2.0D));
 
-        if (this.items.size() > 0) {
+        if (!this.items.isEmpty()) {
             float startAngle = getAngleFor(-0.5F);
             float endAngle = getAngleFor(this.items.size() - 0.5F);
 

@@ -39,12 +39,12 @@ public class SorcererGoal extends Goal {
     public void tick() {
         List<Ability> abilities = JJKAbilities.getAbilities(this.mob);
 
-        IJujutsuCapability ownerJujutsu = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsu == null) return;
+        if (ownercap == null) return;
 
-        ISorcererData ownerSorcererData = ownerJujutsu.getSorcererData();
-        ICurseManipulationData ownerCurseManipulationData = ownerJujutsu.getCurseManipulationData();
+        ISorcererData ownerSorcererData = ownercap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownercap.getCurseManipulationData();
 
         if (ownerSorcererData.hasToggled(JJKAbilities.RIKA.get())) {
             if (ownerSorcererData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
@@ -62,10 +62,10 @@ public class SorcererGoal extends Goal {
             if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {
                 List<AbsorbedCurse> curses = ownerCurseManipulationData.getCurses();
 
-                IJujutsuCapability targetJujutsu = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (targetJujutsu != null) {
-                    ISorcererData targetData = targetJujutsu.getSorcererData();
+                if (targetcap != null) {
+                    ISorcererData targetData = targetcap.getSorcererData();
 
                     AbsorbedCurse closest = null;
 

@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -170,10 +171,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
-    protected float ridingOffset(@NotNull Entity pEntity) {
-        LivingEntity passenger = this.getControllingPassenger();
-        if (passenger == null) return super.ridingOffset(pEntity);
-        return -passenger.getBbHeight() + 0.8F;
+    public @NotNull Vec3 getPassengerRidingPosition(Entity pEntity) {
+        return new Vec3(
+                new Vector3f(0.0F, -pEntity.getBbHeight() + 0.8F, 0.0F)
+                        .rotateY(-this.yBodyRot * (float) (Math.PI / 180.0)))
+                .add(this.position());
     }
 
     @Override

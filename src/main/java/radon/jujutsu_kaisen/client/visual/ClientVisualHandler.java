@@ -60,12 +60,12 @@ public class ClientVisualHandler {
         if (synced.containsKey(entity.getUUID())) {
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
-            IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return null;
+            if (cap == null) return null;
 
-            ISorcererData sorcererData = jujutsuCap.getSorcererData();
-            ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
             Set<ICursedTechnique> techniques = new HashSet<>();
 

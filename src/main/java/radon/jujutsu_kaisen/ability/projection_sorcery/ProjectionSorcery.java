@@ -56,11 +56,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
@@ -97,11 +97,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        IProjectionSorceryData data = jujutsuCap.getProjectionSorceryData();
+        IProjectionSorceryData data = cap.getProjectionSorceryData();
 
         List<AbstractMap.SimpleEntry<Vec3, Float>> frames = data.getFrames();
 
@@ -168,12 +168,12 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void onStop(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        IProjectionSorceryData projectionSorceryData = jujutsuCap.getProjectionSorceryData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IProjectionSorceryData projectionSorceryData = cap.getProjectionSorceryData();
 
         List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(projectionSorceryData.getFrames());
 
@@ -253,11 +253,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
             if (victim.level().isClientSide) return;
 
-            IJujutsuCapability jujutsu = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            IProjectionSorceryData data = jujutsu.getProjectionSorceryData();
+            IProjectionSorceryData data = cap.getProjectionSorceryData();
 
             if (data.getSpeedStacks() == 0) return;
 

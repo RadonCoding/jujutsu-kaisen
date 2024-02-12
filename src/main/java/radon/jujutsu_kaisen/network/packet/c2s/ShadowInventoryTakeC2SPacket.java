@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -32,11 +33,11 @@ public class ShadowInventoryTakeC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            IJujutsuCapability jujutsu = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            ITenShadowsData data = jujutsu.getTenShadowsData();
+            ITenShadowsData data = cap.getTenShadowsData();
 
             ItemStack stack = data.getShadowInventory(this.index);
 
@@ -53,11 +54,11 @@ public class ShadowInventoryTakeC2SPacket implements CustomPacketPayload {
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {
-
+        pBuffer.writeInt(this.index);
     }
 
     @Override
-    public ResourceLocation id() {
-        return null;
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

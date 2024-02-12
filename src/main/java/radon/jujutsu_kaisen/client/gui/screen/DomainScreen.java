@@ -36,11 +36,11 @@ public class DomainScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
         DisplayItem item = this.getCurrent().get(this.hovered);
 

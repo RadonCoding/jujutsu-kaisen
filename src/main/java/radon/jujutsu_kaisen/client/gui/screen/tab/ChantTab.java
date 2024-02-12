@@ -72,11 +72,11 @@ public class ChantTab extends JJKTab {
     public <T extends ObjectSelectionList.Entry<T>> void buildChantList(Consumer<T> consumer, Function<String, T> result) {
         if (this.ability == null || this.minecraft.player == null) return;
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         data.getFirstChants(this.ability.get()).forEach(chant -> consumer.accept(result.apply(chant)));
@@ -106,11 +106,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
         if (this.minecraft.player == null) return;
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         String text = this.text.getValue().toLowerCase();
@@ -156,11 +156,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
             if (this.ability == null) return;
 
-            IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             PacketHandler.sendToServer(new AddChantC2SPacket(JJKAbilities.getKey(this.ability.get()), text));
             data.addChant(this.ability.get(), text);
@@ -172,11 +172,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
         this.remove = Button.builder(Component.translatable(String.format("gui.%s.chant.remove", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.ability == null || this.chant == null) return;
 
-            IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             PacketHandler.sendToServer(new RemoveChantC2SPacket(JJKAbilities.getKey(this.ability.get()), this.chant.get()));
             data.removeChant(this.ability.get(), this.chant.get());

@@ -30,10 +30,10 @@ public class SukunaFingerItem extends CursedObjectItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        IJujutsuCapability jujutsuCap = pPlayer.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pPlayer.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap != null) {
-            ISorcererData data = jujutsuCap.getSorcererData();
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
 
             ItemStack stack = pPlayer.getItemInHand(pUsedHand);
 
@@ -50,10 +50,10 @@ public class SukunaFingerItem extends CursedObjectItem {
 
     @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
-        IJujutsuCapability jujutsuCap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap != null) {
-            ISorcererData data = jujutsuCap.getSorcererData();
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
 
             if (data.getType() == JujutsuType.CURSE) {
                 return super.finishUsingItem(pStack, pLevel, pEntityLiving);
