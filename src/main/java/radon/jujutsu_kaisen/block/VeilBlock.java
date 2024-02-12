@@ -59,15 +59,17 @@ public class VeilBlock extends Block implements EntityBlock {
 
             Entity entity = ctx.getEntity();
 
-            if (entity != null) {
-                ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+            if (entity == null) return super.getCollisionShape(pState, pLevel, pPos, pContext);
 
-                if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
-                    return Shapes.empty();
-                }
-                if (entity instanceof Projectile projectile) entity = projectile.getOwner();
-                return VeilBlockEntity.isAllowed(be.getParent(), entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
+            if (!entity.hasData(JJKAttachmentTypes.SORCERER)) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+
+            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
+                return Shapes.empty();
             }
+            if (entity instanceof Projectile projectile) entity = projectile.getOwner();
+            return VeilBlockEntity.isAllowed(be.getParent(), entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
     }
