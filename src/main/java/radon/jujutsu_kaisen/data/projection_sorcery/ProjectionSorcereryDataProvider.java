@@ -53,7 +53,7 @@ public class ProjectionSorcereryDataProvider {
         IProjectionSorceryData data = player.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
         data.init(player);
 
-        if (!player.level().isClientSide) return;
+        if (player.level().isClientSide) return;
 
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(data.serializeNBT()), (ServerPlayer) player);
     }
