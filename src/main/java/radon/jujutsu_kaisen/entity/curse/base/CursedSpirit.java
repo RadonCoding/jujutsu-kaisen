@@ -216,9 +216,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         if (!this.isCustom()) this.createGoals();
 
         ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
-
-
-        data.init(this);
+        this.init(data);
 
         if (this.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target_info", JujutsuKaisen.MOD_ID)),
@@ -247,15 +245,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Override
     public boolean fireImmune() {
         return true;
-    }
-
-    @Override
-    public void kill() {
-        super.kill();
-
-        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-            System.out.println(ste);
-        }
     }
 
     @Override

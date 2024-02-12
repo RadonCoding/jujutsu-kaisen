@@ -14,9 +14,8 @@ public class ServerVisualHandler {
 
         ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-
         ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), JJKAbilities.getTechniques(entity), data.getTechnique(), data.getType(),
                 data.getExperience(), data.getCursedEnergyColor());
-        PacketHandler.broadcast(new SyncVisualDataS2CPacket(entity.getUUID(), data.serializeNBT()));
+        PacketHandler.broadcast(new SyncVisualDataS2CPacket(entity.getUUID(), client.serializeNBT()));
     }
 }

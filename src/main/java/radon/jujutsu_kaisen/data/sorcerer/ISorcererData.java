@@ -6,6 +6,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -17,9 +18,7 @@ import java.util.UUID;
 public interface ISorcererData extends INBTSerializable<CompoundTag> {
     void attack(DamageSource source, LivingEntity target);
 
-    void tick(LivingEntity owner);
-
-    void init(LivingEntity owner);
+    void tick();
 
     int getCursedEnergyColor();
 

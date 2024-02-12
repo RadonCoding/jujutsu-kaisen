@@ -50,7 +50,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         return domain == null ? JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CLEAVE.get()) : JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.CLEAVE.get());
     }
 
-    private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
+    private static float calculateDamage(DamageSource source, LivingEntity target) {
         float damage = target.getMaxHealth();
         float armor = (float) target.getArmorValue();
         float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
@@ -104,7 +104,6 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
                 1.0F, 1.0F);
 
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
 
         for (int i = 1; i <= 20; i++) {
             data.delayTickEvent(() -> {
@@ -133,7 +132,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         data.delayTickEvent(() -> {
             float power = domain == null ? Ability.getPower(JJKAbilities.CLEAVE.get(), owner) : Ability.getPower(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
 
-            float damage = calculateDamage(source, owner, target);
+            float damage = calculateDamage(source, target);
             damage = Math.min(MAX_DAMAGE * power, damage);
 
             boolean success = target.hurt(source, damage);

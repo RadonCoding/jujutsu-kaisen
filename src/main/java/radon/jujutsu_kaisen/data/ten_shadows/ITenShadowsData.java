@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -14,9 +15,7 @@ import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import java.util.*;
 
 public interface ITenShadowsData extends INBTSerializable<CompoundTag> {
-    void tick(LivingEntity owner);
-
-    void init(LivingEntity owner);
+    void tick();
 
     boolean hasTamed(EntityType<?> entity);
 

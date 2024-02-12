@@ -179,8 +179,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         if (!this.isCustom()) this.createGoals();
 
         ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
-
-
         this.init(data);
     }
 

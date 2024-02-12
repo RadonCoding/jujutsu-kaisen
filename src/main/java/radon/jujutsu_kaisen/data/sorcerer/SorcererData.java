@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
@@ -100,9 +101,11 @@ public class SorcererData implements ISorcererData {
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
 
-    private LivingEntity owner;
+    private final LivingEntity owner;
 
-    public SorcererData() {
+    public SorcererData(LivingEntity owner) {
+        this.owner = owner;
+
         this.domainSize = 1.0F;
 
         this.unlocked = new HashSet<>();
@@ -332,11 +335,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void tick(LivingEntity owner) {
-        if (this.owner == null) {
-            this.owner = owner;
-        }
-
+    public void tick() {
         this.updateSummons();
 
         this.updateCooldowns();
@@ -392,11 +391,6 @@ public class SorcererData implements ISorcererData {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
         }
-    }
-
-    @Override
-    public void init(LivingEntity owner) {
-        this.owner = owner;
     }
 
     @Override

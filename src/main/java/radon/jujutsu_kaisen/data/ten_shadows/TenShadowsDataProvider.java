@@ -6,9 +6,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -29,7 +31,7 @@ public class TenShadowsDataProvider {
         if (!owner.hasData(JJKAttachmentTypes.TEN_SHADOWS)) return;
 
         ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
-        data.tick(owner);
+        data.tick();
     }
 
     @SubscribeEvent
@@ -50,14 +52,10 @@ public class TenShadowsDataProvider {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getEntity();
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         ITenShadowsData data = player.getData(JJKAttachmentTypes.TEN_SHADOWS);
-        data.init(player);
-
-        if (player.level().isClientSide) return;
-
-        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), (ServerPlayer) player);
+        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
     }
 
     @SubscribeEvent
@@ -70,8 +68,8 @@ public class TenShadowsDataProvider {
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, ITenShadowsData> {
         @Override
-        public ITenShadowsData read(CompoundTag tag) {
-            ITenShadowsData data = new TenShadowsData();
+        public @NotNull ITenShadowsData read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag) {
+            ITenShadowsData data = new TenShadowsData((LivingEntity) holder);
             data.deserializeNBT(tag);
             return data;
         }
