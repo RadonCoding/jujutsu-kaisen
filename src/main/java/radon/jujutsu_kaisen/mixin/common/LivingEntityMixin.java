@@ -65,12 +65,12 @@ ISorcererData data = jujutsuCap.getSorcererData();
     public float travel(BlockState instance, LevelReader levelReader, BlockPos blockPos, Entity entity) {
         IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+        if (jujutsuCap != null) {
+            ISorcererData data = jujutsuCap.getSorcererData();
 
-ISorcererData data = jujutsuCap.getSorcererData();
-
-        if (data != null && data.hasToggled(JJKAbilities.DISMANTLE_SKATING.get()) && instance.getFluidState().isEmpty()) {
-            return 1.0989F - 0.02F;
+            if (data.hasToggled(JJKAbilities.DISMANTLE_SKATING.get()) && instance.getFluidState().isEmpty()) {
+                return 1.0989F - 0.02F;
+            }
         }
         return instance.getFriction(levelReader, blockPos, entity);
     }

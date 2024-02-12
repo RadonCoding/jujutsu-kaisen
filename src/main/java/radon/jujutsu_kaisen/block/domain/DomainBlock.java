@@ -38,26 +38,28 @@ public class DomainBlock extends Block implements EntityBlock {
 
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
+        VoxelShape shape = super.getCollisionShape(pState, pLevel, pPos, pContext);
+
         if (pContext instanceof EntityCollisionContext ctx) {
             Entity entity = ctx.getEntity();
 
-            if (entity == null) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            if (entity == null) return shape;
 
             IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+            if (jujutsuCap == null) return shape;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
                 return Shapes.empty();
             }
         }
-        return super.getCollisionShape(pState, pLevel, pPos, pContext);
+        return shape;
     }
 
     @Override
-    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+    public float getExplosionResistance(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, Explosion explosion) {
         Entity exploder = explosion.getDirectSourceEntity();
 
         if (exploder != null && level instanceof ServerLevel && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {

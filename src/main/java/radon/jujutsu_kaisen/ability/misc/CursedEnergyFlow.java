@@ -296,7 +296,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (data.getNature() == CursedEnergyNature.LIGHTNING) {
             if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
-                    jujutsuCap.getAbility() != null && jujutsuCap.getAbility().getClassification() == Classification.LIGHTNING)) {
+                    jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
                 event.setCanceled(true);
             }
         }

@@ -149,9 +149,9 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
         IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+        if (jujutsuCap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data != null && data.hasToggled(JJKAbilities.SCISSORS.get())) {
             AbilityHandler.trigger(this, JJKAbilities.SCISSORS.get());
@@ -192,9 +192,9 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
             IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+            if (jujutsuCap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * data.getAbilityPower());
         });
@@ -218,15 +218,14 @@ ISorcererData data = jujutsuCap.getSorcererData();
             return;
         }
 
-
         this.getCurrent().ifPresent(identifier -> {
             if (!(((ServerLevel) this.level()).getEntity(identifier) instanceof LivingEntity target)) return;
 
             IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return false;
+            if (jujutsuCap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
 
@@ -242,11 +241,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
         if (target != null) {
             IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return false;
+            if (jujutsuCap != null) {
+                ISorcererData data = jujutsuCap.getSorcererData();
 
-ISorcererData data = jujutsuCap.getSorcererData();
-
-            if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
+                if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
+            }
         }
 
         if (target == null || target.isRemoved() || !target.isAlive()) {

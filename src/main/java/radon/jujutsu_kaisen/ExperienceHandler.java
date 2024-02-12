@@ -212,11 +212,8 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
             IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
-
-ISorcererData data = jujutsuCap.getSorcererData();
-
-            if (data != null) {
+            if (jujutsuCap != null) {
+                ISorcererData data = jujutsuCap.getSorcererData();
                 strength += data.getExperience() * 0.1F;
 
                 if (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get())) {

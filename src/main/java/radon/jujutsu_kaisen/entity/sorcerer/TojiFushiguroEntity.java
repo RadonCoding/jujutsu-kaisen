@@ -234,11 +234,9 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
         IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return false;
+        if (jujutsuCap != null) {
+            ISorcererData data = jujutsuCap.getSorcererData();
 
-ISorcererData data = jujutsuCap.getSorcererData();
-
-        if (data != null) {
             for (Ability toggled : data.getToggled()) {
                 if (toggled.isTechnique()) {
                     result = INVERTED_SPEAR_OF_HEAVEN;

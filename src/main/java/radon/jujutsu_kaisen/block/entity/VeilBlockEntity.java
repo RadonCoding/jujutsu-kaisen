@@ -94,9 +94,9 @@ public class VeilBlockEntity extends BlockEntity {
             if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
                 IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+                if (jujutsuCap == null) continue;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+                ISorcererData data = jujutsuCap.getSorcererData();
 
                 return data.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
                         data.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
