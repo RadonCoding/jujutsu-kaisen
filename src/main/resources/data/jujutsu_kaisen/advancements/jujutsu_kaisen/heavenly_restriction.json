@@ -1,0 +1,23 @@
+{
+  "parent": "jujutsu_kaisen:jujutsu_kaisen/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:chain"
+    },
+    "title": {
+      "translate": "advancements.jujutsu_kaisen.heavenly_restriction.title"
+    },
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.heavenly_restriction.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "builtin/entity"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "jujutsu_kaisen:item/chain_of_a_thousand_miles_inventory"
+    },
+    "ground": {
+      "parent": "jujutsu_kaisen:item/chain_of_a_thousand_miles_inventory"
+    },
+    "fixed": {
+      "parent": "jujutsu_kaisen:item/chain_of_a_thousand_miles_inventory"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+package radon.jujutsu_kaisen.visual;
+
+import net.minecraft.world.entity.LivingEntity;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
+
+public class ServerVisualHandler {
+    public static void sync(LivingEntity entity) {
+        if (entity.level().isClientSide) return;
+
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+
+        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), JJKAbilities.getTechniques(entity), data.getTechnique(), data.getType(),
+                data.getExperience(), data.getCursedEnergyColor());
+        PacketHandler.broadcast(new SyncVisualDataS2CPacket(entity.getUUID(), data.serializeNBT()));
+    }
+}

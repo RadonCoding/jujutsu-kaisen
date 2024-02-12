@@ -1,0 +1,16 @@
+package radon.jujutsu_kaisen.item.cursed_tool;
+
+import net.minecraft.world.item.Tier;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.item.base.CursedToolItem;
+
+public class InvertedSpearOfHeavenItem extends CursedToolItem {
+    public InvertedSpearOfHeavenItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
+        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    }
+
+    @Override
+    public SorcererGrade getGrade() {
+        return SorcererGrade.SPECIAL_GRADE;
+    }
+}

@@ -1,0 +1,40 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.playful_cloud",
+				"texture_width": 32,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0.5, 0]
+			},
+			"bones": [
+				{
+					"name": "middle",
+					"pivot": [6.62106, -4.98697, -0.01849],
+					"cubes": [
+						{"origin": [-7.69858, -3.57061, 1.95671], "size": [14, 1, 1], "pivot": [1.30142, -8.82061, 2.45671], "rotation": [0, 0, -10], "uv": [0, 2]}
+					]
+				},
+				{
+					"name": "bottom",
+					"parent": "middle",
+					"pivot": [-7.17894, -7.48697, -0.51849],
+					"cubes": [
+						{"origin": [-7.37894, -5.38697, -3.61849], "size": [14, 1, 1], "pivot": [-0.37894, -9.13697, 2.88151], "rotation": [6.93255, 34.39275, 12.14787], "uv": [0, 4]}
+					]
+				},
+				{
+					"name": "top",
+					"parent": "middle",
+					"pivot": [6.62106, -5.08697, -0.01849],
+					"cubes": [
+						{"origin": [-13.32192, 11.83017, 1.95671], "size": [14, 1, 1], "pivot": [-6.82192, 1.83017, 2.45671], "rotation": [0, 0, 70], "uv": [0, 0]}
+					]
+				}
+			]
+		}
+	]
+}

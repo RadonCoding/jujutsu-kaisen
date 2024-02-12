@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "jujutsu_kaisen:block/veil_rod",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "jujutsu_kaisen:block/veil_rod",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "jujutsu_kaisen:block/veil_rod",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "jujutsu_kaisen:block/veil_rod",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "jujutsu_kaisen:block/veil_rod"
+    },
+    "facing=west": {
+      "model": "jujutsu_kaisen:block/veil_rod",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

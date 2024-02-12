@@ -1,0 +1,19 @@
+{
+  "type": "jujutsu_kaisen:mob_spawn",
+  "biomes": {
+    "excluding": [
+      "#neoforge:no_mob_spawns"
+    ],
+    "if_any": [
+      "#neoforge:is_mountain"
+    ]
+  },
+  "spawners": [
+    {
+      "type": "jujutsu_kaisen:jogo",
+      "weight": 1,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}
