@@ -34,11 +34,9 @@ import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
-import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -226,14 +224,10 @@ public class JJKAbilities {
         Set<ICursedTechnique> techniques = new HashSet<>();
 
         if (sorcererData.getTechnique() != null) techniques.add(sorcererData.getTechnique());
+        if (sorcererData.getCurrentCopied() != null) techniques.add(sorcererData.getCurrentCopied());
+        if (curseManipulationData.getCurrentAbsorbed() != null) techniques.add(curseManipulationData.getCurrentAbsorbed());
         if (sorcererData.getAdditional() != null) techniques.add(sorcererData.getAdditional());
 
-        if (JJKAbilities.hasActiveTechnique(owner, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-            techniques.add(curseManipulationData.getCurrentAbsorbed());
-        }
-        if (sorcererData.hasToggled(JJKAbilities.RIKA.get())) {
-            techniques.add(sorcererData.getCurrentCopied());
-        }
         return techniques;
     }
 
