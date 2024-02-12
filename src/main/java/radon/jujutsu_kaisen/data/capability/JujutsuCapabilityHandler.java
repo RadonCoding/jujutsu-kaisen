@@ -24,9 +24,11 @@ public class JujutsuCapabilityHandler {
     @SubscribeEvent
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-            if (!type.getBaseClass().isInstance(Player.class) && !type.getBaseClass().isInstance(ISorcerer.class)) continue;
+            event.registerEntity(INSTANCE, type, (entity, ctx) -> {
+                if (!(entity instanceof ISorcerer) && !(entity instanceof Player)) return null;
 
-            event.registerEntity(INSTANCE, type, (entity, ctx) -> new JujutsuCapability((LivingEntity) entity));
+                return new JujutsuCapability((LivingEntity) entity);
+            });
         }
     }
 }

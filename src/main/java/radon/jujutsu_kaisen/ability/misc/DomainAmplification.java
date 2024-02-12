@@ -22,13 +22,15 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (target == null || target.isDeadOrDying()) return false;
+
+        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (jujutsuCap == null) return false;
 
         ISorcererData data = jujutsuCap.getSorcererData();
 
-        return target != null && !target.isDeadOrDying() && data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
+        return data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
     }
 
     @Override
