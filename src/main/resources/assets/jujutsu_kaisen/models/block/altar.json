@@ -1,6 +1,0 @@
-{
-  "parent": "jujutsu_kaisen:block/template_altar",
-  "textures": {
-    "top": "minecraft:block/stone"
-  }
-}

@@ -1,5 +1,0 @@
-Armor Rules:
-	- When creating an item texture the arms should be made 9 pixels tall by resizing from the bottom, the outline going over the texture doesn't matter
-	- The bottom corners of the chest should be cut for a better shape
-	- The outline should not be too dark and the shading colors should be visible in-game
-	- For pants the top part of the waist is removed and the part under the outline is the middle
