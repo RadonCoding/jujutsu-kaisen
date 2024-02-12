@@ -20,9 +20,6 @@ public class CommandPureLove extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return false;
-
         return target != null && !target.isDeadOrDying() && (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
     }
 
@@ -36,7 +33,6 @@ public class CommandPureLove extends Ability {
         if (owner.level().isClientSide) return;
 
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
 
         RikaEntity rika = data.getSummonByClass(RikaEntity.class);
 
@@ -50,9 +46,6 @@ public class CommandPureLove extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-
-        if (data == null) return false;
-
         return data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }
 

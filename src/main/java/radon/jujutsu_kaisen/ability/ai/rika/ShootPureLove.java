@@ -39,6 +39,10 @@ public class ShootPureLove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner instanceof RikaEntity rika) {
+            rika.setShooting(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION + PureLoveBeamEntity.FRAMES);
+        }
+
         PureLoveBeamEntity beam = new PureLoveBeamEntity(owner, this.getPower(owner));
         owner.level().addFreshEntity(beam);
 
