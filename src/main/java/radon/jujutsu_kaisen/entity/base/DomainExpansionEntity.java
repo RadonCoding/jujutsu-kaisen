@@ -207,8 +207,6 @@ public abstract class DomainExpansionEntity extends Entity {
         ITenShadowsData victimTenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
         ISorcererData victimSorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
 
-        if (victimTenShadowsData == null || victimSorcererData == null) return false;
-
         if ((victim instanceof MahoragaEntity && victimTenShadowsData.isAdaptedTo(this.ability))) return false;
 
         if (victimSorcererData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
@@ -216,10 +214,7 @@ public abstract class DomainExpansionEntity extends Entity {
 
             if (simple != null) {
                 ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-
-                if (ownerSorcererData != null) {
-                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower() * 10.0F);
-                }
+                simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower() * 10.0F);
             }
         }
 
