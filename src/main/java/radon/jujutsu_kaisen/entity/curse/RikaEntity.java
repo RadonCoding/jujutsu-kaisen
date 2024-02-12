@@ -47,9 +47,10 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     private static final int DURATION = 5 * 60 * 20;
 
     public static EntityDataAccessor<Integer> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.INT);
+    public static EntityDataAccessor<Integer> DATA_SHOOTING = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.INT);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    private static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
+    private static final RawAnimation SHOOT = RawAnimation.begin().thenPlayAndHold("misc.shoot");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public RikaEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
@@ -120,6 +121,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         super.defineSynchedData();
 
         this.entityData.define(DATA_OPEN, 0);
+        this.entityData.define(DATA_SHOOTING, 0);
     }
 
     public void setOpen(int duration) {
@@ -134,9 +136,21 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         return this.getOpen() > 0;
     }
 
+    public void setShooting(int duration) {
+        this.entityData.set(DATA_SHOOTING, duration);
+    }
+
+    public int getShooting() {
+        return this.entityData.get(DATA_SHOOTING);
+    }
+
+    public boolean isShooting() {
+        return this.getShooting() > 0;
+    }
+
     private PlayState openPredicate(AnimationState<RikaEntity> animationState) {
-        if (this.isOpen()) {
-            return animationState.setAndContinue(OPEN);
+        if (this.isShooting()) {
+            return animationState.setAndContinue(SHOOT);
         }
         return PlayState.STOP;
     }
@@ -193,13 +207,19 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             }
 
             if (!this.level().isClientSide) {
-                int remaining = this.getOpen();
+                int open = this.getOpen();
 
-                if (remaining > 0) {
-                    if (--remaining == 0) {
+                if (open > 0) {
+                    if (--open == 0) {
                         this.discard();
                     }
-                    this.setOpen(remaining);
+                    this.setOpen(open);
+                }
+
+                int shooting = this.getShooting();
+
+                if (shooting > 0) {
+                    this.setShooting(--shooting);
                 }
 
                 if (this.getTime() >= DURATION) {
