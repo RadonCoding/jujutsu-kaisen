@@ -40,6 +40,9 @@ public class PacketHandler {
         registrar.play(SetCostS2CPacket.IDENTIFIER, SetCostS2CPacket::new, handler -> handler
                 .client(SetCostS2CPacket::handle)
                 .server(SetCostS2CPacket::handle));
+        registrar.play(SyncVisualDataS2CPacket.IDENTIFIER, SyncVisualDataS2CPacket::new, handler -> handler
+                .client(SyncVisualDataS2CPacket::handle)
+                .server(SyncVisualDataS2CPacket::handle));
         registrar.play(ReceiveVisualDataS2CPacket.IDENTIFIER, ReceiveVisualDataS2CPacket::new, handler -> handler
                 .client(ReceiveVisualDataS2CPacket::handle)
                 .server(ReceiveVisualDataS2CPacket::handle));

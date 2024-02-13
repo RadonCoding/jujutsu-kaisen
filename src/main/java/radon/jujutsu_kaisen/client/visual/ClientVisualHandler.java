@@ -120,6 +120,10 @@ public class ClientVisualHandler {
 
         if (entity == mc.player) return;
 
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
         PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
     }
 
