@@ -23,17 +23,17 @@ import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 
 import java.util.*;
 
-public class AllEncompassingUnequiovocalLoveEntity extends ClosedDomainExpansionEntity {
+public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
     @Nullable
     private ICursedTechnique technique;
 
     private final Map<BlockPos, ICursedTechnique> offsets = new HashMap<>();
 
-    public AllEncompassingUnequiovocalLoveEntity(EntityType<?> pType, Level pLevel) {
+    public AuthenticMutualLoveEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
-    public AllEncompassingUnequiovocalLoveEntity(LivingEntity owner, DomainExpansion ability, int radius) {
+    public AuthenticMutualLoveEntity(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.GENUINE_MUTUAL_LOVE.get(), owner, ability, radius);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
