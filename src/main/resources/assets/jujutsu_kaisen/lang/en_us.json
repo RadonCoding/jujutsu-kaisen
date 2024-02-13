@@ -277,6 +277,7 @@
   "ability.jujutsu_kaisen.limitless_imbuement": "Limitless Imbuement",
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",
+  "ability.jujutsu_kaisen.big_dismantle": "Big Dismantle",
   "ability.jujutsu_kaisen.dismantle_net": "Dismantle Net",
   "ability.jujutsu_kaisen.dismantle_skating": "Dismantle Skating",
   "ability.jujutsu_kaisen.dismantle_skating.enable": "Activated dismantle skating",
@@ -622,6 +623,7 @@
   "entity.jujutsu_kaisen.hollow_purple": "Hollow Purple Projectile",
   "entity.jujutsu_kaisen.hollow_purple_explosion": "Hollow Purple Explosion",
   "entity.jujutsu_kaisen.dismantle": "Dismantle",
+  "entity.jujutsu_kaisen.big_dismantle": "Big Dismantle",
   "entity.jujutsu_kaisen.fire_arrow": "Fire Arrow",
   "entity.jujutsu_kaisen.pure_love": "Pure Love Beam",
   "entity.jujutsu_kaisen.ember_insect": "Ember Insect",

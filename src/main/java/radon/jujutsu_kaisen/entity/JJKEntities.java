@@ -324,6 +324,11 @@ public class JJKEntities {
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dismantle")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<BigDismantleProjectile>> BIG_DISMANTLE = ENTITIES.register("big_dismantle", () ->
+            EntityType.Builder.<BigDismantleProjectile>of(BigDismantleProjectile::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "big_dismantle")
+                            .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<FireArrowProjectile>> FIRE_ARROW = ENTITIES.register("fire_arrow", () ->
             EntityType.Builder.<FireArrowProjectile>of(FireArrowProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
