@@ -398,8 +398,6 @@ public abstract class Ability {
 
             ISorcererData data = cap.getSorcererData();
 
-            if (data == null) return 0;
-
             if (duration > 0) {
                 duration = (int) (duration * data.getRealPower());
             }
