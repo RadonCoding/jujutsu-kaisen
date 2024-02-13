@@ -121,7 +121,14 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
 
         if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
-            ExplosionHandler.spawn(this.level().dimension(), this.position(), EXPLOSION_POWER, EXPLOSION_DURATION, this, this.damageSources().mobAttack(this), false);
+            IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return result;
+
+            ISorcererData data = cap.getSorcererData();
+
+            ExplosionHandler.spawn(this.level().dimension(), this.position(), EXPLOSION_POWER, EXPLOSION_DURATION, data.getRealPower(), this,
+                    this.damageSources().mobAttack(this), false);
         }
         return result;
     }
