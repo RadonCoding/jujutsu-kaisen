@@ -68,7 +68,6 @@ public class Punch extends Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         for (int i = 0; i < 4; i++) {
