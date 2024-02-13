@@ -53,13 +53,15 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ISorcererData data = cap.getSorcererData();
+
+        if (data.getOutput() < 1.0F) return false;
+
         if (!(owner instanceof MahoragaEntity)) {
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return false;
-
-            ISorcererData data = cap.getSorcererData();
-
             if (!data.hasActiveTechnique(JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get())) return false;
         }
         return super.isValid(owner);
