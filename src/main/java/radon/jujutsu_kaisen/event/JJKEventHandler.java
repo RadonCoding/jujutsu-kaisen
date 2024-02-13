@@ -3,7 +3,9 @@ package radon.jujutsu_kaisen.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -14,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -26,6 +29,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.misc.CursedEnergyFlow;
 import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -56,6 +60,56 @@ import java.util.List;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onLivingHurt(LivingHurtEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            DamageSource source = event.getSource();
+
+            // Your own cursed energy doesn't do as much damage
+            if (source instanceof JJKDamageSources.JujutsuDamageSource) {
+                if (source.getEntity() == victim) {
+                    event.setAmount(event.getAmount() * 0.1F);
+                }
+            }
+
+            // Perfect body generic melee increase
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (cap == null) return;
+
+                ISorcererData data = cap.getSorcererData();
+
+                if (data != null && data.hasTrait(Trait.PERFECT_BODY)) {
+                    if (DamageUtil.isMelee(source)) {
+                        event.setAmount(event.getAmount() * 2.0F);
+                    }
+                }
+            }
+
+            // Lessen damage for sorcerers
+            if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+                IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (cap == null) return;
+
+                ISorcererData data = cap.getSorcererData();
+
+                if (data != null) {
+                    float armor = data.getExperience() * 0.002F;
+
+                    if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                        armor *= 10.0F;
+                    }
+                    float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
+                    event.setAmount(blocked);
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onExplosion(ExplosionEvent.Detonate event) {
             Explosion explosion = event.getExplosion();
