@@ -100,9 +100,9 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                     IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+                    if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+                    ISorcererData data = cap.getSorcererData();
 
                     data.delayTickEvent(() -> {
                         if (this.isRemoved()) return;
