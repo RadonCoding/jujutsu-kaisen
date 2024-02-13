@@ -15,13 +15,16 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -32,28 +35,21 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DismantleProjectile extends JujutsuProjectile {
-    private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
+public class WorldSlashProjectile extends JujutsuProjectile {
+    private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.INT);
 
     private static final int DURATION = 10;
-    public static final int MIN_LENGTH = 3;
-    public static final int MAX_LENGTH = 12;
+    public static final int MIN_LENGTH = 6;
+    public static final int MAX_LENGTH = 24;
+    private static final int SCALAR = 6;
 
-    private boolean instant;
-    private boolean destroy = true;
-    private int destroyed;
-
-    public DismantleProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+    public WorldSlashProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
-    public DismantleProjectile(LivingEntity owner, float power, float roll) {
-        this(JJKEntities.DISMANTLE.get(), owner, power, roll);
-    }
-
-    public DismantleProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, float roll) {
-        super(pType, owner.level(), owner, power);
+    public WorldSlashProjectile(LivingEntity owner, float power, float roll) {
+        super(JJKEntities.WORLD_SLASH.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
@@ -61,43 +57,14 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.setRoll(roll);
     }
 
-    public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
-        super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
+    public WorldSlashProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
+        super(JJKEntities.WORLD_SLASH.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
 
         this.setRoll(roll);
         this.setLength(length);
-    }
-
-    public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean instant, boolean destroy) {
-        this(owner, power, roll, pos, length);
-
-        this.moveTo(pos.x, pos.y, pos.z, (this.random.nextFloat() - 0.5F) * 360.0F, 0.0F);
-
-        this.instant = instant;
-        this.destroy = destroy;
-    }
-
-    protected boolean isInfinite() {
-        return false;
-    }
-
-    protected float getDamage() {
-        return 10.0F;
-    }
-
-    public int getMinLength() {
-        return MIN_LENGTH;
-    }
-
-    public int getMaxLength() {
-        return MAX_LENGTH;
-    }
-
-    public int getScalar() {
-        return 3;
     }
 
     @Override
@@ -110,7 +77,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     public int getLength() {
         int length = this.entityData.get(DATA_LENGTH);
-        return length > 0 ? length : Math.max(this.getMinLength(), Math.min(this.getMaxLength(), Mth.floor(this.getScalar() * this.getPower())));
+        return length > 0 ? length : Math.max(MIN_LENGTH, Math.min(MAX_LENGTH, Mth.floor(SCALAR * this.getPower())));
     }
 
     private void setLength(int length) {
@@ -131,9 +98,6 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         pCompound.putFloat("roll", this.getRoll());
         pCompound.putInt("length", this.getLength());
-        pCompound.putBoolean("instant", this.instant);
-        pCompound.putBoolean("destroy", this.destroy);
-        pCompound.putInt("destroyed", this.destroyed);
     }
 
     @Override
@@ -142,9 +106,6 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         this.entityData.set(DATE_ROLL, pCompound.getFloat("roll"));
         this.entityData.set(DATA_LENGTH, pCompound.getInt("length"));
-        this.instant = pCompound.getBoolean("instant");
-        this.destroy = pCompound.getBoolean("destroy");
-        this.destroyed = pCompound.getInt("destroyed");
     }
 
     @Override
@@ -162,18 +123,17 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         Entity entity = pResult.getEntity();
 
+        if (!(entity instanceof LivingEntity living)) {
+            entity.discard();
+            return;
+        }
+
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        if (entity == owner) return;
+        if (living == owner) return;
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
-        DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
-        entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), this.getDamage() * this.getPower());
+        float strength = Math.min(1.0F, 0.1F + (1.0F - (this.distanceTo(living) / ((float) this.getLength() / 2))));
+        living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength);
     }
 
     private Vec3 rotate(Vec3 vector, Vec3 axis, double degrees) {
@@ -197,7 +157,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     public List<HitResult> getHitResults() {
-        if (!(this.getOwner() instanceof LivingEntity owner)) return List.of();
+        if (!(this.getOwner() instanceof LivingEntity)) return List.of();
 
         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
@@ -228,24 +188,13 @@ public class DismantleProjectile extends JujutsuProjectile {
                     hits.add(new EntityHitResult(entity));
                 }
 
-                if (!this.destroy) continue;
-
                 BlockState state = this.level().getBlockState(current);
 
-                if (HelperMethods.isDestroyable(this.level(), owner, current)) {
-                    boolean destroyed;
+                this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
 
-                    if (state.getFluidState().isEmpty()) {
-                        destroyed = this.level().destroyBlock(current, false);
-                    } else {
-                        destroyed = this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
-                    }
-
-                    if (destroyed) {
-                        ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, current.getCenter().x, current.getCenter().y, current.getCenter().z,
-                                0, 1.0D, 0.0D, 0.0D, 1.0D);
-                        this.destroyed++;
-                    }
+                if (!state.isAir()) {
+                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, current.getCenter().x, current.getCenter().y, current.getCenter().z,
+                            0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
             }
         }
@@ -264,7 +213,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2) || this.getTime() >= DURATION) {
+        if (this.getTime() >= DURATION) {
             this.discard();
         }
     }

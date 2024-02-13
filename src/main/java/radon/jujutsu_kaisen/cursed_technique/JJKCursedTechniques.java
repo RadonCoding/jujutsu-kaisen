@@ -11,6 +11,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -44,7 +47,13 @@ public class JJKCursedTechniques {
     }
 
     public static Set<ICursedTechnique> getTechniques(LivingEntity owner) {
-        return JJKAbilities.getTechniques(owner);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return Set.of();
+
+        ISorcererData data = cap.getSorcererData();
+
+        return data.getTechniques();
     }
 
     @Nullable

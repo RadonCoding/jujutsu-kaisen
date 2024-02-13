@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 
 public class SetAbsorbedC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "set_absorbed_serverbound");
@@ -35,13 +36,15 @@ public class SetAbsorbedC2SPacket implements CustomPacketPayload {
 
             if (cap == null) return;
 
-            ICurseManipulationData data = cap.getCurseManipulationData();
+            ISorcererData sorcererData = cap.getSorcererData();
 
-            if (!JJKAbilities.hasActiveTechnique(sender, JJKCursedTechniques.CURSE_MANIPULATION.get())) return;
+            if (!sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) return;
 
-            if (!data.getAbsorbed().contains(this.technique)) return;
+            ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
-            data.setCurrentAbsorbed(this.technique);
+            if (!curseManipulationData.getAbsorbed().contains(this.technique)) return;
+
+            curseManipulationData.setCurrentAbsorbed(this.technique);
         });
     }
 

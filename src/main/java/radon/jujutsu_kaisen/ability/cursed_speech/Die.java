@@ -21,13 +21,9 @@ public class Die extends Ability {
     private static final float DAMAGE = 25.0F;
 
     @Override
-    public boolean isScalable(LivingEntity owner) {
-        return true;
-    }
-
-    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return CursedSpeechUtil.getTargets(owner).contains(target) && target != null && (owner.getHealth() / owner.getMaxHealth() <= 0.25F || HelperMethods.RANDOM.nextInt(10) == 0 && owner.hasLineOfSight(target));
+        if (target == null) return false;
+        return CursedSpeechUtil.getTargets(owner).contains(target) && (owner.getHealth() / owner.getMaxHealth() <= 0.25F || HelperMethods.RANDOM.nextInt(10) == 0 && owner.hasLineOfSight(target));
     }
 
     @Override

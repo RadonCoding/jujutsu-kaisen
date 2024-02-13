@@ -10,6 +10,11 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+
+import java.util.Set;
 
 public class CurseSummonC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "curse_summon_serverbound");
@@ -28,7 +33,13 @@ public class CurseSummonC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            if (JJKAbilities.hasActiveTechnique(sender, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+            IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            ISorcererData data = cap.getSorcererData();
+
+            if (data.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
                 CurseManipulationUtil.summonCurse(sender, this.index, true);
             }
         });

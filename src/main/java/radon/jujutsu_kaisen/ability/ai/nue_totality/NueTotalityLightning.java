@@ -33,7 +33,7 @@ public class NueTotalityLightning extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return owner instanceof NueTotalityEntity;
+        return owner instanceof NueTotalityEntity && super.isValid(owner);
     }
 
     @Override

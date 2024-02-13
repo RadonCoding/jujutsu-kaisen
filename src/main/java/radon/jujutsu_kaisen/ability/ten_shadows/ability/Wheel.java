@@ -44,14 +44,20 @@ public class Wheel extends Summon<WheelEntity> {
         if (owner instanceof MahoragaEntity) return true;
         if (target == null) return false;
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return false;
+        if (ownerCap == null) return false;
 
-        ITenShadowsData data = cap.getTenShadowsData();
+        ITenShadowsData ownerData = ownerCap.getTenShadowsData();
 
-        for (ICursedTechnique technique : JJKAbilities.getTechniques(target)) {
-            if (data.isAdaptedTo(technique)) continue;
+        IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (targetCap == null) return false;
+
+        ISorcererData targetData = targetCap.getSorcererData();
+
+        for (ICursedTechnique technique : targetData.getTechniques()) {
+            if (ownerData.isAdaptedTo(technique)) continue;
 
             return true;
         }

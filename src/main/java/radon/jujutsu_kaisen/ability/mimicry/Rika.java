@@ -39,11 +39,11 @@ public class Rika extends Summon<RikaEntity> {
         if (target != null) {
             if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
 
-            IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (targetcap == null) return false;
+            if (targetCap == null) return false;
 
-            ISorcererData targetData = targetcap.getSorcererData();
+            ISorcererData targetData = targetCap.getSorcererData();
 
             return SorcererUtil.getGrade(targetData.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
         }

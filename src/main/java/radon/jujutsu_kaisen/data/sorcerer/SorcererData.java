@@ -8,6 +8,7 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
@@ -30,12 +32,11 @@ import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.EntityUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.PlayerUtil;
-import radon.jujutsu_kaisen.util.SorcererUtil;
+import radon.jujutsu_kaisen.util.*;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
 import javax.annotation.Nullable;
@@ -702,6 +703,59 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public Set<ICursedTechnique> getTechniques() {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return Set.of();
+
+        ISorcererData sorcererData = cap.getSorcererData();
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
+
+        Set<ICursedTechnique> techniques = new HashSet<>();
+
+        if (sorcererData.getTechnique() != null) techniques.add(sorcererData.getTechnique());
+        if (sorcererData.getCurrentCopied() != null) techniques.add(sorcererData.getCurrentCopied());
+        if (curseManipulationData.getCurrentAbsorbed() != null) techniques.add(curseManipulationData.getCurrentAbsorbed());
+        if (sorcererData.getAdditional() != null) techniques.add(sorcererData.getAdditional());
+
+        List<ItemStack> stacks = new ArrayList<>();
+        stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
+        stacks.addAll(CuriosUtil.findSlots(owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
+        stacks.removeIf(ItemStack::isEmpty);
+
+        for (ItemStack stack : stacks) {
+            if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
+
+            techniques.add(MimicryKatanaItem.getTechnique(stack));
+        }
+        return techniques;
+    }
+
+    @Override
+    public boolean hasTechnique(ICursedTechnique technique) {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
+
+        return this.technique == technique || this.additional == technique || this.copied.contains(technique) ||
+                curseManipulationData.getAbsorbed().contains(technique);
+    }
+
+    @Override
+    public boolean hasActiveTechnique(ICursedTechnique technique) {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
+
+        return this.technique == technique || this.additional == technique || this.currentCopied == technique ||
+                curseManipulationData.getCurrentAbsorbed() == technique;
+    }
+
+    @Override
     public CursedEnergyNature getNature() {
         return this.nature;
     }
@@ -1178,8 +1232,7 @@ public class SorcererData implements ISorcererData {
                 if (cap == null) continue;
 
                 ISorcererData data = cap.getSorcererData();
-
-                taken.addAll(JJKAbilities.getTechniques(player));
+                taken.addAll(data.getTechniques());
                 traits.addAll(data.getTraits());
             }
         }

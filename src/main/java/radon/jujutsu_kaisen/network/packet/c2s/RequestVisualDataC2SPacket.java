@@ -45,7 +45,7 @@ public class RequestVisualDataC2SPacket implements CustomPacketPayload {
             ISorcererData data = cap.getSorcererData();
 
             ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(),
-                    JJKAbilities.getTechniques(target), data.getTechnique(), data.getType(), data.getExperience(), data.getCursedEnergyColor());
+                    data.getTechniques(), data.getTechnique(), data.getType(), data.getExperience(), data.getCursedEnergyColor());
             PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, client.serializeNBT()), sender);
         });
     }

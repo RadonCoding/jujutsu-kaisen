@@ -20,7 +20,7 @@ public class ServerVisualHandler {
 
         ISorcererData data = cap.getSorcererData();
 
-        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), JJKAbilities.getTechniques(entity), data.getTechnique(), data.getType(),
+        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), data.getTechniques(), data.getTechnique(), data.getType(),
                 data.getExperience(), data.getCursedEnergyColor());
         PacketHandler.broadcast(new SyncVisualDataS2CPacket(entity.getUUID(), client.serializeNBT()));
     }

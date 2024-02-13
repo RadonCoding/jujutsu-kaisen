@@ -257,17 +257,17 @@ public class MahoragaEntity extends TenShadowsSummon {
 
             if (owner == null) return;
 
-            IJujutsuCapability srccap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability srcCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (srccap == null) return;
+            if (srcCap == null) return;
 
-            ITenShadowsData srcData = srccap.getTenShadowsData();
+            ITenShadowsData srcData = srcCap.getTenShadowsData();
 
-            IJujutsuCapability dstcap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability dstCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (dstcap == null) return;
+            if (dstCap == null) return;
 
-            ITenShadowsData dstData = dstcap.getTenShadowsData();
+            ITenShadowsData dstData = dstCap.getTenShadowsData();
 
             dstData.addAdapted(srcData.getAdapted());
             dstData.addAdapting(srcData.getAdapting());
@@ -299,17 +299,17 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         if (owner == null) return;
 
-        IJujutsuCapability srccap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability srcCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (srccap == null) return;
+        if (srcCap == null) return;
 
-        ITenShadowsData srcData = srccap.getTenShadowsData();
+        ITenShadowsData srcData = srcCap.getTenShadowsData();
 
-        IJujutsuCapability dstcap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability dstCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (dstcap == null) return;
+        if (dstCap == null) return;
 
-        ITenShadowsData dstData = dstcap.getTenShadowsData();
+        ITenShadowsData dstData = dstCap.getTenShadowsData();
 
         dstData.addAdapted(srcData.getAdapted());
         dstData.addAdapting(srcData.getAdapting());

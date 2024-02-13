@@ -278,6 +278,7 @@
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",
   "ability.jujutsu_kaisen.big_dismantle": "Big Dismantle",
+  "ability.jujutsu_kaisen.world_slash": "World Slash",
   "ability.jujutsu_kaisen.dismantle_net": "Dismantle Net",
   "ability.jujutsu_kaisen.dismantle_skating": "Dismantle Skating",
   "ability.jujutsu_kaisen.dismantle_skating.enable": "Activated dismantle skating",
@@ -624,6 +625,7 @@
   "entity.jujutsu_kaisen.hollow_purple_explosion": "Hollow Purple Explosion",
   "entity.jujutsu_kaisen.dismantle": "Dismantle",
   "entity.jujutsu_kaisen.big_dismantle": "Big Dismantle",
+  "entity.jujutsu_kaisen.world_slash": "World Slash",
   "entity.jujutsu_kaisen.fire_arrow": "Fire Arrow",
   "entity.jujutsu_kaisen.pure_love": "Pure Love Beam",
   "entity.jujutsu_kaisen.ember_insect": "Ember Insect",
@@ -679,6 +681,7 @@
 
   "death.attack.jujutsu": "%1$s was killed by %2$s using jujutsu",
   "death.attack.jujutsu_bypass": "%1$s was killed by %2$s using jujutsu",
+  "death.attack.world_slash": "%1$s was cut out of existence by %2$s",
   "death.attack.soul": "%1$s had their soul killed by %2$s",
   "death.attack.self": "%1$s killed themselves because of %2$s",
   "death.attack.split_soul_katana": "%1$s was slain by %2$s",

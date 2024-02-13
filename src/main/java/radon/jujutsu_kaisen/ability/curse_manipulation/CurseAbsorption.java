@@ -96,17 +96,17 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
         if (!canAbsorb(attacker, victim)) return;
 
-        IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (attackercap == null) return;
+        if (attackerCap == null) return;
 
-        ISorcererData attackerData = attackercap.getSorcererData();
+        ISorcererData attackerData = attackerCap.getSorcererData();
 
-        IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (victimcap == null) return;
+        if (victimCap == null) return;
 
-        ISorcererData victimData = victimcap.getSorcererData();
+        ISorcererData victimData = victimCap.getSorcererData();
 
         if (!attackerData.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
 

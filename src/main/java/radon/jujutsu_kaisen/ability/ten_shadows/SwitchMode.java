@@ -33,10 +33,10 @@ public class SwitchMode extends Ability {
 
         ITenShadowsData ownerData = ownerCap.getTenShadowsData();
 
-        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetcap != null) {
-            ISorcererData targetData = targetcap.getSorcererData();
+        if (targetCap != null) {
+            ISorcererData targetData = targetCap.getSorcererData();
 
             if (ownerData.hasTamed(JJKEntities.MAHORAGA.get())) {
                 if (ownerData.getMode() == TenShadowsMode.SUMMON) {

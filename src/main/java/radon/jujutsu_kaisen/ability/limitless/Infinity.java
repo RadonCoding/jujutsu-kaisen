@@ -219,9 +219,9 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
@@ -244,9 +244,9 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
@@ -267,11 +267,11 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
-            if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
             DamageSource source = event.getSource();
 

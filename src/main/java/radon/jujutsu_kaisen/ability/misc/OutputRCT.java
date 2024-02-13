@@ -113,11 +113,11 @@ ISorcererData data = cap.getSorcererData();
 
         float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 5 * 20.0F;
 
-        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetcap == null) return;
+        if (targetCap == null) return;
 
-        ISorcererData targetData = targetcap.getSorcererData();
+        ISorcererData targetData = targetCap.getSorcererData();
 
         if (targetData != null && targetData.getType() == JujutsuType.CURSE) {
             target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount);

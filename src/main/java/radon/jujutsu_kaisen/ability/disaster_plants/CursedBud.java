@@ -14,6 +14,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -63,7 +66,13 @@ public class CursedBud extends Ability {
 
             if (!DamageUtil.isMelee(source)) return;
 
-            if (!JJKAbilities.hasActiveTechnique(attacker, JJKCursedTechniques.DISASTER_PLANTS.get())) return;
+            IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            ISorcererData data = cap.getSorcererData();
+
+            if (!data.hasActiveTechnique(JJKCursedTechniques.DISASTER_PLANTS.get())) return;
 
             for (CursedBudProjectile bud : victim.level().getEntitiesOfClass(CursedBudProjectile.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
                 if (bud.getOwner() != attacker) continue;

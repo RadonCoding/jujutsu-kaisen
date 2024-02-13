@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 
 import java.util.List;
 
@@ -59,17 +60,22 @@ public class CursedSpiritOrbItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        if (!JJKAbilities.hasActiveTechnique(pEntityLiving, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+        IJujutsuCapability cap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) {
             pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
             return stack;
         }
 
-        IJujutsuCapability cap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        ISorcererData sorcererData = cap.getSorcererData();
 
-        if (cap == null) return stack;
+        if (!sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+            pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
+            return stack;
+        }
 
-        ICurseManipulationData data = cap.getCurseManipulationData();
-        data.addCurse(getAbsorbed(pStack));
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
+        curseManipulationData.addCurse(getAbsorbed(pStack));
 
         return stack;
     }

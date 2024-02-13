@@ -41,7 +41,7 @@ public class AbilityScreen extends RadialScreen {
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
-        if (JJKAbilities.hasActiveTechnique(this.minecraft.player, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+        if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             List<AbsorbedCurse> curses = curseManipulationData.getCurses();
             items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
         }
@@ -51,7 +51,7 @@ public class AbilityScreen extends RadialScreen {
             items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
         }
 
-        if (JJKAbilities.hasActiveTechnique(this.minecraft.player, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+        if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             Set<ICursedTechnique> absorbed = curseManipulationData.getAbsorbed();
             items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
         }
@@ -106,7 +106,13 @@ public class AbilityScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        if (!JJKAbilities.hasActiveTechnique(this.minecraft.player, JJKCursedTechniques.MIMICRY.get())) return;
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
+        if (!data.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get())) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;
