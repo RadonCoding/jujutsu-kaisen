@@ -9,6 +9,19 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class LimitlessTechnique implements ICursedTechnique {
+    private static final Set<Ability> ABILITIES = new LinkedHashSet<>();
+
+    static {
+        ABILITIES.add(JJKAbilities.INFINITY.get());
+        ABILITIES.add(JJKAbilities.RED.get());
+        ABILITIES.add(JJKAbilities.BLUE_STILL.get());
+        ABILITIES.add(JJKAbilities.BLUE_MOTION.get());
+        ABILITIES.add(JJKAbilities.BLUE_FISTS.get());
+        ABILITIES.add(JJKAbilities.HOLLOW_PURPLE.get());
+        ABILITIES.add(JJKAbilities.TELEPORT.get());
+        ABILITIES.add(JJKAbilities.FLY.get());
+    }
+
     @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.UNLIMITED_VOID.get();
@@ -16,13 +29,6 @@ public class LimitlessTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return new LinkedHashSet<>(Set.of(JJKAbilities.INFINITY.get(),
-                JJKAbilities.RED.get(),
-                JJKAbilities.BLUE_STILL.get(),
-                JJKAbilities.BLUE_MOTION.get(),
-                JJKAbilities.BLUE_FISTS.get(),
-                JJKAbilities.HOLLOW_PURPLE.get(),
-                JJKAbilities.TELEPORT.get(),
-                JJKAbilities.FLY.get()));
+        return new LinkedHashSet<>(ABILITIES);
     }
 }

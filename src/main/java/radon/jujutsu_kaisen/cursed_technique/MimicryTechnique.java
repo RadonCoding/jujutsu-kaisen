@@ -9,6 +9,15 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class MimicryTechnique implements ICursedTechnique {
+    private static final Set<Ability> ABILITIES = new LinkedHashSet<>();
+
+    static {
+        ABILITIES.add(JJKAbilities.RIKA.get());
+        ABILITIES.add(JJKAbilities.MIMICRY.get());
+        ABILITIES.add(JJKAbilities.REFILL.get());
+        ABILITIES.add(JJKAbilities.COMMAND_PURE_LOVE.get());
+    }
+
     @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get();
@@ -16,9 +25,6 @@ public class MimicryTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return new LinkedHashSet<>(Set.of(JJKAbilities.RIKA.get(),
-                JJKAbilities.MIMICRY.get(),
-                JJKAbilities.REFILL.get(),
-                JJKAbilities.COMMAND_PURE_LOVE.get()));
+        return new LinkedHashSet<>(ABILITIES);
     }
 }

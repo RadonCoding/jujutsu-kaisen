@@ -8,8 +8,14 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class SkyStrikeTechnique implements ICursedTechnique {
+    private static final Set<Ability> ABILITIES = new LinkedHashSet<>();
+
+    static {
+        ABILITIES.add(JJKAbilities.SKY_STRIKE.get());
+    }
+
     @Override
     public Set<Ability> getAbilities() {
-        return new LinkedHashSet<>(Set.of(JJKAbilities.SKY_STRIKE.get()));
+        return new LinkedHashSet<>(ABILITIES);
     }
 }
