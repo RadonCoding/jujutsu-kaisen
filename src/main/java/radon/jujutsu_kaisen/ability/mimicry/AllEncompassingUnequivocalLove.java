@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.AllEncompassingUnequiovocalLove;
+import radon.jujutsu_kaisen.entity.domain.AllEncompassingUnequiovocalLoveEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class AllEncompassingUnequivocalLove extends DomainExpansion implements D
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        ICursedTechnique technique = ((AllEncompassingUnequiovocalLove) domain).getTechnique();
+        ICursedTechnique technique = ((AllEncompassingUnequiovocalLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
@@ -33,7 +33,7 @@ public class AllEncompassingUnequivocalLove extends DomainExpansion implements D
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-        ICursedTechnique technique = ((AllEncompassingUnequiovocalLove) domain).getTechnique();
+        ICursedTechnique technique = ((AllEncompassingUnequiovocalLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
@@ -46,7 +46,7 @@ public class AllEncompassingUnequivocalLove extends DomainExpansion implements D
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
         int radius = Math.round(this.getRadius(owner));
 
-        AllEncompassingUnequiovocalLove domain = new AllEncompassingUnequiovocalLove(owner, this, radius);
+        AllEncompassingUnequiovocalLoveEntity domain = new AllEncompassingUnequiovocalLoveEntity(owner, this, radius);
         owner.level().addFreshEntity(domain);
 
         return domain;
