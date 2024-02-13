@@ -212,11 +212,11 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
-        IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (victimcap != null) {
-            ISorcererData victimSorcererData = victimcap.getSorcererData();
-            ITenShadowsData victimTenShadowsData = victimcap.getTenShadowsData();
+        if (victimCap != null) {
+            ISorcererData victimSorcererData = victimCap.getSorcererData();
+            ITenShadowsData victimTenShadowsData = victimCap.getTenShadowsData();
 
             if ((victim instanceof MahoragaEntity && victimTenShadowsData.isAdaptedTo(this.ability))) return false;
 
