@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -89,7 +90,8 @@ public class ReleaseCurse extends Ability {
         }
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerSorcererData.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerCurseManipulationData.serializeNBT()), player);
         }
 
         if (!owner.level().isClientSide) {

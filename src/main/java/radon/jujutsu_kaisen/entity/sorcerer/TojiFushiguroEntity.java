@@ -35,6 +35,7 @@ import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import top.theillusivec4.curios.api.CuriosDataProvider;
 
 import java.util.Arrays;
 import java.util.List;
