@@ -57,9 +57,10 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean isAffected(BlockPos pos) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         if (VeilHandler.isProtected(this.level(), pos)) return false;
 
-        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), pos);
+        Set<DomainExpansionEntity> domains = VeilHandler.getDomains(level, pos);
 
         for (DomainExpansionEntity domain : domains) {
             if (domain == this) continue;

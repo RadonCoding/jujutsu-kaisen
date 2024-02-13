@@ -97,6 +97,8 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner.level().isClientSide) return;
+
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -104,7 +106,6 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
-
 
         data.delayTickEvent(() -> {
             ICursedTechnique technique = data.getTechnique();
