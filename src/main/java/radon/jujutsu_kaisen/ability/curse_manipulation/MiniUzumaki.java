@@ -55,6 +55,4 @@ public class MiniUzumaki extends Ability {
     public int getCooldown() {
         return 30 * 20;
     }
-
-
 }
