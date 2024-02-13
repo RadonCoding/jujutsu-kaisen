@@ -126,7 +126,7 @@ public class WorldSlash extends Ability {
 
                 ISorcererData data = cap.getSorcererData();
 
-                if (!data.isUnlocked(JJKAbilities.WORLD_SLASH.get())) continue;
+                if (data.isUnlocked(JJKAbilities.WORLD_SLASH.get())) continue;
                 if (!data.hasTechnique(JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get())) continue;
 
                 data.unlock(JJKAbilities.WORLD_SLASH.get());
