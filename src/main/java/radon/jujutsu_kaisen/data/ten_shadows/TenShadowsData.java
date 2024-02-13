@@ -55,11 +55,15 @@ public class TenShadowsData implements ITenShadowsData {
 
         if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) return;
 
-        for (Map.Entry<Adaptation, Integer> entry : this.adapting.entrySet()) {
+        Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<Adaptation, Integer> entry = iter.next();
+
             int timer = entry.getValue();
 
             if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
-                entry.setValue(0);
+                iter.remove();
 
                 this.adapted.put(entry.getKey(), this.adapted.getOrDefault(entry.getKey(), 0) + 1);
 

@@ -160,6 +160,8 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void resetCooldowns();
 
+    void disrupt(Ability ability, int duration);
+
     void addDuration(Ability ability);
 
     void increaseBrainDamage();
