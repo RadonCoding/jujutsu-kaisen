@@ -78,23 +78,17 @@ public class AbilityOverlay {
 
         if (mc.player == null) return;
 
-        int aboveStart = 0;
-        int aboveEnd = 0;
-
-        int belowStart = 0;
-        int belowEnd = 0;
-
         List<Component> lines = new ArrayList<>();
 
         Ability middle = abilities.get(index);
 
-        aboveStart = lines.size();
+        int aboveStart = lines.size();
 
         int aboveIndex = (index == 0) ? abilities.size() - 1 : index - 1;
         Ability above = abilities.get(aboveIndex);
-        renderAbilityInfo(lines, above);
+        lines.add(above.getName());
 
-        aboveEnd = lines.size();
+        int aboveEnd = lines.size();
 
         lines.add(Component.empty());
 
@@ -102,15 +96,15 @@ public class AbilityOverlay {
 
         lines.add(Component.empty());
 
-        belowStart = lines.size();
+        int belowStart = lines.size();
 
         if (abilities.size() > 2) {
             int belowIndex = (index == abilities.size() - 1) ? 0 : index + 1;
             Ability below = abilities.get(belowIndex);
-            renderAbilityInfo(lines, below);
+            lines.add(below.getName());
         }
 
-        belowEnd = lines.size();
+        int belowEnd = lines.size();
 
         int offset = 0;
 
@@ -163,7 +157,6 @@ public class AbilityOverlay {
             }
         }
     }
-
 
     private static void renderToggle(ExtendedGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
         Minecraft mc = gui.getMinecraft();
