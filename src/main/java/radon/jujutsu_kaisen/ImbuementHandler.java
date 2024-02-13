@@ -13,11 +13,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.IImbueable;
 import radon.jujutsu_kaisen.ability.base.IImbuement;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -27,7 +25,6 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.CuriosUtil;
@@ -113,7 +110,7 @@ public class ImbuementHandler {
 
             if (technique == null) return;
 
-            if (ability instanceof IImbueable && ability.isTechnique() && ability.getCost(owner) > 0.0F) {
+            if (ability instanceof IImbuement && ability.isTechnique() && ability.getCost(owner) > 0.0F) {
                 int amount = Math.round(Math.max(1, ability.getCost(owner) / 100.0F));
 
                 ItemStack held = owner.getItemInHand(InteractionHand.MAIN_HAND);
