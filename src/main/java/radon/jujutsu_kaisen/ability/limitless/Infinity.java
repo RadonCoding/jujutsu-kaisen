@@ -24,6 +24,7 @@ import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -80,6 +81,11 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
     @Override
     public int getCooldown() {
         return 5 * 20;
+    }
+
+    @Override
+    public MenuType getMenuType(LivingEntity owner) {
+        return this.getActivationType(owner) == ActivationType.INSTANT ? MenuType.MELEE : MenuType.RADIAL;
     }
 
     public static class FrozenProjectileData extends SavedData {
