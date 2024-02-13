@@ -45,6 +45,11 @@ public class BigDismantleProjectile extends DismantleProjectile {
     }
 
     @Override
+    protected boolean isInfinite() {
+        return true;
+    }
+
+    @Override
     protected float getDamage() {
         return super.getDamage() * 2;
     }
