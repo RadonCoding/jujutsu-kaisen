@@ -151,19 +151,19 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
 
-    public static DeferredHolder<Block, DomainBlock> ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_ONE = BLOCKS.register("all_encompassing_unequivocal_love_one", () ->
+    public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE_ONE = BLOCKS.register("authentic_mutual_love_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
-    public static DeferredHolder<Block, DomainBlock> ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_TWO = BLOCKS.register("all_encompassing_unequivocal_love_two", () ->
+    public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE_TWO = BLOCKS.register("authentic_mutual_love_two", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
-    public static DeferredHolder<Block, DomainBlock> ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_THREE = BLOCKS.register("all_encompassing_unequivocal_love_three", () ->
+    public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE_THREE = BLOCKS.register("authentic_mutual_three", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)

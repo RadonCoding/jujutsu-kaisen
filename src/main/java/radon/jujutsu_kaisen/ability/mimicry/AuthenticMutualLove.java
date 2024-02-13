@@ -12,17 +12,17 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.AllEncompassingUnequiovocalLoveEntity;
+import radon.jujutsu_kaisen.entity.domain.AuthenticMutualLoveEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
 
-public class AllEncompassingUnequivocalLove extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class AuthenticMutualLove extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        ICursedTechnique technique = ((AllEncompassingUnequiovocalLoveEntity) domain).getTechnique();
+        ICursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
@@ -33,7 +33,7 @@ public class AllEncompassingUnequivocalLove extends DomainExpansion implements D
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-        ICursedTechnique technique = ((AllEncompassingUnequiovocalLoveEntity) domain).getTechnique();
+        ICursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
@@ -46,7 +46,7 @@ public class AllEncompassingUnequivocalLove extends DomainExpansion implements D
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
         int radius = Math.round(this.getRadius(owner));
 
-        AllEncompassingUnequiovocalLoveEntity domain = new AllEncompassingUnequiovocalLoveEntity(owner, this, radius);
+        AuthenticMutualLoveEntity domain = new AuthenticMutualLoveEntity(owner, this, radius);
         owner.level().addFreshEntity(domain);
 
         return domain;
@@ -59,7 +59,7 @@ public class AllEncompassingUnequivocalLove extends DomainExpansion implements D
 
     @Override
     public List<Block> getFloorBlocks() {
-        return List.of(JJKBlocks.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_ONE.get(), JJKBlocks.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_TWO.get(), JJKBlocks.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_THREE.get());
+        return List.of(JJKBlocks.AUTHENTIC_MUTUAL_LOVE_ONE.get(), JJKBlocks.AUTHENTIC_MUTUAL_LOVE_TWO.get(), JJKBlocks.AUTHENTIC_MUTUAL_LOVE_THREE.get());
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
