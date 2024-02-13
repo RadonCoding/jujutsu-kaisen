@@ -39,9 +39,9 @@ public class DamageEventHandler {
             if (source.getEntity() instanceof LivingEntity attacker) {
                 IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+                if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 if (data != null && data.hasTrait(Trait.PERFECT_BODY)) {
                     if (DamageUtil.isMelee(source)) {
@@ -54,9 +54,9 @@ ISorcererData data = cap.getSorcererData();
             if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
                 IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+                if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
                     float armor = data.getExperience() * 0.002F;
