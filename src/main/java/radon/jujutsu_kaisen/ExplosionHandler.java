@@ -34,11 +34,18 @@ import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +56,6 @@ import static net.minecraft.world.entity.projectile.WindCharge.EXPLOSION_DAMAGE_
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExplosionHandler {
-    private static final ExplosionDamageCalculator EXPLOSION_DAMAGE_CALCULATOR = new ExplosionDamageCalculator();
     private static final List<ExplosionData> explosions = new CopyOnWriteArrayList<>();
 
     private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> pDropPositionArray, ItemStack pStack, BlockPos pPos) {
@@ -82,12 +88,8 @@ public class ExplosionHandler {
 
             float diameter = explosion.radius * 2.0F;
 
-            float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
-
             Explosion current = new Explosion(event.level, explosion.instigator, explosion.position.x, explosion.position.y, explosion.position.z,
-                    radius, explosion.fire, Explosion.BlockInteraction.DESTROY);
-
-            ExplosionDamageCalculator calculator = explosion.instigator == null ? EXPLOSION_DAMAGE_CALCULATOR : new EntityBasedExplosionDamageCalculator(explosion.instigator);
+                    diameter, explosion.fire, Explosion.BlockInteraction.DESTROY);
 
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.x, explosion.position.y, explosion.position.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, diameter, 1.0F);
@@ -131,8 +133,24 @@ public class ExplosionHandler {
                     d7 /= d13;
                     d9 /= d13;
 
-                    if (calculator.shouldDamageEntity(current, entity)) {
-                        entity.hurt(explosion.source, calculator.getEntityDamageAmount(current, entity) * explosion.damage);
+                    if (explosion.calculator.shouldDamageEntity(current, entity)) {
+                        float amount = explosion.calculator.getEntityDamageAmount(current, entity);
+
+                        if (explosion.source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && explosion.instigator != null) {
+                            IJujutsuCapability cap = explosion.instigator.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                            if (cap != null) {
+                                ISorcererData data = cap.getSorcererData();
+
+                                if (jujutsu.getDirectEntity() instanceof JujutsuProjectile projectile) {
+                                    amount *= projectile.getPower();
+                                } else {
+                                    Ability ability = jujutsu.getAbility();
+                                    amount *= ability == null ? data.getAbilityPower() : ability.getPower(explosion.instigator);
+                                }
+                            }
+                        }
+                        entity.hurt(explosion.source, amount);
                     }
 
                     double d10;
@@ -153,6 +171,8 @@ public class ExplosionHandler {
 
             if (explosion.instigator instanceof Player || event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
+
+                float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
 
                 int minX = Mth.floor(explosion.position.x - radius - 1.0F);
                 int maxX = Mth.floor(explosion.position.x + radius + 1.0F);
@@ -238,10 +258,6 @@ public class ExplosionHandler {
 
     public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
         explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, causesFire));
-    }
-
-    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire));
     }
 
     private static class ExplosionData {
