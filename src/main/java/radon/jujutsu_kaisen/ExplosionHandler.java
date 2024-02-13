@@ -135,22 +135,7 @@ public class ExplosionHandler {
 
                     if (explosion.calculator.shouldDamageEntity(current, entity)) {
                         float amount = explosion.calculator.getEntityDamageAmount(current, entity);
-
-                        if (explosion.source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && explosion.instigator != null) {
-                            IJujutsuCapability cap = explosion.instigator.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                            if (cap != null) {
-                                ISorcererData data = cap.getSorcererData();
-
-                                if (jujutsu.getDirectEntity() instanceof JujutsuProjectile projectile) {
-                                    amount *= projectile.getPower();
-                                } else {
-                                    Ability ability = jujutsu.getAbility();
-                                    amount *= ability == null ? data.getAbilityPower() : ability.getPower(explosion.instigator);
-                                }
-                            }
-                        }
-                        entity.hurt(explosion.source, amount);
+                        entity.hurt(explosion.source, amount * explosion.damage);
                     }
 
                     double d10;
@@ -256,8 +241,8 @@ public class ExplosionHandler {
         explosions.removeAll(remove);
     }
 
-    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, causesFire));
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire));
     }
 
     private static class ExplosionData {
