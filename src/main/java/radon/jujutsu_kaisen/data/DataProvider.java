@@ -26,6 +26,8 @@ public class DataProvider {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
+        if (owner.isDeadOrDying()) return;
+
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
