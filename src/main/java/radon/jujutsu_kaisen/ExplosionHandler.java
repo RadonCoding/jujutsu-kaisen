@@ -45,8 +45,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static net.minecraft.world.entity.projectile.WindCharge.EXPLOSION_DAMAGE_CALCULATOR;
+
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExplosionHandler {
+    private static final ExplosionDamageCalculator EXPLOSION_DAMAGE_CALCULATOR = new ExplosionDamageCalculator();
     private static final List<ExplosionData> explosions = new CopyOnWriteArrayList<>();
 
     private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> pDropPositionArray, ItemStack pStack, BlockPos pPos) {
@@ -69,7 +72,7 @@ public class ExplosionHandler {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
+    public static void onLevelTick(TickEvent.LevelTickEvent event) throws Exception {
         if (event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
 
         List<ExplosionData> remove = new ArrayList<>();
@@ -83,6 +86,8 @@ public class ExplosionHandler {
 
             Explosion current = new Explosion(event.level, explosion.instigator, explosion.position.x, explosion.position.y, explosion.position.z,
                     radius, explosion.fire, Explosion.BlockInteraction.DESTROY);
+
+            ExplosionDamageCalculator calculator = explosion.instigator == null ? EXPLOSION_DAMAGE_CALCULATOR : new EntityBasedExplosionDamageCalculator(explosion.instigator);
 
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.x, explosion.position.y, explosion.position.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, diameter, 1.0F);
@@ -111,36 +116,38 @@ public class ExplosionHandler {
 
                     if (entity.ignoreExplosion(current)) continue;
 
-                    double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
+                    double d11 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
 
-                    if (d12 <= 1.0D) {
-                        double d5 = entity.getX() - explosion.position.x;
-                        double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y;
-                        double d9 = entity.getZ() - explosion.position.z;
-                        double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+                    if (d11 > 1.0D) continue;
 
-                        if (d13 != 0.0D) {
-                            d5 /= d13;
-                            d7 /= d13;
-                            d9 /= d13;
-                            double d14 = Explosion.getSeenPercent(explosion.position, entity);
-                            double d10 = (1.0D - d12) * d14;
-                            entity.hurt(explosion.source, (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * explosion.radius + 1.0D)) * explosion.damage);
-                            double d11;
+                    double d5 = entity.getX() - explosion.position.x;
+                    double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y;
+                    double d9 = entity.getZ() - explosion.position.z;
+                    double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
 
-                            if (entity instanceof LivingEntity living) {
-                                d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
-                            } else {
-                                d11 = d10;
-                            }
+                    if (d13 == 0.0D) continue;
 
-                            d5 *= d11;
-                            d7 *= d11;
-                            d9 *= d11;
-                            Vec3 vec31 = new Vec3(d5, d7, d9);
-                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
-                        }
+                    d5 /= d13;
+                    d7 /= d13;
+                    d9 /= d13;
+
+                    if (calculator.shouldDamageEntity(current, entity)) {
+                        entity.hurt(explosion.source, calculator.getEntityDamageAmount(current, entity) * explosion.damage);
                     }
+
+                    double d10;
+
+                    if (entity instanceof LivingEntity living) {
+                        d10 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d11);
+                    } else {
+                        d10 = d11;
+                    }
+
+                    d5 *= d10;
+                    d7 *= d10;
+                    d9 *= d10;
+                    Vec3 vec31 = new Vec3(d5, d7, d9);
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
                 }
             }
 

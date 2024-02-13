@@ -89,7 +89,7 @@ public class DisasterFlames extends Ability implements IImbuement {
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
         if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()),
-                DAMAGE * Ability.getPower(JJKAbilities.DISASTER_FLAMES.get(), owner) * (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE)))) {
+                DAMAGE * this.getPower(owner) * Math.max(0.1F, (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE))))) {
             target.setSecondsOnFire(5);
         }
 

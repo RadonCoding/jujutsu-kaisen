@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
