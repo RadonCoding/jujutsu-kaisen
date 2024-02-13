@@ -5,18 +5,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.ImbuementHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +87,24 @@ public class CursedEnergyOverlay {
         }
 
         List<Component> below = new ArrayList<>();
+
+        List<ItemStack> stacks = new ArrayList<>();
+        stacks.add(mc.player.getItemInHand(InteractionHand.MAIN_HAND));
+        stacks.add(mc.player.getItemInHand(InteractionHand.OFF_HAND));
+        stacks.addAll(CuriosUtil.findSlots(mc.player, "right_hand"));
+        stacks.addAll(CuriosUtil.findSlots(mc.player, "left_hand"));
+
+        stacks.removeIf(ItemStack::isEmpty);
+
+        for (ItemStack stack : stacks) {
+            for (Ability ability : ImbuementHandler.getFullImbuements(stack)) {
+                int cooldown = data.getRemainingCooldown(ability);
+
+                if (cooldown > 0) {
+                    below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
+                }
+            }
+        }
 
         for (Ability ability : data.getToggled()) {
             if (!(ability instanceof Ability.IAttack)) continue;

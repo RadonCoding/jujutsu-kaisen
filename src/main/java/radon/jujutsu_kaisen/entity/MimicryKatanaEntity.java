@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
@@ -85,7 +86,7 @@ public class MimicryKatanaEntity extends Entity {
 
         if (domain != null && pPlayer == domain.getOwner()) {
             ItemStack stack = new ItemStack(this::getItem);
-            ImbuementHandler.setFullyImbued(stack, this.getTechnique());
+            MimicryKatanaItem.setTechnique(stack, this.getTechnique());
 
             if (pPlayer.getItemInHand(pHand).isEmpty()) {
                 pPlayer.setItemInHand(pHand, stack);

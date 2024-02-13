@@ -193,6 +193,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
         super.onAddedToWorld();
 
         ItemStack inventory = new ItemStack(JJKItems.INVENTORY_CURSE.get());
+
         InventoryCurseItem.addItem(inventory, PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
         InventoryCurseItem.addItem(inventory, INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
         InventoryCurseItem.addItem(inventory, SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));

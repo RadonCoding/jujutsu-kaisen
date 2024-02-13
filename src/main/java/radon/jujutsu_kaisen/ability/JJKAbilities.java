@@ -49,8 +49,10 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
+import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 
 import java.util.*;
@@ -240,7 +242,9 @@ public class JJKAbilities {
         stacks.removeIf(ItemStack::isEmpty);
 
         for (ItemStack stack : stacks) {
-            techniques.addAll(ImbuementHandler.getFullImbuements(stack));
+            if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
+
+            techniques.add(MimicryKatanaItem.getTechnique(stack));
         }
         return techniques;
     }

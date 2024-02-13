@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
@@ -24,17 +23,17 @@ import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 
 import java.util.*;
 
-public class AllEncompassingUnequiovocalLove extends ClosedDomainExpansionEntity {
+public class AllEncompassingUnequiovocalLoveEntity extends ClosedDomainExpansionEntity {
     @Nullable
     private ICursedTechnique technique;
 
     private final Map<BlockPos, ICursedTechnique> offsets = new HashMap<>();
 
-    public AllEncompassingUnequiovocalLove(EntityType<?> pType, Level pLevel) {
+    public AllEncompassingUnequiovocalLoveEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
-    public AllEncompassingUnequiovocalLove(LivingEntity owner, DomainExpansion ability, int radius) {
+    public AllEncompassingUnequiovocalLoveEntity(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.GENUINE_MUTUAL_LOVE.get(), owner, ability, radius);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
