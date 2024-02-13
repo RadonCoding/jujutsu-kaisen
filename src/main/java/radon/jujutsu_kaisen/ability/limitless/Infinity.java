@@ -30,11 +30,12 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.DamageUtil;
 
 import java.util.*;
 
-public class Infinity extends Ability implements Ability.IToggled {
+public class Infinity extends Ability implements Ability.IToggled, Ability.IDurationable {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -73,6 +74,24 @@ public class Infinity extends Ability implements Ability.IToggled {
     @Override
     public int getCooldown() {
         return 5 * 20;
+    }
+
+    @Override
+    public int getDuration() {
+        return 10 * 20;
+    }
+
+    @Override
+    public int getRealDuration(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0;
+
+        ISorcererData data = cap.getSorcererData();
+
+        if (data.hasTrait(Trait.SIX_EYES)) return 0;
+
+        return IDurationable.super.getRealDuration(owner);
     }
 
     public static class FrozenProjectileData extends SavedData {
