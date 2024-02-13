@@ -90,7 +90,7 @@ public class JJKEventHandler {
                 }
             }
 
-            // Lessen damage for sorcerers
+            // Lessen damage for heavenly restricted
             if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
                 IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -99,13 +99,11 @@ public class JJKEventHandler {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
-                    float armor = data.getExperience() * 0.002F;
-
                     if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                        armor *= 10.0F;
+                        float armor = data.getExperience() * 0.02F;
+                        float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
+                        event.setAmount(blocked);
                     }
-                    float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
-                    event.setAmount(blocked);
                 }
             }
         }
