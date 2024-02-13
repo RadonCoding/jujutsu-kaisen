@@ -113,7 +113,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                     continue;
                 }
             }
-
             this.ability.onHitEntity(this, owner, entity, false);
         }
     }
