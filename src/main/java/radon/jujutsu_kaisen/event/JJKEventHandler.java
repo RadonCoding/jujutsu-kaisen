@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -68,10 +69,12 @@ public class JJKEventHandler {
 
             DamageSource source = event.getSource();
 
+            float amount = event.getAmount();
+
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
                 if (source.getEntity() == victim) {
-                    event.setAmount(event.getAmount() * 0.1F);
+                    event.setAmount(amount * 0.1F);
                 }
             }
 
@@ -85,7 +88,7 @@ public class JJKEventHandler {
 
                 if (data != null && data.hasTrait(Trait.PERFECT_BODY)) {
                     if (DamageUtil.isMelee(source)) {
-                        event.setAmount(event.getAmount() * 2.0F);
+                        event.setAmount(amount * 2.0F);
                     }
                 }
             }
@@ -101,7 +104,12 @@ public class JJKEventHandler {
                 if (data != null) {
                     if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                         float armor = data.getExperience() * 0.02F;
-                        float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
+                        float toughness = armor * 0.1F;
+
+                        float f = 2.0F + toughness / 4.0F;
+                        float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
+                        float blocked = amount * (1.0F - f1 / 25.0F);
+
                         event.setAmount(blocked);
                     }
                 }
