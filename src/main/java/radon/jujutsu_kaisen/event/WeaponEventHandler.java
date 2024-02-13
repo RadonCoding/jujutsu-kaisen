@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -49,6 +50,39 @@ public class WeaponEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
+        public static void onLivingHurt(LivingHurtEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            DamageSource source = event.getSource();
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            List<Item> stacks = new ArrayList<>();
+
+            if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
+                stacks.add(chain.getStack().getItem());
+            } else {
+                stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND).getItem());
+                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                        .stream().map(ItemStack::getItem).collect(Collectors.toSet()));
+            }
+
+            if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
+
+            IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (attackerCap != null) {
+                ISorcererData attackerData = attackerCap.getSorcererData();
+
+                if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                    event.setCanceled(victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount()));
+                }
+            }
+        }
+
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -70,19 +104,10 @@ public class WeaponEventHandler {
 
             if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
-            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (attackercap != null) {
-                ISorcererData attackerData = attackercap.getSorcererData();
-
-                if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                    if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
-                        if (victim.isDeadOrDying()) {
-                            event.setCanceled(true);
-                            return;
-                        }
-                    }
-                }
+            if (attackerCap != null) {
+                ISorcererData attackerData = attackerCap.getSorcererData();
 
                 if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
                     if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
@@ -157,9 +182,9 @@ public class WeaponEventHandler {
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             List<ItemStack> stacks = new ArrayList<>();
 
