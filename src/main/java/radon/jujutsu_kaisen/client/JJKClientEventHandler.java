@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -18,12 +19,16 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
+import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
+import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 import radon.jujutsu_kaisen.client.render.block.NightSkyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulSmallRenderer;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -218,6 +223,13 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(AoiTodoModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(AoiTodoModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(AoiTodoModel.OUTER_LAYER, SkinModel::createOuterLayer);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterMenuScreens(RegisterMenuScreensEvent event) {
+            event.register(JJKMenus.ALTAR.get(), AltarScreen::new);
+            event.register(JJKMenus.VEIL_ROD.get(), VeilRodScreen::new);
+            event.register(JJKMenus.BOUNTY.get(), BountyScreen::new);
         }
 
         @SubscribeEvent

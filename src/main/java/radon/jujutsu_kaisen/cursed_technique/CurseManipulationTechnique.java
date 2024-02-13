@@ -8,15 +8,21 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class CurseManipulationTechnique implements ICursedTechnique {
+    private static final Set<Ability> ABILITIES = new LinkedHashSet<>();
+
+    static {
+        ABILITIES.add(JJKAbilities.CURSE_ABSORPTION.get());
+        ABILITIES.add(JJKAbilities.RELEASE_CURSE.get());
+        ABILITIES.add(JJKAbilities.RELEASE_CURSES.get());
+        ABILITIES.add(JJKAbilities.SUMMON_ALL.get());
+        ABILITIES.add(JJKAbilities.ENHANCE_CURSE.get());
+        ABILITIES.add(JJKAbilities.MAXIMUM_UZUMAKI.get());
+        ABILITIES.add(JJKAbilities.MINI_UZUMAKI.get());
+        ABILITIES.add(JJKAbilities.WORM_CURSE_GRAB.get());
+    }
+
     @Override
     public Set<Ability> getAbilities() {
-        return new LinkedHashSet<>(Set.of(JJKAbilities.CURSE_ABSORPTION.get(),
-                JJKAbilities.RELEASE_CURSE.get(),
-                JJKAbilities.RELEASE_CURSES.get(),
-                JJKAbilities.SUMMON_ALL.get(),
-                JJKAbilities.ENHANCE_CURSE.get(),
-                JJKAbilities.MAXIMUM_UZUMAKI.get(),
-                JJKAbilities.MINI_UZUMAKI.get(),
-                JJKAbilities.WORM_CURSE_GRAB.get()));
+        return new LinkedHashSet<>(ABILITIES);
     }
 }

@@ -8,12 +8,18 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class CursedSpeechTechnique implements ICursedTechnique {
+    private static final Set<Ability> ABILITIES = new LinkedHashSet<>();
+
+    static {
+        ABILITIES.add(JJKAbilities.DONT_MOVE.get());
+        ABILITIES.add(JJKAbilities.GET_CRUSHED.get());
+        ABILITIES.add(JJKAbilities.BLAST_AWAY.get());
+        ABILITIES.add(JJKAbilities.EXPLODE.get());
+        ABILITIES.add(JJKAbilities.DIE.get());
+    }
+
     @Override
     public Set<Ability> getAbilities() {
-        return new LinkedHashSet<>(Set.of(JJKAbilities.DONT_MOVE.get(),
-                JJKAbilities.GET_CRUSHED.get(),
-                JJKAbilities.BLAST_AWAY.get(),
-                JJKAbilities.EXPLODE.get(),
-                JJKAbilities.DIE.get()));
+        return new LinkedHashSet<>(ABILITIES);
     }
 }

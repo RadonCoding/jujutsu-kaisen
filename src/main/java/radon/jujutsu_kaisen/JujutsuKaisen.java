@@ -85,10 +85,6 @@ public class JujutsuKaisen {
     }
 
     public static void onClientSetup(FMLClientSetupEvent event) {
-        MenuScreens.register(JJKMenus.ALTAR.get(), AltarScreen::new);
-        MenuScreens.register(JJKMenus.VEIL_ROD.get(), VeilRodScreen::new);
-        MenuScreens.register(JJKMenus.BOUNTY.get(), BountyScreen::new);
-
         ItemBlockRenderTypes.setRenderLayer(JJKFluids.FAKE_WATER_SOURCE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_ONE.get(), RenderType.cutout());

@@ -9,6 +9,33 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TenShadowsTechnique implements ICursedTechnique {
+    private static final Set<Ability> ABILITIES = new LinkedHashSet<>();
+
+    static {
+        ABILITIES.add(JJKAbilities.SWITCH_MODE.get());
+        ABILITIES.add(JJKAbilities.RELEASE_SHIKIGAMI.get());
+        ABILITIES.add(JJKAbilities.SHADOW_STORAGE.get());
+        ABILITIES.add(JJKAbilities.SHADOW_TRAVEL.get());
+        ABILITIES.add(JJKAbilities.NUE_LIGHTNING.get());
+        ABILITIES.add(JJKAbilities.PIERCING_WATER.get());
+        ABILITIES.add(JJKAbilities.WHEEL.get());
+        ABILITIES.add(JJKAbilities.GREAT_SERPENT_GRAB.get());
+
+        ABILITIES.add(JJKAbilities.DIVINE_DOGS.get());
+        ABILITIES.add(JJKAbilities.DIVINE_DOG_TOTALITY.get());
+        ABILITIES.add(JJKAbilities.TOAD.get());
+        ABILITIES.add(JJKAbilities.TOAD_FUSION.get());
+        ABILITIES.add(JJKAbilities.GREAT_SERPENT.get());
+        ABILITIES.add(JJKAbilities.NUE.get());
+        ABILITIES.add(JJKAbilities.NUE_TOTALITY.get());
+        ABILITIES.add(JJKAbilities.MAX_ELEPHANT.get());
+        ABILITIES.add(JJKAbilities.RABBIT_ESCAPE.get());
+        ABILITIES.add(JJKAbilities.TRANQUIL_DEER.get());
+        ABILITIES.add(JJKAbilities.PIERCING_BULL.get());
+        ABILITIES.add(JJKAbilities.AGITO.get());
+        ABILITIES.add(JJKAbilities.MAHORAGA.get());
+    }
+
     @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.CHIMERA_SHADOW_GARDEN.get();
@@ -16,27 +43,6 @@ public class TenShadowsTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return new LinkedHashSet<>(Set.of(JJKAbilities.SWITCH_MODE.get(),
-                JJKAbilities.RELEASE_SHIKIGAMI.get(),
-                JJKAbilities.SHADOW_STORAGE.get(),
-                JJKAbilities.SHADOW_TRAVEL.get(),
-                JJKAbilities.NUE_LIGHTNING.get(),
-                JJKAbilities.PIERCING_WATER.get(),
-                JJKAbilities.WHEEL.get(),
-                JJKAbilities.GREAT_SERPENT_GRAB.get(),
-
-                JJKAbilities.DIVINE_DOGS.get(),
-                JJKAbilities.DIVINE_DOG_TOTALITY.get(),
-                JJKAbilities.TOAD.get(),
-                JJKAbilities.TOAD_FUSION.get(),
-                JJKAbilities.GREAT_SERPENT.get(),
-                JJKAbilities.NUE.get(),
-                JJKAbilities.NUE_TOTALITY.get(),
-                JJKAbilities.MAX_ELEPHANT.get(),
-                JJKAbilities.RABBIT_ESCAPE.get(),
-                JJKAbilities.TRANQUIL_DEER.get(),
-                JJKAbilities.PIERCING_BULL.get(),
-                JJKAbilities.AGITO.get(),
-                JJKAbilities.MAHORAGA.get()));
+        return new LinkedHashSet<>(ABILITIES);
     }
 }
