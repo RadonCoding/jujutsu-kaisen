@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -318,7 +319,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         }
 
         float armor = data.getExperience() * (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.1F : 0.025F);
-        float blocked = CombatRules.getDamageAfterAbsorb(amount, armor, armor * 0.5F);
+        float toughness = armor * 0.1F;
+
+        float f = 2.0F + toughness / 4.0F;
+        float f1 = Math.min(armor * 0.2F, armor - amount / f);
+        float blocked = amount * (1.0F - f1 / 25.0F);
 
         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
             float cost = blocked * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
