@@ -86,10 +86,10 @@ public class ExplosionHandler {
         for (ExplosionData explosion : explosions) {
             if (event.level.dimension() != explosion.dimension) return;
 
-            float diameter = explosion.radius * 2.0F;
-
             Explosion current = new Explosion(event.level, explosion.instigator, explosion.position.x, explosion.position.y, explosion.position.z,
-                    diameter, explosion.fire, Explosion.BlockInteraction.DESTROY);
+                    explosion.radius, explosion.fire, Explosion.BlockInteraction.DESTROY);
+
+            float diameter = explosion.radius * 2.0F;
 
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.x, explosion.position.y, explosion.position.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, diameter, 1.0F);
