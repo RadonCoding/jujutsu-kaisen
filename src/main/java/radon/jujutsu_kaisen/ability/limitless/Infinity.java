@@ -35,7 +35,7 @@ import radon.jujutsu_kaisen.util.DamageUtil;
 
 import java.util.*;
 
-public class Infinity extends Ability implements Ability.IToggled, Ability.IDurationable {
+public class Infinity extends Ability implements Ability.IToggled, Ability.IChannelened {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -48,7 +48,13 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return ActivationType.CHANNELED;
+
+        ISorcererData data = cap.getSorcererData();
+
+        return data.hasTrait(Trait.SIX_EYES) ? ActivationType.TOGGLED : ActivationType.CHANNELED;
     }
 
     @Override
@@ -74,24 +80,6 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
     @Override
     public int getCooldown() {
         return 5 * 20;
-    }
-
-    @Override
-    public int getDuration() {
-        return 10 * 20;
-    }
-
-    @Override
-    public int getRealDuration(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return 0;
-
-        ISorcererData data = cap.getSorcererData();
-
-        if (data.hasTrait(Trait.SIX_EYES)) return 0;
-
-        return IDurationable.super.getRealDuration(owner);
     }
 
     public static class FrozenProjectileData extends SavedData {
