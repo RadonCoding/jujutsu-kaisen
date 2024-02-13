@@ -37,7 +37,6 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
 
-    public static final float DAMAGE = 10.0F;
     private static final int DURATION = 10;
     public static final int MIN_LENGTH = 3;
     public static final int MAX_LENGTH = 12;
@@ -53,7 +52,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public DismantleProjectile(LivingEntity owner, float power, float roll) {
         this(JJKEntities.DISMANTLE.get(), owner, power, roll);
     }
-    
+
     public DismantleProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, float roll) {
         super(pType, owner.level(), owner, power);
 
@@ -80,6 +79,10 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         this.instant = instant;
         this.destroy = destroy;
+    }
+
+    protected float getDamage() {
+        return 10.0F;
     }
 
     public int getMinLength() {
@@ -167,7 +170,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         ISorcererData data = cap.getSorcererData();
 
         DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
-        entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * this.getPower());
+        entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), this.getDamage() * this.getPower());
     }
 
     private Vec3 rotate(Vec3 vector, Vec3 axis, double degrees) {
