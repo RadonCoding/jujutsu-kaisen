@@ -19,8 +19,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -157,7 +161,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (cap == null) return 0.0F;
 
         ISorcererData data = cap.getSorcererData();
-        
+
         if (data == null) return 0.0F;
 
         if (owner.isInWater() && data.getNature() == CursedEnergyNature.LIGHTNING) {
@@ -196,7 +200,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (cap == null) return Status.FAILURE;
 
         ISorcererData data = cap.getSorcererData();
-        
+
         if (data == null) return Status.FAILURE;
 
         return data.getEnergy() == 0.0F ? Status.FAILURE : super.isStillUsable(owner);
@@ -328,5 +332,14 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
         }
         event.setAmount(amount - blocked);
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ForgeEvents {
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public static void onLivingHurt(LivingHurtEvent event) {
+            CursedEnergyFlow.attack(event);
+            CursedEnergyFlow.shield(event);
+        }
     }
 }
