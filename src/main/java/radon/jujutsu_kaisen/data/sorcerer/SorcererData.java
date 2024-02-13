@@ -87,6 +87,7 @@ public class SorcererData implements ISorcererData {
     private final Set<Trait> traits;
     private final List<DelayedTickEvent> delayedTickEvents;
     private final Map<Ability, Integer> cooldowns;
+    private final Map<Ability, Integer> disrupted;
     private final Map<Ability, Integer> durations;
     private final Set<Integer> summons;
     private final Map<UUID, Set<Pact>> acceptedPacts;
@@ -127,6 +128,7 @@ public class SorcererData implements ISorcererData {
         this.traits = new HashSet<>();
         this.delayedTickEvents = new ArrayList<>();
         this.cooldowns = new HashMap<>();
+        this.disrupted = new HashMap<>();
         this.durations = new HashMap<>();
         this.summons = new HashSet<>();
         this.acceptedPacts = new HashMap<>();
@@ -148,6 +150,22 @@ public class SorcererData implements ISorcererData {
 
             if (remaining > 0) {
                 this.cooldowns.put(entry.getKey(), --remaining);
+            } else {
+                iter.remove();
+            }
+        }
+    }
+
+    private void updateDisrupted() {
+        Iterator<Map.Entry<Ability, Integer>> iter = this.disrupted.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<Ability, Integer> entry = iter.next();
+
+            int remaining = entry.getValue();
+
+            if (remaining > 0) {
+                this.disrupted.put(entry.getKey(), --remaining);
             } else {
                 iter.remove();
             }
@@ -202,6 +220,8 @@ public class SorcererData implements ISorcererData {
         List<Ability> remove = new ArrayList<>();
 
         for (Ability ability : new ArrayList<>(this.toggled)) {
+            if (this.disrupted.containsKey(ability)) continue;
+
             Ability.Status status = ability.isStillUsable(this.owner);
 
             if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
@@ -220,6 +240,8 @@ public class SorcererData implements ISorcererData {
 
     private void updateChanneled() {
         if (this.channeled != null) {
+            if (this.disrupted.containsKey(this.channeled)) return;
+
             Ability.Status status = this.channeled.isStillUsable(this.owner);
 
             if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && this.channeled instanceof Ability.IAttack)) {
@@ -342,6 +364,7 @@ public class SorcererData implements ISorcererData {
         this.updateSummons();
 
         this.updateCooldowns();
+        this.updateDisrupted();
         this.updateDurations();
         this.updateTickEvents();
         this.updateToggled();
@@ -909,6 +932,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void disrupt(Ability ability, int duration) {
+        this.disrupted.put(ability, duration);
+    }
+
+    @Override
     public void resetBurnout() {
         this.burnout = 0;
     }
@@ -1084,7 +1112,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isChanneling(Ability ability) {
-        return this.channeled == ability;
+        return this.channeled == ability && !this.disrupted.containsKey(this.channeled);
     }
 
     @Override
@@ -1297,7 +1325,7 @@ public class SorcererData implements ISorcererData {
     }
 
     public boolean hasToggled(Ability ability) {
-        return this.toggled.contains(ability);
+        return this.toggled.contains(ability) && !this.disrupted.containsKey(ability);
     }
 
     @Override
@@ -1392,6 +1420,20 @@ public class SorcererData implements ISorcererData {
             cooldownsTag.add(data);
         }
         nbt.put("cooldowns", cooldownsTag);
+
+        ListTag disruptedTag = new ListTag();
+
+        for (Map.Entry<Ability, Integer> entry : this.disrupted.entrySet()) {
+            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
+
+            if (key == null) continue;
+
+            CompoundTag data = new CompoundTag();
+            data.putString("identifier", key.toString());
+            data.putInt("duration", entry.getValue());
+            disruptedTag.add(data);
+        }
+        nbt.put("disrupted", disruptedTag);
 
         ListTag summonsTag = new ListTag();
 
@@ -1520,6 +1562,14 @@ public class SorcererData implements ISorcererData {
             CompoundTag data = (CompoundTag) key;
             this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
                     data.getInt("cooldown"));
+        }
+
+        this.disrupted.clear();
+
+        for (Tag key : nbt.getList("disrupted", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+            this.disrupted.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
+                    data.getInt("duration"));
         }
 
         this.summons.clear();
