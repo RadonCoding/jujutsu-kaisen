@@ -319,11 +319,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
         }
 
-        float armor = data.getExperience() * (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.1F : 0.025F);
-        float toughness = armor * 0.01F;
+        float armor = data.getExperience() * (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.05F : 0.0125F);
+        float toughness = armor * 0.1F;
 
         float f = 2.0F + toughness / 4.0F;
-        float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 25.0F);
+        float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
         float blocked = amount * (1.0F - f1 / 25.0F);
 
         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
