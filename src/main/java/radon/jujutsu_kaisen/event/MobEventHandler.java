@@ -49,61 +49,50 @@ public class MobEventHandler {
 
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
             DamageSource source = event.getSource();
-
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
-
-            // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
-            if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
-                if (tamable1.isTame() && tamable1.getOwner() == victim) {
-                    event.setCanceled(true);
-                } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
-                    // Prevent tames with the same owner from attacking each other
-                    if (!tamable1.is(tamable2) && tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()) {
-                        event.setCanceled(true);
-                    }
-                }
-            } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
-                // Prevent the owner from attacking the tame
-                if (tamable.isTame() && tamable.getOwner() == attacker) {
-                    event.setCanceled(true);
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return;
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
 
-            ISorcererData data = cap.getSorcererData();
+                if (victim instanceof ISorcerer sorcerer && sorcerer.canChant()) {
+                    if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
+                    }
 
-            DamageSource source = event.getSource();
+                    if (!data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
+                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
+                    }
 
-            if (!(victim instanceof ISorcerer sorcerer) || !sorcerer.canChant()) return;
-
-            if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
-
-            if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
+                    if (source instanceof JJKDamageSources.JujutsuDamageSource) {
+                        if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                        }
+                    }
+                }
             }
 
-            if (!data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
-                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
-            }
-
-            if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
+                if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
+                    if (tamable1.isTame() && tamable1.getOwner() == victim) {
+                        event.setCanceled(true);
+                    } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
+                        // Prevent tames with the same owner from attacking each other
+                        if (!tamable1.is(tamable2) && tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()) {
+                            event.setCanceled(true);
+                        }
+                    }
+                } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
+                    // Prevent the owner from attacking the tame
+                    if (tamable.isTame() && tamable.getOwner() == attacker) {
+                        event.setCanceled(true);
+                    }
                 }
             }
         }
