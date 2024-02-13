@@ -112,7 +112,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     @Override
     public boolean canJump() {
-        return false;
+        return true;
     }
 
     @Override
