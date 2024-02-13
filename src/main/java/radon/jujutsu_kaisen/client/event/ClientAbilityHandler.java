@@ -207,8 +207,20 @@ public class ClientAbilityHandler {
                     mc.setScreen(new DomainScreen());
                 }
 
-                if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
-                    mc.setScreen(new MeleeScreen());
+                switch (ConfigHolder.CLIENT.meleeMenuType.get()) {
+                    case TOGGLE -> {
+                        if (JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
+                            mc.setScreen(new MeleeScreen());
+                        }
+                    }
+                    case SCROLL -> {
+                        if (JJKKeys.MELEE_MENU_UP.isDown()) {
+                            AbilityOverlay.scroll(1);
+                        }
+                        if (JJKKeys.MELEE_MENU_DOWN.isDown()) {
+                            AbilityOverlay.scroll(-1);
+                        }
+                    }
                 }
 
                 if (JJKKeys.INCREASE_OUTPUT.isDown()) {

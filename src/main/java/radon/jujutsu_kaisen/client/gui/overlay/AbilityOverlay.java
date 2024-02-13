@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -72,18 +73,77 @@ public class AbilityOverlay {
         return index;
     }
 
-    private static void render(ExtendedGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
+    private static void renderScroll(ExtendedGui gui, GuiGraphics graphics, int width, int height, int index) {
         Minecraft mc = gui.getMinecraft();
 
         if (mc.player == null) return;
 
+        int aboveStart = 0;
+        int aboveEnd = 0;
+
+        int belowStart = 0;
+        int belowEnd = 0;
+
         List<Component> lines = new ArrayList<>();
+
+        Ability middle = abilities.get(index);
+
+        aboveStart = lines.size();
+
+        int aboveIndex = (index == 0) ? abilities.size() - 1 : index - 1;
+        Ability above = abilities.get(aboveIndex);
+        renderAbilityInfo(lines, above);
+
+        aboveEnd = lines.size();
+
+        lines.add(Component.empty());
+
+        renderAbilityInfo(lines, middle);
+
+        lines.add(Component.empty());
+
+        belowStart = lines.size();
+
+        if (abilities.size() > 2) {
+            int belowIndex = (index == abilities.size() - 1) ? 0 : index + 1;
+            Ability below = abilities.get(belowIndex);
+            renderAbilityInfo(lines, below);
+        }
+
+        belowEnd = lines.size();
+
+        int offset = 0;
+
+        for (Component line : lines) {
+            if (mc.font.width(line) > offset) {
+                offset = mc.font.width(line);
+            }
+        }
+
+        int x = width - 20 - offset;
+        int y = height - 20 - (lines.size() * mc.font.lineHeight + 2);
+
+        for (int i = 0; i < lines.size(); i++) {
+            if (i >= aboveStart && i <= aboveEnd || i >= belowStart && i <= belowEnd) {
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+            }
+
+            graphics.drawString(gui.getFont(), lines.get(i), x, y, 16777215);
+            y += mc.font.lineHeight;
+
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+    }
+
+    private static void renderAbilityInfo(List<Component> lines, Ability ability) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null) return;
 
         Component nameText = Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID), ability.getName());
         lines.add(nameText);
 
         float cost = ability.getRealCost(mc.player);
-
         if (cost > 0.0F) {
             lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost));
         }
@@ -102,6 +162,17 @@ public class AbilityOverlay {
                 lines.add(durationText);
             }
         }
+    }
+
+
+    private static void renderToggle(ExtendedGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
+        Minecraft mc = gui.getMinecraft();
+
+        if (mc.player == null) return;
+
+        List<Component> lines = new ArrayList<>();
+
+        renderAbilityInfo(lines, ability);
 
         int offset = 0;
 
@@ -130,9 +201,7 @@ public class AbilityOverlay {
             abilities.removeIf(ability -> ability.getMenuType(mc.player) != MenuType.MELEE);
 
             if (!abilities.isEmpty()) {
-                int index = getIndex();
-                Ability ability = abilities.get(index);
-                render(gui, graphics, width, height, ability);
+                renderScroll(gui, graphics, width, height, getIndex());
             }
         } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE) {
             Ability selected = MeleeScreen.getSelected();
@@ -142,7 +211,7 @@ public class AbilityOverlay {
             if (!selected.isValid(mc.player) || !JJKAbilities.getAbilities(mc.player).contains(selected)) {
                 selected = null;
             }
-            render(gui, graphics, width, height, selected);
+            renderToggle(gui, graphics, width, height, selected);
         }
     };
 }

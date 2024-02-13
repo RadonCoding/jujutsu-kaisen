@@ -149,6 +149,8 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
             event.register(JJKKeys.ACTIVATE_MELEE_MENU);
+            event.register(JJKKeys.MELEE_MENU_UP);
+            event.register(JJKKeys.MELEE_MENU_DOWN);
             event.register(JJKKeys.ACTIVATE_ABILITY);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
