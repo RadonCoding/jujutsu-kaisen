@@ -64,7 +64,7 @@ public class WheelEntity extends Entity implements GeoEntity {
 
     @Override
     public float getMyRidingOffset(@NotNull Entity pEntity) {
-        return 0.5F;
+        return 0.1F;
     }
 
     public void spin() {
