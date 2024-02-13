@@ -121,13 +121,30 @@ public class ImbuementHandler {
 
             if (technique == null) return;
 
-            ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack held = owner.getItemInHand(InteractionHand.MAIN_HAND);
 
-            if (stack.isEmpty()) return;
+            if (held.isEmpty()) return;
 
-            if (!(stack.getItem() instanceof SwordItem)) return;
+            if (!(held.getItem() instanceof SwordItem)) return;
 
-            increaseImbuementAmount(stack, technique, amount);
+            increaseImbuementAmount(held, technique, amount);
+
+            if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
+                List<ItemStack> stacks = new ArrayList<>();
+                stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
+                stacks.addAll(CuriosUtil.findSlots(owner, owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
+                stacks.removeIf(ItemStack::isEmpty);
+
+                for (ItemStack stack : stacks) {
+                    if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
+
+                    Set<ICursedTechnique> imbuements = getFullImbuements(stack);
+
+                    if (imbuements.contains(technique)) {
+                        stack.shrink(1);
+                    }
+                }
+            }
         }
 
         @SubscribeEvent

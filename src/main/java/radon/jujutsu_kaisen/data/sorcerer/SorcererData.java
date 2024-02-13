@@ -969,9 +969,6 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public @Nullable ICursedTechnique getCurrentCopied() {
-        if (!this.toggled.contains(JJKAbilities.RIKA.get())) {
-            return null;
-        }
         return this.currentCopied;
     }
 

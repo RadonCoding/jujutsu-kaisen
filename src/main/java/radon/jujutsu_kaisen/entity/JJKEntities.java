@@ -13,7 +13,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.domain.ChimeraShadowGardenEntity;
-import radon.jujutsu_kaisen.entity.domain.base.AllEncompassingUnequiovocalLove;
+import radon.jujutsu_kaisen.entity.domain.SelfEmbodimentOfPerfectionEntity;
+import radon.jujutsu_kaisen.entity.domain.AllEncompassingUnequiovocalLove;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;

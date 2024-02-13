@@ -1,10 +1,10 @@
-package radon.jujutsu_kaisen.entity;
+package radon.jujutsu_kaisen.entity.domain;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
