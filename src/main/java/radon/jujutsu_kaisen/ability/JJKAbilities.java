@@ -99,6 +99,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, UnlimitedVoid> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
 
     public static DeferredHolder<Ability, Dismantle> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
+    public static DeferredHolder<Ability, BigDismantle> BIG_DISMANTLE = ABILITIES.register("big_dismantle", BigDismantle::new);
     public static DeferredHolder<Ability, DismantleNet> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
     public static DeferredHolder<Ability, DismantleSkating> DISMANTLE_SKATING = ABILITIES.register("dismantle_skating", DismantleSkating::new);
     public static DeferredHolder<Ability, Cleave> CLEAVE = ABILITIES.register("cleave", Cleave::new);

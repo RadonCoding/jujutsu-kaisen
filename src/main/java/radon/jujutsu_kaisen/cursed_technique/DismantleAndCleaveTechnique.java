@@ -17,6 +17,7 @@ public class DismantleAndCleaveTechnique implements ICursedTechnique {
     @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.DISMANTLE.get(),
+                JJKAbilities.BIG_DISMANTLE.get(),
                 JJKAbilities.DISMANTLE_NET.get(),
                 JJKAbilities.DISMANTLE_SKATING.get(),
                 JJKAbilities.CLEAVE.get(),

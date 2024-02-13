@@ -39,7 +39,6 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     public static final float DAMAGE = 10.0F;
     private static final int DURATION = 10;
-    private static final int LINE_LENGTH = 2;
     public static final int MIN_LENGTH = 3;
     public static final int MAX_LENGTH = 12;
 
@@ -52,7 +51,11 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     public DismantleProjectile(LivingEntity owner, float power, float roll) {
-        super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
+        this(JJKEntities.DISMANTLE.get(), owner, power, roll);
+    }
+    
+    public DismantleProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, float roll) {
+        super(pType, owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
@@ -79,6 +82,18 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.destroy = destroy;
     }
 
+    public int getMinLength() {
+        return MIN_LENGTH;
+    }
+
+    public int getMaxLength() {
+        return MAX_LENGTH;
+    }
+
+    public int getScale() {
+        return 3;
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -89,7 +104,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     public int getLength() {
         int length = this.entityData.get(DATA_LENGTH);
-        return length > 0 ? length : Math.max(MIN_LENGTH, Math.min(MAX_LENGTH, Mth.floor(LINE_LENGTH * this.getPower())));
+        return length > 0 ? length : Math.max(this.getMinLength(), Math.min(this.getMaxLength(), Mth.floor(this.getScale() * this.getPower())));
     }
 
     private void setLength(int length) {
