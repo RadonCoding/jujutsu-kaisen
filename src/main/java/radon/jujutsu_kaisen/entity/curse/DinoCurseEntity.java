@@ -109,16 +109,6 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     }
 
     @Override
-    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
-        boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
-
-        if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
-            ExplosionHandler.spawn(this.level().dimension(), this.position(), EXPLOSION_POWER, EXPLOSION_DURATION, this, this.damageSources().mobAttack(this), false);
-        }
-        return result;
-    }
-
-    @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
             this.riding = this.tickCount;
