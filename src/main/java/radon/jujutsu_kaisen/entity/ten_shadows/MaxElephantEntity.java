@@ -123,7 +123,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
             IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return result;
+            if (cap == null) return true;
 
             ISorcererData data = cap.getSorcererData();
 
