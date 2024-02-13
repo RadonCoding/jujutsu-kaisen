@@ -81,6 +81,10 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.destroy = destroy;
     }
 
+    protected boolean isInfinite() {
+        return false;
+    }
+
     protected float getDamage() {
         return 10.0F;
     }
@@ -261,7 +265,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (this.instant || this.destroyed >= this.getLength() * 2 || this.getTime() >= DURATION) {
+        if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2) || this.getTime() >= DURATION) {
             this.discard();
         }
     }
