@@ -35,9 +35,9 @@ public interface ITenShadowsData extends INBTSerializable<CompoundTag> {
 
     void revive(boolean full);
 
-    Set<Adaptation> getAdapted();
+    Map<Adaptation, Integer> getAdapted();
 
-    void addAdapted(Set<Adaptation> adaptations);
+    void addAdapted(Map<Adaptation, Integer> adaptations);
 
     Map<Adaptation, Integer> getAdapting();
 
@@ -59,11 +59,11 @@ public interface ITenShadowsData extends INBTSerializable<CompoundTag> {
 
     Adaptation.Type getAdaptationType(Adaptation adaptation);
 
-    Map<Adaptation.Type, Float> getAdaptationTypes();
+    int getAdaptation(Ability ability);
 
     boolean isAdaptedTo(DamageSource source);
 
-    boolean isAdaptedTo(@Nullable Ability ability);
+    boolean isAdaptedTo(Ability ability);
 
     boolean isAdaptedTo(ICursedTechnique technique);
 

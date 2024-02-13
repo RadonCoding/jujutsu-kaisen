@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
+import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 public class DamageUtil {
     public static boolean isBlockable(LivingEntity target, Projectile projectile) {
+        if (projectile instanceof WorldSlashProjectile) return false;
         if (projectile.getOwner() == target) return false;
 
         if (projectile instanceof ThrownChainProjectile chain) {

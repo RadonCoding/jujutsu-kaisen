@@ -67,17 +67,17 @@ public class PactEventHandler {
             }
 
             // Check for Pact.INVULNERABILITY
-            IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimcap == null) return;
+            if (victimCap == null) return;
 
-            ISorcererData victimData = victimcap.getSorcererData();
+            ISorcererData victimData = victimCap.getSorcererData();
             
-            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (attackercap == null) return;
+            if (attackerCap == null) return;
 
-            ISorcererData attackerData = attackercap.getSorcererData();
+            ISorcererData attackerData = attackerCap.getSorcererData();
 
             if (victimData.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerData.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
                 event.setCanceled(true);

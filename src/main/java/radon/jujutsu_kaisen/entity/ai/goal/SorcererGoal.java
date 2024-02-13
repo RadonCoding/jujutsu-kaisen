@@ -56,16 +56,16 @@ public class SorcererGoal extends Goal {
             }
         }
 
-        if (JJKAbilities.hasActiveTechnique(this.mob, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+        if (ownerSorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             LivingEntity target = this.mob.getTarget();
 
             if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {
                 List<AbsorbedCurse> curses = ownerCurseManipulationData.getCurses();
 
-                IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (targetcap != null) {
-                    ISorcererData targetData = targetcap.getSorcererData();
+                if (targetCap != null) {
+                    ISorcererData targetData = targetCap.getSorcererData();
 
                     AbsorbedCurse closest = null;
 

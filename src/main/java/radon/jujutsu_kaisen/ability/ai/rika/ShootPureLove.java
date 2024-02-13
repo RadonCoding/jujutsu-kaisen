@@ -26,7 +26,7 @@ public class ShootPureLove extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return owner instanceof RikaEntity;
+        return owner instanceof RikaEntity && super.isValid(owner);
     }
 
     @Override

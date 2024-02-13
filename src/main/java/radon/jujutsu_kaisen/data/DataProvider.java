@@ -9,10 +9,13 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.projection_sorcery.ProjectionSorceryData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
@@ -47,8 +50,29 @@ public class DataProvider {
         if (cap == null) return;
 
         if (event.isWasDeath()) {
-            IProjectionSorceryData data = cap.getProjectionSorceryData();
-            data.resetSpeedStacks();
+            IProjectionSorceryData projectionSorceryData = cap.getProjectionSorceryData();
+            projectionSorceryData.resetSpeedStacks();
+
+            ISorcererData sorcererData = cap.getSorcererData();
+            sorcererData.setEnergy(sorcererData.getMaxEnergy());
+            sorcererData.clearToggled();
+            sorcererData.resetCooldowns();
+            sorcererData.resetBrainDamage();
+            sorcererData.resetBurnout();
+            sorcererData.resetExtraEnergy();
+            sorcererData.resetBlackFlash();
+
+            ITenShadowsData tenShadowsData = cap.getTenShadowsData();
+
+            if (!ConfigHolder.SERVER.realisticShikigami.get()) {
+                tenShadowsData.revive(false);
+            }
+
+            if (clone instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
+            }
         }
     }
 

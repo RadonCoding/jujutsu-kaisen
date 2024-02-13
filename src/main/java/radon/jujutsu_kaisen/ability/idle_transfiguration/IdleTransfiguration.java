@@ -90,11 +90,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         ISorcererData ownerData = ownerCap.getSorcererData();
 
-        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetcap == null) return false;
+        if (targetCap == null) return false;
 
-        ISorcererData targetData = targetcap.getSorcererData();
+        ISorcererData targetData = targetCap.getSorcererData();
 
         if (!targetData.hasTrait(Trait.VESSEL) || targetData.getFingers() == 0) return false;
 

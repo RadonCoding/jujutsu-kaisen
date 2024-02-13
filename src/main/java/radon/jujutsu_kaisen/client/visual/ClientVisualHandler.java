@@ -70,10 +70,10 @@ public class ClientVisualHandler {
 
             if (cap == null) return null;
 
-            ISorcererData sorcererData = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
-            return new ClientData(sorcererData.getToggled(), sorcererData.getChanneled(), sorcererData.getTraits(), JJKAbilities.getTechniques(mc.player),
-                    sorcererData.getTechnique(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
+            return new ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), data.getTechniques(),
+                    data.getTechnique(), data.getType(), data.getExperience(), data.getCursedEnergyColor());
         }
         return null;
     }

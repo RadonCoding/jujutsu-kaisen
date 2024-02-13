@@ -28,7 +28,7 @@ public class Scissors extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return owner instanceof KuchisakeOnnaEntity;
+        return owner instanceof KuchisakeOnnaEntity && super.isValid(owner);
     }
 
     @Override

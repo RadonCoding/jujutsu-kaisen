@@ -16,13 +16,9 @@ public class DontMove extends Ability {
     private static final int DURATION = 20;
 
     @Override
-    public boolean isScalable(LivingEntity owner) {
-        return true;
-    }
-
-    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return CursedSpeechUtil.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+        return CursedSpeechUtil.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class CursedEnergyOverlay {
         above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(data.getOutput() * 100)));
         above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), data.getExperience()));
 
-        if (JJKAbilities.hasActiveTechnique(mc.player, JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
+        if (data.hasActiveTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
             above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.transfigured_souls", JujutsuKaisen.MOD_ID), data.getTransfiguredSouls()));
         }
 

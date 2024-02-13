@@ -29,7 +29,7 @@ public class TenShadowsData implements ITenShadowsData {
     private final Set<ResourceLocation> tamed;
     private final Set<ResourceLocation> dead;
     private final List<ItemStack> shadowInventory;
-    private final Set<Adaptation> adapted;
+    private final Map<Adaptation, Integer> adapted;
     private final Map<Adaptation, Integer> adapting;
     private TenShadowsMode mode;
 
@@ -41,7 +41,7 @@ public class TenShadowsData implements ITenShadowsData {
         this.mode = TenShadowsMode.SUMMON;
         this.tamed = new HashSet<>();
         this.dead = new HashSet<>();
-        this.adapted = new HashSet<>();
+        this.adapted = new HashMap<>();
         this.adapting = new HashMap<>();
         this.shadowInventory = new ArrayList<>();
     }
@@ -55,17 +55,13 @@ public class TenShadowsData implements ITenShadowsData {
 
         if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) return;
 
-        Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<Adaptation, Integer> entry = iter.next();
-
+        for (Map.Entry<Adaptation, Integer> entry : this.adapting.entrySet()) {
             int timer = entry.getValue();
 
             if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
-                iter.remove();
+                entry.setValue(0);
 
-                this.adapted.add(entry.getKey());
+                this.adapted.put(entry.getKey(), this.adapted.getOrDefault(entry.getKey(), 0) + 1);
 
                 if (this.owner instanceof MahoragaEntity mahoraga) {
                     mahoraga.onAdaptation();
@@ -139,13 +135,13 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public Set<Adaptation> getAdapted() {
+    public Map<Adaptation, Integer> getAdapted() {
         return this.adapted;
     }
 
     @Override
-    public void addAdapted(Set<Adaptation> adaptations) {
-        this.adapted.addAll(adaptations);
+    public void addAdapted(Map<Adaptation, Integer> adaptations) {
+        this.adapted.putAll(adaptations);
     }
 
     @Override
@@ -192,7 +188,7 @@ public class TenShadowsData implements ITenShadowsData {
 
     @Override
     public float getAdaptationProgress(Adaptation adaptation) {
-        return this.adapted.contains(adaptation) ? 1.0F : (float) this.adapting.getOrDefault(adaptation, 0) / JJKConstants.REQUIRED_ADAPTATION;
+        return this.adapted.containsKey(adaptation) ? 1.0F : (float) this.adapting.getOrDefault(adaptation, 0) / JJKConstants.REQUIRED_ADAPTATION;
     }
 
     @Override
@@ -215,27 +211,34 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public Map<Adaptation.Type, Float> getAdaptationTypes() {
-        Map<Adaptation.Type, Float> adaptations = new HashMap<>();
+    public int getAdaptation(Ability ability) {
+        for (Map.Entry<Adaptation, Integer> entry : this.adapted.entrySet()) {
+            Adaptation adapted = entry.getKey();
 
-        for (Adaptation adaptation : this.adapting.keySet()) {
-            adaptations.put(this.getAdaptationType(adaptation), this.getAdaptationProgress(adaptation));
+            Ability current = adapted.getAbility();
+
+            if (current == null) continue;
+
+            if (current == ability) return entry.getValue();
+
+            Ability.Classification first = current.getClassification();
+            Ability.Classification second = ability.getClassification();
+
+            if (first == Ability.Classification.NONE || second == Ability.Classification.NONE) continue;
+            if (first == second) return entry.getValue();
         }
-        for (Adaptation adaptation : this.adapted) {
-            adaptations.put(this.getAdaptationType(adaptation), this.getAdaptationProgress(adaptation));
-        }
-        return adaptations;
+        return 0;
     }
 
     @Override
     public boolean isAdaptedTo(DamageSource source) {
         Adaptation adaptation = this.getAdaptation(source);
-        return this.adapted.contains(adaptation);
+        return this.adapted.containsKey(adaptation);
     }
 
     @Override
     public boolean isAdaptedTo(Ability ability) {
-        for (Adaptation adapted : this.adapted) {
+        for (Adaptation adapted : this.adapted.keySet()) {
             Ability current = adapted.getAbility();
 
             if (current == null) continue;
@@ -320,20 +323,13 @@ public class TenShadowsData implements ITenShadowsData {
 
         ListTag adaptedTag = new ListTag();
 
-        for (Adaptation adaptation : this.adapted) {
-            adaptedTag.add(adaptation.serializeNBT());
-        }
-        nbt.put("adapted", adaptedTag);
-
-        ListTag adaptingTag = new ListTag();
-
-        for (Map.Entry<Adaptation, Integer> entry : this.adapting.entrySet()) {
+        for (Map.Entry<Adaptation, Integer> entry : this.adapted.entrySet()) {
             CompoundTag data = new CompoundTag();
             data.put("adaptation", entry.getKey().serializeNBT());
             data.putInt("stage", entry.getValue());
-            adaptingTag.add(data);
+            adaptedTag.add(data);
         }
-        nbt.put("adapting", adaptingTag);
+        nbt.put("adapted", adaptedTag);
 
         ListTag shadowInventoryTag = new ListTag();
 
@@ -364,14 +360,8 @@ public class TenShadowsData implements ITenShadowsData {
         this.adapted.clear();
 
         for (Tag key : nbt.getList("adapted", Tag.TAG_COMPOUND)) {
-            this.adapted.add(new Adaptation((CompoundTag) key));
-        }
-
-        this.adapting.clear();
-
-        for (Tag key : nbt.getList("adapting", Tag.TAG_COMPOUND)) {
             CompoundTag adaptation = (CompoundTag) key;
-            this.adapting.put(new Adaptation(adaptation.getCompound("adaptation")), adaptation.getInt("stage"));
+            this.adapted.put(new Adaptation(adaptation.getCompound("adaptation")), adaptation.getInt("stage"));
         }
 
         this.shadowInventory.clear();

@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 public class JJKDamageSources {
     public static final ResourceKey<DamageType> JUJUTSU = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu"));
+    public static final ResourceKey<DamageType> WORLD_SLASH = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "world_slash"));
     public static final ResourceKey<DamageType> SOUL = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "soul"));
     public static final ResourceKey<DamageType> SELF = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "self"));
     public static final ResourceKey<DamageType> SPLIT_SOUL_KATANA = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "split_soul_katana"));
@@ -31,6 +32,12 @@ public class JJKDamageSources {
         RegistryAccess registry = source.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new JujutsuDamageSource(types.getHolderOrThrow(JUJUTSU), source, indirect, ability);
+    }
+
+    public static DamageSource worldSlash(Entity source, @Nullable LivingEntity indirect) {
+        RegistryAccess registry = source.level().registryAccess();
+        Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
+        return new DamageSource(types.getHolderOrThrow(WORLD_SLASH), source, indirect);
     }
 
     public static DamageSource soulAttack(LivingEntity source) {

@@ -168,11 +168,11 @@ public class SimpleDomainEntity extends Entity {
 
                     if (target == null) continue;
                     
-                    IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    if (targetcap == null) continue;
+                    if (targetCap == null) continue;
 
-                    ISorcererData targetData = targetcap.getSorcererData();
+                    ISorcererData targetData = targetCap.getSorcererData();
 
                     this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), DAMAGE * (1.0F + Math.max(0.0F, targetData.getAbilityPower() - ownerData.getAbilityPower())));
                 }

@@ -100,6 +100,7 @@ public class JJKAbilities {
 
     public static DeferredHolder<Ability, Dismantle> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
     public static DeferredHolder<Ability, BigDismantle> BIG_DISMANTLE = ABILITIES.register("big_dismantle", BigDismantle::new);
+    public static DeferredHolder<Ability, WorldSlash> WORLD_SLASH = ABILITIES.register("world_slash", WorldSlash::new);
     public static DeferredHolder<Ability, DismantleNet> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
     public static DeferredHolder<Ability, DismantleSkating> DISMANTLE_SKATING = ABILITIES.register("dismantle_skating", DismantleSkating::new);
     public static DeferredHolder<Ability, Cleave> CLEAVE = ABILITIES.register("cleave", Cleave::new);
@@ -216,58 +217,6 @@ public class JJKAbilities {
         return ABILITY_REGISTRY.get(key);
     }
 
-    public static Set<ICursedTechnique> getTechniques(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return Set.of();
-
-        ISorcererData sorcererData = cap.getSorcererData();
-        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-
-        Set<ICursedTechnique> techniques = new HashSet<>();
-
-        if (sorcererData.getTechnique() != null) techniques.add(sorcererData.getTechnique());
-        if (sorcererData.getCurrentCopied() != null) techniques.add(sorcererData.getCurrentCopied());
-        if (curseManipulationData.getCurrentAbsorbed() != null) techniques.add(curseManipulationData.getCurrentAbsorbed());
-        if (sorcererData.getAdditional() != null) techniques.add(sorcererData.getAdditional());
-
-        List<ItemStack> stacks = new ArrayList<>();
-        stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
-        stacks.addAll(CuriosUtil.findSlots(owner, owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
-        stacks.removeIf(ItemStack::isEmpty);
-
-        for (ItemStack stack : stacks) {
-            if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
-
-            techniques.add(MimicryKatanaItem.getTechnique(stack));
-        }
-        return techniques;
-    }
-
-    public static boolean hasTechnique(LivingEntity owner, ICursedTechnique technique) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData sorcererData = cap.getSorcererData();
-        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-
-        return sorcererData.getTechnique() == technique || sorcererData.getAdditional() == technique || sorcererData.getCopied().contains(technique) ||
-                curseManipulationData.getAbsorbed().contains(technique);
-    }
-
-    public static boolean hasActiveTechnique(LivingEntity owner, ICursedTechnique technique) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData sorcererData = cap.getSorcererData();
-        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-
-        return sorcererData.getTechnique() == technique || sorcererData.getAdditional() == technique || sorcererData.getCurrentCopied() == technique ||
-                curseManipulationData.getCurrentAbsorbed() == technique;
-    }
-
     public static List<Ability> getAbilities(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -307,7 +256,7 @@ public class JJKAbilities {
         }
 
         if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            for (ICursedTechnique technique : JJKAbilities.getTechniques(owner)) {
+            for (ICursedTechnique technique : data.getTechniques()) {
                 abilities.addAll(technique.getAbilities());
             }
 

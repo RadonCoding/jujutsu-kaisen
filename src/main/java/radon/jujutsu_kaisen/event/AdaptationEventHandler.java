@@ -45,9 +45,7 @@ public class AdaptationEventHandler {
 
             if (!sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
-            if (!tenShadowsData.isAdaptedTo(event.getAbility())) {
-                tenShadowsData.tryAdapt(event.getAbility());
-            }
+            tenShadowsData.tryAdapt(event.getAbility());
         }
 
         @SubscribeEvent
@@ -68,7 +66,7 @@ public class AdaptationEventHandler {
             if (sorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             // Initiate / continue the adaptation process
-            if (!tenShadowsData.isAdaptedTo(source)) tenShadowsData.tryAdapt(source);
+            tenShadowsData.tryAdapt(source);
 
             if (!(victim instanceof MahoragaEntity)) return;
 
@@ -105,22 +103,22 @@ public class AdaptationEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimcap == null) return;
+            if (victimCap == null) return;
 
-            ISorcererData victimData = victimcap.getSorcererData();
+            ISorcererData victimData = victimCap.getSorcererData();
 
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (attackercap == null) return;
+            if (attackerCap == null) return;
 
-            ISorcererData attackerSorcererData = attackercap.getSorcererData();
-            ITenShadowsData attackerTenShadowsData = attackercap.getTenShadowsData();
+            ISorcererData attackerSorcererData = attackerCap.getSorcererData();
+            ITenShadowsData attackerTenShadowsData = attackerCap.getTenShadowsData();
 
             if (!attackerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerSorcererData.hasToggled(JJKAbilities.WHEEL.get())) {
                 if (victimData.hasToggled(JJKAbilities.INFINITY.get())) {

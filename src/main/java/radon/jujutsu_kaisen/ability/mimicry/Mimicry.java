@@ -82,16 +82,16 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
         ISorcererData ownerData = ownerCap.getSorcererData();
 
-        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetcap == null) return false;
+        if (targetCap == null) return false;
 
-        ISorcererData targetData = targetcap.getSorcererData();
+        ISorcererData targetData = targetCap.getSorcererData();
 
         ICursedTechnique current = ownerData.getTechnique();
         ICursedTechnique copied = targetData.getTechnique();
 
-        if (copied == null || current == null || JJKAbilities.hasTechnique(owner, copied) || current == copied) return false;
+        if (copied == null || current == null || ownerData.hasTechnique(copied) || current == copied) return false;
 
         owner.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 

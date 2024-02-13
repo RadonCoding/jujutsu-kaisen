@@ -90,14 +90,13 @@ public class SukunaEntity extends SorcererEntity {
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        if (!JJKAbilities.hasActiveTechnique(this, JJKCursedTechniques.TEN_SHADOWS.get())) return;
-
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
+        if (!data.hasActiveTechnique(JJKCursedTechniques.TEN_SHADOWS.get())) return;
 
         for (Entity entity : data.getSummons()) {
             if (entity instanceof TenShadowsSummon) return;
@@ -292,17 +291,17 @@ ISorcererData data = cap.getSorcererData();
             player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
         }
 
-        IJujutsuCapability srccap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability srcCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (srccap == null) return;
+        if (srcCap == null) return;
 
-        ITenShadowsData srcData = srccap.getTenShadowsData();
+        ITenShadowsData srcData = srcCap.getTenShadowsData();
 
-        IJujutsuCapability dstcap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability dstCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (dstcap == null) return;
+        if (dstCap == null) return;
 
-        ITenShadowsData dstData = dstcap.getTenShadowsData();
+        ITenShadowsData dstData = dstCap.getTenShadowsData();
 
         dstData.setTamed(srcData.getTamed());
         dstData.setDead(srcData.getDead());

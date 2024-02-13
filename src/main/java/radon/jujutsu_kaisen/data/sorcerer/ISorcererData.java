@@ -118,6 +118,12 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void setTechnique(@Nullable ICursedTechnique technique);
 
+    Set<ICursedTechnique> getTechniques();
+
+    boolean hasTechnique(ICursedTechnique technique);
+
+    boolean hasActiveTechnique(ICursedTechnique technique);
+
     CursedEnergyNature getNature();
 
     void setNature(CursedEnergyNature nature);

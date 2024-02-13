@@ -19,16 +19,17 @@ import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
+import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 
-public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/dismantle.png");
+public class WorldSlashRenderer extends EntityRenderer<WorldSlashProjectile> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/world_slash.png");
 
-    public DismantleRenderer(EntityRendererProvider.Context pContext) {
+    public WorldSlashRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
 
     @Override
-    public void render(@NotNull DismantleProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(@NotNull WorldSlashProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         Minecraft mc = Minecraft.getInstance();
 
         pPoseStack.pushPose();
@@ -42,10 +43,10 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
 
         pPoseStack.mulPose(Axis.YP.rotationDegrees(pEntity.getRoll()));
 
-        float factor = (float) pEntity.getLength() / pEntity.getMaxLength();
-        pPoseStack.scale(1.0F, 1.0F, 0.1F + (0.1F * factor));
+        float factor = (float) pEntity.getLength() / WorldSlashProjectile.MAX_LENGTH;
+        pPoseStack.scale(1.0F, 1.0F, 0.2F + (0.2F * factor));
 
-        RenderType type = RenderType.entityTranslucent(this.getTextureLocation(pEntity));
+        RenderType type = JJKRenderTypes.glow(this.getTextureLocation(pEntity));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
         Matrix4f pose = pPoseStack.last().pose();
@@ -86,7 +87,12 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull DismantleProjectile pEntity) {
+    protected int getBlockLightLevel(@NotNull WorldSlashProjectile pEntity, @NotNull BlockPos pPos) {
+        return 15;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull WorldSlashProjectile pEntity) {
         return TEXTURE;
     }
 }

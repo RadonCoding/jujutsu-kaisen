@@ -149,10 +149,10 @@ public class WeaponEventHandler {
             }
 
             if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (victimcap != null) {
-                    ISorcererData victimData = victimcap.getSorcererData();
+                if (victimCap != null) {
+                    ISorcererData victimData = victimCap.getSorcererData();
 
                     List<Ability> remove = new ArrayList<>();
 

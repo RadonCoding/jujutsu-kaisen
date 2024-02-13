@@ -67,7 +67,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return owner instanceof DinoCurseEntity;
+        return owner instanceof DinoCurseEntity && super.isValid(owner);
     }
 
     @Override

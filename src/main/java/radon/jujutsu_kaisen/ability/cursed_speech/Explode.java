@@ -17,13 +17,9 @@ public class Explode extends Ability {
     private static final float MAX_EXPLOSIVE_POWER = 20.0F;
 
     @Override
-    public boolean isScalable(LivingEntity owner) {
-        return true;
-    }
-
-    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return CursedSpeechUtil.getTargets(owner).contains(target) && target != null && (owner.getHealth() / owner.getMaxHealth() <= 0.5F || HelperMethods.RANDOM.nextInt(10) == 0 && owner.hasLineOfSight(target));
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+        return CursedSpeechUtil.getTargets(owner).contains(target) && (owner.getHealth() / owner.getMaxHealth() <= 0.5F || HelperMethods.RANDOM.nextInt(10) == 0);
     }
 
     @Override

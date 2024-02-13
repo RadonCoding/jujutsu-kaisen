@@ -22,13 +22,9 @@ public class BlastAway extends Ability {
     private static final double LAUNCH_POWER = 2.0D;
 
     @Override
-    public boolean isScalable(LivingEntity owner) {
-        return true;
-    }
-
-    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return CursedSpeechUtil.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+        return CursedSpeechUtil.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override

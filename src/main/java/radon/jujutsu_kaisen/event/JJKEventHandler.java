@@ -264,10 +264,10 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
 
             if (ConfigHolder.SERVER.realisticCurses.get()) {
-                IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (victimcap != null) {
-                    ISorcererData victimData = victimcap.getSorcererData();
+                if (victimCap != null) {
+                    ISorcererData victimData = victimCap.getSorcererData();
 
                     if (victimData.getType() == JujutsuType.CURSE) {
                         ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
@@ -284,10 +284,10 @@ public class JJKEventHandler {
                         } else if (DamageUtil.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                             cursed = true;
                         } else {
-                            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                            IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                            if (attackercap != null) {
-                                ISorcererData attackerData = attackercap.getSorcererData();
+                            if (attackerCap != null) {
+                                ISorcererData attackerData = attackerCap.getSorcererData();
                                 cursed = attackerData.getEnergy() > 0.0F;
                             }
                         }

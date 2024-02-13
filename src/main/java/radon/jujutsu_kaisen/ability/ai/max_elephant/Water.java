@@ -67,7 +67,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return owner instanceof MaxElephantEntity;
+        return owner instanceof MaxElephantEntity && super.isValid(owner);
     }
 
     @Override
