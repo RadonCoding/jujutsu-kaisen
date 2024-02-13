@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.base.AllEncompassingUnequiovocalLove;
+import radon.jujutsu_kaisen.entity.domain.AllEncompassingUnequiovocalLove;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;

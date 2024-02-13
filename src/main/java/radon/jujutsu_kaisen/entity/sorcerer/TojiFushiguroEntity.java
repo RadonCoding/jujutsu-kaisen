@@ -198,8 +198,6 @@ public class TojiFushiguroEntity extends SorcererEntity {
         InventoryCurseItem.addItem(inventory, SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
 
         CuriosUtil.setItemInSlot(this, "body", inventory);
-
-        System.out.println(CuriosUtil.findSlot(this, "body").getItem());
     }
 
     private int getSlot(ItemStack stack) {

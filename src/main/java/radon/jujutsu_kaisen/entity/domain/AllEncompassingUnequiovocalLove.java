@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity.domain.base;
+package radon.jujutsu_kaisen.entity.domain;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 
 import java.util.*;
 
@@ -41,7 +42,6 @@ public class AllEncompassingUnequiovocalLove extends ClosedDomainExpansionEntity
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
-        
 
         this.technique = data.getCurrentCopied();
 
@@ -74,7 +74,7 @@ public class AllEncompassingUnequiovocalLove extends ClosedDomainExpansionEntity
         }
     }
 
-    public ICursedTechnique getTechnique() {
+    public @Nullable ICursedTechnique getTechnique() {
         return this.technique;
     }
 
