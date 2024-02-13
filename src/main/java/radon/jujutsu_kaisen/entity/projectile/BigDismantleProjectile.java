@@ -45,17 +45,22 @@ public class BigDismantleProjectile extends DismantleProjectile {
     }
 
     @Override
+    protected float getDamage() {
+        return super.getDamage() * 2;
+    }
+
+    @Override
     public int getMinLength() {
-        return 6;
+        return super.getMinLength() * 2;
     }
 
     @Override
     public int getMaxLength() {
-        return 24;
+        return super.getMaxLength() * 2;
     }
 
     @Override
     public int getScale() {
-        return 6;
+        return super.getScale() * 2;
     }
 }
