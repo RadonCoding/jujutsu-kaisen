@@ -102,16 +102,18 @@ public class JJKEventHandler {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
+                    float armor = data.getExperience() * 0.002F;
+
                     if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                        float armor = data.getExperience() * 0.02F;
-                        float toughness = armor * 0.1F;
-
-                        float f = 2.0F + toughness / 4.0F;
-                        float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
-                        float blocked = amount * (1.0F - f1 / 25.0F);
-
-                        event.setAmount(blocked);
+                        armor *= 10.0F;
                     }
+                    float toughness = armor * 0.1F;
+
+                    float f = 2.0F + toughness / 4.0F;
+                    float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
+                    float blocked = amount * (1.0F - f1 / 25.0F);
+
+                    event.setAmount(blocked);
                 }
             }
         }
