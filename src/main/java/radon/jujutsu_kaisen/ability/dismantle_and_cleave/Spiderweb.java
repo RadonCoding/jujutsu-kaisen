@@ -78,20 +78,17 @@ public class Spiderweb extends Ability {
 
             AABB bounds = AABB.ofSize(center, real, real, real);
 
-            for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
-                data.delayTickEvent(() -> {
-                    owner.level().playSound(null, center.x, center.y, center.z,
-                            JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+                Vec3 current = pos.getCenter();
 
-                    BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                        if (HelperMethods.RANDOM.nextInt(Math.round(radius) * 2) == 0) {
-                            Vec3 current = pos.getCenter();
-                            owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner),
-                                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, current, HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, true));
-                        }
-                    });
-                }, i * 2);
-            }
+                if (HelperMethods.RANDOM.nextInt(Math.round(radius)) == 0) {
+                    data.delayTickEvent(() -> {
+                        owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner), (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F,
+                                current, HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1),
+                                true, true));
+                    }, HelperMethods.RANDOM.nextInt((int) Math.round(Math.sqrt(owner.distanceToSqr(current))) * 2));
+                }
+            });
         }
     }
 
