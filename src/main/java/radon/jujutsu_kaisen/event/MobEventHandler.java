@@ -61,19 +61,19 @@ public class MobEventHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            if (!(victim instanceof ISorcerer sorcerer) || !sorcerer.canChant()) {
-                if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                    AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
-                }
+            if (!(victim instanceof ISorcerer sorcerer) || !sorcerer.canChant()) return;
 
-                if (!data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
-                    AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
-                }
+            if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
+            }
 
-                if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                    if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                        AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                    }
+            if (!data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
+                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
+            }
+
+            if (source instanceof JJKDamageSources.JujutsuDamageSource) {
+                if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }
         }
