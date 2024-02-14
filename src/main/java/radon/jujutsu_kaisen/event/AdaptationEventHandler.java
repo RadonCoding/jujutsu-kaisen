@@ -58,25 +58,40 @@ public class AdaptationEventHandler {
 
             DamageSource source = event.getSource();
 
-            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return;
+            if (victimCap == null) return;
 
-            ISorcererData sorcererData = cap.getSorcererData();
-            ITenShadowsData tenShadowsData = cap.getTenShadowsData();
+            ISorcererData victimSorcererData = victimCap.getSorcererData();
+            ITenShadowsData victimTenShadowsData = victimCap.getTenShadowsData();
 
-            if (sorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
+            if (victimSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !victimSorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
+
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (attackerCap != null) {
+                    ISorcererData attackerData = attackerCap.getSorcererData();
+
+                    if (attackerData.hasToggled(JJKAbilities.INFINITY.get())) {
+                        victimTenShadowsData.tryAdapt(JJKAbilities.INFINITY.get());
+                    }
+                    if (attackerData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                        victimTenShadowsData.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
+                    }
+                }
+            }
 
             // Initiate / continue the adaptation process
-            tenShadowsData.tryAdapt(source);
+            victimTenShadowsData.tryAdapt(source);
 
             if (!(victim instanceof MahoragaEntity)) return;
 
-            float process = (1.0F - tenShadowsData.getAdaptationProgress(source));
+            float process = (1.0F - victimTenShadowsData.getAdaptationProgress(source));
 
-            switch (tenShadowsData.getAdaptationType(source)) {
+            switch (victimTenShadowsData.getAdaptationType(source)) {
                 case DAMAGE -> {
-                    if (tenShadowsData.isAdaptedTo(source)) {
+                    if (victimTenShadowsData.isAdaptedTo(source)) {
                         victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
                     }
                     event.setAmount(event.getAmount() * process);
@@ -99,7 +114,7 @@ public class AdaptationEventHandler {
             }
         }
 
-        @SubscribeEvent(receiveCanceled = true)
+        @SubscribeEvent()
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -115,43 +130,31 @@ public class AdaptationEventHandler {
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
+            if (!(attacker instanceof MahoragaEntity)) return;
+
             IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (attackerCap == null) return;
 
-            ISorcererData attackerSorcererData = attackerCap.getSorcererData();
             ITenShadowsData attackerTenShadowsData = attackerCap.getTenShadowsData();
 
-            if (!attackerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerSorcererData.hasToggled(JJKAbilities.WHEEL.get())) {
-                if (victimData.hasToggled(JJKAbilities.INFINITY.get())) {
-                    attackerTenShadowsData.tryAdapt(JJKAbilities.INFINITY.get());
-                }
-                if (victimData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
-                    attackerTenShadowsData.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
+            Set<Ability> toggled = new HashSet<>(victimData.getToggled());
+
+            for (Ability ability : toggled) {
+                if (!attackerTenShadowsData.isAdaptedTo(ability)) continue;
+                victimData.disrupt(ability, DISRUPTION_DURATION * attackerTenShadowsData.getAdaptation(ability));
+            }
+
+            Ability channeled = victimData.getChanneled();
+
+            if (channeled != null) {
+                if (attackerTenShadowsData.isAdaptedTo(channeled)) {
+                    victimData.disrupt(channeled, DISRUPTION_DURATION * attackerTenShadowsData.getAdaptation(channeled));
                 }
             }
 
-            if (!event.isCanceled()) {
-                if (attacker instanceof MahoragaEntity) {
-                    Set<Ability> toggled = new HashSet<>(victimData.getToggled());
-
-                    for (Ability ability : toggled) {
-                        if (!attackerTenShadowsData.isAdaptedTo(ability)) continue;
-                        victimData.disrupt(ability, DISRUPTION_DURATION * attackerTenShadowsData.getAdaptation(ability));
-                    }
-
-                    Ability channeled = victimData.getChanneled();
-
-                    if (channeled != null) {
-                        if (attackerTenShadowsData.isAdaptedTo(channeled)) {
-                            victimData.disrupt(channeled, DISRUPTION_DURATION * attackerTenShadowsData.getAdaptation(channeled));
-                        }
-                    }
-
-                    if (victim instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimData.serializeNBT()), player);
-                    }
-                }
+            if (victim instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimData.serializeNBT()), player);
             }
         }
     }
