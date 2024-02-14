@@ -40,9 +40,9 @@ public class OutputRCT extends Ability {
 
         IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return false;
+        if (cap == null) return false;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null) return false;
 

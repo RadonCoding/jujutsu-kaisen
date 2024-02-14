@@ -41,11 +41,15 @@ public class VeilHandler {
     }
 
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level) {
+        if (!domains.containsKey(level.dimension())) return Set.of();
+
+        Set<UUID> current = domains.get(level.dimension());
+
+        if (current.isEmpty()) return Set.of();
+
         Set<DomainExpansionEntity> result = new HashSet<>();
 
-        if (!domains.containsKey(level.dimension())) return result;
-
-        for (UUID identifier : domains.get(level.dimension())) {
+        for (UUID identifier : current) {
             if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain)) continue;
             result.add(domain);
         }
@@ -53,11 +57,15 @@ public class VeilHandler {
     }
 
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level, BlockPos pos) {
+        if (!domains.containsKey(level.dimension())) return Set.of();
+
+        Set<UUID> current = domains.get(level.dimension());
+
+        if (current.isEmpty()) return Set.of();
+
         Set<DomainExpansionEntity> result = new HashSet<>();
 
-        if (!domains.containsKey(level.dimension())) return result;
-
-        for (UUID identifier : domains.get(level.dimension())) {
+        for (UUID identifier : current) {
             if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !domain.isInsideBarrier(pos)) continue;
             result.add(domain);
         }
@@ -65,11 +73,15 @@ public class VeilHandler {
     }
 
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level, AABB bounds) {
+        if (!domains.containsKey(level.dimension())) return Set.of();
+
+        Set<UUID> current = domains.get(level.dimension());
+
+        if (current.isEmpty()) return Set.of();
+
         Set<DomainExpansionEntity> result = new HashSet<>();
 
-        if (!domains.containsKey(level.dimension())) return result;
-
-        for (UUID identifier : domains.get(level.dimension())) {
+        for (UUID identifier : current) {
             if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || (!bounds.intersects(domain.getBounds()))) continue;
             result.add(domain);
         }
