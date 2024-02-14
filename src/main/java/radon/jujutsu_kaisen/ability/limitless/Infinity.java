@@ -153,7 +153,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
                     iter.remove();
                     this.setDirty();
                 } else {
-                    if (data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(projectile) < 2.5F) {
+                    if ((data.hasToggled(JJKAbilities.INFINITY.get()) || data.isChanneling(JJKAbilities.INFINITY.get())) && owner.distanceTo(projectile) < 2.5F) {
                         Vec3 original = nbt.getMovement();
                         projectile.setDeltaMovement(original.scale(Double.MIN_VALUE));
                         projectile.setNoGravity(true);
@@ -236,7 +236,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
 
             ISorcererData data = cap.getSorcererData();
 
-            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasToggled(JJKAbilities.INFINITY.get()) && !data.isChanneling(JJKAbilities.INFINITY.get())) return;
 
             Projectile projectile = event.getProjectile();
 
@@ -261,7 +261,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
 
             ISorcererData data = cap.getSorcererData();
 
-            if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasToggled(JJKAbilities.INFINITY.get()) && !data.isChanneling(JJKAbilities.INFINITY.get())) return;
 
             FrozenProjectileData frozen = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
@@ -284,7 +284,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
 
             ISorcererData data = cap.getSorcererData();
 
-            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasToggled(JJKAbilities.INFINITY.get()) && !data.isChanneling(JJKAbilities.INFINITY.get())) return;
 
             DamageSource source = event.getSource();
 
