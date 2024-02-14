@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -141,6 +142,7 @@ public class AdaptationEventHandler {
             Set<Ability> toggled = new HashSet<>(victimData.getToggled());
 
             for (Ability ability : toggled) {
+                if (ability instanceof DomainExpansion.IOpenDomain) continue;
                 if (!attackerTenShadowsData.isAdaptedTo(ability)) continue;
                 victimData.disrupt(ability, DISRUPTION_DURATION * attackerTenShadowsData.getAdaptation(ability));
             }
