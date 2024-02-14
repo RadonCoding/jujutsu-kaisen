@@ -170,18 +170,13 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
                 if (living == owner) continue;
 
-                Vec3 look = this.getLookAngle();
-                Vec3 up = this.getUpVector(1.0F);
-                Vec3 right = look.cross(up);
+                float distance = (float) Math.abs((living.getY() + living.getBbHeight() / 2.0F) -
+                        (this.getY() + (this.getBbHeight() / 2.0F)));
 
-                float distance = Math.abs((float) living.position()
-                        .subtract(this.position())
-                        .dot(right));
-
-                if (distance < entity.getBbWidth()) {
+                if (distance < this.getBbHeight()) {
                     distance = 0.0F;
                 }
-                float strength = 1.0F - (distance / ((float) this.getLength() / 2));
+                float strength = 1.0F - (Math.min(living.getBbHeight(), distance) / living.getBbHeight());
                 living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength);
             }
         }
