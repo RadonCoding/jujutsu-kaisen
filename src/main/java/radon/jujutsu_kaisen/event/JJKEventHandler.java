@@ -74,7 +74,7 @@ public class JJKEventHandler {
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
                 if (source.getEntity() == victim) {
-                    event.setAmount(amount * 0.1F);
+                    event.setAmount(amount * 0.01F);
                 }
             }
 

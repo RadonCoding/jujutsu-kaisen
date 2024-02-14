@@ -8,6 +8,9 @@ import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -18,7 +21,13 @@ public class TransfiguredSoulVisual implements IVisual {
 
         if (mc.player == null) return false;
 
-        if (!JJKCursedTechniques.getTechniques(mc.player).contains(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) return false;
+        IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ISorcererData data = cap.getSorcererData();
+
+        if (!data.hasActiveTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) return false;
 
         return entity.hasEffect(JJKEffects.TRANSFIGURED_SOUL.get());
     }
