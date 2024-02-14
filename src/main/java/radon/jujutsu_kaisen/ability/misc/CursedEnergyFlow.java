@@ -327,8 +327,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
             if (data.getEnergy() < cost) return;
 
-            System.out.println(cost + "," + amount);
-
             data.useEnergy(cost);
 
             if (victim instanceof ServerPlayer player) {
