@@ -748,7 +748,9 @@ public class SorcererData implements ISorcererData {
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
-        techniques.add(this.technique);
+        if (this.technique != null) {
+            techniques.add(this.technique);
+        }
 
         if (this.additional != null) {
             techniques.add(this.additional);
@@ -779,7 +781,10 @@ public class SorcererData implements ISorcererData {
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         Set<ICursedTechnique> techniques = new HashSet<>();
-        techniques.add(this.technique);
+
+        if (this.technique != null) {
+            techniques.add(this.technique);
+        }
 
         if (this.additional != null) {
             techniques.add(this.additional);
