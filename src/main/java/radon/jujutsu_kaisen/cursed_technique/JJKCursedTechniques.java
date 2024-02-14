@@ -45,16 +45,6 @@ public class JJKCursedTechniques {
         return CURSED_TECHNIQUE_REGISTRY.get(key);
     }
 
-    public static Set<ICursedTechnique> getTechniques(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return Set.of();
-
-        ISorcererData data = cap.getSorcererData();
-
-        return data.getActiveTechniques();
-    }
-
     @Nullable
     public static ICursedTechnique getTechnique(Ability ability) {
         for (DeferredHolder<ICursedTechnique, ? extends ICursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {

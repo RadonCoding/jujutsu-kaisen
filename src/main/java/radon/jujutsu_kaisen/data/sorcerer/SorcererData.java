@@ -748,17 +748,19 @@ public class SorcererData implements ISorcererData {
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
-        if (this.technique != null) {
-            techniques.add(this.technique);
+        techniques.add(this.technique);
+        techniques.add(this.additional);
+
+        if (this.toggled.contains(JJKAbilities.RIKA.get())) {
+            if (this.currentCopied != null) {
+                techniques.add(this.currentCopied);
+            }
         }
-        if (this.additional != null) {
-            techniques.add(this.additional);
-        }
-        if (techniques.contains(JJKCursedTechniques.MIMICRY.get()) && this.toggled.contains(JJKAbilities.RIKA.get()) && this.currentCopied != null) {
-            techniques.add(this.currentCopied);
-        }
-        if (techniques.contains(JJKCursedTechniques.CURSE_MANIPULATION.get()) && curseManipulationData.getCurrentAbsorbed() != null) {
-            techniques.add(curseManipulationData.getCurrentAbsorbed());
+
+        ICursedTechnique absorbed = curseManipulationData.getCurrentAbsorbed();
+
+        if (absorbed != null) {
+            techniques.add(absorbed);
         }
         techniques.addAll(this.getMimicryTechniques());
 
@@ -775,18 +777,10 @@ public class SorcererData implements ISorcererData {
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
-        if (this.technique != null) {
-            techniques.add(this.technique);
-        }
-        if (this.additional != null) {
-            techniques.add(this.additional);
-        }
-        if (this.currentCopied != null) {
-            techniques.add(this.currentCopied);
-        }
-        if (curseManipulationData.getCurrentAbsorbed() != null) {
-            techniques.add(curseManipulationData.getCurrentAbsorbed());
-        }
+        techniques.add(this.technique);
+        techniques.add(this.additional);
+        techniques.addAll(this.copied);
+        techniques.addAll(curseManipulationData.getAbsorbed());
         techniques.addAll(this.getMimicryTechniques());
 
         return techniques;
