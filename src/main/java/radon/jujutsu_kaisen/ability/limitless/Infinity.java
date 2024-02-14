@@ -272,6 +272,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
             }
         }
 
+        // Has fire before WeaponEventHandler::onLivingAttackLow
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity owner = event.getEntity();
