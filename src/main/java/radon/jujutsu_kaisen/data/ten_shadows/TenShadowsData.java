@@ -65,11 +65,12 @@ public class TenShadowsData implements ITenShadowsData {
             if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
                 iter.remove();
 
-                this.adapted.put(entry.getKey(), this.adapted.getOrDefault(entry.getKey(), 0) + 1);
-
                 if (this.owner instanceof MahoragaEntity mahoraga) {
-                    mahoraga.onAdaptation();
+                    if (!this.adapted.containsKey(entry.getKey())) {
+                        mahoraga.onAdaptation();
+                    }
                 }
+                this.adapted.put(entry.getKey(), this.adapted.getOrDefault(entry.getKey(), 0) + 1);
 
                 WheelEntity wheel = data.getSummonByClass(WheelEntity.class);
 
