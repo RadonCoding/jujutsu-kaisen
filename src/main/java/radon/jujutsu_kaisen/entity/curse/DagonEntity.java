@@ -16,6 +16,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
+import java.util.Set;
 
 public class DagonEntity extends DisasterCurse {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
@@ -42,8 +43,8 @@ public class DagonEntity extends DisasterCurse {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get());
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get());
     }
 
     private PlayState walkRunPredicate(AnimationState<DagonEntity> animationState) {

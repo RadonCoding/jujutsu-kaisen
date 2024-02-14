@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.List;
+import java.util.Set;
 
 public class MegumiFushiguroEntity extends SorcererEntity {
     public MegumiFushiguroEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
@@ -64,8 +65,8 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(), JJKAbilities.SIMPLE_DOMAIN.get());
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(), JJKAbilities.SIMPLE_DOMAIN.get());
     }
 
     @Override

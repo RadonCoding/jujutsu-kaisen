@@ -181,8 +181,8 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
                 JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get());
     }
 

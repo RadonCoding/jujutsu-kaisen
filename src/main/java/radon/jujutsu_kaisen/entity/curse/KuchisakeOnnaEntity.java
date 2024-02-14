@@ -38,6 +38,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class KuchisakeOnnaEntity extends CursedSpirit {
@@ -176,10 +177,9 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SIMPLE_DOMAIN.get());
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.SIMPLE_DOMAIN.get());
     }
-
 
     public void attack() {
         this.entityData.set(DATA_SNIP, SNIP_DURATION);

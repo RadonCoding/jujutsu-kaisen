@@ -45,8 +45,8 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get(), JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(),
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get(), JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(),
                 JJKAbilities.OUTPUT_RCT.get());
     }
 

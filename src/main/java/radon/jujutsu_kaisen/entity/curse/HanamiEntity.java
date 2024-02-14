@@ -20,6 +20,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
+import java.util.Set;
 
 public class HanamiEntity extends DisasterCurse {
     private static final EntityDataAccessor<Boolean> DATA_CAST = SynchedEntityData.defineId(HanamiEntity.class, EntityDataSerializers.BOOLEAN);
@@ -59,8 +60,8 @@ public class HanamiEntity extends DisasterCurse {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }
 
     @Override
