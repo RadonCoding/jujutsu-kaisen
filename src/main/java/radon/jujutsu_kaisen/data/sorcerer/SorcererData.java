@@ -980,7 +980,7 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             return 0.0F;
         }
-        return this.energy;
+        return Math.min(this.getMaxEnergy(), this.energy);
     }
 
     @Override
