@@ -61,7 +61,7 @@ import java.util.List;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        @SubscribeEvent(priority = EventPriority.LOWEST)
+        @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 

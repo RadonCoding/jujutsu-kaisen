@@ -63,7 +63,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        @SubscribeEvent(priority = EventPriority.LOWEST)
+        @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 

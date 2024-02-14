@@ -272,7 +272,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
             }
         }
 
-        @SubscribeEvent(priority = EventPriority.LOWEST)
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity owner = event.getEntity();
 

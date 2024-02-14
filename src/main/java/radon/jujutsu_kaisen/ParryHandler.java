@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class ParryHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
 

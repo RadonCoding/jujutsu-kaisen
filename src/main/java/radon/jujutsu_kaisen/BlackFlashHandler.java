@@ -68,7 +68,7 @@ public class BlackFlashHandler {
             COMBOS.remove(owner.getUUID());
         }
 
-        @SubscribeEvent(priority = EventPriority.LOWEST)
+        @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;

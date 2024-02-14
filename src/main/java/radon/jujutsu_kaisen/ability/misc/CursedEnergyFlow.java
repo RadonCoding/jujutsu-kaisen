@@ -337,7 +337,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             CursedEnergyFlow.attack(event);
             CursedEnergyFlow.shield(event);
