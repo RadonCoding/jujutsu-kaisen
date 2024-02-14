@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.base;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +14,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JJKConstants;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -211,20 +213,14 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
-        Vec2 coordinates = this.getDisplayCoordinates();
-        return new AbilityDisplayInfo("domain_expansion", coordinates.x, coordinates.y);
+    public ResourceLocation getIcon(LivingEntity owner) {
+        return new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/ability/domain_expansion.png");
     }
 
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
         return JJKAbilities.CURSED_ENERGY_FLOW.get();
-    }
-
-    @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(2.0F, 0.0F);
     }
 
     @Override

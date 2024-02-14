@@ -104,12 +104,7 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        return JJKAbilities.CURSED_ENERGY_FLOW.get();
-    }
-
-    @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(3.0F, 5.0F);
+        return JJKAbilities.SIMPLE_DOMAIN.get();
     }
 
     @Override

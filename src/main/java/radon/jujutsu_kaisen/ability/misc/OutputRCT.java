@@ -61,11 +61,6 @@ public class OutputRCT extends Ability {
     }
 
     @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(5.0F, 2.0F);
-    }
-
-    @Override
     public int getPointsCost() {
         return ConfigHolder.SERVER.outputRCTCost.get();
     }

@@ -60,11 +60,6 @@ public class RCT2 extends RCT1 {
     }
 
     @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(3.0F, 2.0F);
-    }
-
-    @Override
     public int getPointsCost() {
         return ConfigHolder.SERVER.rct2Cost.get();
     }

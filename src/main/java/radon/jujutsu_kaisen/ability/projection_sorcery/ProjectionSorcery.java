@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -239,7 +240,12 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 previous.set(frame);
             }, delay++);
         }
+
         projectionSorceryData.addSpeedStack();
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(projectionSorceryData.serializeNBT()), player);
+        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.checkerframework.checker.units.qual.A;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -51,10 +52,10 @@ public class AbilityWidget {
     private boolean unlockable;
     private boolean blocked;
 
-    public AbilityWidget(AbilityTab tab, Minecraft minecraft, Ability ability) {
+    public AbilityWidget(AbilityTab tab, Minecraft minecraft, Ability ability, float x, float y) {
         this.tab = tab;
         this.ability = ability;
-        this.display = ability.getDisplay(minecraft.player);
+        this.display = new AbilityDisplayInfo(ability.getIcon(minecraft.player), x, y);
         this.minecraft = minecraft;
         this.title = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(ability.getName(), 255));
         this.x = Mth.floor(this.display.getX() * 28.0F);
@@ -176,15 +177,15 @@ public class AbilityWidget {
 
     public void draw(GuiGraphics pGuiGraphics, int pX, int pY) {
         AdvancementWidgetType type = this.unlocked ? AdvancementWidgetType.OBTAINED : AdvancementWidgetType.UNOBTAINED;
-        pGuiGraphics.blitSprite(type.frameSprite(AdvancementType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
+        pGuiGraphics.blitSprite(type.frameSprite(this.unlocked ? AdvancementType.CHALLENGE : AdvancementType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
 
         if (this.ability.isCursedEnergyColor()) {
             if (this.minecraft.player != null) {
                 IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+                if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
                     Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
@@ -217,9 +218,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
 
         PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
@@ -267,7 +268,7 @@ ISorcererData data = cap.getSorcererData();
 
         pGuiGraphics.blitSprite(type.boxSprite(), 200, 26, 0, 0, l, k, i, 26);
         pGuiGraphics.blitSprite(type.boxSprite(), 200, 26, 200 - j, 0, l + i, k, j, 26);
-        pGuiGraphics.blitSprite(type.frameSprite(AdvancementType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
+        pGuiGraphics.blitSprite(type.frameSprite(this.unlocked ? AdvancementType.CHALLENGE : AdvancementType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
 
         if (xOverflow) {
             pGuiGraphics.drawString(this.minecraft.font, this.title, l + 5, pY + this.y + 9, -1);
@@ -289,9 +290,9 @@ ISorcererData data = cap.getSorcererData();
             if (this.minecraft.player != null) {
                 IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+                if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
                     Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
@@ -321,11 +322,11 @@ ISorcererData data = cap.getSorcererData();
         }
     }
 
-    public int getY() {
-        return this.y;
+    public float getY() {
+        return this.display.getY();
     }
 
-    public int getX() {
-        return this.x;
+    public float getX() {
+        return this.display.getX();
     }
 }

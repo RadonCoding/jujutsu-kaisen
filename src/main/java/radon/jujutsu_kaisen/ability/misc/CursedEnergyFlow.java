@@ -183,11 +183,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(0.0F, 2.0F);
-    }
-
-    @Override
     public void onEnabled(LivingEntity owner) {
     }
 

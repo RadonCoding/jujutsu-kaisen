@@ -79,11 +79,6 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(2.0F, 2.0F);
-    }
-
-    @Override
     public MenuType getMenuType(LivingEntity owner) {
         return MenuType.NONE;
     }

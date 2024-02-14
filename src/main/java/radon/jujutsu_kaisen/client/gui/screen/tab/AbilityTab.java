@@ -19,10 +19,7 @@ import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityWidget;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AbilityTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.ability", JujutsuKaisen.MOD_ID));
@@ -30,8 +27,13 @@ public class AbilityTab extends JJKTab {
 
     private final Map<Ability, AbilityWidget> abilities = new HashMap<>();
 
-    private final List<AbilityWidget> roots = new ArrayList<>();
+    private final Map<Ability, AbilityWidget> roots = new HashMap<>();
     private float fade;
+
+    private float y;
+
+    @Nullable
+    private AbstractMap.SimpleEntry<Ability, AbilityWidget> last;
 
     public AbilityTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
         super(minecraft, screen, type, index, page, Items.ENDER_PEARL.getDefaultInstance(), TITLE, BACKGROUND, true);
@@ -48,7 +50,36 @@ public class AbilityTab extends JJKTab {
     }
 
     private void addAbilityAndChildren(Ability ability) {
-        this.addAbility(ability);
+        float x = 0.0F;
+
+        float y = 0.0F;
+
+        Ability parent = ability.getParent(this.minecraft.player);
+
+        if (parent != null) {
+            // If the ability is the start of an new group
+            if (this.roots.containsKey(parent)) {
+                x = this.roots.get(parent).getX() + 2.0F;
+                y = this.y + 2.0F;
+            } else {
+                // Otherwise we'll just put the ability to the right side of the parent
+                AbilityWidget widget = this.getAbility(parent);
+
+                if (widget != null) {
+                    x = widget.getX() + 1.0F;
+                    y = widget.getY();
+                }
+
+                if (this.last != null) {
+                    // If the parents are the same we need to increase the Y
+                    if (this.last.getKey().getParent(this.minecraft.player) == parent) {
+                        y += 2.0F;
+                    }
+                }
+            }
+        }
+
+        this.addAbility(ability, x, y);
 
         for (DeferredHolder<Ability, ? extends Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
             Ability current = entry.get();
@@ -57,6 +88,7 @@ public class AbilityTab extends JJKTab {
                 this.addAbilityAndChildren(current);
             }
         }
+        this.y = Math.max(this.y, y);
     }
 
     @Override
@@ -73,10 +105,9 @@ public class AbilityTab extends JJKTab {
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        ISorcererData data = cap.getSorcererData();
 
         pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.ability.points", JujutsuKaisen.MOD_ID), data.getPoints()),
                 xOffset, yOffset, 16777215, true);
@@ -84,7 +115,7 @@ ISorcererData data = cap.getSorcererData();
 
     @Override
     protected void drawCustom(GuiGraphics graphics, int x, int y) {
-        for (AbilityWidget root : this.roots) {
+        for (AbilityWidget root : this.roots.values()) {
             root.drawConnectivity(graphics, x, y, true);
             root.drawConnectivity(graphics, x, y, false);
             root.draw(graphics, x, y);
@@ -131,18 +162,20 @@ ISorcererData data = cap.getSorcererData();
         pGuiGraphics.pose().popPose();
     }
 
-    public void addAbility(Ability ability) {
-        AbilityWidget widget = new AbilityWidget(this, this.minecraft, ability);
+    public void addAbility(Ability ability, float x, float y) {
+        AbilityWidget widget = new AbilityWidget(this, this.minecraft, ability, x, y);
+
+        this.last = new AbstractMap.SimpleEntry<>(ability, widget);
 
         if (ability.getParent(this.minecraft.player) == null) {
-            this.roots.add(widget);
+            this.roots.put(ability, widget);
         }
 
         this.abilities.put(ability, widget);
 
-        int i = widget.getX();
+        int i = Mth.floor(widget.getX() * 28.0F);
         int j = i + 28;
-        int k = widget.getY();
+        int k = Mth.floor(widget.getY() * 27.0F);
         int l = k + 27;
 
         this.minX = Math.min(this.minX, i);

@@ -99,11 +99,6 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
         return ConfigHolder.SERVER.simpleDomainCost.get();
     }
 
-    @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(3.0F, 4.0F);
-    }
-
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent

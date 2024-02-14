@@ -9,8 +9,8 @@ public class AbilityDisplayInfo {
     private final float x;
     private final float y;
 
-    public AbilityDisplayInfo(String name, float x, float y) {
-        this.icon = new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/ability/%s.png", name));
+    public AbilityDisplayInfo(ResourceLocation icon, float x, float y) {
+        this.icon = icon;
         this.x = x;
         this.y = y;
     }
