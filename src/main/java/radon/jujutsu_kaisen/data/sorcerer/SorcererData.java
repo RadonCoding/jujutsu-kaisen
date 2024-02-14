@@ -776,14 +776,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasActiveTechnique(ICursedTechnique technique) {
-        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-
-        return this.technique == technique || this.additional == technique || this.currentCopied == technique ||
-                curseManipulationData.getCurrentAbsorbed() == technique;
+        return this.getTechniques().contains(technique);
     }
 
     @Override
