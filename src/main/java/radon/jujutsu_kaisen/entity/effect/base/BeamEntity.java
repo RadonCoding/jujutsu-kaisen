@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -177,7 +178,7 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
                                 if (distance > radius) continue;
 
-                                if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
+                                if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
 
                                 this.level().destroyBlock(pos, false);
 

@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -123,7 +124,7 @@ public class LightningEntity extends JujutsuProjectile {
                                 double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                                 if (distance <= radius) {
-                                    if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                                    if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
                                         this.level().destroyBlock(pos, false);
                                     }
                                 }

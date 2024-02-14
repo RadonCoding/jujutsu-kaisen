@@ -100,7 +100,7 @@ public class BlueProjectile extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= this.getRadius()) {
-                        if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                        if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
                             if (state.getFluidState().isEmpty()) {
                                 this.level().destroyBlock(pos, false);
                             } else {
@@ -150,7 +150,7 @@ public class BlueProjectile extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= radius) {
-                        if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                        if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
                             if (this.level().destroyBlock(pos, false)) {
                                 FallingBlockEntity entity = FallingBlockEntity.fall(this.level(), pos, state);
                                 entity.noPhysics = true;
