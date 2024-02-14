@@ -6,7 +6,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -118,7 +117,9 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void setTechnique(@Nullable ICursedTechnique technique);
 
-    Set<ICursedTechnique> getTechniques();
+    Set<ICursedTechnique> getActiveTechniques();
+
+    Set<ICursedTechnique> getAllTechniques();
 
     boolean hasTechnique(ICursedTechnique technique);
 
