@@ -37,9 +37,9 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
 
-        if (owner instanceof MahoragaEntity) return HelperMethods.RANDOM.nextInt(5) == 0;
+        if (owner instanceof MahoragaEntity) return HelperMethods.RANDOM.nextInt(20) == 0;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

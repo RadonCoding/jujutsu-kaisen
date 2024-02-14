@@ -35,9 +35,9 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
         ISorcererData data = cap.getSorcererData();
 
         if (data.isChanneling(this)) {
-            return HelperMethods.RANDOM.nextInt(5) != 0;
+            return HelperMethods.RANDOM.nextInt(20) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(3) == 0;
+        return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override

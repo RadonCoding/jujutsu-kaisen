@@ -58,7 +58,7 @@ public class SwitchMode extends Ability {
                 }
             }
         }
-        return HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override

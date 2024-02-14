@@ -21,7 +21,7 @@ public class ShootPureLove extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (((RikaEntity) owner).isOpen()) return true;
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
-        return HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override

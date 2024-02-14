@@ -19,7 +19,7 @@ public class MiniUzumaki extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
-        return HelperMethods.RANDOM.nextInt(10) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= MiniUzumakiProjectile.RANGE;
+        return HelperMethods.RANDOM.nextInt(40) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= MiniUzumakiProjectile.RANGE;
     }
 
     @Override
