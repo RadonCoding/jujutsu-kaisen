@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
+import java.util.Set;
 
 public class YutaOkkotsuEntity extends SorcererEntity {
     public YutaOkkotsuEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
