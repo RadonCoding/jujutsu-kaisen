@@ -273,6 +273,7 @@ public class SukunaEntity extends SorcererEntity {
         ISorcererData sorcererDst = jujutsuDst.getSorcererData();
         ITenShadowsData tenShadowsDst = jujutsuDst.getTenShadowsData();
 
+        sorcererDst.unlockAll(sorcererSrc.getUnlocked());
         sorcererDst.setTraits(sorcererSrc.getTraits());
         sorcererDst.setAdditional(sorcererSrc.getTechnique());
         tenShadowsDst.setTamed(tenShadowsSrc.getTamed());

@@ -39,9 +39,11 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     boolean isUnlocked(Ability ability);
 
+    Set<Ability> getUnlocked();
+
     void unlock(Ability ability);
 
-    void unlockAll(List<Ability> abilities);
+    void unlockAll(Set<Ability> abilities);
 
     void createPact(UUID recipient, Pact pact);
 
