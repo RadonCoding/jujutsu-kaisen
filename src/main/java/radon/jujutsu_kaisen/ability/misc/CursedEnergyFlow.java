@@ -209,6 +209,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (victim.level().isClientSide) return;
 
         DamageSource source = event.getSource();
+        
         float amount = event.getAmount();
 
         if (!DamageUtil.isMelee(source)) return;
