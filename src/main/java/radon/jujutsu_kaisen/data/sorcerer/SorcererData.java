@@ -736,10 +736,18 @@ public class SorcererData implements ISorcererData {
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
-        if (sorcererData.getTechnique() != null) techniques.add(sorcererData.getTechnique());
-        if (sorcererData.getCurrentCopied() != null) techniques.add(sorcererData.getCurrentCopied());
-        if (curseManipulationData.getCurrentAbsorbed() != null) techniques.add(curseManipulationData.getCurrentAbsorbed());
-        if (sorcererData.getAdditional() != null) techniques.add(sorcererData.getAdditional());
+        if (sorcererData.getTechnique() != null) {
+            techniques.add(sorcererData.getTechnique());
+        }
+        if (this.toggled.contains(JJKAbilities.RIKA.get()) && sorcererData.getCurrentCopied() != null) {
+            techniques.add(sorcererData.getCurrentCopied());
+        }
+        if (this.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get()) && curseManipulationData.getCurrentAbsorbed() != null) {
+            techniques.add(curseManipulationData.getCurrentAbsorbed());
+        }
+        if (sorcererData.getAdditional() != null) {
+            techniques.add(sorcererData.getAdditional());
+        }
 
         List<ItemStack> stacks = new ArrayList<>();
         stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
