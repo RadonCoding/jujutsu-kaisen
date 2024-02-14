@@ -739,7 +739,7 @@ public class SorcererData implements ISorcererData {
         if (sorcererData.getTechnique() != null) {
             techniques.add(sorcererData.getTechnique());
         }
-        if (this.toggled.contains(JJKAbilities.RIKA.get()) && sorcererData.getCurrentCopied() != null) {
+        if (this.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get()) && this.toggled.contains(JJKAbilities.RIKA.get()) && sorcererData.getCurrentCopied() != null) {
             techniques.add(sorcererData.getCurrentCopied());
         }
         if (this.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get()) && curseManipulationData.getCurrentAbsorbed() != null) {
@@ -750,8 +750,8 @@ public class SorcererData implements ISorcererData {
         }
 
         List<ItemStack> stacks = new ArrayList<>();
-        stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
-        stacks.addAll(CuriosUtil.findSlots(owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
+        stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND));
+        stacks.addAll(CuriosUtil.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
         stacks.removeIf(ItemStack::isEmpty);
 
         for (ItemStack stack : stacks) {
