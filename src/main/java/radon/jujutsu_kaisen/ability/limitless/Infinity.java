@@ -85,7 +85,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
 
     @Override
     public MenuType getMenuType(LivingEntity owner) {
-        return this.getActivationType(owner) == ActivationType.INSTANT ? MenuType.MELEE : MenuType.RADIAL;
+        return this.getActivationType(owner) == ActivationType.CHANNELED ? MenuType.MELEE : MenuType.RADIAL;
     }
 
     public static class FrozenProjectileData extends SavedData {
@@ -145,9 +145,9 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
 
                 IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+                if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 if (projectile == null) {
                     iter.remove();
