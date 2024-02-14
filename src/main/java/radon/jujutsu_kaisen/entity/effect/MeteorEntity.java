@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -302,7 +303,7 @@ public class MeteorEntity extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance > radius) continue;
-                    if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
+                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
 
                     if (!state.getFluidState().isEmpty()) {
                         this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
@@ -331,7 +332,7 @@ public class MeteorEntity extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance > radius) continue;
-                    if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
+                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
 
                     if (state.getFluidState().isEmpty()) {
                         this.level().destroyBlock(pos, false);

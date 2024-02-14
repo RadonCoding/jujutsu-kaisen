@@ -192,7 +192,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 BlockState state = this.level().getBlockState(current);
 
-                if (HelperMethods.isDestroyable(this.level(), owner, current)) {
+                if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, current)) {
                     boolean destroyed;
 
                     if (state.getFluidState().isEmpty()) {

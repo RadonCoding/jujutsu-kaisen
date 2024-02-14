@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -84,7 +85,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                         if (distance <= radius) {
-                            if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                            if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
                                 if (state.getFluidState().isEmpty()) {
                                     this.level().destroyBlock(pos, false);
                                 } else {
