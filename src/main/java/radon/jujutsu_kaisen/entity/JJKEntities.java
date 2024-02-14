@@ -65,6 +65,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<JogoatEntity>> JOGOAT = ENTITIES.register("jogoat", () ->
             EntityType.Builder.<JogoatEntity>of(JogoatEntity::new, MobCategory.CREATURE)
+                    .sized(0.6F, 2.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogoat")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<DagonEntity>> DAGON = ENTITIES.register("dagon", () ->

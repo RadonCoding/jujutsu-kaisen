@@ -103,7 +103,7 @@ public class JJKEventHandler {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
-                    float armor = data.getExperience() * 0.002F;
+                    float armor = data.getExperience() * 0.02F;
 
                     if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                         armor *= 10.0F;
