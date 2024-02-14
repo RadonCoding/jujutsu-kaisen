@@ -41,7 +41,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
         if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(5) == 0 && owner.distanceTo(target) <= RANGE;
+        return HelperMethods.RANDOM.nextInt(20) == 0 && owner.distanceTo(target) <= RANGE;
     }
 
     @Override

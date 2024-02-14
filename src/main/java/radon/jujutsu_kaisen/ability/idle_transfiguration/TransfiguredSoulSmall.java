@@ -20,7 +20,7 @@ public class TransfiguredSoulSmall extends TransfiguredSoul<TransfiguredSoulSmal
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        return HelperMethods.RANDOM.nextInt(5) == 0;
+        return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override

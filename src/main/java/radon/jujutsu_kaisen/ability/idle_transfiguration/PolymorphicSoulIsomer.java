@@ -20,7 +20,7 @@ public class PolymorphicSoulIsomer extends TransfiguredSoul<PolymorphicSoulIsome
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        return HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override

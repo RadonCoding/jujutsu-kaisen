@@ -25,7 +25,7 @@ public class BigDismantle extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
-        return HelperMethods.RANDOM.nextInt(5) == 0;
+        return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override

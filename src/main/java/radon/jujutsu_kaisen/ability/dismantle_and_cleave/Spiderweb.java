@@ -25,14 +25,14 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Spiderweb extends Ability {
     private static final int RANGE = 3;
-    private static final int DELAY = 20;
     private static final float EXPLOSIVE_POWER = 2.0F;
     private static final float MIN_EXPLOSIVE_POWER = 8.0F;
     private static final float MAX_EXPLOSIVE_POWER = 24.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(10) == 0;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override

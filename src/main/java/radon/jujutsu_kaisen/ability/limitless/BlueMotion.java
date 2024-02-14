@@ -19,7 +19,7 @@ public class BlueMotion extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
-        return HelperMethods.RANDOM.nextInt(5) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= BlueProjectile.RANGE;
+        return HelperMethods.RANDOM.nextInt(20) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= BlueProjectile.RANGE;
     }
 
     @Override
