@@ -27,7 +27,7 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
+        if (target == null || target.isDeadOrDying()) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -36,7 +36,7 @@ public class Agito extends Summon<AgitoEntity> {
         ISorcererData data = cap.getSorcererData();
 
         if (data.hasToggled(this)) {
-            return HelperMethods.RANDOM.nextInt(20) != 0;
+            return owner.level().getGameTime() % 20 == 0 && HelperMethods.RANDOM.nextInt(10) != 0;
         }
         return HelperMethods.RANDOM.nextInt(10) == 0;
     }

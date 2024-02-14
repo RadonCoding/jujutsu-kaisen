@@ -27,6 +27,8 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target == null || target.isDeadOrDying()) return false;
+
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return false;
@@ -34,9 +36,9 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
         ISorcererData data = cap.getSorcererData();
 
         if (data.hasToggled(this)) {
-            return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
+            return owner.level().getGameTime() % 20 == 0 && HelperMethods.RANDOM.nextInt(10) != 0;
         }
-        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
