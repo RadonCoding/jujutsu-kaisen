@@ -63,7 +63,7 @@ public class JJKEventHandler {
     public static class ForgeEvents {
         // Has to fire before CursedEnergyFlow::onLivingHurt
         @SubscribeEvent(priority = EventPriority.HIGH)
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingHurtHigh(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
@@ -93,29 +93,40 @@ public class JJKEventHandler {
                     }
                 }
             }
+        }
 
-            // Lessen damage for heavenly restricted
-            if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        // Has to fire after CursedEnergyFlow::onLivingHurt
+        @SubscribeEvent(priority = EventPriority.LOW)
+        public static void onLivingHurtLow(LivingHurtEvent event) {
+            LivingEntity victim = event.getEntity();
 
-                if (cap == null) return;
+            if (victim.level().isClientSide) return;
 
-                ISorcererData data = cap.getSorcererData();
+            DamageSource source = event.getSource();
 
-                if (data != null) {
-                    float armor = data.getExperience() * 0.02F;
+            float amount = event.getAmount();
 
-                    if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                        armor *= 10.0F;
-                    }
-                    float toughness = armor * 0.1F;
+            if (source.is(DamageTypeTags.BYPASSES_ARMOR))  return;
 
-                    float f = 2.0F + toughness / 4.0F;
-                    float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
-                    float blocked = amount * (1.0F - f1 / 25.0F);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    event.setAmount(blocked);
+            if (cap == null) return;
+
+            ISorcererData data = cap.getSorcererData();
+
+            if (data != null) {
+                float armor = data.getExperience() * 0.002F;
+
+                if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                    armor *= 10.0F;
                 }
+                float toughness = armor * 0.1F;
+
+                float f = 2.0F + toughness / 4.0F;
+                float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
+                float blocked = amount * (1.0F - f1 / 25.0F);
+
+                event.setAmount(blocked);
             }
         }
 
