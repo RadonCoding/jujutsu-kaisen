@@ -47,13 +47,13 @@ public class SyncSorcererDataS2CPacket implements CustomPacketPayload {
 
             ISorcererData old = cap.getSorcererData();
 
-            Set<Ability> oldToggled = old.getToggled();
             Set<Ability> newToggled = new HashSet<>();
 
             for (Tag key : this.nbt.getList("toggled", Tag.TAG_STRING)) {
                 newToggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
             }
 
+            Set<Ability> oldToggled = new HashSet<>(old.getToggled());
             oldToggled.removeAll(newToggled);
 
             for (Ability ability : oldToggled) {
