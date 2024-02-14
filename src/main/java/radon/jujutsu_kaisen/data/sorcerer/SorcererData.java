@@ -469,12 +469,17 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public Set<Ability> getUnlocked() {
+        return this.unlocked;
+    }
+
+    @Override
     public void unlock(Ability ability) {
         this.unlocked.add(ability);
     }
 
     @Override
-    public void unlockAll(List<Ability> abilities) {
+    public void unlockAll(Set<Ability> abilities) {
         this.unlocked.addAll(abilities);
     }
 
