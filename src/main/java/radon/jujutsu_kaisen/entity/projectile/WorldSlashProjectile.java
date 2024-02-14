@@ -16,24 +16,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class WorldSlashProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.FLOAT);
@@ -115,27 +110,6 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         }
     }
 
-    @Override
-    protected void onHitEntity(@NotNull EntityHitResult pResult) {
-        super.onHitEntity(pResult);
-
-        if (this.level().isClientSide) return;
-
-        Entity entity = pResult.getEntity();
-
-        if (!(entity instanceof LivingEntity living)) {
-            entity.discard();
-            return;
-        }
-
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
-        if (living == owner) return;
-
-        float strength = Math.min(1.0F, 0.1F + (1.0F - (this.distanceTo(living) / ((float) this.getLength() / 2))));
-        living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength);
-    }
-
     private Vec3 rotate(Vec3 vector, Vec3 axis, double degrees) {
         double radians = degrees * Math.PI / 180.0D;
 
@@ -156,8 +130,8 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         );
     }
 
-    public List<HitResult> getHitResults() {
-        if (!(this.getOwner() instanceof LivingEntity)) return List.of();
+    public Set<Entity> getHits() {
+        if (!(this.getOwner() instanceof LivingEntity)) return Set.of();
 
         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
@@ -174,7 +148,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         Vec3 start = center.add(side.scale((double) length / 2));
         Vec3 end = center.add(forward.subtract(side.scale((double) length / 2)));
 
-        List<HitResult> hits = new ArrayList<>();
+        Set<Entity> hits = new HashSet<>();
 
         double depth = Math.max(1, Math.round(this.getDeltaMovement().length()));
 
@@ -184,9 +158,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
                 AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
 
-                for (Entity entity : this.level().getEntities(this, bounds)) {
-                    hits.add(new EntityHitResult(entity));
-                }
+                hits.addAll(this.level().getEntities(this, bounds));
 
                 BlockState state = this.level().getBlockState(current);
 
@@ -206,10 +178,23 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         super.tick();
 
         if (!this.level().isClientSide) {
-            for (HitResult result : this.getHitResults()) {
-                if (result.getType() != HitResult.Type.MISS) {
-                    this.onHit(result);
+            for (Entity entity : this.getHits()) {
+                if (!(entity instanceof LivingEntity living)) {
+                    entity.discard();
+                    continue;
                 }
+
+                if (!(this.getOwner() instanceof LivingEntity owner)) continue;
+
+                if (living == owner) continue;
+
+                Vec3 look = this.getLookAngle();
+                Vec3 up = this.getUpVector(1.0F);
+                Vec3 right = look.cross(up);
+
+                float distance = (float) Math.floor(Math.abs((float) living.position().subtract(this.position()).dot(right)));
+                float strength = 1.0F - (distance / ((float) this.getLength() / 2));
+                living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength);
             }
         }
 
