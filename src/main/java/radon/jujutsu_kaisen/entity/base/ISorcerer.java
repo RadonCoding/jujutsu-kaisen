@@ -72,8 +72,8 @@ public interface ISorcerer {
         return List.of();
     }
 
-    default List<Ability> getUnlocked() {
-        return List.of();
+    default Set<Ability> getUnlocked() {
+        return Set.of();
     }
 
     JujutsuType getJujutsuType();

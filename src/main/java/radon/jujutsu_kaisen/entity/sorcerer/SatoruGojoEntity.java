@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
+import java.util.Set;
 
 public class SatoruGojoEntity extends SorcererEntity {
     private final ItemStack blindfold;
@@ -50,8 +51,8 @@ public class SatoruGojoEntity extends SorcererEntity {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(),
                 JJKAbilities.ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get());
     }
 

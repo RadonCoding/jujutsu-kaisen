@@ -28,6 +28,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
+import java.util.Set;
 
 public class AgitoEntity extends TenShadowsSummon {
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
@@ -146,7 +147,7 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get());
+    public Set<Ability> getUnlocked() {
+        return Set.of(JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get());
     }
 }
