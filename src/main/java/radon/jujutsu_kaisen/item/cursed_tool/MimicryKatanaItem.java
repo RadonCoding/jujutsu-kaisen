@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -9,14 +11,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -33,7 +38,7 @@ public class MimicryKatanaItem extends KatanaItem {
     }
 
     @Override
-    public boolean onDroppedByPlayer(ItemStack item, Player player) {
+    public boolean onDroppedByPlayer(@NotNull ItemStack item, @NotNull Player player) {
         return false;
     }
 
@@ -50,6 +55,15 @@ public class MimicryKatanaItem extends KatanaItem {
         if (!data.hasSummonOfClass(DomainExpansionEntity.class)) {
             pStack.shrink(1);
         }
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+
+        ICursedTechnique technique = getTechnique(pStack);
+
+        pTooltipComponents.add(Component.translatable(String.format("item.%s.mimicry_katana.technique", JujutsuKaisen.MOD_ID), technique.getName().copy().withStyle(ChatFormatting.DARK_PURPLE)));
     }
 
     public static ICursedTechnique getTechnique(ItemStack stack) {

@@ -789,6 +789,7 @@ public class SorcererData implements ISorcererData {
         if (this.additional != null) {
             techniques.add(this.additional);
         }
+
         techniques.addAll(this.copied);
         techniques.addAll(curseManipulationData.getAbsorbed());
         techniques.addAll(this.getMimicryTechniques());
