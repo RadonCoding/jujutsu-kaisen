@@ -114,7 +114,7 @@ public class AdaptationEventHandler {
             }
         }
 
-        @SubscribeEvent()
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
