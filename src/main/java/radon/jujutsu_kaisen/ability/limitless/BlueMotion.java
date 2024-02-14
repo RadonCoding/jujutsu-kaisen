@@ -18,8 +18,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class BlueMotion extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-        return HelperMethods.RANDOM.nextInt(20) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= BlueProjectile.RANGE;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target) || owner.distanceTo(target) > BlueProjectile.RANGE) return false;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
