@@ -25,7 +25,6 @@ public class GreatSerpentGrab extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!JJKAbilities.GREAT_SERPENT.get().isTamed(owner)) return false;
         if (target == null || target.isDeadOrDying()) return false;
         return HelperMethods.RANDOM.nextInt(3) == 0 && this.getTarget(owner) == target;
     }
