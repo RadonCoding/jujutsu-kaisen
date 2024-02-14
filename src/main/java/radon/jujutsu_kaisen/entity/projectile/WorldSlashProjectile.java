@@ -19,6 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
@@ -110,26 +111,6 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         }
     }
 
-    private Vec3 rotate(Vec3 vector, Vec3 axis, double degrees) {
-        double radians = degrees * Math.PI / 180.0D;
-
-        double cosine = Math.cos(radians);
-        double sine = Math.sin(radians);
-
-        double xx = (1.0D - cosine) * axis.x * axis.x;
-        double xy = (1.0D - cosine) * axis.x * axis.y;
-        double xz = (1.0D - cosine) * axis.x * axis.z;
-        double yy = (1.0D - cosine) * axis.y * axis.y;
-        double yz = (1.0D - cosine) * axis.y * axis.z;
-        double zz = (1.0D - cosine) * axis.z * axis.z;
-
-        return new Vec3(
-                (cosine + xx) * vector.x + (xy - axis.z * sine) * vector.y + (xz + axis.y * sine) * vector.z,
-                (xy + axis.z * sine) * vector.x + (cosine + yy) * vector.y + (yz - axis.x * sine) * vector.z,
-                (xz - axis.y * sine) * vector.x + (yz + axis.x * sine) * vector.y + (cosine + zz) * vector.z
-        );
-    }
-
     public Set<Entity> getHits() {
         if (!(this.getOwner() instanceof LivingEntity)) return Set.of();
 
@@ -140,9 +121,10 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         float roll = this.getRoll();
 
         Vec3 forward = this.calculateViewVector(pitch, 180.0F - yaw);
-        Vec3 up = this.calculateViewVector(pitch - 90.0F, 180.0f - yaw);
+        Vec3 up = this.calculateViewVector(pitch - 90.0F, 180.0F - yaw);
 
-        Vec3 side = this.rotate(forward.cross(up), forward, -roll);
+        Quaternionf quaternion = new Quaternionf().rotateAxis((float) Math.toRadians(-roll), (float) forward.x, (float) forward.y, (float) forward.z);
+        Vec3 side = new Vec3(quaternion.transform(forward.cross(up).toVector3f()));
 
         int length = this.getLength();
         Vec3 start = center.add(side.scale((double) length / 2));
