@@ -88,9 +88,9 @@ public class BlackFlashHandler {
 
             IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (SorcererUtil.getGrade(data.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal() ||
                     (!(source instanceof JJKDamageSources.JujutsuDamageSource) && !data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !data.hasToggled(JJKAbilities.BLUE_FISTS.get()))) return;
