@@ -120,6 +120,7 @@ Modifiers:
 ### Perfect Body
 
 Perfect body gives you extra arms and allows you to autocomplete chants by pressing TAB in chat.
+This also increases your melee attack potency by 200% as you have more arms.
 
 This trait can be obtained by obtaining special grade **sorcerer flesh** and special grade **curse flesh**, these are a rare drop from special grade sorcerers and curses.
 
