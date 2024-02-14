@@ -9,6 +9,7 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.Event;
@@ -60,9 +61,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 
