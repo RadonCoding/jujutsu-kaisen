@@ -116,3 +116,12 @@ Modifiers:
 - Cursed Objects (cursed spirits)
 - Cursed Tools (sorcerers)
 - TNT (destruction)
+
+### Perfect Body
+
+Perfect body gives you extra arms and allows you to autocomplete chants by pressing TAB in chat.
+
+This trait can be obtained by obtaining special grade **sorcerer flesh** and special grade **curse flesh**, these are a rare drop from special grade sorcerers and curses.
+
+These ingredients are combined in an crafting table giving you **merged flesh**.
+Consuming the **merged flesh** at the maximum experience amount set in config you'll obtain the **perfect body**.
