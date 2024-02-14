@@ -69,6 +69,8 @@ public class BlackFlashHandler {
             COMBOS.remove(owner.getUUID());
         }
 
+        // Has to fire after CursedEnergyFlow::onLivingHurt
+        // Has to fire after JJKEventHandler::onLivingHurt
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();

@@ -61,7 +61,8 @@ import java.util.List;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        @SubscribeEvent
+        // Has to fire before CursedEnergyFlow::onLivingHurt
+        @SubscribeEvent(priority = EventPriority.HIGH)
         public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 
