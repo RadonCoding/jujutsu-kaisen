@@ -209,7 +209,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (victim.level().isClientSide) return;
 
         DamageSource source = event.getSource();
-        
+
         float amount = event.getAmount();
 
         if (!DamageUtil.isMelee(source)) return;
@@ -326,6 +326,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             float cost = blocked * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
             if (data.getEnergy() < cost) return;
+
+            System.out.println(cost + "," + amount);
 
             data.useEnergy(cost);
 

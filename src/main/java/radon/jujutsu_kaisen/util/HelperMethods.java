@@ -40,7 +40,7 @@ public class HelperMethods {
         return FastColor.ARGB32.color(255, Math.round(rgb.x * 255.0F), Math.round(rgb.y * 255.0F), Math.round(rgb.z * 255.0F));
     }
 
-    public static boolean isDestroyable(Level level, @Nullable LivingEntity source, BlockPos pos) {
+    public static boolean isDestroyable(ServerLevel level, @Nullable LivingEntity source, BlockPos pos) {
         if (!ConfigHolder.SERVER.destruction.get()) return false;
 
         if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return false;
@@ -50,7 +50,14 @@ public class HelperMethods {
         if (!VeilHandler.canDestroy(source, level, center.x, center.y, center.z)) return false;
 
         BlockState state = level.getBlockState(pos);
-        return !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
+        boolean destroyable = !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
+
+        if (!destroyable && source != null && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
+            UUID identifier = be.getIdentifier();
+            destroyable = identifier == null || !(level.getEntity(identifier) instanceof DomainExpansionEntity domain) ||
+                    !domain.isInsideBarrier(source.blockPosition());
+        }
+        return destroyable;
     }
 
     public static <E> E getWeightedRandom(Map<E, Double> weights, RandomSource random) {
