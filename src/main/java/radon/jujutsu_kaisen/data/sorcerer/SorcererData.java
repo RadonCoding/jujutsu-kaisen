@@ -723,83 +723,78 @@ public class SorcererData implements ISorcererData {
         ServerVisualHandler.sync(this.owner);
     }
 
+    private Set<ICursedTechnique> getMimicryTechniques() {
+        Set<ICursedTechnique> techniques = new HashSet<>();
+
+        List<ItemStack> stacks = new ArrayList<>();
+        stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND));
+        stacks.addAll(CuriosUtil.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
+        stacks.removeIf(ItemStack::isEmpty);
+
+        for (ItemStack stack : stacks) {
+            if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
+            techniques.add(MimicryKatanaItem.getTechnique(stack));
+        }
+        return techniques;
+    }
+
     @Override
     public Set<ICursedTechnique> getActiveTechniques() {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return Set.of();
 
-        ISorcererData sorcererData = cap.getSorcererData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
-        if (sorcererData.getTechnique() != null) {
-            techniques.add(sorcererData.getTechnique());
+        if (this.technique != null) {
+            techniques.add(this.technique);
         }
-        if (this.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get()) && this.toggled.contains(JJKAbilities.RIKA.get()) && sorcererData.getCurrentCopied() != null) {
-            techniques.add(sorcererData.getCurrentCopied());
+        if (this.additional != null) {
+            techniques.add(this.additional);
         }
-        if (this.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get()) && curseManipulationData.getCurrentAbsorbed() != null) {
+        if (techniques.contains(JJKCursedTechniques.MIMICRY.get()) && this.toggled.contains(JJKAbilities.RIKA.get()) && this.currentCopied != null) {
+            techniques.add(this.currentCopied);
+        }
+        if (techniques.contains(JJKCursedTechniques.CURSE_MANIPULATION.get()) && curseManipulationData.getCurrentAbsorbed() != null) {
             techniques.add(curseManipulationData.getCurrentAbsorbed());
         }
-        if (sorcererData.getAdditional() != null) {
-            techniques.add(sorcererData.getAdditional());
-        }
+        techniques.addAll(this.getMimicryTechniques());
 
-        List<ItemStack> stacks = new ArrayList<>();
-        stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND));
-        stacks.addAll(CuriosUtil.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
-        stacks.removeIf(ItemStack::isEmpty);
-
-        for (ItemStack stack : stacks) {
-            if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
-
-            techniques.add(MimicryKatanaItem.getTechnique(stack));
-        }
         return techniques;
     }
 
     @Override
-    public Set<ICursedTechnique> getAllTechniques() {
+    public Set<ICursedTechnique> getTechniques() {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return Set.of();
 
-        ISorcererData sorcererData = cap.getSorcererData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
-        if (sorcererData.getTechnique() != null) {
-            techniques.add(sorcererData.getTechnique());
+        if (this.technique != null) {
+            techniques.add(this.technique);
         }
-        if (sorcererData.getCurrentCopied() != null) {
-            techniques.add(sorcererData.getCurrentCopied());
+        if (this.additional != null) {
+            techniques.add(this.additional);
+        }
+        if (this.currentCopied != null) {
+            techniques.add(this.currentCopied);
         }
         if (curseManipulationData.getCurrentAbsorbed() != null) {
             techniques.add(curseManipulationData.getCurrentAbsorbed());
         }
-        if (sorcererData.getAdditional() != null) {
-            techniques.add(sorcererData.getAdditional());
-        }
+        techniques.addAll(this.getMimicryTechniques());
 
-        List<ItemStack> stacks = new ArrayList<>();
-        stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND));
-        stacks.addAll(CuriosUtil.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
-        stacks.removeIf(ItemStack::isEmpty);
-
-        for (ItemStack stack : stacks) {
-            if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
-
-            techniques.add(MimicryKatanaItem.getTechnique(stack));
-        }
         return techniques;
     }
 
     @Override
     public boolean hasTechnique(ICursedTechnique technique) {
-        return this.getAllTechniques().contains(technique);
+        return this.getTechniques().contains(technique);
     }
 
     @Override

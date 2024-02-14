@@ -119,7 +119,7 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     Set<ICursedTechnique> getActiveTechniques();
 
-    Set<ICursedTechnique> getAllTechniques();
+    Set<ICursedTechnique> getTechniques();
 
     boolean hasTechnique(ICursedTechnique technique);
 
