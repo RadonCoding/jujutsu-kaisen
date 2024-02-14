@@ -155,14 +155,11 @@ public class WeaponEventHandler {
                 if (victimCap != null) {
                     ISorcererData victimData = victimCap.getSorcererData();
 
-                    List<Ability> remove = new ArrayList<>();
-
                     for (Ability ability : victimData.getToggled()) {
                         if (!ability.isTechnique()) continue;
 
-                        remove.add(ability);
+                        victimData.disrupt(ability, 20);
                     }
-                    remove.forEach(victimData::toggle);
 
                     if (victim instanceof ServerPlayer player) {
                         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimData.serializeNBT()), player);
