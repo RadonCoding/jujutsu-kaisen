@@ -284,6 +284,12 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         DamageSource source = event.getSource();
         float amount = event.getAmount();
 
+        if (Float.isNaN(amount)) {
+            for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+                System.out.println(ste);
+            }
+        }
+
         if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;

@@ -18,8 +18,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class BlueStill extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || !owner.hasLineOfSight(target) || owner.distanceTo(target) <= BlueProjectile.RANGE) return false;
-        return HelperMethods.RANDOM.nextInt(20) == 0;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target) || owner.distanceTo(target) > BlueProjectile.RANGE) return false;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
