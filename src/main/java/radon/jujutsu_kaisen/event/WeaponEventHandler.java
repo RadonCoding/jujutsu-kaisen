@@ -50,8 +50,8 @@ import java.util.stream.Collectors;
 public class WeaponEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        @SubscribeEvent(priority = EventPriority.HIGHEST)
-        public static void onLivingHurt(LivingHurtEvent event) {
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onLivingAttackLow(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
