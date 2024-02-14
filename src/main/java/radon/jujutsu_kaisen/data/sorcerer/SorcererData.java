@@ -749,7 +749,10 @@ public class SorcererData implements ISorcererData {
         Set<ICursedTechnique> techniques = new HashSet<>();
 
         techniques.add(this.technique);
-        techniques.add(this.additional);
+
+        if (this.additional != null) {
+            techniques.add(this.additional);
+        }
 
         if (this.toggled.contains(JJKAbilities.RIKA.get())) {
             if (this.currentCopied != null) {
@@ -776,9 +779,11 @@ public class SorcererData implements ISorcererData {
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         Set<ICursedTechnique> techniques = new HashSet<>();
-
         techniques.add(this.technique);
-        techniques.add(this.additional);
+
+        if (this.additional != null) {
+            techniques.add(this.additional);
+        }
         techniques.addAll(this.copied);
         techniques.addAll(curseManipulationData.getAbsorbed());
         techniques.addAll(this.getMimicryTechniques());
