@@ -30,7 +30,9 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DismantleProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
@@ -154,28 +156,6 @@ public class DismantleProjectile extends JujutsuProjectile {
         }
     }
 
-    @Override
-    protected void onHitEntity(@NotNull EntityHitResult pResult) {
-        super.onHitEntity(pResult);
-
-        if (this.level().isClientSide) return;
-
-        Entity entity = pResult.getEntity();
-
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
-        if (entity == owner) return;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
-        DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
-        entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), this.getDamage() * this.getPower());
-    }
-
     private Vec3 rotate(Vec3 vector, Vec3 axis, double degrees) {
         double radians = degrees * Math.PI / 180.0D;
 
@@ -196,8 +176,8 @@ public class DismantleProjectile extends JujutsuProjectile {
         );
     }
 
-    public List<HitResult> getHitResults() {
-        if (!(this.getOwner() instanceof LivingEntity owner)) return List.of();
+    public Set<Entity> getHits() {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return Set.of();
 
         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
@@ -214,7 +194,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         Vec3 start = center.add(side.scale((double) length / 2));
         Vec3 end = center.add(forward.subtract(side.scale((double) length / 2)));
 
-        List<HitResult> hits = new ArrayList<>();
+        Set<Entity> hits = new HashSet<>();
 
         double depth = Math.max(1, Math.round(this.getDeltaMovement().length()));
 
@@ -224,9 +204,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
 
-                for (Entity entity : this.level().getEntities(this, bounds)) {
-                    hits.add(new EntityHitResult(entity));
-                }
+                hits.addAll(this.level().getEntities(this, bounds));
 
                 if (!this.destroy) continue;
 
@@ -257,10 +235,20 @@ public class DismantleProjectile extends JujutsuProjectile {
         super.tick();
 
         if (!this.level().isClientSide) {
-            for (HitResult result : this.getHitResults()) {
-                if (result.getType() != HitResult.Type.MISS) {
-                    this.onHit(result);
-                }
+            for (Entity entity : this.getHits()) {
+                if (!(this.getOwner() instanceof LivingEntity owner)) continue;
+
+                if (entity == owner) continue;
+
+                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (cap == null) continue;
+
+                ISorcererData data = cap.getSorcererData();
+
+                DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()),
+                        this.getDamage() * this.getPower());
             }
         }
 
