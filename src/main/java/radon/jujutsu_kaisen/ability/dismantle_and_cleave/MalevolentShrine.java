@@ -33,18 +33,9 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-        int size;
-
-        if (domain instanceof OpenDomainExpansionEntity open) {
-           size = open.getWidth() * open.getHeight();
-        } else if (domain instanceof ClosedDomainExpansionEntity closed) {
-            size = closed.getRadius() * 8;
-        } else {
-            return;
+        if (domain instanceof ClosedDomainExpansionEntity closed) {
+            if (HelperMethods.RANDOM.nextInt(closed.getRadius() * 8) != 0) return;
         }
-
-        if (HelperMethods.RANDOM.nextInt(size) != 0) return;
-
         Ability dismantle = JJKAbilities.DISMANTLE.get();
         ((IDomainAttack) dismantle).performBlock(owner, domain, pos);
     }
