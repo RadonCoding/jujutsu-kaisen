@@ -53,6 +53,8 @@ public class MobEventHandler {
 
             if (victim.level().isClientSide) return;
 
+            if (!(victim instanceof ISorcerer sorcerer) || !sorcerer.canChant()) return;
+
             DamageSource source = event.getSource();
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -60,8 +62,6 @@ public class MobEventHandler {
             if (cap == null) return;
 
             ISorcererData data = cap.getSorcererData();
-
-            if (!(victim instanceof ISorcerer sorcerer) || !sorcerer.canChant()) return;
 
             if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
