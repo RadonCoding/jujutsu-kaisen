@@ -163,7 +163,7 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
-    public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE_THREE = BLOCKS.register("authentic_mutual_three", () ->
+    public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE_THREE = BLOCKS.register("authentic_mutual_love_three", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
