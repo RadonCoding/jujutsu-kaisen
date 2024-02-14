@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
@@ -141,13 +142,8 @@ public abstract class Ability {
         return parent != null && !parent.isUnlocked(owner);
     }
 
-    public Vec2 getDisplayCoordinates() {
-        return Vec2.ZERO;
-    }
-
-    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
-        Vec2 coordinates = this.getDisplayCoordinates();
-        return new AbilityDisplayInfo(JJKAbilities.getKey(this).getPath(), coordinates.x, coordinates.y);
+    public ResourceLocation getIcon(LivingEntity owner) {
+        return new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/ability/%s.png", JJKAbilities.getKey(this).getPath()));
     }
 
     @Nullable

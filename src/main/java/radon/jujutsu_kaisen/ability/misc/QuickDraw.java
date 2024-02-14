@@ -116,11 +116,6 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(4.0F, 4.0F);
-    }
-
-    @Override
     public boolean isTechnique() {
         return false;
     }

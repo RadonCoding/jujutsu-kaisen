@@ -87,11 +87,6 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(4.0F, 1.0F);
-    }
-
-    @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
     }
