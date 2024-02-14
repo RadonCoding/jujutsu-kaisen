@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -56,7 +55,7 @@ public class Wheel extends Summon<WheelEntity> {
 
         ISorcererData targetData = targetCap.getSorcererData();
 
-        for (ICursedTechnique technique : targetData.getTechniques()) {
+        for (ICursedTechnique technique : targetData.getActiveTechniques()) {
             if (ownerData.isAdaptedTo(technique)) continue;
 
             return true;

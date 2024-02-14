@@ -18,9 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
@@ -72,7 +70,7 @@ public class ClientVisualHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            return new ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), data.getTechniques(),
+            return new ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), data.getActiveTechniques(),
                     data.getTechnique(), data.getType(), data.getExperience(), data.getCursedEnergyColor());
         }
         return null;

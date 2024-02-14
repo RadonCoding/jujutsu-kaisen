@@ -8,7 +8,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -53,7 +52,7 @@ public class JJKCursedTechniques {
 
         ISorcererData data = cap.getSorcererData();
 
-        return data.getTechniques();
+        return data.getActiveTechniques();
     }
 
     @Nullable

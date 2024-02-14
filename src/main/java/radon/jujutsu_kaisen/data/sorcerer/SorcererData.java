@@ -19,13 +19,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.neoforged.neoforge.common.NeoForge;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
@@ -726,7 +724,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public Set<ICursedTechnique> getTechniques() {
+    public Set<ICursedTechnique> getActiveTechniques() {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return Set.of();
@@ -763,20 +761,50 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasTechnique(ICursedTechnique technique) {
+    public Set<ICursedTechnique> getAllTechniques() {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return false;
+        if (cap == null) return Set.of();
 
+        ISorcererData sorcererData = cap.getSorcererData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
-        return this.technique == technique || this.additional == technique || this.copied.contains(technique) ||
-                curseManipulationData.getAbsorbed().contains(technique);
+        Set<ICursedTechnique> techniques = new HashSet<>();
+
+        if (sorcererData.getTechnique() != null) {
+            techniques.add(sorcererData.getTechnique());
+        }
+        if (sorcererData.getCurrentCopied() != null) {
+            techniques.add(sorcererData.getCurrentCopied());
+        }
+        if (curseManipulationData.getCurrentAbsorbed() != null) {
+            techniques.add(curseManipulationData.getCurrentAbsorbed());
+        }
+        if (sorcererData.getAdditional() != null) {
+            techniques.add(sorcererData.getAdditional());
+        }
+
+        List<ItemStack> stacks = new ArrayList<>();
+        stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND));
+        stacks.addAll(CuriosUtil.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
+        stacks.removeIf(ItemStack::isEmpty);
+
+        for (ItemStack stack : stacks) {
+            if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
+
+            techniques.add(MimicryKatanaItem.getTechnique(stack));
+        }
+        return techniques;
+    }
+
+    @Override
+    public boolean hasTechnique(ICursedTechnique technique) {
+        return this.getAllTechniques().contains(technique);
     }
 
     @Override
     public boolean hasActiveTechnique(ICursedTechnique technique) {
-        return this.getTechniques().contains(technique);
+        return this.getActiveTechniques().contains(technique);
     }
 
     @Override
@@ -1261,7 +1289,7 @@ public class SorcererData implements ISorcererData {
                 if (cap == null) continue;
 
                 ISorcererData data = cap.getSorcererData();
-                taken.addAll(data.getTechniques());
+                taken.addAll(data.getActiveTechniques());
                 traits.addAll(data.getTraits());
             }
         }

@@ -4,10 +4,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -53,7 +51,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
         ISorcererData targetData = targetCap.getSorcererData();
 
-        for (ICursedTechnique technique : targetData.getTechniques()) {
+        for (ICursedTechnique technique : targetData.getActiveTechniques()) {
             if (ownerTenShadowsData.isAdaptedTo(technique)) {
                 return true;
             }
