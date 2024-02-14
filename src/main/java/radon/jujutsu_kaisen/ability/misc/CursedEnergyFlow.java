@@ -314,7 +314,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
         }
 
-        float armor = data.getExperience() * (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.01F : 0.0025F);
+        float armor = data.getExperience() * (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.0075F : 0.005F);
         float toughness = armor * 0.1F;
 
         float f = 2.0F + toughness / 4.0F;
