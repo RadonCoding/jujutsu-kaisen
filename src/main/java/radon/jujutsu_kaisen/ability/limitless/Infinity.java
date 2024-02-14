@@ -88,6 +88,11 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IChan
         return this.getActivationType(owner) == ActivationType.CHANNELED ? MenuType.MELEE : MenuType.RADIAL;
     }
 
+    @Override
+    public boolean shouldLog(LivingEntity owner) {
+        return true;
+    }
+
     public static class FrozenProjectileData extends SavedData {
         private static final SavedData.Factory<FrozenProjectileData> FACTORY = new SavedData.Factory<>(FrozenProjectileData::new, FrozenProjectileData::new, null);
 
