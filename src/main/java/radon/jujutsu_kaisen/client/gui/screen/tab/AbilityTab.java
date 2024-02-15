@@ -39,7 +39,7 @@ public class AbilityTab extends JJKTab {
     public AbilityTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
         super(minecraft, screen, type, index, page, Items.ENDER_PEARL.getDefaultInstance(), TITLE, BACKGROUND, true);
 
-        this.abilities = new ArrayList<>(JJKAbilities.ABILITIES.getEntries().stream().map(DeferredHolder::get).toList());
+        this.abilities = new ArrayList<>(JJKAbilities.ABILITY_REGISTRY.stream().toList());
         this.abilities.sort(Comparator.comparing(ability -> ability.getName().getString()));
 
         if (this.minecraft.player == null) return;
@@ -51,21 +51,21 @@ public class AbilityTab extends JJKTab {
         }
     }
 
-    private void addAbilityAndChildren(Ability parent) {
+    private void addAbilityAndChildren(Ability ability) {
         float x = 0.0F;
 
         float y = 0.0F;
 
-        Ability grandparent = parent.getParent(this.minecraft.player);
+        Ability parent = ability.getParent(this.minecraft.player);
 
-        if (grandparent != null) {
+        if (parent != null) {
             // If the ability is the start of an new group
-            if (this.roots.containsKey(grandparent)) {
-                x = this.roots.get(grandparent).getX() + 2.0F;
+            if (this.roots.containsKey(parent)) {
+                x = this.roots.get(parent).getX() + 2.0F;
                 y = this.y + 2.0F;
             } else {
                 // Otherwise we'll just put the ability to the right side of the parent
-                AbilityWidget widget = this.getAbility(grandparent);
+                AbilityWidget widget = this.getAbility(parent);
 
                 if (widget != null) {
                     x = widget.getX() + 1.0F;
@@ -74,18 +74,18 @@ public class AbilityTab extends JJKTab {
 
                 if (this.last != null) {
                     // If the parents are the same we need to increase the Y
-                    if (this.last.getKey().getParent(this.minecraft.player) == grandparent) {
+                    if (this.last.getKey().getParent(this.minecraft.player) == parent) {
                         y += 2.0F;
                     }
                 }
             }
         }
 
-        this.addAbility(parent, x, y);
+        this.addAbility(ability, x, y);
 
-        for (Ability ability : this.abilities) {
-            if (ability.isDisplayed(this.minecraft.player) && ability.getParent(this.minecraft.player) == ability) {
-                this.addAbilityAndChildren(ability);
+        for (Ability current : this.abilities) {
+            if (current.isDisplayed(this.minecraft.player) && current.getParent(this.minecraft.player) == ability) {
+                this.addAbilityAndChildren(current);
             }
         }
         this.y = Math.max(this.y, y);
