@@ -94,6 +94,10 @@ public class DivineDogs extends Summon<DivineDogEntity> {
             owner.level().addFreshEntity(black);
             sorcererData.addSummon(black);
         }
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
+        }
     }
 
     @Override
