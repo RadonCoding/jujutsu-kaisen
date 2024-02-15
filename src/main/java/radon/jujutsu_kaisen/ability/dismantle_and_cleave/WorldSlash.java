@@ -53,7 +53,7 @@ public class WorldSlash extends Ability {
     }
 
     @Override
-    public boolean isScalable(LivingEntity owner) {
+    public boolean isChantable() {
         return true;
     }
 
