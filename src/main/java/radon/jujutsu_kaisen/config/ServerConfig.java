@@ -103,7 +103,7 @@ public class ServerConfig {
         this.destruction = builder.comment("When enabled abilities break blocks")
                 .define("destruction", true);
         this.chants = builder.comment("Possible chants for NPCs")
-                .defineList("unlockableTechniques", () -> List.of(
+                .defineList("chants", () -> List.of(
                                 "Nah, I'd win.",
                                 "Stand proud.",
                                 "You can cook.",
