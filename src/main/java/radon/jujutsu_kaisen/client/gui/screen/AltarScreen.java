@@ -20,8 +20,7 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
         super(pMenu, pPlayerInventory, pTitle, TEXTURE);
     }
 
-    @Override
-    public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
+    private void renderPlaceholderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
         int i = pSlot.x;
         int j = pSlot.y;
         String s = null;
@@ -56,7 +55,7 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
             pGuiGraphics.pose().pushPose();
             pGuiGraphics.pose().translate((float) i, (float) j, 0.0F);
 
-            this.renderSlot(pGuiGraphics, slot);
+            this.renderPlaceholderSlot(pGuiGraphics, slot);
 
             pGuiGraphics.pose().popPose();
         }
