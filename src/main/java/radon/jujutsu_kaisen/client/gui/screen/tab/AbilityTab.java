@@ -39,7 +39,7 @@ public class AbilityTab extends JJKTab {
     public AbilityTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
         super(minecraft, screen, type, index, page, Items.ENDER_PEARL.getDefaultInstance(), TITLE, BACKGROUND, true);
 
-        this.abilities = new ArrayList<>(JJKAbilities.ABILITY_REGISTRY.stream().toList());
+        this.abilities = new ArrayList<>(JJKAbilities.ABILITIES.getEntries().stream().map(DeferredHolder::get).toList());
         this.abilities.sort(Comparator.comparing(ability -> ability.getName().getString()));
 
         if (this.minecraft.player == null) return;
