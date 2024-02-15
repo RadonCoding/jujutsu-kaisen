@@ -151,7 +151,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, InstantSpiritBodyOfDistortedKilling> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static DeferredHolder<Ability, SelfEmbodimentOfPerfection> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
 
-    public static DeferredHolder<Ability, SwitchMode> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
+    public static DeferredHolder<Ability, AbilityMode> ABILITY_MODE = ABILITIES.register("ability_mode", AbilityMode::new);
     public static DeferredHolder<Ability, ReleaseShikigami> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
     public static DeferredHolder<Ability, ShadowStorage> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
     public static DeferredHolder<Ability, ShadowTravel> SHADOW_TRAVEL = ABILITIES.register("shadow_travel", ShadowTravel::new);

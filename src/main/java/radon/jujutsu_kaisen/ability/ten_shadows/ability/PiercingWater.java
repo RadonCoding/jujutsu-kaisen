@@ -38,7 +38,7 @@ public class PiercingWater extends Ability {
 
         return !sorcererData.hasToggled(JJKAbilities.MAX_ELEPHANT.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.MAX_ELEPHANT.get()) &&
-                tenShadowsData.getMode() == TenShadowsMode.ABILITY;
+                sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get());
     }
 
     @Override
