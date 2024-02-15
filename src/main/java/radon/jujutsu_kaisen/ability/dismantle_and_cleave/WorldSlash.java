@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -53,15 +54,15 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData data = cap.getSorcererData();
-
-        if (data.getOutput() < 1.0F) return false;
-
         if (!(owner instanceof MahoragaEntity)) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return false;
+
+            ISorcererData data = cap.getSorcererData();
+
+            if (data.getOutput() + ChantHandler.getChant(owner, this) < 2.0F) return false;
+
             if (!data.hasActiveTechnique(JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get())) return false;
         }
         return super.isValid(owner);
@@ -84,11 +85,6 @@ public class WorldSlash extends Ability {
             if (data.getAdaptation(JJKAbilities.INFINITY.get()) > 1) return true;
         }
         return super.isUnlocked(owner);
-    }
-
-    @Override
-    public boolean isTechnique() {
-        return false;
     }
 
     @Override
