@@ -1435,12 +1435,7 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("toggled", toggledTag);
 
-        ListTag traitsTag = new ListTag();
-
-        for (Trait trait : this.traits) {
-            traitsTag.add(IntTag.valueOf(trait.ordinal()));
-        }
-        nbt.put("traits", traitsTag);
+        nbt.put("traits", new IntArrayTag(this.traits.stream().map(Enum::ordinal).toList()));
 
         ListTag cooldownsTag = new ListTag();
 
