@@ -364,7 +364,7 @@ public abstract class RadialScreen extends Screen {
                 renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
 
                 if (item.ability instanceof Summon<?> summon) {
-                    if (JJKCursedTechniques.getTechnique(item.ability) == JJKCursedTechniques.TEN_SHADOWS.get()) {
+                    if (summon.getActivationType(this.minecraft.player) == Ability.ActivationType.INSTANT) {
                         if (data.getSummonByClass(summon.getClazz()) instanceof LivingEntity living) {
                             pGuiGraphics.pose().pushPose();
                             pGuiGraphics.pose().scale(HEALTH_BAR_SCALE, HEALTH_BAR_SCALE, HEALTH_BAR_SCALE);
