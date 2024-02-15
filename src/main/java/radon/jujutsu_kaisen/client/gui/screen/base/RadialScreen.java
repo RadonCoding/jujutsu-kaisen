@@ -354,18 +354,22 @@ public abstract class RadialScreen extends Screen {
             }
 
             if ((item.ability instanceof Summon<?> summon && summon.display()) || item.type == DisplayItem.Type.CURSE) {
-                Entity entity = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level) :
+                Entity tmp = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level) :
                         CurseManipulationUtil.createCurse(this.minecraft.player, item.curse.getKey());
 
-                if (entity == null) continue;
+                if (tmp == null) continue;
 
-                float height = entity.getBbHeight();
-                int scale = (int) Math.max(3.0F, 10.0F - entity.getBbHeight());
-                renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
+                float height = tmp.getBbHeight();
+                int scale = (int) Math.max(3.0F, 10.0F - tmp.getBbHeight());
+                renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, tmp);
 
                 if (item.ability instanceof Summon<?> summon) {
                     if (summon.getActivationType(this.minecraft.player) == Ability.ActivationType.INSTANT) {
-                        if (data.getSummonByClass(summon.getClazz()) instanceof LivingEntity living) {
+                        int y = Math.round((posY + (height * scale / 2.0F) + (this.font.lineHeight / 2.0F)) * (1.0F / HEALTH_BAR_SCALE));
+
+                        for (Entity entity : data.getSummonsByClass(summon.getClazz())) {
+                            if (!(entity instanceof LivingEntity living)) continue;
+
                             pGuiGraphics.pose().pushPose();
                             pGuiGraphics.pose().scale(HEALTH_BAR_SCALE, HEALTH_BAR_SCALE, HEALTH_BAR_SCALE);
 
@@ -375,7 +379,6 @@ public abstract class RadialScreen extends Screen {
                             RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
                             int x = Math.round(posX * (1.0F / HEALTH_BAR_SCALE) - 46.5F);
-                            int y = Math.round((posY + (height * scale / 2.0F) + (this.font.lineHeight / 2.0F)) * (1.0F / HEALTH_BAR_SCALE));
 
                             pGuiGraphics.blit(HEALTH_BAR, x, y, 0, 0, 93, 10, 93, 18);
 
@@ -386,6 +389,8 @@ public abstract class RadialScreen extends Screen {
                             RenderSystem.enableDepthTest();
 
                             pGuiGraphics.pose().popPose();
+
+                            y += 10 + 2;
                         }
                     }
                 }
