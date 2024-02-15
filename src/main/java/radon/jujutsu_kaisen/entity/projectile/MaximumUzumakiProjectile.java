@@ -34,9 +34,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEntity {
     private static final int DELAY = 20;
     private static final double RANGE = 10.0D;
-    private static final float MAX_POWER = 10.0F;
-
-    private float power;
+    private static final float RADIUS = 5.0F;
+    private static final float MAX_EXPLOSION = 25.0F;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -60,7 +59,6 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
 
         for (Entity entity : ownerSorcererData.getSummons()) {
-            if (this.power == MAX_POWER) break;
             if (!(entity instanceof CursedSpirit)) continue;
 
             IJujutsuCapability curseCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -78,24 +76,11 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
                 }
             }
-            this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curseData.getExperience()));
+            this.setPower(SorcererUtil.getPower(curseData.getExperience()));
             entity.discard();
         }
     }
 
-    @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        pCompound.putFloat("power", this.power);
-    }
-
-    @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.power = pCompound.getFloat("power");
-    }
 
     @Override
     public void tick() {
@@ -124,8 +109,9 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
                 this.setPos(pos);
 
+                float radius = Math.min(MAX_EXPLOSION, RADIUS * this.getPower());
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                ExplosionHandler.spawn(this.level().dimension(), offset, this.power * 2.0F, 3 * 20, this.getPower() * 0.5F, owner,
+                ExplosionHandler.spawn(this.level().dimension(), offset, radius, 3 * 20, this.getPower() * 0.5F, owner,
                         JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_UZUMAKI.get()), false);
             }
         }

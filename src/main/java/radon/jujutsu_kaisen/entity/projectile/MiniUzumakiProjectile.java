@@ -54,15 +54,15 @@ public class MiniUzumakiProjectile extends BeamEntity {
                 continue;
             }
 
-            IJujutsuCapability weakestcap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability weakestCap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (weakestcap == null) continue;
+            if (weakestCap == null) continue;
 
             IJujutsuCapability currentcap = current.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (currentcap == null) continue;
 
-            ISorcererData weakestData = weakestcap.getSorcererData();
+            ISorcererData weakestData = weakestCap.getSorcererData();
             ISorcererData currentData = currentcap.getSorcererData();
 
             if (currentData.getExperience() < weakestData.getExperience()) weakest = current;
@@ -70,11 +70,11 @@ public class MiniUzumakiProjectile extends BeamEntity {
 
         if (weakest == null) return;
 
-        IJujutsuCapability weakestcap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability weakestCap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (weakestcap == null) return;
+        if (weakestCap == null) return;
 
-        ISorcererData weakestData = weakestcap.getSorcererData();
+        ISorcererData weakestData = weakestCap.getSorcererData();
 
         this.setPower(SorcererUtil.getPower(weakestData.getExperience()));
 
