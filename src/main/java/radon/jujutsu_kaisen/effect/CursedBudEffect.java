@@ -4,6 +4,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -51,6 +52,11 @@ public class CursedBudEffect extends JJKEffect {
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
+
+        if (data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            pLivingEntity.removeEffect(this);
+            return;
+        }
 
         MobEffectInstance instance = pLivingEntity.getEffect(this);
 
