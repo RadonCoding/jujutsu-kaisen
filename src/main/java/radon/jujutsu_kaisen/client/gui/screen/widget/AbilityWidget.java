@@ -131,43 +131,43 @@ public class AbilityWidget {
             int l = pX + this.x + 13;
             int i1 = pY + this.y + 13;
 
-            int color;
+            int j1;
 
             if (pDropShadow) {
                 if (this.unlocked) {
-                    color = 0xFF005304;
+                    j1 = 0xFF005304;
                 } else if (this.unlockable) {
-                    color = 0xFF2B2B2B;
+                    j1 = 0xFF2B2B2B;
                 } else if (this.blocked) {
-                    color = 0xFF6A0000;
+                    j1 = 0xFF6A0000;
                 } else {
-                    color = 0xFF000000;
+                    j1 = 0xFF000000;
                 }
             } else {
                 if (this.unlocked) {
-                    color = 0xFF008711;
+                    j1 = 0xFF008711;
                 } else if (this.unlockable) {
-                    color = 0xFF666666;
+                    j1 = 0xFF666666;
                 } else if (this.blocked) {
-                    color = 0xFFCF0000;
+                    j1 = 0xFFCF0000;
                 } else {
-                    color = 0xFFFFFFFF;
+                    j1 = 0xFFFFFFFF;
                 }
             }
 
             if (pDropShadow) {
-                pGuiGraphics.hLine(j, i, k - 1, color);
-                pGuiGraphics.hLine(j + 1, i, k, color);
-                pGuiGraphics.hLine(j, i, k + 1, color);
-                pGuiGraphics.hLine(l, j - 1, i1 - 1, color);
-                pGuiGraphics.hLine(l, j - 1, i1, color);
-                pGuiGraphics.hLine(l, j - 1, i1 + 1, color);
-                pGuiGraphics.vLine(j - 1, i1, k, color);
-                pGuiGraphics.vLine(j + 1, i1, k, color);
+                pGuiGraphics.hLine(j, i, k - 1, j1);
+                pGuiGraphics.hLine(j + 1, i, k, j1);
+                pGuiGraphics.hLine(j, i, k + 1, j1);
+                pGuiGraphics.hLine(l, j - 1, i1 - 1, j1);
+                pGuiGraphics.hLine(l, j - 1, i1, j1);
+                pGuiGraphics.hLine(l, j - 1, i1 + 1, j1);
+                pGuiGraphics.vLine(j - 1, i1, k, j1);
+                pGuiGraphics.vLine(j + 1, i1, k, j1);
             } else {
-                pGuiGraphics.hLine(j, i, k, color);
-                pGuiGraphics.hLine(l, j, i1, color);
-                pGuiGraphics.vLine(j, i1, k, color);
+                pGuiGraphics.hLine(j, i, k, j1);
+                pGuiGraphics.hLine(l, j, i1, j1);
+                pGuiGraphics.vLine(j, i1, k, j1);
             }
         }
         for (AbilityWidget widget : this.children) {
