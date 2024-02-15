@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.datafixers.types.templates.Sum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,16 +12,21 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -37,6 +43,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RadialScreen extends Screen {
+    public static ResourceLocation HEALTH_BAR = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/health_bar.png");
+    private static final float HEALTH_BAR_SCALE = 0.3F;
+
     protected static final int RADIUS_IN = 50;
     protected static final int RADIUS_OUT = RADIUS_IN * 2;
 
@@ -224,6 +233,12 @@ public abstract class RadialScreen extends Screen {
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
@@ -347,6 +362,33 @@ public abstract class RadialScreen extends Screen {
                 float height = entity.getBbHeight();
                 int scale = (int) Math.max(3.0F, 10.0F - entity.getBbHeight());
                 renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
+
+                if (item.ability instanceof Summon<?> summon) {
+                    if (JJKCursedTechniques.getTechnique(item.ability) == JJKCursedTechniques.TEN_SHADOWS.get()) {
+                        if (data.getSummonByClass(summon.getClazz()) instanceof LivingEntity living) {
+                            pGuiGraphics.pose().pushPose();
+                            pGuiGraphics.pose().scale(HEALTH_BAR_SCALE, HEALTH_BAR_SCALE, HEALTH_BAR_SCALE);
+
+                            RenderSystem.disableDepthTest();
+                            RenderSystem.depthMask(false);
+                            RenderSystem.defaultBlendFunc();
+                            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+                            int x = Math.round(posX * (1.0F / HEALTH_BAR_SCALE) - 46.5F);
+                            int y = Math.round((posY + (height * scale / 2.0F) + (this.font.lineHeight / 2.0F)) * (1.0F / HEALTH_BAR_SCALE));
+
+                            pGuiGraphics.blit(HEALTH_BAR, x, y, 0, 0, 93, 10, 93, 18);
+
+                            float health = (living.getHealth() / living.getMaxHealth()) * 93.0F;
+                            pGuiGraphics.blit(HEALTH_BAR, x, y + 1, 0, 10, (int) health, 8, 93, 18);
+
+                            RenderSystem.depthMask(true);
+                            RenderSystem.enableDepthTest();
+
+                            pGuiGraphics.pose().popPose();
+                        }
+                    }
+                }
             } else if (item.type == DisplayItem.Type.ABILITY) {
                 int y = posY - this.font.lineHeight / 2;
 
