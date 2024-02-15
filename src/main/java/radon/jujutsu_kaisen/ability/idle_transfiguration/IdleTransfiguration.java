@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -51,7 +52,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         if (cap == null) return ActivationType.TOGGLED;
 
         ISorcererData data = cap.getSorcererData();
-        return data.hasToggled(JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? ActivationType.INSTANT : ActivationType.TOGGLED;
+        return data.hasSummonOfClass(DomainExpansionEntity.class) ? ActivationType.INSTANT : ActivationType.TOGGLED;
     }
 
     public static float calculateStrength(LivingEntity entity) {

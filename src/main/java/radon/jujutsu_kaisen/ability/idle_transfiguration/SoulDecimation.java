@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
 import radon.jujutsu_kaisen.util.DamageUtil;
 
@@ -38,7 +39,7 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
 
         if (data == null) return ActivationType.TOGGLED;
 
-        return data.hasToggled(JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? ActivationType.INSTANT : ActivationType.TOGGLED;
+        return data.hasSummonOfClass(DomainExpansionEntity.class) ? ActivationType.INSTANT : ActivationType.TOGGLED;
     }
 
     @Override
