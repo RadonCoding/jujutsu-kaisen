@@ -71,9 +71,11 @@ public class CursedEnergyOverlay {
 
             graphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 10, 93, 18);
 
-            float energyWidth = (data.getEnergy() / data.getMaxEnergy()) * 94.0F;
+            float energyWidth = (data.getEnergy() / data.getMaxEnergy()) * 93.0F;
             graphics.blit(TEXTURE, 20, aboveY + 1, 0, 10, (int) energyWidth, 8, 93, 18);
 
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
@@ -134,9 +136,5 @@ public class CursedEnergyOverlay {
         }
 
         graphics.pose().popPose();
-
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     };
 }
