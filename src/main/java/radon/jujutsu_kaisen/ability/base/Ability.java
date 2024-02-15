@@ -8,19 +8,14 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec2;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.chant.ChantHandler;
-import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -64,7 +59,13 @@ public abstract class Ability {
         if (cap == null) return 0.0F;
 
         ISorcererData data = cap.getSorcererData();
-        return data.getAbilityPower() * (1.0F + ChantHandler.getChant(owner, ability));
+
+        float power = ability.isScalable(owner) ? data.getRealPower() : data.getAbilityPower();
+
+        if (ability.isChantable()) {
+            power *= ChantHandler.getChant(owner, ability);
+        }
+        return power;
     }
 
     public float getPower(LivingEntity owner) {
@@ -73,6 +74,10 @@ public abstract class Ability {
 
     public boolean isScalable(LivingEntity owner) {
         return this.getActivationType(owner) != ActivationType.TOGGLED;
+    }
+
+    public boolean isChantable() {
+        return this.isTechnique();
     }
 
     protected boolean isNotDisabledFromDA() {
@@ -368,7 +373,9 @@ public abstract class Ability {
         if (data.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
-        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable(owner) ? ChantHandler.getOutput(owner, this) : 1.0F)));
+
+        float output = this.isScalable(owner) ? this.isChantable() ? ChantHandler.getChant(owner, this) : data.getOutput() : 1.0F;
+        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * output));
     }
 
     public interface IDomainAttack {

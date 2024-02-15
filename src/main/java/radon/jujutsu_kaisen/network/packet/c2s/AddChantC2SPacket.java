@@ -39,7 +39,7 @@ public class AddChantC2SPacket implements CustomPacketPayload {
 
             Ability ability = JJKAbilities.getValue(this.key);
 
-            if (ability == null || !ability.isScalable(sender) || !ability.isTechnique()) return;
+            if (ability == null || !ability.isScalable(sender)) return;
 
             IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
