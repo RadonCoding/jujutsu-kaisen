@@ -165,7 +165,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, DivineDogTotality> DIVINE_DOG_TOTALITY = ABILITIES.register("divine_dog_totality", DivineDogTotality::new);
     public static DeferredHolder<Ability, Toad> TOAD = ABILITIES.register("toad", Toad::new);
     public static DeferredHolder<Ability, ToadFusion> TOAD_FUSION = ABILITIES.register("toad_fusion", ToadFusion::new);
-    public static DeferredHolder<Ability, RabbitEscape> RABBIT_ESCAPE = ABILITIES.register("rabbit_esdatae", RabbitEscape::new);
+    public static DeferredHolder<Ability, RabbitEscape> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
     public static DeferredHolder<Ability, Nue> NUE = ABILITIES.register("nue", Nue::new);
     public static DeferredHolder<Ability, NueTotality> NUE_TOTALITY = ABILITIES.register("nue_totality", NueTotality::new);
     public static DeferredHolder<Ability, GreatSerpent> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
