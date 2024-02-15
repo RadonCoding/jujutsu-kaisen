@@ -20,26 +20,26 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
         super(pMenu, pPlayerInventory, pTitle, TEXTURE);
     }
 
-    private void renderPlaceholderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
-        int i = pSlot.x;
-        int j = pSlot.y;
+    private void renderPlaceholderSlot(GuiGraphics graphics, Slot slot) {
+        int i = slot.x;
+        int j = slot.y;
         String s = null;
 
-        pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, 100.0F);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (this.minecraft != null && this.minecraft.player != null) {
-            pGuiGraphics.renderFakeItem(JJKItems.VEIL_ROD.get().getDefaultInstance(), i, j);
-            pGuiGraphics.renderItemDecorations(this.font, JJKItems.VEIL_ROD.get().getDefaultInstance(), i, j, s);
+            graphics.renderFakeItem(JJKItems.VEIL_ROD.get().getDefaultInstance(), i, j);
+            graphics.renderItemDecorations(this.font, JJKItems.VEIL_ROD.get().getDefaultInstance(), i, j, s);
         }
 
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        pGuiGraphics.pose().popPose();
+        graphics.pose().popPose();
     }
 
     @Override
