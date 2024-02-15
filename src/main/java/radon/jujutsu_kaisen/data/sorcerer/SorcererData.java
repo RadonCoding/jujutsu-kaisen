@@ -1198,6 +1198,26 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public <T extends Entity> List<T> getSummonsByClass(Class<T> clazz) {
+        List<T> entities = new ArrayList<>();
+
+        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+
+        for (Integer identifier : this.summons) {
+            Entity entity = this.owner.level().getEntity(identifier);
+
+            if (entity == null) continue;
+
+            T summon = test.tryCast(entity);
+
+            if (summon != null) {
+                entities.add(summon);
+            }
+        }
+        return entities;
+    }
+
+    @Override
     public <T extends Entity> void unsummonByClass(Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
