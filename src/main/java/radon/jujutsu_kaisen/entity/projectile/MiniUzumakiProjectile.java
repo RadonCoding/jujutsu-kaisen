@@ -31,11 +31,10 @@ public class MiniUzumakiProjectile extends BeamEntity {
         this.noCulling = true;
     }
 
-    public MiniUzumakiProjectile(LivingEntity owner, float power) {
+    public MiniUzumakiProjectile(LivingEntity owner) {
         this(JJKEntities.MINI_UZUMAKI.get(), owner.level());
 
         this.setOwner(owner);
-        this.setPower(power);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

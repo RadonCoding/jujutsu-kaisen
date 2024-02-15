@@ -43,8 +43,8 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         super(pType, pLevel);
     }
 
-    public MaximumUzumakiProjectile(LivingEntity owner, float power) {
-        super(JJKEntities.MAXIMUM_UZUMAKI.get(), owner.level(), owner, power);
+    public MaximumUzumakiProjectile(LivingEntity owner) {
+        super(JJKEntities.MAXIMUM_UZUMAKI.get(), owner.level(), owner);
 
         Vec3 pos = owner.position()
                 .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
@@ -76,7 +76,9 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
                 }
             }
-            this.setPower(SorcererUtil.getPower(curseData.getExperience()));
+
+            this.setPower(this.getPower() + SorcererUtil.getPower(curseData.getExperience()));
+
             entity.discard();
         }
     }
