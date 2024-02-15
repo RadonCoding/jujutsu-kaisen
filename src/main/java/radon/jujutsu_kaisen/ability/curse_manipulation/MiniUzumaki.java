@@ -23,6 +23,11 @@ public class MiniUzumaki extends Ability {
     }
 
     @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
+    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
