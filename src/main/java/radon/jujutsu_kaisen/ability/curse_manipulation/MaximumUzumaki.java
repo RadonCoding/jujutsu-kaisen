@@ -38,7 +38,7 @@ public class MaximumUzumaki extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        MaximumUzumakiProjectile uzumaki = new MaximumUzumakiProjectile(owner, this.getPower(owner));
+        MaximumUzumakiProjectile uzumaki = new MaximumUzumakiProjectile(owner);
         owner.level().addFreshEntity(uzumaki);
     }
 
