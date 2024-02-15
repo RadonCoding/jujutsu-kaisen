@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -1586,8 +1587,8 @@ public class SorcererData implements ISorcererData {
 
         this.traits.clear();
 
-        for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
-            this.traits.add(Trait.values()[((IntTag) key).getAsInt()]);
+        for (int index : nbt.getIntArray("traits")) {
+            this.traits.add(Trait.values()[index]);
         }
 
         this.cooldowns.clear();

@@ -178,7 +178,7 @@ public class JJKEventHandler {
         public static void onAttackEntity(AttackEntityEvent event) {
             if (event.getTarget() instanceof JJKPartEntity<?>) {
                 Entity parent = ((JJKPartEntity<?>) event.getTarget()).getParent();
-                if (parent != null) event.getEntity().attack(parent);
+                event.getEntity().attack(parent);
                 event.setCanceled(true);
             }
         }

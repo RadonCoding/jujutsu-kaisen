@@ -38,12 +38,12 @@ public class CursedSpeechUtil {
         getTargets(owner).forEach(entity -> {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
 
-ISorcererData data = cap.getSorcererData();
-
-            if (data.hasToggled(JJKAbilities.INFINITY.get()) || data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) return;
-
+                if (data.hasToggled(JJKAbilities.INFINITY.get()) || data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))
+                    return;
+            }
             consumer.accept(entity);
         });
     }
