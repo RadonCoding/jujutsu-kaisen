@@ -75,7 +75,6 @@ public class Gun extends Transformation {
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
-        
 
         if (data.getTransfiguredSouls() == 0) return;
 
