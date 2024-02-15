@@ -31,7 +31,7 @@ public class MiniUzumaki extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        MiniUzumakiProjectile uzumaki = new MiniUzumakiProjectile(owner, this.getPower(owner));
+        MiniUzumakiProjectile uzumaki = new MiniUzumakiProjectile(owner);
         owner.level().addFreshEntity(uzumaki);
     }
 
