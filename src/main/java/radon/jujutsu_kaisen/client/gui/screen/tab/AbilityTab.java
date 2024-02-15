@@ -12,7 +12,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
@@ -25,9 +24,11 @@ public class AbilityTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.ability", JujutsuKaisen.MOD_ID));
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
-    private final Map<Ability, AbilityWidget> abilities = new HashMap<>();
-
+    private final Map<Ability, AbilityWidget> children = new HashMap<>();
     private final Map<Ability, AbilityWidget> roots = new HashMap<>();
+
+    private final List<Ability> abilities;
+
     private float fade;
 
     private float y;
@@ -38,32 +39,33 @@ public class AbilityTab extends JJKTab {
     public AbilityTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
         super(minecraft, screen, type, index, page, Items.ENDER_PEARL.getDefaultInstance(), TITLE, BACKGROUND, true);
 
+        this.abilities = new ArrayList<>(JJKAbilities.ABILITY_REGISTRY.stream().toList());
+        this.abilities.sort(Comparator.comparing(ability -> ability.getName().getString()));
+
         if (this.minecraft.player == null) return;
 
-        for (DeferredHolder<Ability, ? extends Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
-            Ability ability = entry.get();
-
+        for (Ability ability : this.abilities) {
             if (ability.isDisplayed(this.minecraft.player) && ability.getParent(this.minecraft.player) == null) {
                 this.addAbilityAndChildren(ability);
             }
         }
     }
 
-    private void addAbilityAndChildren(Ability ability) {
+    private void addAbilityAndChildren(Ability parent) {
         float x = 0.0F;
 
         float y = 0.0F;
 
-        Ability parent = ability.getParent(this.minecraft.player);
+        Ability grandparent = parent.getParent(this.minecraft.player);
 
-        if (parent != null) {
+        if (grandparent != null) {
             // If the ability is the start of an new group
-            if (this.roots.containsKey(parent)) {
-                x = this.roots.get(parent).getX() + 2.0F;
+            if (this.roots.containsKey(grandparent)) {
+                x = this.roots.get(grandparent).getX() + 2.0F;
                 y = this.y + 2.0F;
             } else {
                 // Otherwise we'll just put the ability to the right side of the parent
-                AbilityWidget widget = this.getAbility(parent);
+                AbilityWidget widget = this.getAbility(grandparent);
 
                 if (widget != null) {
                     x = widget.getX() + 1.0F;
@@ -72,20 +74,18 @@ public class AbilityTab extends JJKTab {
 
                 if (this.last != null) {
                     // If the parents are the same we need to increase the Y
-                    if (this.last.getKey().getParent(this.minecraft.player) == parent) {
+                    if (this.last.getKey().getParent(this.minecraft.player) == grandparent) {
                         y += 2.0F;
                     }
                 }
             }
         }
 
-        this.addAbility(ability, x, y);
+        this.addAbility(parent, x, y);
 
-        for (DeferredHolder<Ability, ? extends Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
-            Ability current = entry.get();
-
-            if (current.isDisplayed(this.minecraft.player) && current.getParent(this.minecraft.player) == ability) {
-                this.addAbilityAndChildren(current);
+        for (Ability ability : this.abilities) {
+            if (ability.isDisplayed(this.minecraft.player) && ability.getParent(this.minecraft.player) == ability) {
+                this.addAbilityAndChildren(ability);
             }
         }
         this.y = Math.max(this.y, y);
@@ -124,7 +124,7 @@ public class AbilityTab extends JJKTab {
 
     @Nullable
     public AbilityWidget getAbility(Ability ability) {
-        return this.abilities.get(ability);
+        return this.children.get(ability);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class AbilityTab extends JJKTab {
         int j = Mth.floor(this.scrollY);
 
         if (pMouseX - pOffsetX - 9 > 0 && pMouseX - pOffsetX - 9 < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY - pOffsetY - 18 > 0 && pMouseY - pOffsetY - 18 < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
-            for (AbilityWidget widget : this.abilities.values()) {
+            for (AbilityWidget widget : this.children.values()) {
                 if (widget.isMouseOver(i, j, pMouseX - pOffsetX - 9, pMouseY - pOffsetY - 18)) {
                     hovered = true;
                     widget.drawHover(pGuiGraphics, i, j, this.fade, pOffsetX, pOffsetY);
@@ -171,7 +171,7 @@ public class AbilityTab extends JJKTab {
             this.roots.put(ability, widget);
         }
 
-        this.abilities.put(ability, widget);
+        this.children.put(ability, widget);
 
         int i = Mth.floor(widget.getX() * 28.0F);
         int j = i + 28;
@@ -183,7 +183,7 @@ public class AbilityTab extends JJKTab {
         this.minY = Math.min(this.minY, k);
         this.maxY = Math.max(this.maxY, l);
 
-        for (AbilityWidget child : this.abilities.values()) {
+        for (AbilityWidget child : this.children.values()) {
             child.attachToParent();
         }
     }
@@ -199,7 +199,7 @@ public class AbilityTab extends JJKTab {
         int j = Mth.floor(this.scrollY);
 
         if (pMouseX > 0 && pMouseX < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY > 0 && pMouseY < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
-            for (AbilityWidget widget : this.abilities.values()) {
+            for (AbilityWidget widget : this.children.values()) {
                 if (widget.isMouseOver(i, j, (int) pMouseX, (int) pMouseY)) {
                     widget.unlock();
                     break;

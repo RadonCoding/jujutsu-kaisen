@@ -70,8 +70,4 @@ public interface ITenShadowsData extends INBTSerializable<CompoundTag> {
     void tryAdapt(DamageSource source);
 
     void tryAdapt(Ability ability);
-
-    TenShadowsMode getMode();
-
-    void setMode(TenShadowsMode mode);
 }

@@ -100,7 +100,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
         if (!sorcererData.hasToggled(this) && this.isTenShadows()) {
-            if (tenShadowsData.getMode() != TenShadowsMode.SUMMON) return false;
+            if (sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get())) return false;
 
             for (Ability ability : sorcererData.getToggled()) {
                 if (!(ability instanceof Summon<?> summon)) continue;

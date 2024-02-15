@@ -372,7 +372,9 @@
   "ability.jujutsu_kaisen.self_embodiment_of_perfection": "Self Embodiment of Perfection",
   "ability.jujutsu_kaisen.idle_transfiguration_imbuement": "Idle Transfiguration Imbuement",
 
-  "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
+  "ability.jujutsu_kaisen.ability_mode": "Ability Mode",
+  "ability.jujutsu_kaisen.ability_mode.enabled": "Activated ability mode",
+  "ability.jujutsu_kaisen.ability_mode.disabled": "Deactivated ability mode",
   "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",
   "ability.jujutsu_kaisen.shadow_travel": "Shadow Travel",
@@ -552,8 +554,6 @@
   "chat.jujutsu_kaisen.pact_failure_remove": "%1$s hasn't requested to remove the %2$s pact with you",
 
   "chat.jujutsu_kaisen.chant": "%1$s chant boost: %2$d%%",
-
-  "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s mode",
 
   "chat.jujutsu_kaisen.not_strong_enough": "Seems your body isn't strong enough to handle that yet",
 

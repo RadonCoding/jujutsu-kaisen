@@ -31,14 +31,12 @@ public class TenShadowsData implements ITenShadowsData {
     private final List<ItemStack> shadowInventory;
     private final Map<Adaptation, Integer> adapted;
     private final Map<Adaptation, Integer> adapting;
-    private TenShadowsMode mode;
 
     private final LivingEntity owner;
 
     public TenShadowsData(LivingEntity owner) {
         this.owner = owner;
 
-        this.mode = TenShadowsMode.SUMMON;
         this.tamed = new HashSet<>();
         this.dead = new HashSet<>();
         this.adapted = new HashMap<>();
@@ -298,19 +296,8 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public TenShadowsMode getMode() {
-        return this.mode;
-    }
-
-    @Override
-    public void setMode(TenShadowsMode mode) {
-        this.mode = mode;
-    }
-
-    @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putInt("mode", this.mode.ordinal());
 
         ListTag tamedTag = new ListTag();
 
@@ -348,8 +335,6 @@ public class TenShadowsData implements ITenShadowsData {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
-
         this.tamed.clear();
 
         for (Tag key : nbt.getList("tamed", Tag.TAG_STRING)) {

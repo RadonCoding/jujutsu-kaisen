@@ -46,7 +46,7 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
 
         return !sorcererData.hasToggled(JJKAbilities.NUE.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.NUE.get()) &&
-                tenShadowsData.getMode() == TenShadowsMode.ABILITY;
+                sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get());
     }
 
     @Override

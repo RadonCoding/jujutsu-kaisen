@@ -12,7 +12,7 @@ public class TenShadowsTechnique implements ICursedTechnique {
     private static final Set<Ability> ABILITIES = new LinkedHashSet<>();
 
     static {
-        ABILITIES.add(JJKAbilities.SWITCH_MODE.get());
+        ABILITIES.add(JJKAbilities.ABILITY_MODE.get());
         ABILITIES.add(JJKAbilities.RELEASE_SHIKIGAMI.get());
         ABILITIES.add(JJKAbilities.SHADOW_STORAGE.get());
         ABILITIES.add(JJKAbilities.SHADOW_TRAVEL.get());

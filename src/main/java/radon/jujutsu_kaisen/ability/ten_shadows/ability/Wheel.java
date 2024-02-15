@@ -76,7 +76,7 @@ public class Wheel extends Summon<WheelEntity> {
 
         return !sorcererData.hasToggled(JJKAbilities.MAHORAGA.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.MAHORAGA.get()) &&
-                (sorcererData.hasToggled(this) || tenShadowsData.getMode() == TenShadowsMode.ABILITY);
+                sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get());
     }
 
     @Override

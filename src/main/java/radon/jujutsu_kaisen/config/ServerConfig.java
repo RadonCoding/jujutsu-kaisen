@@ -21,7 +21,6 @@ public class ServerConfig {
     public final ModConfigSpec.DoubleValue experienceMultiplier;
     public final ModConfigSpec.DoubleValue deathPenalty;
     public final ModConfigSpec.IntValue blackFlashChance;
-    public final ModConfigSpec.BooleanValue realisticShikigami;
     public final ModConfigSpec.BooleanValue realisticCurses;
     public final ModConfigSpec.IntValue requiredImbuementAmount;
 
@@ -53,6 +52,9 @@ public class ServerConfig {
     public final ModConfigSpec.IntValue maximumCopiedTechniques;
     public final ModConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
 
+    public final ModConfigSpec.BooleanValue realisticShikigami;
+    public final ModConfigSpec.IntValue abilityModeCost;
+
     public final ModConfigSpec.IntValue cursedEnergyNatureRarity;
     public final ModConfigSpec.IntValue curseRarity;
     public final ModConfigSpec.IntValue sixEyesRarity;
@@ -83,8 +85,6 @@ public class ServerConfig {
                 .defineInRange("deathPenalty", 0.05F, 0.0F, 1.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
                 .defineInRange("blackFlashChance", 50, 1, 1000);
-        this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
-                .define("realisticShikigami", true);
         this.realisticCurses = builder.comment("When enabled curses only take damage from cap attacks")
                 .define("realisticCurses", true);
         this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into a weapon")
@@ -180,6 +180,13 @@ public class ServerConfig {
                         ),
                         ignored -> true
                 );
+        builder.pop();
+
+        builder.comment("Ten Shadows").push("ten_shadows");
+        this.realisticShikigami = builder.comment("When enabled shikigami will die permanently")
+                .define("realisticShikigami", true);
+        this.abilityModeCost = builder.comment("The amount of points ability mode costs to unlock")
+                .defineInRange("abilityModeCost", 300, 1, 10000);
         builder.pop();
 
         builder.comment("Rarity").push("rarity");
