@@ -74,10 +74,9 @@ public class ChantTab extends JJKTab {
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        ISorcererData data = cap.getSorcererData();
 
         data.getFirstChants(this.ability.get()).forEach(chant -> consumer.accept(result.apply(chant)));
     }
@@ -108,10 +107,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        ISorcererData data = cap.getSorcererData();
 
         String text = this.text.getValue().toLowerCase();
 
@@ -158,9 +156,9 @@ ISorcererData data = cap.getSorcererData();
 
             IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             PacketHandler.sendToServer(new AddChantC2SPacket(JJKAbilities.getKey(this.ability.get()), text));
             data.addChant(this.ability.get(), text);
@@ -174,9 +172,9 @@ ISorcererData data = cap.getSorcererData();
 
             IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             PacketHandler.sendToServer(new RemoveChantC2SPacket(JJKAbilities.getKey(this.ability.get()), this.chant.get()));
             data.removeChant(this.ability.get(), this.chant.get());

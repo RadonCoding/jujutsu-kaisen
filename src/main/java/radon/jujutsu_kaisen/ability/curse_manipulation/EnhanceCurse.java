@@ -26,7 +26,12 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return this.getTarget(owner) != null;
+        return false;
+    }
+
+    @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
     }
 
     @Override
