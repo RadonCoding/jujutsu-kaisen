@@ -118,14 +118,13 @@ public class AbilityOverlay {
         int y = height - 20 - (lines.size() * mc.font.lineHeight + 2);
 
         for (int i = 0; i < lines.size(); i++) {
+            int color = 0xFFFFFF;
+
             if (i >= aboveStart && i <= aboveEnd || i >= belowStart && i <= belowEnd) {
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+                color = (0x80 << 24) | color;
             }
-
-            graphics.drawString(gui.getFont(), lines.get(i), x, y, 16777215);
+            graphics.drawString(gui.getFont(), lines.get(i), x, y, color);
             y += mc.font.lineHeight;
-
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 
