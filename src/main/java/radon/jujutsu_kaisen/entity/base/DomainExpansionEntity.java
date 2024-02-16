@@ -230,7 +230,7 @@ public abstract class DomainExpansionEntity extends Entity {
 
                     ISorcererData ownerSorcererData = ownerCap.getSorcererData();
 
-                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower() * 10.0F);
+                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower(this.ability) * 10.0F);
                 }
             }
         }
@@ -256,7 +256,7 @@ public abstract class DomainExpansionEntity extends Entity {
 
         ISorcererData data = cap.getSorcererData();
 
-        return data.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
+        return data.getAbilityPower(this.ability) * (owner.getHealth() / owner.getMaxHealth());
     }
 
     @Override

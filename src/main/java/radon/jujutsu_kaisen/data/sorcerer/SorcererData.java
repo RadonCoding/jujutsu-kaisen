@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
@@ -656,6 +657,20 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getOutput() {
         return Math.min(this.getMaximumOutput(), this.output);
+    }
+
+    @Override
+    public float getAbilityPower(Ability ability) {
+        float power = this.getRealPower() * ChantHandler.getOutput(this.owner, ability);
+
+        if (this.technique != null) {
+            Ability domain = this.technique.getDomain();
+
+            if (domain != null && this.toggled.contains(domain)) {
+                power *= 1.2F;
+            }
+        }
+        return power;
     }
 
     @Override

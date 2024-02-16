@@ -60,12 +60,7 @@ public abstract class Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        float power = ability.isScalable(owner) ? data.getRealPower() : data.getAbilityPower();
-
-        if (ability.isChantable()) {
-            power *= 1.0F + ChantHandler.getChant(owner, ability);
-        }
-        return power;
+        return ability.isScalable(owner) ? data.getRealPower() : ability.isChantable() ? data.getAbilityPower(ability) : data.getAbilityPower();
     }
 
     public float getPower(LivingEntity owner) {
@@ -374,7 +369,7 @@ public abstract class Ability {
             cost *= 0.5F;
         }
 
-        float output = this.isScalable(owner) ? this.isChantable() ? ChantHandler.getChant(owner, this) : data.getOutput() : 1.0F;
+        float output = this.isScalable(owner) ? this.isChantable() ? ChantHandler.getOutput(owner, this) : data.getOutput() : 1.0F;
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * output));
     }
 

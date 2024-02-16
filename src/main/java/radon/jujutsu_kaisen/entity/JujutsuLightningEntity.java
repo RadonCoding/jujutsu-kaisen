@@ -107,9 +107,9 @@ public class JujutsuLightningEntity extends LightningBolt {
                 if (owner != null) {
                     IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+                    if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+                    ISorcererData data = cap.getSorcererData();
 
                     for (Entity entity : entities) {
                         if (entity == owner) continue;
