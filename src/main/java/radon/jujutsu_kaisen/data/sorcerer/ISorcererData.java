@@ -95,6 +95,8 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     float getOutput();
 
+    float getAbilityPower(Ability ability);
+
     float getAbilityPower();
 
     float getRealPower();

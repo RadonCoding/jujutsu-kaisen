@@ -51,12 +51,11 @@ public class WoodShieldEntity extends Mob {
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
-        
 
         AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
 
         if (attribute != null) {
-            attribute.setBaseValue(STRENGTH * data.getAbilityPower());
+            attribute.setBaseValue(STRENGTH * data.getAbilityPower(JJKAbilities.WOOD_SHIELD.get()));
             this.setHealth(this.getMaxHealth());
         }
     }
