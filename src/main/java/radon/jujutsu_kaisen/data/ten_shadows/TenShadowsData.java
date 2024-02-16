@@ -51,7 +51,7 @@ public class TenShadowsData implements ITenShadowsData {
 
         ISorcererData data = cap.getSorcererData();
 
-        if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) return;
+        if (!data.hasToggled(JJKAbilities.WHEEL.get())) return;
 
         Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
 
