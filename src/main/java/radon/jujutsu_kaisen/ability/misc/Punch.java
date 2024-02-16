@@ -38,7 +38,7 @@ public class Punch extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        if (owner.getNavigation().isStuck() && (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE)) return true;
+        if (owner.getNavigation().isStuck()) return true;
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
