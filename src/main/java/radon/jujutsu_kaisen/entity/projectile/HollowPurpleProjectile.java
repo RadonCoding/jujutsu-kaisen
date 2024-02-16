@@ -28,7 +28,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final float SPEED = 5.0F;
     private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 30.0F;
-    private static final float MAX_RADIUS = 15.0F;
+    private static final float MAX_RADIUS = 10.0F;
     private static final float RADIUS = 2.0F;
     private static final int ANIMATION = 20;
 
