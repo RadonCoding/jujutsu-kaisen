@@ -110,23 +110,6 @@ public class DomainBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
-
-        this.initialized = pTag.getBoolean("initialized");
-
-        if (this.initialized) {
-            this.identifier = pTag.getUUID("identifier");
-            this.death = pTag.getInt("death");
-            this.deferred = pTag.getCompound("original");
-
-            if (pTag.contains("saved")) {
-                this.saved = pTag.getCompound("saved");
-            }
-        }
-    }
-
-    @Override
     public void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
@@ -144,6 +127,23 @@ public class DomainBlockEntity extends BlockEntity {
 
             if (this.saved != null) {
                 pTag.put("saved", this.saved);
+            }
+        }
+    }
+
+    @Override
+    public void load(@NotNull CompoundTag pTag) {
+        super.load(pTag);
+
+        this.initialized = pTag.getBoolean("initialized");
+
+        if (this.initialized) {
+            this.identifier = pTag.getUUID("identifier");
+            this.death = pTag.getInt("death");
+            this.deferred = pTag.getCompound("original");
+
+            if (pTag.contains("saved")) {
+                this.saved = pTag.getCompound("saved");
             }
         }
     }

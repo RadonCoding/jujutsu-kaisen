@@ -35,6 +35,9 @@ public class VeilBlockEntity extends BlockEntity {
 
     private CompoundTag deferred;
 
+    @Nullable
+    private CompoundTag saved;
+
     private int size;
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -65,6 +68,14 @@ public class VeilBlockEntity extends BlockEntity {
                 }
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
+
+                if (this.saved != null) {
+                    BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
+
+                    if (be != null) {
+                        be.load(this.saved);
+                    }
+                }
             }
         } else {
             if (!this.getBlockState().getFluidState().isEmpty()) {
@@ -116,11 +127,13 @@ public class VeilBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(BlockPos parent, int size, BlockState original) {
+    public void create(BlockPos parent, int size, BlockState original, CompoundTag saved) {
+        this.initialized = true;
         this.parent = parent;
         this.size = size;
         this.original = original;
-        this.sendUpdates();
+        this.saved = saved;
+        this.setChanged();
     }
 
     public @Nullable BlockPos getParent() {
@@ -129,15 +142,6 @@ public class VeilBlockEntity extends BlockEntity {
 
     public static boolean isAllowed(BlockPos pos, Entity entity) {
         return isWhitelisted(pos, entity);
-    }
-
-    public void sendUpdates() {
-        if (this.level != null) {
-            this.level.setBlocksDirty(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition));
-            this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
-            this.level.updateNeighborsAt(this.worldPosition, this.level.getBlockState(this.worldPosition).getBlock());
-            this.setChanged();
-        }
     }
 
     @Nullable
@@ -159,17 +163,22 @@ public class VeilBlockEntity extends BlockEntity {
         pTag.putBoolean("initialized", this.initialized);
 
         if (this.initialized) {
+            if (this.parent != null) {
+                pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
+            }
+
+            pTag.putInt("size", this.size);
+
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
             } else {
                 pTag.put("original", this.deferred);
             }
-        }
 
-        if (this.parent != null) {
-            pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
+            if (this.saved != null) {
+                pTag.put("saved", this.saved);
+            }
         }
-        pTag.putInt("size", this.size);
     }
 
     @Override
@@ -179,12 +188,17 @@ public class VeilBlockEntity extends BlockEntity {
         this.initialized = pTag.getBoolean("initialized");
 
         if (this.initialized) {
+            if (pTag.contains("parent")) {
+                this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
+            }
+
+            this.size = pTag.getInt("size");
+
             this.deferred = pTag.getCompound("original");
         }
 
-        if (pTag.contains("parent")) {
-            this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
+        if (pTag.contains("saved")) {
+            this.saved = pTag.getCompound("saved");
         }
-        this.size = pTag.getInt("size");
     }
 }
