@@ -17,6 +17,7 @@
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
+    "client.LocalPlayerMixin",
     "client.MinecraftMixin"
   ],
   "mixins": [
