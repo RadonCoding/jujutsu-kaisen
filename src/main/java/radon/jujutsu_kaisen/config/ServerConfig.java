@@ -162,7 +162,7 @@ public class ServerConfig {
         this.outputRCTCost = builder.comment("The amount of points output RCT costs to unlock")
                 .defineInRange("outputRCTCost", 300, 1, 10000);
         this.maximumCopiedTechniques = builder.comment("The amount of techniques mimicry can copy")
-                .defineInRange("maximumCopiedTechniques", 3, 1, 10000);
+                .defineInRange("maximumCopiedTechniques", 6, 1, 10000);
         this.unlockableTechniques = builder.comment("Techniques that are unlockable by default")
                 .defineList("unlockableTechniques", () -> List.of(
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.CURSE_MANIPULATION.get()).toString(),

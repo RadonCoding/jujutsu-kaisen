@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -37,7 +38,7 @@ public class Punch extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return false;
+        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return true;
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
@@ -87,13 +88,24 @@ public class Punch extends Ability {
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
-        Vec3 pos = owner.getEyePosition().add(look);
-        owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+        Vec3 start = owner.getEyePosition().add(look);
+        owner.level().playSound(null, start.x, start.y, start.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
-        Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
+        Vec3 end = owner.getEyePosition().add(look.scale(RANGE / 2));
 
-        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
+        AABB bounds = AABB.ofSize(end, RANGE, RANGE, RANGE).inflate(1.0D);
+
+        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+            if (pos.getCenter().distanceTo(bounds.getCenter()) > RANGE) return;
+            if (!HelperMethods.isDestroyable(level, owner, pos)) return;
+
+            owner.level().destroyBlock(pos, true, owner);
+        });
+
+        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds,
                 entity -> entity != owner && owner.hasLineOfSight(entity))) {
+            if (Math.sqrt(entity.distanceToSqr(bounds.getCenter())) > RANGE) continue;
+
             Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
             level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
