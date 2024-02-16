@@ -131,17 +131,17 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                             if (opponent == null) continue;
 
-                            IJujutsuCapability veilCastercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                            IJujutsuCapability veilCasterCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                            if (veilCastercap == null) continue;
+                            if (veilCasterCap == null) continue;
 
-                            ISorcererData veilCasterData = veilCastercap.getSorcererData();
+                            ISorcererData veilCasterData = veilCasterCap.getSorcererData();
 
-                            IJujutsuCapability domainCastercap = opponent.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                            IJujutsuCapability domainCasterCap = opponent.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                            if (domainCastercap == null) continue;
+                            if (domainCasterCap == null) continue;
 
-                            ISorcererData domainCasterData = domainCastercap.getSorcererData();
+                            ISorcererData domainCasterData = domainCasterCap.getSorcererData();
 
                             if (domainCasterData.getAbilityPower() <= veilCasterData.getAbilityPower()) continue;
 
@@ -157,14 +157,14 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                         BlockEntity existing = pLevel.getBlockEntity(pos);
 
-                        BlockState state;
+                        BlockState state = pLevel.getBlockState(pos);
+
+                        CompoundTag saved = null;
 
                         if (existing instanceof VeilBlockEntity be) {
                             state = be.getOriginal();
                         } else if (existing != null) {
-                            continue;
-                        } else {
-                            state = pLevel.getBlockState(pos);
+                            saved = existing.saveWithFullMetadata();
                         }
 
                         if (!(existing instanceof VeilBlockEntity)) {
@@ -173,7 +173,7 @@ public class VeilRodBlockEntity extends BlockEntity {
                         }
 
                         if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                            be.create(pPos, pBlockEntity.size, state);
+                            be.create(pPos, pBlockEntity.size, state, saved);
                         }
                     }
                 }
