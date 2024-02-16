@@ -71,7 +71,7 @@ public class Punch extends Ability {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
             level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
                     pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
@@ -79,7 +79,7 @@ public class Punch extends Ability {
                     pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
             level.sendParticles(ParticleTypes.CRIT,
                     pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
