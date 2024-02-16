@@ -63,7 +63,7 @@ public abstract class Ability {
         float power = ability.isScalable(owner) ? data.getRealPower() : data.getAbilityPower();
 
         if (ability.isChantable()) {
-            power *= ChantHandler.getChant(owner, ability);
+            power *= 1.0F + ChantHandler.getChant(owner, ability);
         }
         return power;
     }
