@@ -17,11 +17,11 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(10 * 20 * this.getStrength(owner, instant)),
+        entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(10 * 20 * getStrength(owner, instant)),
                 4, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(10 * 20* this.getStrength(owner, instant)),
+        entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(10 * 20* getStrength(owner, instant)),
                 4, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, Math.round(10 * 20 * this.getStrength(owner, instant)),
+        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, Math.round(10 * 20 * getStrength(owner, instant)),
                 4, false, false, false));
     }
 
