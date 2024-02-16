@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -95,7 +96,12 @@ public class VeilBlockEntity extends BlockEntity {
             for (Modifier modifier : be.modifiers) {
                 if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER)
                     continue;
-                if (((PlayerModifier) modifier).getName().equals(player.getDisplayName().getString())) {
+
+                Component name = player.getDisplayName();
+
+                if (name == null) continue;
+
+                if (((PlayerModifier) modifier).getName().equals(name.getString())) {
                     return true;
                 }
             }
@@ -133,7 +139,16 @@ public class VeilBlockEntity extends BlockEntity {
         this.size = size;
         this.original = original;
         this.saved = saved;
-        this.setChanged();
+        this.sendUpdates();
+    }
+
+    public void sendUpdates() {
+        if (this.level != null) {
+            this.level.setBlocksDirty(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition));
+            this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
+            this.level.updateNeighborsAt(this.worldPosition, this.level.getBlockState(this.worldPosition).getBlock());
+            this.setChanged();
+        }
     }
 
     public @Nullable BlockPos getParent() {
@@ -185,15 +200,14 @@ public class VeilBlockEntity extends BlockEntity {
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
 
+        this.size = pTag.getInt("size");
+
         this.initialized = pTag.getBoolean("initialized");
 
         if (this.initialized) {
             if (pTag.contains("parent")) {
                 this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
             }
-
-            this.size = pTag.getInt("size");
-
             this.deferred = pTag.getCompound("original");
         }
 
