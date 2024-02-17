@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 
+import java.util.List;
+
 public class TriggerAbilityC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "trigger_ability_serverbound");
 
@@ -27,6 +29,8 @@ public class TriggerAbilityC2SPacket implements CustomPacketPayload {
     public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
+
+            if (sender.isSpectator()) return;
 
             Ability ability = JJKAbilities.getValue(this.key);
 
