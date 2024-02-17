@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -343,6 +344,8 @@ public abstract class RadialScreen extends Screen {
                     Component experienceText = Component.translatable(String.format("gui.%s.ability_overlay.experience", JujutsuKaisen.MOD_ID),
                             CurseManipulationUtil.getCurseExperience(item.curse.getKey()));
                     lines.add(experienceText);
+                } else if (item.type == DisplayItem.Type.ITEM) {
+                    lines.add(item.item.getDisplayName());
                 }
 
                 int x = this.width / 2;
@@ -410,6 +413,14 @@ public abstract class RadialScreen extends Screen {
                 pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
                 pGuiGraphics.pose().translate(posX, y, 0.0F);
                 pGuiGraphics.drawCenteredString(this.font, item.type == DisplayItem.Type.COPIED ? item.copied.getName() : item.absorbed.getName(), posX, y, 0xAA00AA);
+                pGuiGraphics.pose().popPose();
+            } else if (item.type == DisplayItem.Type.ITEM) {
+                ItemStack stack = item.item;
+
+                pGuiGraphics.pose().pushPose();
+                pGuiGraphics.pose().translate(-8.0F, -8.0F, 0.0F);
+                pGuiGraphics.renderFakeItem(stack, posX, posY);
+                pGuiGraphics.renderItemDecorations(this.font, stack, posX, posY);
                 pGuiGraphics.pose().popPose();
             }
         }
