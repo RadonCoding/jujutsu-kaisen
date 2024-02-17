@@ -220,6 +220,7 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
 
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.RABBIT_ESCAPE.get();

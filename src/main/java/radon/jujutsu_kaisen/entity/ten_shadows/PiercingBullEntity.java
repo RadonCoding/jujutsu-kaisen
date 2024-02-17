@@ -23,6 +23,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import javax.annotation.Nullable;
+
 public class PiercingBullEntity extends TenShadowsSummon {
     private static final float DAMAGE = 5.0F;
     private static final int INTERVAL = 20;
@@ -149,6 +151,7 @@ ISorcererData data = cap.getSorcererData();
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.PIERCING_BULL.get();

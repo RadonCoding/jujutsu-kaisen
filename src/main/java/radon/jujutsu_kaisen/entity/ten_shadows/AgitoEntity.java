@@ -27,6 +27,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -136,6 +137,7 @@ public class AgitoEntity extends TenShadowsSummon {
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.AGITO.get();

@@ -19,6 +19,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import javax.annotation.Nullable;
+
 public class DivineDogTotalityEntity extends TenShadowsSummon {
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
@@ -102,6 +104,7 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.DIVINE_DOG_TOTALITY.get();

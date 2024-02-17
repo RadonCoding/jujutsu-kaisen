@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -34,6 +35,7 @@ public class TransfiguredSoulSmallEntity extends TransfiguredSoulVariantEntity {
                 .add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.TRANSFIGURED_SOUL_SMALL.get();

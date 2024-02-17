@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEnt
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulVariantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import javax.annotation.Nullable;
+
 public class TransfiguredSoulNormalEntity extends TransfiguredSoulVariantEntity {
     public TransfiguredSoulNormalEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -20,6 +22,7 @@ public class TransfiguredSoulNormalEntity extends TransfiguredSoulVariantEntity 
         super(JJKEntities.TRANSFIGURED_SOUL_NORMAL.get(), owner);
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.TRANSFIGURED_SOUL_NORMAL.get();

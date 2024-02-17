@@ -35,6 +35,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import javax.annotation.Nullable;
+
 public class ToadEntity extends TenShadowsSummon {
     private static final EntityDataAccessor<Integer> DATA_RITUAL = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_CAN_SHOOT = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.BOOLEAN);
@@ -197,6 +199,7 @@ public class ToadEntity extends TenShadowsSummon {
         controllerRegistrar.add(new AnimationController<>(this, "Howl", this::howlPredicate));
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return this.hasWings() ? JJKAbilities.TOAD_FUSION.get() : JJKAbilities.TOAD.get();

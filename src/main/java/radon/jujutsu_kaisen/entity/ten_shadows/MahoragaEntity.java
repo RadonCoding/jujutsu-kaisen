@@ -32,6 +32,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class MahoragaEntity extends TenShadowsSummon {
@@ -344,6 +345,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         return List.of(JJKAbilities.WHEEL.get());
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.MAHORAGA.get();

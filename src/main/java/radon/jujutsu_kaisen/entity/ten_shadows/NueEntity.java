@@ -147,6 +147,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.NUE.get();

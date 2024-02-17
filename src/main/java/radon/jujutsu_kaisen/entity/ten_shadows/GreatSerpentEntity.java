@@ -254,6 +254,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.GREAT_SERPENT.get();
