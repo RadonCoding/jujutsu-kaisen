@@ -58,7 +58,7 @@ public class ShadowInventoryScreen extends RadialScreen {
         DisplayItem item = this.getCurrent().get(this.hovered);
 
         if (item.type == DisplayItem.Type.ITEM) {
-            PacketHandler.sendToServer(new ShadowInventoryTakeC2SPacket(this.hovered));
+            PacketHandler.sendToServer(new ShadowInventoryTakeC2SPacket((page + 1) * this.hovered));
         }
     }
 }

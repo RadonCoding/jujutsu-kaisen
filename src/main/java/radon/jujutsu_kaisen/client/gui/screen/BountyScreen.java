@@ -76,28 +76,27 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
         return this.name.keyPressed(pKeyCode, pScanCode, pModifiers) || this.name.canConsumeInput() || super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
-    @Override
-    public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
-        int i = pSlot.x;
-        int j = pSlot.y;
+    private void renderPlaceholderSlot(GuiGraphics graphics, Slot slot) {
+        int i = slot.x;
+        int j = slot.y;
         String s = null;
 
-        pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, 100.0F);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (this.minecraft != null && this.minecraft.player != null) {
             ItemStack display = new ItemStack(Items.EMERALD, this.menu.getCost());
-            pGuiGraphics.renderFakeItem(display, i, j);
-            pGuiGraphics.renderItemDecorations(this.font, display, i, j, s);
+            graphics.renderFakeItem(display, i, j);
+            graphics.renderItemDecorations(this.font, display, i, j, s);
         }
 
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        pGuiGraphics.pose().popPose();
+        graphics.pose().popPose();
     }
 
     @Override
@@ -113,7 +112,7 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
             pGuiGraphics.pose().pushPose();
             pGuiGraphics.pose().translate((float) i, (float) j, 0.0F);
 
-            this.renderSlot(pGuiGraphics, slot);
+            this.renderPlaceholderSlot(pGuiGraphics, slot);
 
             pGuiGraphics.pose().popPose();
         }

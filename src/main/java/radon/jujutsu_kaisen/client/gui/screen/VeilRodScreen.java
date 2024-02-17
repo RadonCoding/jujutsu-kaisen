@@ -6,6 +6,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
@@ -77,8 +80,19 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
             this.activate.active = true;
         }).pos(i + 89, j + 47).size(54, 16).build());
 
-        this.activate.active = !this.menu.isActive();
-        this.deactivate.active = this.menu.isActive();
+        this.menu.addSlotListener(new ContainerListener() {
+            @Override
+            public void slotChanged(@NotNull AbstractContainerMenu pContainerToSend, int pDataSlotIndex, @NotNull ItemStack pStack) {
+
+            }
+
+            @Override
+            public void dataChanged(@NotNull AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
+                VeilRodScreen.this.sizeSlider.setValue(VeilRodScreen.this.menu.getSize());
+                VeilRodScreen.this.activate.active = !VeilRodScreen.this.menu.isActive();
+                VeilRodScreen.this.deactivate.active = VeilRodScreen.this.menu.isActive();
+            }
+        });
     }
 
     @Override
