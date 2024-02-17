@@ -64,23 +64,19 @@ public class VeilBlock extends Block implements EntityBlock {
 
             if (entity == null) return shape;
 
-            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            if (entity instanceof Projectile projectile) {
+                Entity owner = projectile.getOwner();
 
-            if (cap == null) return shape;
-
-            ISorcererData data = cap.getSorcererData();
-
-            if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
-                return Shapes.empty();
+                if (owner != null) {
+                    entity = projectile.getOwner();
+                }
             }
-
-            if (entity instanceof Projectile projectile) entity = projectile.getOwner();
 
             BlockPos parent = block.getParent();
 
             if (parent == null || !(pLevel.getBlockEntity(parent) instanceof VeilRodBlockEntity rod)) return shape;
 
-            return entity != null && rod.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
+            return rod.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
         }
         return shape;
     }

@@ -81,6 +81,15 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public boolean isAllowed(Entity entity) {
         if (entity.getUUID() == this.ownerUUID) return true;
+
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
+
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return true;
+        }
+
         if (this.modifiers == null) return false;
 
         if (entity instanceof Player player) {
@@ -98,16 +107,14 @@ public class VeilRodBlockEntity extends BlockEntity {
             }
         }
 
-        for (Modifier modifier : this.modifiers) {
-            if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
-                IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
 
-                if (cap == null) continue;
-
-                ISorcererData data = cap.getSorcererData();
-
-                return data.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
-                        data.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
+            for (Modifier modifier : this.modifiers) {
+                if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
+                    return data.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
+                            data.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
+                }
             }
         }
         return false;
