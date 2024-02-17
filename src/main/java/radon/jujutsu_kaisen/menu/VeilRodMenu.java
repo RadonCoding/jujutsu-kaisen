@@ -20,15 +20,16 @@ public class VeilRodMenu extends AbstractContainerMenu {
 
         this.access = pAccess;
 
+        this.addDataSlot(this.active);
+        this.addDataSlot(this.size);
+
         this.size.set(this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
                 return be.getSize();
             }
             return null;
         }).orElse(ConfigHolder.SERVER.minimumVeilSize.get()));
-
-        this.addDataSlot(this.active);
-        this.addDataSlot(this.size);
+        this.sendAllDataToRemote();
     }
 
     public VeilRodMenu(int pContainerId) {
@@ -54,6 +55,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
             }
             return false;
         });
+        this.sendAllDataToRemote();
     }
 
     public int getSize() {
@@ -70,6 +72,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
             }
             return false;
         });
+        this.sendAllDataToRemote();
     }
 
     @Override
