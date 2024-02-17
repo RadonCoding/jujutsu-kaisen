@@ -56,7 +56,6 @@ public class ReleaseShikigami extends Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-
         for (Entity entity : data.getSummons()) {
             if (!(entity instanceof TenShadowsSummon summon && summon.isTame())) continue;
             summon.discard();

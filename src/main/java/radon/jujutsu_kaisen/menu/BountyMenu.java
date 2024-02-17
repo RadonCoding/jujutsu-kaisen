@@ -75,7 +75,6 @@ public class BountyMenu extends AbstractContainerMenu {
 
     public void setCost(int cost) {
         this.cost.set(cost);
-        this.sendAllDataToRemote();
     }
 
     public @Nullable TojiFushiguroEntity getEntity() {
