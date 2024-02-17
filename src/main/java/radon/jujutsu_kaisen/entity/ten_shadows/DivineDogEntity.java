@@ -266,6 +266,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         return Variant.values()[this.entityData.get(DATA_VARIANT)];
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.DIVINE_DOGS.get();

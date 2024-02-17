@@ -173,6 +173,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.RIKA.get();

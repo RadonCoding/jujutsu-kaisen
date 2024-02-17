@@ -249,6 +249,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         return List.of(JJKAbilities.WATER.get());
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.MAX_ELEPHANT.get();

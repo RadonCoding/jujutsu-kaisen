@@ -31,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -40,6 +41,7 @@ import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;
@@ -50,15 +52,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, ISorcerer, ICommandable {
+public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
     private static final int RARITY = 10;
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    @Nullable
-    private UUID ownerUUID;
-    @Nullable
-    private LivingEntity cachedOwner;
 
     protected CursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -173,87 +168,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         }
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
-    @Nullable
-    public LivingEntity getOwner() {
-        if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
-            return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
-            return this.cachedOwner;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void aiStep() {
-        this.updateSwingTime();
-
-        super.aiStep();
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        LivingEntity passenger = this.getControllingPassenger();
-
-        if (passenger != null) {
-            this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
-        } else {
-            this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-        }
-    }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        if (!this.isCustom()) this.createGoals();
-
-        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
-        this.init(data);
-
-        if (this.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target_info", JujutsuKaisen.MOD_ID)),
-                    false), player);
-        }
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        pCompound.putBoolean("tame", this.isTame());
-
-        if (this.ownerUUID != null) {
-            pCompound.putUUID("owner", this.ownerUUID);
-        }
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.setTame(pCompound.getBoolean("tame"));
-
-        if (pCompound.hasUUID("owner")) {
-            this.ownerUUID = pCompound.getUUID("owner");
-        }
-    }
-
     @Override
     public boolean fireImmune() {
         return true;
@@ -267,22 +181,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
             LivingEntity target = this.getTarget();
             this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
         }
-    }
-
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(@NotNull ServerLevel pLevel, @NotNull AgeableMob pOtherParent) {
-        return null;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 
     @Override
@@ -301,19 +199,15 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        Entity entity = this.getOwner();
-        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        if (!this.isCustom()) this.createGoals();
     }
 
+    @Nullable
     @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-
-        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
-
-        if (owner != null) {
-            this.setOwner(owner);
-        }
+    public Summon<?> getAbility() {
+        return null;
     }
 }

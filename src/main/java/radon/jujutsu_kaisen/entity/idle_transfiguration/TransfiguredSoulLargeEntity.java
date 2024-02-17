@@ -14,6 +14,8 @@ import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import javax.annotation.Nullable;
+
 public class TransfiguredSoulLargeEntity extends TransfiguredSoulVariantEntity {
     public TransfiguredSoulLargeEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -29,6 +31,7 @@ public class TransfiguredSoulLargeEntity extends TransfiguredSoulVariantEntity {
                 .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.TRANSFIGURED_SOUL_LARGE.get();

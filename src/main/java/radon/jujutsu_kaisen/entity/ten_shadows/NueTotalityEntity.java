@@ -212,6 +212,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
     }
 
+    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.NUE_TOTALITY.get();
