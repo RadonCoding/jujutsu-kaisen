@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.data.sorcerer;
+package radon.jujutsu_kaisen.data.curse_manipulation;
 
 
 import com.mojang.authlib.GameProfile;
