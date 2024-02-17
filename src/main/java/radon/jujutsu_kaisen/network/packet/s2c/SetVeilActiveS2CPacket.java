@@ -1,30 +1,26 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
-import radon.jujutsu_kaisen.menu.BountyMenu;
+import radon.jujutsu_kaisen.menu.VeilRodMenu;
 
-import java.util.function.Supplier;
+public class SetVeilActiveS2CPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "set_veil_active_clientbound");
 
-public class SetCostS2CPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "set_cost_clientbound");
+    private final boolean active;
 
-    private final int cost;
-
-    public SetCostS2CPacket(int frequency) {
-        this.cost = frequency;
+    public SetVeilActiveS2CPacket(boolean active) {
+        this.active = active;
     }
 
-    public SetCostS2CPacket(FriendlyByteBuf buf) {
-        this(buf.readInt());
+    public SetVeilActiveS2CPacket(FriendlyByteBuf buf) {
+        this(buf.readBoolean());
     }
 
     public void handle(PlayPayloadContext ctx) {
@@ -33,15 +29,15 @@ public class SetCostS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            if (!(player.containerMenu instanceof BountyMenu menu)) return;
+            if (!(player.containerMenu instanceof VeilRodMenu menu)) return;
 
-            menu.setCost(this.cost);
+            menu.setActive(this.active);
         });
     }
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeInt(this.cost);
+        pBuffer.writeBoolean(this.active);
     }
 
     @Override

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.RequestCostC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.RequestBountyCostC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.SetTojiBountyC2SPacket;
 
 public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
@@ -55,7 +55,7 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
 
     private void onNameChanged(String name) {
         if (!name.isEmpty()) {
-            PacketHandler.sendToServer(new RequestCostC2SPacket(name));
+            PacketHandler.sendToServer(new RequestBountyCostC2SPacket(name));
         }
     }
 

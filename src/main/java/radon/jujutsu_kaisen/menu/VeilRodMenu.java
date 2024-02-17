@@ -7,6 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SetVeilActiveS2CPacket;
 
 public class VeilRodMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
