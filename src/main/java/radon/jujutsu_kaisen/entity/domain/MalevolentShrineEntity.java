@@ -138,7 +138,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             this.first = false;
         }
 
-        int size = width * height / 2;
+        int size = width * height / 8;
         AABB bounds = this.getBounds();
 
         for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
