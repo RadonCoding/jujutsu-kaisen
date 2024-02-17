@@ -52,9 +52,15 @@ public class PacketHandler {
         registrar.play(SetOverlayMessageS2CPacket.IDENTIFIER, SetOverlayMessageS2CPacket::new, handler -> handler
                 .client(SetOverlayMessageS2CPacket::handle)
                 .server(SetOverlayMessageS2CPacket::handle));
-        registrar.play(SetCostS2CPacket.IDENTIFIER, SetCostS2CPacket::new, handler -> handler
-                .client(SetCostS2CPacket::handle)
-                .server(SetCostS2CPacket::handle));
+        registrar.play(SetVeilActiveS2CPacket.IDENTIFIER, SetVeilActiveS2CPacket::new, handler -> handler
+                .client(SetVeilActiveS2CPacket::handle)
+                .server(SetVeilActiveS2CPacket::handle));
+        registrar.play(SetVeilSizeS2CPacket.IDENTIFIER, SetVeilSizeS2CPacket::new, handler -> handler
+                .client(SetVeilSizeS2CPacket::handle)
+                .server(SetVeilSizeS2CPacket::handle));
+        registrar.play(SetBountyCostS2CPacket.IDENTIFIER, SetBountyCostS2CPacket::new, handler -> handler
+                .client(SetBountyCostS2CPacket::handle)
+                .server(SetBountyCostS2CPacket::handle));
         registrar.play(SyncVisualDataS2CPacket.IDENTIFIER, SyncVisualDataS2CPacket::new, handler -> handler
                 .client(SyncVisualDataS2CPacket::handle)
                 .server(SyncVisualDataS2CPacket::handle));
@@ -90,15 +96,21 @@ public class PacketHandler {
         registrar.play(RightClickInputListenerC2SPacket.IDENTIFIER, RightClickInputListenerC2SPacket::new, handler -> handler
                 .client(RightClickInputListenerC2SPacket::handle)
                 .server(RightClickInputListenerC2SPacket::handle));
-        registrar.play(SetVeilSizeC2SPacket.IDENTIFIER, SetVeilSizeC2SPacket::new, handler -> handler
-                .client(SetVeilSizeC2SPacket::handle)
-                .server(SetVeilSizeC2SPacket::handle));
+        registrar.play(RequestVeilActiveC2SPacket.IDENTIFIER, RequestVeilActiveC2SPacket::new, handler -> handler
+                .client(RequestVeilActiveC2SPacket::handle)
+                .server(RequestVeilActiveC2SPacket::handle));
         registrar.play(ToggleVeilC2SPacket.IDENTIFIER, ToggleVeilC2SPacket::new, handler -> handler
                 .client(ToggleVeilC2SPacket::handle)
                 .server(ToggleVeilC2SPacket::handle));
-        registrar.play(RequestCostC2SPacket.IDENTIFIER, RequestCostC2SPacket::new, handler -> handler
-                .client(RequestCostC2SPacket::handle)
-                .server(RequestCostC2SPacket::handle));
+        registrar.play(RequestVeilSizeC2SPacket.IDENTIFIER, RequestVeilSizeC2SPacket::new, handler -> handler
+                .client(RequestVeilSizeC2SPacket::handle)
+                .server(RequestVeilSizeC2SPacket::handle));
+        registrar.play(SetVeilSizeC2SPacket.IDENTIFIER, SetVeilSizeC2SPacket::new, handler -> handler
+                .client(SetVeilSizeC2SPacket::handle)
+                .server(SetVeilSizeC2SPacket::handle));
+        registrar.play(RequestBountyCostC2SPacket.IDENTIFIER, RequestBountyCostC2SPacket::new, handler -> handler
+                .client(RequestBountyCostC2SPacket::handle)
+                .server(RequestBountyCostC2SPacket::handle));
         registrar.play(SetTojiBountyC2SPacket.IDENTIFIER, SetTojiBountyC2SPacket::new, handler -> handler
                 .client(SetTojiBountyC2SPacket::handle)
                 .server(SetTojiBountyC2SPacket::handle));

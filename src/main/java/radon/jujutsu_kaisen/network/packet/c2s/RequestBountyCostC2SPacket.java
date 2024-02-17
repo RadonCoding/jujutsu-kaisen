@@ -8,31 +8,27 @@ import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SetCostS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SetBountyCostS2CPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.nio.charset.Charset;
 
-public class RequestCostC2SPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "request_cost_serverbound");
+public class RequestBountyCostC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "request_bounty_cost_serverbound");
 
     private final CharSequence name;
 
-    public RequestCostC2SPacket(CharSequence name) {
+    public RequestBountyCostC2SPacket(CharSequence name) {
         this.name = name;
     }
 
-    public RequestCostC2SPacket(FriendlyByteBuf buf) {
+    public RequestBountyCostC2SPacket(FriendlyByteBuf buf) {
         this(buf.readCharSequence(buf.readInt(), Charset.defaultCharset()));
     }
 
@@ -55,7 +51,7 @@ public class RequestCostC2SPacket implements CustomPacketPayload {
             if (sender.containerMenu instanceof BountyMenu menu) {
                 menu.setCost(cost);
             }
-            PacketHandler.sendToClient(new SetCostS2CPacket(cost), sender);
+            PacketHandler.sendToClient(new SetBountyCostS2CPacket(cost), sender);
         });
     }
 

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
@@ -13,6 +14,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.RequestVeilActiveC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.RequestVeilSizeC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.SetVeilSizeC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.ToggleVeilC2SPacket;
 
@@ -60,6 +63,9 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     @Override
     protected void init() {
         super.init();
+
+        PacketHandler.sendToServer(new RequestVeilActiveC2SPacket());
+        PacketHandler.sendToServer(new RequestVeilSizeC2SPacket());
 
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
