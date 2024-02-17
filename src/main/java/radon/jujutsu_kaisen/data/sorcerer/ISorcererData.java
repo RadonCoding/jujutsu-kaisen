@@ -83,6 +83,8 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     boolean hasChant(Ability ability, String chant);
 
+    boolean hasChants(Ability ability);
+
     boolean isChantsAvailable(Set<String> chants);
 
     @Nullable Ability getAbility(String chant);
