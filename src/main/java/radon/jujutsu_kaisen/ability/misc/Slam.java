@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -38,6 +39,13 @@ public class Slam extends Ability implements Ability.ICharged {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
+
+        BlockPos above = BlockPos.containing(owner.position()
+                .add(0.0D, owner.getBbHeight(), 0.0D)
+                .add(0.0D, 0.5D, 0.0D));
+
+        if (owner.getNavigation().isStuck() && owner.level().getBlockState(above).getShape(owner.level(), above).isEmpty()) return true;
+
         return owner.hasLineOfSight(target);
     }
 
