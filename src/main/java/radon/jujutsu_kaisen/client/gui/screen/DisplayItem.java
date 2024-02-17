@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
+import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -12,9 +13,16 @@ public class DisplayItem {
     public AbstractMap.SimpleEntry<AbsorbedCurse, Integer> curse;
     public ICursedTechnique copied;
     public ICursedTechnique absorbed;
+    public ItemStack item;
 
     public DisplayItem(Type type) {
         this.type = type;
+    }
+
+    public DisplayItem(ItemStack item) {
+        this(Type.ITEM);
+
+        this.item = item;
     }
 
     public DisplayItem(Ability ability) {
@@ -43,6 +51,7 @@ public class DisplayItem {
         ABILITY,
         CURSE,
         COPIED,
-        ABSORBED
+        ABSORBED,
+        ITEM
     }
 }
