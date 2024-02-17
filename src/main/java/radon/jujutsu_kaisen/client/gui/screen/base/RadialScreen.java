@@ -345,7 +345,7 @@ public abstract class RadialScreen extends Screen {
                             CurseManipulationUtil.getCurseExperience(item.curse.getKey()));
                     lines.add(experienceText);
                 } else if (item.type == DisplayItem.Type.ITEM) {
-                    lines.add(item.item.getDisplayName());
+                    lines.add(item.item.getHoverName());
                 }
 
                 int x = this.width / 2;
