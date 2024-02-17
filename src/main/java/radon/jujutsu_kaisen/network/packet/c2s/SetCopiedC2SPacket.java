@@ -35,6 +35,8 @@ public class SetCopiedC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
+            if (sender.isSpectator()) return;
+
             IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;
