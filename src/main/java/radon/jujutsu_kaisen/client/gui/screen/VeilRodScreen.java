@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +20,9 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/container/veil_rod.png");
 
     private ExtendedSlider sizeSlider;
+
+    private Button activate;
+    private Button deactivate;
 
     private int oldSize;
 
@@ -66,11 +70,16 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
         this.addRenderableWidget(this.sizeSlider);
         this.setInitialFocus(this.sizeSlider);
 
-        this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.activate", JujutsuKaisen.MOD_ID)), ignored -> {
+        this.activate.active = !this.menu.isActive();
+        this.deactivate.active = this.menu.isActive();
+
+        this.activate = this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.activate", JujutsuKaisen.MOD_ID)), ignored -> {
             PacketHandler.sendToServer(new ToggleVeilC2SPacket(true));
+            this.deactivate.active = true;
         }).pos(i + 33, j + 47).size(54, 16).build());
-        this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.deactivate", JujutsuKaisen.MOD_ID)), ignored -> {
+        this.deactivate = this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.deactivate", JujutsuKaisen.MOD_ID)), ignored -> {
             PacketHandler.sendToServer(new ToggleVeilC2SPacket(false));
+            this.activate.active = true;
         }).pos(i + 89, j + 47).size(54, 16).build());
     }
 
@@ -84,9 +93,5 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         pGuiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-    }
-
-    public void setFrequency(int frequency) {
-        this.sizeSlider.setValue(frequency);
     }
 }

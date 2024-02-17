@@ -42,6 +42,14 @@ public class VeilRodMenu extends AbstractContainerMenu {
 
     public void setActive(boolean active) {
         this.active = active;
+
+        this.access.evaluate((level, pos) -> {
+            if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
+                be.setActive(active);
+                return true;
+            }
+            return false;
+        });
     }
 
     public int getSize() {
