@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 public class VeilRodMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
 
+    private boolean active;
     private int size;
 
     public VeilRodMenu(int pContainerId, ContainerLevelAccess pAccess) {
@@ -33,6 +34,14 @@ public class VeilRodMenu extends AbstractContainerMenu {
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
         return ItemStack.EMPTY;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public int getSize() {

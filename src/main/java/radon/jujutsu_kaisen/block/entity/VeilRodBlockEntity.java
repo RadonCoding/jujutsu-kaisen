@@ -45,13 +45,14 @@ public class VeilRodBlockEntity extends BlockEntity {
     public static final int INTERVAL = 10;
     private static final float COST = 0.5F;
 
+    @Nullable
+    public UUID ownerUUID;
+
+    private boolean active;
     private int counter;
     private int size;
 
     public List<Modifier> modifiers;
-
-    @Nullable
-    public UUID ownerUUID;
 
     public VeilRodBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL_ROD.get(), pPos, pBlockState);
@@ -121,6 +122,8 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
+        if (!pBlockEntity.active) return;
+
         VeilHandler.veil(pLevel.dimension(), pPos);
 
         if (++pBlockEntity.counter != INTERVAL) return;
@@ -229,6 +232,10 @@ public class VeilRodBlockEntity extends BlockEntity {
         }
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public int getSize() {
         return this.size;
     }
@@ -260,6 +267,7 @@ public class VeilRodBlockEntity extends BlockEntity {
         if (this.ownerUUID != null) {
             pTag.putUUID("owner", this.ownerUUID);
         }
+        pTag.putBoolean("active", this.active);
         pTag.putInt("counter", this.counter);
         pTag.putInt("size", this.size);
 
@@ -275,6 +283,7 @@ public class VeilRodBlockEntity extends BlockEntity {
         if (pTag.contains("owner")) {
             this.ownerUUID = pTag.getUUID("owner");
         }
+        this.active = pTag.getBoolean("active");
         this.counter = pTag.getInt("counter");
         this.size = pTag.getInt("size");
 

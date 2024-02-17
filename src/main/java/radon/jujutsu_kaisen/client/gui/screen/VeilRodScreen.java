@@ -5,20 +5,22 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.SetSizeC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.SetVeilSizeC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.ToggleVeilC2SPacket;
 
 public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/container/veil_rod.png");
 
     private ExtendedSlider sizeSlider;
 
-    private int oldFrequency;
+    private int oldSize;
 
     public VeilRodScreen(VeilRodMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -30,11 +32,11 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
         int size = this.sizeSlider.getValueInt();
 
-        if (size != this.oldFrequency) {
+        if (size != this.oldSize) {
             if (this.minecraft != null && this.minecraft.player != null) {
-                PacketHandler.sendToServer(new SetSizeC2SPacket(size));
+                PacketHandler.sendToServer(new SetVeilSizeC2SPacket(size));
             }
-            this.oldFrequency = size;
+            this.oldSize = size;
         }
     }
 
@@ -59,10 +61,17 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.sizeSlider = new ExtendedSlider(i + 33, j + 35, 110, 16, Component.empty(), Component.empty(),
+        this.sizeSlider = new ExtendedSlider(i + 33, j + 29, 110, 16, Component.empty(), Component.empty(),
                 ConfigHolder.SERVER.minimumVeilSize.get(), ConfigHolder.SERVER.maximumVeilSize.get(), this.menu.getSize(), true);
         this.addRenderableWidget(this.sizeSlider);
         this.setInitialFocus(this.sizeSlider);
+
+        this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.activate", JujutsuKaisen.MOD_ID)), ignored -> {
+            PacketHandler.sendToServer(new ToggleVeilC2SPacket(true));
+        }).pos(i + 33, j + 47).size(54, 16).build());
+        this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.deactivate", JujutsuKaisen.MOD_ID)), ignored -> {
+            PacketHandler.sendToServer(new ToggleVeilC2SPacket(false));
+        }).pos(i + 89, j + 47).size(54, 16).build());
     }
 
     @Override
