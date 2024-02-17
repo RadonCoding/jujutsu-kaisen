@@ -63,7 +63,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
+        return target != null && !target.isDeadOrDying();
     }
 
     @Override
