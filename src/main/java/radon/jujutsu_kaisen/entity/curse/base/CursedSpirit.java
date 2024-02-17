@@ -220,9 +220,10 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
+
         this.init(data);
 
         if (this.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {
@@ -235,6 +236,8 @@ ISorcererData data = cap.getSorcererData();
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
+        pCompound.putBoolean("tame", this.isTame());
+
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
@@ -243,6 +246,8 @@ ISorcererData data = cap.getSorcererData();
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+
+        this.setTame(pCompound.getBoolean("tame"));
 
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
