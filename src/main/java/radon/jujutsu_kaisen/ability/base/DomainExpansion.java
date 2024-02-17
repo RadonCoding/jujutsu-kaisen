@@ -150,15 +150,15 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        ISorcererData abilityData = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
         DomainExpansionEntity domain = this.createBarrier(owner);
-        data.addSummon(domain);
+        sorcererData.addSummon(domain);
 
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
         }
     }
 
@@ -171,7 +171,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         if (cap == null) return;
 
         ISorcererData sorcererData = cap.getSorcererData();
-        ISorcererData abilityData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
         sorcererData.unsummonByClass(DomainExpansionEntity.class);
 
