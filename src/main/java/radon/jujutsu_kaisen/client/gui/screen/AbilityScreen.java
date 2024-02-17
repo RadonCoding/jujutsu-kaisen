@@ -45,19 +45,21 @@ public class AbilityScreen extends RadialScreen {
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
-        if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-            List<AbsorbedCurse> curses = curseManipulationData.getCurses();
-            items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
-        }
+        if (!this.minecraft.player.isSpectator()) {
+            if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+                List<AbsorbedCurse> curses = curseManipulationData.getCurses();
+                items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
+            }
 
-        if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
-            Set<ICursedTechnique> copied = mimicryData.getCopied();
-            items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
-        }
+            if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
+                Set<ICursedTechnique> copied = mimicryData.getCopied();
+                items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
+            }
 
-        if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-            Set<ICursedTechnique> absorbed = curseManipulationData.getAbsorbed();
-            items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
+            if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+                Set<ICursedTechnique> absorbed = curseManipulationData.getAbsorbed();
+                items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
+            }
         }
         return items;
     }
