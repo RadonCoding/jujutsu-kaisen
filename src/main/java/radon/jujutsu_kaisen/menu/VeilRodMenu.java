@@ -3,30 +3,32 @@ package radon.jujutsu_kaisen.menu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SetVeilActiveS2CPacket;
 
 public class VeilRodMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
 
-    private boolean active;
-    private int size;
+    private final DataSlot active = DataSlot.standalone();
+    private final DataSlot size = DataSlot.standalone();
 
     public VeilRodMenu(int pContainerId, ContainerLevelAccess pAccess) {
         super(JJKMenus.VEIL_ROD.get(), pContainerId);
 
         this.access = pAccess;
 
-        this.size = this.access.evaluate((level, pos) -> {
+        this.size.set(this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
                 return be.getSize();
             }
             return null;
-        }).orElse(ConfigHolder.SERVER.minimumVeilSize.get());
+        }).orElse(ConfigHolder.SERVER.minimumVeilSize.get()));
+
+        this.addDataSlot(this.active);
+        this.addDataSlot(this.size);
     }
 
     public VeilRodMenu(int pContainerId) {
@@ -39,11 +41,11 @@ public class VeilRodMenu extends AbstractContainerMenu {
     }
 
     public boolean isActive() {
-        return this.active;
+        return this.active.get() > 0;
     }
 
     public void setActive(boolean active) {
-        this.active = active;
+        this.active.set(active ? 1 : 0);
 
         this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
@@ -55,11 +57,11 @@ public class VeilRodMenu extends AbstractContainerMenu {
     }
 
     public int getSize() {
-        return this.size;
+        return this.size.get();
     }
 
     public void setSize(int size) {
-        this.size = size;
+        this.size.set(size);
 
         this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {

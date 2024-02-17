@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,16 +15,18 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 
 public class BountyMenu extends AbstractContainerMenu {
-    private final @Nullable TojiFushiguroEntity entity;
-    private final Container container;
     private final ContainerLevelAccess access;
 
-    private int cost;
+    private final @Nullable TojiFushiguroEntity entity;
+    private final Container container;
+
+    private final DataSlot cost = DataSlot.standalone();
 
     public BountyMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess, @Nullable TojiFushiguroEntity entity) {
         super(JJKMenus.BOUNTY.get(), pContainerId);
 
         this.access = pAccess;
+
         this.entity = entity;
         this.container = new SimpleContainer(1) {
             public void setChanged() {
@@ -48,6 +51,8 @@ public class BountyMenu extends AbstractContainerMenu {
         for (int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18, 142));
         }
+
+        this.addDataSlot(this.cost);
     }
 
     public BountyMenu(int pContainerId, Inventory pPlayerInventory) {
@@ -57,19 +62,19 @@ public class BountyMenu extends AbstractContainerMenu {
     public boolean charge() {
         Slot slot = this.getSlot(0);
 
-        if (slot.hasItem() && slot.getItem().getCount() >= this.cost) {
-            slot.getItem().shrink(this.cost);
+        if (slot.hasItem() && slot.getItem().getCount() >= this.cost.get()) {
+            slot.getItem().shrink(this.cost.get());
             return true;
         }
         return false;
     }
 
     public int getCost() {
-        return this.cost;
+        return this.cost.get();
     }
 
     public void setCost(int cost) {
-        this.cost = cost;
+        this.cost.set(cost);
     }
 
     public @Nullable TojiFushiguroEntity getEntity() {

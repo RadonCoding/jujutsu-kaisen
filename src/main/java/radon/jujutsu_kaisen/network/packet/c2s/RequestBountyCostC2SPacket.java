@@ -14,7 +14,6 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SetBountyCostS2CPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.nio.charset.Charset;
@@ -51,7 +50,6 @@ public class RequestBountyCostC2SPacket implements CustomPacketPayload {
             if (sender.containerMenu instanceof BountyMenu menu) {
                 menu.setCost(cost);
             }
-            PacketHandler.sendToClient(new SetBountyCostS2CPacket(cost), sender);
         });
     }
 
