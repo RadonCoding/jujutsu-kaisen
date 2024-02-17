@@ -40,7 +40,7 @@ public class SetTechniqueCommand {
         abilityData.channel(null);
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(sorcererData.serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
 
         return 1;
     }
