@@ -621,6 +621,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public boolean hasChants(Ability ability) {
+        return this.chants.containsKey(ability);
+    }
+
+    @Override
     public boolean isChantsAvailable(Set<String> chants) {
         for (Set<String> entry : this.chants.values()) {
             if (entry.containsAll(chants)) return false;

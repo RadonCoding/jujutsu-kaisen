@@ -27,6 +27,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -34,6 +37,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -92,6 +96,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
+        this.goalSelector.addGoal(goal++, new ChantGoal<>(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));

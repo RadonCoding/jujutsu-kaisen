@@ -78,17 +78,6 @@ public interface ISorcerer {
 
     JujutsuType getJujutsuType();
 
-    static Set<String> getRandomChantCombo(int count) {
-        List<? extends String> chants = ConfigHolder.SERVER.chants.get();
-
-        Set<String> combo = new HashSet<>();
-
-        while (combo.size() < Math.min(chants.size(), count)) {
-            combo.add(chants.get(HelperMethods.RANDOM.nextInt(chants.size())));
-        }
-        return combo;
-    }
-
     default void init(ISorcererData data) {
         data.setExperience(this.getExperience());
         data.setTechnique(this.getTechnique());
@@ -105,18 +94,6 @@ public interface ISorcerer {
 
         if (this.getCursedEnergyColor() != -1) {
             data.setCursedEnergyColor(this.getCursedEnergyColor());
-        }
-
-        if (this.canChant()) {
-            for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
-                if (!ability.isScalable((LivingEntity) this)) continue;
-
-                Set<String> chants = getRandomChantCombo(5);
-
-                while (!data.isChantsAvailable(chants)) chants = getRandomChantCombo(5);
-
-                data.addChants(ability, chants);
-            }
         }
     }
 }
