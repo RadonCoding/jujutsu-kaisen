@@ -26,10 +26,10 @@ import javax.annotation.Nullable;
 public class VeilBlockEntity extends BlockEntity {
     private int counter;
 
+    private boolean initialized;
+
     @Nullable
     private BlockPos parent;
-
-    private boolean initialized;
 
     @Nullable
     private BlockState original;
@@ -87,6 +87,10 @@ public class VeilBlockEntity extends BlockEntity {
         }
     }
 
+    public @Nullable BlockPos getParent() {
+        return this.parent;
+    }
+
     public @Nullable BlockState getOriginal() {
         if (this.level == null) return this.original;
 
@@ -116,10 +120,6 @@ public class VeilBlockEntity extends BlockEntity {
         }
     }
 
-    public @Nullable BlockPos getParent() {
-        return this.parent;
-    }
-
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
@@ -127,9 +127,7 @@ public class VeilBlockEntity extends BlockEntity {
 
     @Override
     public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        this.saveAdditional(tag);
-        return tag;
+        return this.saveWithoutMetadata();
     }
 
     @Override
