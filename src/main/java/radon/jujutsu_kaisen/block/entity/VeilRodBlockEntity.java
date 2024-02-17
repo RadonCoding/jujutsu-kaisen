@@ -3,10 +3,12 @@ package radon.jujutsu_kaisen.block.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -18,17 +20,17 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
+import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -75,6 +77,40 @@ public class VeilRodBlockEntity extends BlockEntity {
             return data.getEnergy() >= cost;
         }
         return true;
+    }
+
+    public boolean isAllowed(Entity entity) {
+        if (entity.getUUID() == this.ownerUUID) return true;
+        if (this.modifiers == null) return false;
+
+        if (entity instanceof Player player) {
+            for (Modifier modifier : this.modifiers) {
+                if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER)
+                    continue;
+
+                Component name = player.getDisplayName();
+
+                if (name == null) continue;
+
+                if (((PlayerModifier) modifier).getName().equals(name.getString())) {
+                    return true;
+                }
+            }
+        }
+
+        for (Modifier modifier : this.modifiers) {
+            if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
+                IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (cap == null) continue;
+
+                ISorcererData data = cap.getSorcererData();
+
+                return data.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
+                        data.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
+            }
+        }
+        return false;
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {

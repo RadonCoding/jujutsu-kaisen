@@ -87,41 +87,6 @@ public class VeilBlockEntity extends BlockEntity {
         }
     }
 
-    public static boolean isWhitelisted(@Nullable BlockPos parent, Entity entity) {
-        if (parent == null || !(entity.level().getBlockEntity(parent) instanceof VeilRodBlockEntity be)) return false;
-        if (entity.getUUID().equals(be.ownerUUID)) return true;
-        if (be.modifiers == null) return false;
-
-        if (entity instanceof Player player) {
-            for (Modifier modifier : be.modifiers) {
-                if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER)
-                    continue;
-
-                Component name = player.getDisplayName();
-
-                if (name == null) continue;
-
-                if (((PlayerModifier) modifier).getName().equals(name.getString())) {
-                    return true;
-                }
-            }
-        }
-
-        for (Modifier modifier : be.modifiers) {
-            if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
-                IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                if (cap == null) continue;
-
-                ISorcererData data = cap.getSorcererData();
-
-                return data.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
-                        data.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
-            }
-        }
-        return false;
-    }
-
     public @Nullable BlockState getOriginal() {
         if (this.level == null) return this.original;
 
@@ -153,10 +118,6 @@ public class VeilBlockEntity extends BlockEntity {
 
     public @Nullable BlockPos getParent() {
         return this.parent;
-    }
-
-    public static boolean isAllowed(BlockPos pos, Entity entity) {
-        return isWhitelisted(pos, entity);
     }
 
     @Nullable

@@ -5,7 +5,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -109,7 +108,7 @@ public class VeilHandler {
         return true;
     }
 
-    public static boolean canDestroy(@Nullable LivingEntity entity, Level level, double x, double y, double z) {
+    public static boolean canDestroy(@Nullable Entity entity, Level level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
         for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
@@ -127,7 +126,7 @@ public class VeilHandler {
 
                 if (relative.distSqr(Vec3i.ZERO) >= radius * radius) continue;
 
-                if (entity != null && be.ownerUUID == entity.getUUID()) continue;
+                if (entity != null && be.isAllowed(entity)) continue;
 
                 for (Modifier modifier : be.modifiers) {
                     if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.GRIEFING) {

@@ -21,6 +21,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -147,11 +148,21 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onEntityPlaceBlock(BlockEvent.EntityPlaceEvent event) {
+            Entity entity = event.getEntity();
+            Vec3 center = event.getPos().getCenter();
+
+            if (!VeilHandler.canDestroy(entity, entity.level(), center.x, center.y, center.z)) {
+                event.setCanceled(true);
+            }
+        }
+
+        @SubscribeEvent
         public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
             LivingEntity entity = event.getEntity();
             Vec3 center = event.getPos().getCenter();
 
-            if (!VeilHandler.canDestroy(event.getEntity(), entity.level(), center.x, center.y, center.z)) {
+            if (!VeilHandler.canDestroy(entity, entity.level(), center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }

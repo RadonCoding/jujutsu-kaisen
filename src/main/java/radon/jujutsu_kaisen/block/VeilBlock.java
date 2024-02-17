@@ -25,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -58,7 +58,7 @@ public class VeilBlock extends Block implements EntityBlock {
         VoxelShape shape = super.getCollisionShape(pState, pLevel, pPos, pContext);
 
         if (pContext instanceof EntityCollisionContext ctx) {
-            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be)) return shape;
+            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity block)) return shape;
 
             Entity entity = ctx.getEntity();
 
@@ -73,8 +73,14 @@ public class VeilBlock extends Block implements EntityBlock {
             if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
                 return Shapes.empty();
             }
+
             if (entity instanceof Projectile projectile) entity = projectile.getOwner();
-            return VeilBlockEntity.isAllowed(be.getParent(), entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
+
+            BlockPos parent = block.getParent();
+
+            if (parent == null || !(pLevel.getBlockEntity(parent) instanceof VeilRodBlockEntity rod)) return shape;
+
+            return entity != null && rod.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
         }
         return shape;
     }
