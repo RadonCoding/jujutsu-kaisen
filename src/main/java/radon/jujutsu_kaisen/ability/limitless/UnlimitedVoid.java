@@ -33,9 +33,9 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
         if (domain.getTime() % 20 == 0) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data != null) {
                 data.increaseBrainDamage();

@@ -10,6 +10,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -41,12 +42,12 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
 
         if (cap == null) return false;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
-        return !sorcererData.hasToggled(JJKAbilities.NUE.get()) &&
+        return !abilityData.hasToggled(JJKAbilities.NUE.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.NUE.get()) &&
-                sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get());
+                abilityData.hasToggled(JJKAbilities.ABILITY_MODE.get());
     }
 
     @Override

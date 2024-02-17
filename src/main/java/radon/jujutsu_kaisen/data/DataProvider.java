@@ -10,6 +10,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
@@ -18,10 +19,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DataProvider {
@@ -35,10 +33,15 @@ public class DataProvider {
 
         if (cap == null) return;
 
+        cap.getSorcererData().tick();
+        cap.getAbilityData().tick();
+        cap.getChantData().tick();
+        cap.getContractData().tick();
+        cap.getTenShadowsData().tick();
         cap.getCurseManipulationData().tick();
         cap.getProjectionSorceryData().tick();
-        cap.getSorcererData().tick();
-        cap.getTenShadowsData().tick();
+        cap.getIdleTransfigurationData().tick();
+        cap.getMimicryData().tick();
     }
 
     @SubscribeEvent
@@ -50,17 +53,16 @@ public class DataProvider {
         if (cap == null) return;
 
         if (event.isWasDeath()) {
-            IProjectionSorceryData projectionSorceryData = cap.getProjectionSorceryData();
-            projectionSorceryData.resetSpeedStacks();
-
             ISorcererData sorcererData = cap.getSorcererData();
             sorcererData.setEnergy(sorcererData.getMaxEnergy());
-            sorcererData.clearToggled();
-            sorcererData.resetCooldowns();
             sorcererData.resetBrainDamage();
             sorcererData.resetBurnout();
             sorcererData.resetExtraEnergy();
             sorcererData.resetBlackFlash();
+
+            IAbilityData abilityData = cap.getAbilityData();
+            abilityData.clearToggled();
+            abilityData.resetCooldowns();
 
             ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
@@ -68,10 +70,14 @@ public class DataProvider {
                 tenShadowsData.revive(false);
             }
 
+            IProjectionSorceryData projectionSorceryData = cap.getProjectionSorceryData();
+            projectionSorceryData.resetSpeedStacks();
+
             if (clone instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-                PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(tenShadowsData.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(projectionSorceryData.serializeNBT()), player);
             }
         }
     }

@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -62,7 +63,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
         if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
@@ -174,7 +175,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
         if (cap == null) return;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         IProjectionSorceryData projectionSorceryData = cap.getProjectionSorceryData();
 
         List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(projectionSorceryData.getFrames());
@@ -194,7 +195,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             Vec3 frame = entry.getKey();
             float yaw = entry.getValue();
 
-            sorcererData.delayTickEvent(() -> {
+            abilityData.delayTickEvent(() -> {
                 if (cancelled.get()) return;
 
                 owner.walkAnimation.setSpeed(2.0F);

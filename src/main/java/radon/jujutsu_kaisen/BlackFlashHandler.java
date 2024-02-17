@@ -13,6 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -93,28 +94,31 @@ public class BlackFlashHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
 
-            if (SorcererUtil.getGrade(data.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal() ||
-                    (!(source instanceof JJKDamageSources.JujutsuDamageSource) && !data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !data.hasToggled(JJKAbilities.BLUE_FISTS.get()))) return;
+            if (SorcererUtil.getGrade(sorcererData.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal() ||
+                    (!(source instanceof JJKDamageSources.JujutsuDamageSource)
+                            && !abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())
+                            && !abilityData.hasToggled(JJKAbilities.BLUE_FISTS.get()))) return;
 
             int combo = COMBOS.getOrDefault(attacker.getUUID(), 0);
             COMBOS.put(attacker.getUUID(), ++combo);
             TIMERS.put(attacker.getUUID(), CLEAR_INTERVAL);
 
-            if (HelperMethods.RANDOM.nextInt(Math.max(1, ConfigHolder.SERVER.blackFlashChance.get() / (data.isInZone() ? 2 : 1) - combo)) != 0) return;
+            if (HelperMethods.RANDOM.nextInt(Math.max(1, ConfigHolder.SERVER.blackFlashChance.get() / (sorcererData.isInZone() ? 2 : 1) - combo)) != 0) return;
 
             COMBOS.remove(attacker.getUUID());
 
-            long lastBlackFlashTime = data.getLastBlackFlashTime();
+            long lastBlackFlashTime = sorcererData.getLastBlackFlashTime();
             int seconds = (int) (attacker.level().getGameTime() - lastBlackFlashTime) / 20;
 
             if (lastBlackFlashTime != 0 && seconds <= 1) return;
 
-            data.onBlackFlash();
+            sorcererData.onBlackFlash();
 
             if (attacker instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
             }
 
             event.setAmount(Math.min(MAX_DAMAGE, (float) Math.pow(event.getAmount(), 2.5D)));

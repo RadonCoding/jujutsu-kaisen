@@ -9,9 +9,12 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.IChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -36,16 +39,17 @@ public class ServerChantHandler {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IChantData chantData = cap.getChantData();
         
-        Ability ability = data.getAbility(word);
+        Ability ability = chantData.getAbility(word);
 
         if (ability != null) {
             if (!MESSAGES.containsKey(owner.getUUID())) {
                 MESSAGES.put(owner.getUUID(), new ArrayList<>());
             }
 
-            List<String> chants = new ArrayList<>(data.getFirstChants(ability));
+            List<String> chants = new ArrayList<>(chantData.getFirstChants(ability));
 
             List<String> latest = MESSAGES.get(owner.getUUID());
 
@@ -73,7 +77,7 @@ public class ServerChantHandler {
                         ability.getName().copy(), ChantHandler.getOutput(owner, ability) * 100), false), player);
             }
 
-            if (data.hasTrait(Trait.PERFECT_BODY)) {
+            if (sorcererData.hasTrait(Trait.PERFECT_BODY)) {
                 PacketHandler.broadcast(new SyncMouthS2CPacket(owner.getUUID()));
             }
         }
@@ -103,14 +107,14 @@ public class ServerChantHandler {
 
                 IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+                if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        
+                IAbilityData abilityData = cap.getAbilityData();
+                IChantData chantData = cap.getChantData();
 
-                Ability ability = data.getAbility(new LinkedHashSet<>(MESSAGES.get(entry.getKey())));
+                Ability ability = chantData.getAbility(new LinkedHashSet<>(MESSAGES.get(entry.getKey())));
 
-                if (data.isChanneling(ability)) continue;
+                if (abilityData.isChanneling(ability)) continue;
 
                 int remaining = entry.getValue();
 

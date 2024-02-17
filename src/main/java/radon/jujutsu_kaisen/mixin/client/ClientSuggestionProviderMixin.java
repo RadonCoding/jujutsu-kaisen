@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -28,16 +29,17 @@ public class ClientSuggestionProviderMixin {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IChantData chantData = cap.getChantData();
 
-        if (!data.hasTrait(Trait.PERFECT_BODY)) return;
+        if (!sorcererData.hasTrait(Trait.PERFECT_BODY)) return;
 
         Collection<String> result = cir.getReturnValue();
 
         String next = ChantHandler.next(player);
 
         if (next == null) {
-            result.addAll(data.getFirstChants());
+            result.addAll(chantData.getFirstChants());
         } else {
             result.add(next);
         }

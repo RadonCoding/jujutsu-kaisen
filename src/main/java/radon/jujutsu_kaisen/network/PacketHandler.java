@@ -22,15 +22,30 @@ public class PacketHandler {
         registrar.play(SyncSorcererDataS2CPacket.IDENTIFIER, SyncSorcererDataS2CPacket::new, handler -> handler
                 .client(SyncSorcererDataS2CPacket::handle)
                 .server(SyncSorcererDataS2CPacket::handle));
+        registrar.play(SyncAbilityDataS2CPacket.IDENTIFIER, SyncAbilityDataS2CPacket::new, handler -> handler
+                .client(SyncAbilityDataS2CPacket::handle)
+                .server(SyncAbilityDataS2CPacket::handle));
+        registrar.play(SyncChantDataS2CPacket.IDENTIFIER, SyncChantDataS2CPacket::new, handler -> handler
+                .client(SyncChantDataS2CPacket::handle)
+                .server(SyncChantDataS2CPacket::handle));
+        registrar.play(SyncContractDataS2CPacket.IDENTIFIER, SyncContractDataS2CPacket::new, handler -> handler
+                .client(SyncContractDataS2CPacket::handle)
+                .server(SyncContractDataS2CPacket::handle));
         registrar.play(SyncTenShadowsDataS2CPacket.IDENTIFIER, SyncTenShadowsDataS2CPacket::new, handler -> handler
                 .client(SyncTenShadowsDataS2CPacket::handle)
                 .server(SyncTenShadowsDataS2CPacket::handle));
-        registrar.play(SyncProjectionSorceryDataS2CPacket.IDENTIFIER, SyncProjectionSorceryDataS2CPacket::new, handler -> handler
-                .client(SyncProjectionSorceryDataS2CPacket::handle)
-                .server(SyncProjectionSorceryDataS2CPacket::handle));
         registrar.play(SyncCurseManipulationDataS2CPacket.IDENTIFIER, SyncCurseManipulationDataS2CPacket::new, handler -> handler
                 .client(SyncCurseManipulationDataS2CPacket::handle)
                 .server(SyncCurseManipulationDataS2CPacket::handle));
+        registrar.play(SyncProjectionSorceryDataS2CPacket.IDENTIFIER, SyncProjectionSorceryDataS2CPacket::new, handler -> handler
+                .client(SyncProjectionSorceryDataS2CPacket::handle)
+                .server(SyncProjectionSorceryDataS2CPacket::handle));
+        registrar.play(SyncIdleTransfigurationDataS2CPacket.IDENTIFIER, SyncIdleTransfigurationDataS2CPacket::new, handler -> handler
+                .client(SyncIdleTransfigurationDataS2CPacket::handle)
+                .server(SyncIdleTransfigurationDataS2CPacket::handle));
+        registrar.play(SyncMimicryDataS2CPacket.IDENTIFIER, SyncMimicryDataS2CPacket::new, handler -> handler
+                .client(SyncMimicryDataS2CPacket::handle)
+                .server(SyncMimicryDataS2CPacket::handle));
         registrar.play(CameraShakeS2CPacket.IDENTIFIER, CameraShakeS2CPacket::new, handler -> handler
                 .client(CameraShakeS2CPacket::handle)
                 .server(CameraShakeS2CPacket::handle));

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -63,15 +64,13 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
 
         if (owner == null) return super.hurt(pSource, pAmount);
 
+        if (pSource.getEntity() != owner) return super.hurt(pSource, pAmount);
+
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return super.hurt(pSource, pAmount);
 
-        ISorcererData data = cap.getSorcererData();
-
-        if (data == null) return super.hurt(pSource, pAmount);
-
-        if (pSource.getEntity() != owner) return super.hurt(pSource, pAmount);
+        IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
             IdleTransfiguration.absorb(owner, this);

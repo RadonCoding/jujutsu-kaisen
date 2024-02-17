@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -43,10 +44,10 @@ public class AdaptationEventHandler {
 
             if (cap == null) return;
 
-            ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
             ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
-            if (!sorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
+            if (!abilityData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             tenShadowsData.tryAdapt(event.getAbility());
         }
@@ -63,16 +64,16 @@ public class AdaptationEventHandler {
 
             if (victimCap == null) return;
 
-            ISorcererData victimSorcererData = victimCap.getSorcererData();
+            IAbilityData victimAbilityData = victimCap.getAbilityData();
             ITenShadowsData victimTenShadowsData = victimCap.getTenShadowsData();
 
-            if (victimSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !victimSorcererData.hasToggled(JJKAbilities.WHEEL.get())) return;
+            if (victimAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !victimAbilityData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             if (source.getEntity() instanceof LivingEntity attacker) {
                 IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
                 if (attackerCap != null) {
-                    ISorcererData attackerData = attackerCap.getSorcererData();
+                    IAbilityData attackerData = attackerCap.getAbilityData();
 
                     if (attackerData.hasToggled(JJKAbilities.INFINITY.get())) {
                         victimTenShadowsData.tryAdapt(JJKAbilities.INFINITY.get());
@@ -125,7 +126,7 @@ public class AdaptationEventHandler {
 
             if (victimCap == null) return;
 
-            ISorcererData victimData = victimCap.getSorcererData();
+            IAbilityData victimData = victimCap.getAbilityData();
 
             DamageSource source = event.getSource();
 

@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -46,9 +48,10 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
-
-        return data.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() && data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
+        IAbilityData abilityData = cap.getAbilityData();
+        IMimicryData mimicryData = cap.getMimicryData();
+        return mimicryData.getCopied().size() < ConfigHolder.SERVER.maximumCopiedTechniques.get() &&
+                abilityData.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }
 
     @Override
@@ -80,7 +83,8 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
         if (ownerCap == null) return false;
 
-        ISorcererData ownerData = ownerCap.getSorcererData();
+        ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+        IMimicryData ownerMimicryData = ownerCap.getMimicryData();
 
         IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -88,17 +92,17 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
         ISorcererData targetData = targetCap.getSorcererData();
 
-        ICursedTechnique current = ownerData.getTechnique();
+        ICursedTechnique current = ownerSorcererData.getTechnique();
         ICursedTechnique copied = targetData.getTechnique();
 
-        if (copied == null || current == null || ownerData.hasTechnique(copied) || current == copied) return false;
+        if (copied == null || current == null || ownerSorcererData.hasTechnique(copied) || current == copied) return false;
 
         owner.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 
-        ownerData.copy(copied);
+        ownerMimicryData.copy(copied);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerData.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
         }
         return true;
     }

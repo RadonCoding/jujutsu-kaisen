@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -32,34 +33,35 @@ public class AbilityMode extends Ability implements Ability.IToggled {
 
         if (ownerCap == null) return false;
 
-        ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+        IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ITenShadowsData ownerTenShadowsData = ownerCap.getTenShadowsData();
 
         IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (targetCap != null) {
-            ISorcererData targetData = targetCap.getSorcererData();
+            ISorcererData targetSorcererData = targetCap.getSorcererData();
+            IAbilityData targetAbilityData = targetCap.getAbilityData();
 
             if (ownerTenShadowsData.hasTamed(JJKEntities.MAHORAGA.get())) {
-                if (targetData.hasToggled(JJKAbilities.INFINITY.get())) {
+                if (targetAbilityData.hasToggled(JJKAbilities.INFINITY.get())) {
                     return !ownerTenShadowsData.isAdaptedTo(JJKAbilities.INFINITY.get());
                 }
 
-                if (targetData.getTechnique() != null && !ownerTenShadowsData.isAdaptedTo(targetData.getTechnique())) {
+                if (targetSorcererData.getTechnique() != null && !ownerTenShadowsData.isAdaptedTo(targetSorcererData.getTechnique())) {
                     return true;
                 }
             } else {
-                if (targetData.hasToggled(JJKAbilities.INFINITY.get())) {
+                if (targetAbilityData.hasToggled(JJKAbilities.INFINITY.get())) {
                     return ownerTenShadowsData.isAdaptedTo(JJKAbilities.INFINITY.get());
                 }
 
-                if (targetData.getTechnique() != null && ownerTenShadowsData.isAdaptedTo(targetData.getTechnique())) {
+                if (targetSorcererData.getTechnique() != null && ownerTenShadowsData.isAdaptedTo(targetSorcererData.getTechnique())) {
                     return false;
                 }
             }
         }
 
-        if (ownerSorcererData.hasToggled(this)) {
+        if (ownerAbilityData.hasToggled(this)) {
             return owner.level().getGameTime() % 20 != 0 || HelperMethods.RANDOM.nextInt(10) != 0;
         }
         return HelperMethods.RANDOM.nextInt(40) == 0;

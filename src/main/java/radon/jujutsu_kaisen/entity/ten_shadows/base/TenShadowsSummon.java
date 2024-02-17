@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -83,7 +84,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (cap == null) return true;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
         if (!data.hasToggled(this.getAbility())) {
             return true;
@@ -267,9 +268,9 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         if (!this.level().isClientSide && owner != null && this.isClone()) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             if (!data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
                 this.discard();

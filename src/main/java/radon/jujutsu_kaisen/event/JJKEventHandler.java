@@ -32,6 +32,7 @@ import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.CursedEnergyFlow;
 import radon.jujutsu_kaisen.ability.misc.Slam;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -205,7 +206,7 @@ public class JJKEventHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             // If the target is dead we should not trigger any IAttack's
             if (victim.getHealth() - event.getAmount() <= 0.0F) return;
@@ -247,13 +248,14 @@ public class JJKEventHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
 
-            if (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+            if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 event.setDistance(event.getDistance() * 0.5F);
             }
 
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 event.setDistance(event.getDistance() * 0.1F);
             }
 

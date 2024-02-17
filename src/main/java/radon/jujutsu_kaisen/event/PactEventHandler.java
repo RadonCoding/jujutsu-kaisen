@@ -8,12 +8,12 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
-import radon.jujutsu_kaisen.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.contract.BindingVow;
+import radon.jujutsu_kaisen.data.contract.Pact;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
 public class PactEventHandler {
@@ -35,7 +35,7 @@ public class PactEventHandler {
 
                 if (cap == null) return;
                 
-                ISorcererData data = cap.getSorcererData();
+                IContractData data = cap.getContractData();
 
                 if (data.hasBindingVow(BindingVow.RECOIL)) {
                     attacker.hurt(JJKDamageSources.self(victim), event.getAmount() * 0.25F);
@@ -71,13 +71,13 @@ public class PactEventHandler {
 
             if (victimCap == null) return;
 
-            ISorcererData victimData = victimCap.getSorcererData();
+            IContractData victimData = victimCap.getContractData();
             
             IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (attackerCap == null) return;
 
-            ISorcererData attackerData = attackerCap.getSorcererData();
+            IContractData attackerData = attackerCap.getContractData();
 
             if (victimData.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerData.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
                 event.setCanceled(true);

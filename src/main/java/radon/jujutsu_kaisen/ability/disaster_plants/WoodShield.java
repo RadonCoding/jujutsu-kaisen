@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -81,11 +82,12 @@ public class WoodShield extends Summon<WoodShieldEntity> {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.WOOD_SHIELD.get())) return;
+            if (!abilityData.hasToggled(JJKAbilities.WOOD_SHIELD.get())) return;
 
-            WoodShieldEntity shield = data.getSummonByClass(WoodShieldEntity.class);
+            WoodShieldEntity shield = sorcererData.getSummonByClass(WoodShieldEntity.class);
 
             if (shield != null) {
                 shield.hurt(event.getSource(), event.getAmount());

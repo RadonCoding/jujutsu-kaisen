@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
@@ -80,9 +81,10 @@ public class CurseManipulationUtil {
         if (ownerCap == null) return null;
 
         ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+        IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
 
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || ownerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return null;
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || ownerAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return null;
 
         List<AbsorbedCurse> curses = ownerCurseManipulationData.getCurses();
 

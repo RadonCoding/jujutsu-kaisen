@@ -1,19 +1,18 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.chant.IChantData;
+import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,12 +34,12 @@ public class ChantGoal<T extends PathfinderMob & ISorcerer> extends Goal {
         return true;
     }
 
-    private static Set<String> getRandomChantCombo(int count) {
+    private static Set<String> getRandomChantCombo() {
         List<? extends String> chants = ConfigHolder.SERVER.chants.get();
 
         Set<String> combo = new HashSet<>();
 
-        while (combo.size() < Math.min(chants.size(), count)) {
+        while (combo.size() < Math.min(chants.size(), ConfigHolder.SERVER.maximumChantCount.get())) {
             combo.add(chants.get(HelperMethods.RANDOM.nextInt(chants.size())));
         }
         return combo;
@@ -54,14 +53,14 @@ public class ChantGoal<T extends PathfinderMob & ISorcerer> extends Goal {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        IChantData data = cap.getChantData();
 
         for (Ability ability : JJKAbilities.getAbilities(this.mob)) {
             if (!ability.isScalable(this.mob) || data.hasChants(ability)) continue;
 
-            Set<String> chants = getRandomChantCombo(5);
+            Set<String> chants = getRandomChantCombo();
 
-            while (!data.isChantsAvailable(chants)) chants = getRandomChantCombo(5);
+            while (!data.isChantsAvailable(chants)) chants = getRandomChantCombo();
 
             data.addChants(ability, chants);
         }

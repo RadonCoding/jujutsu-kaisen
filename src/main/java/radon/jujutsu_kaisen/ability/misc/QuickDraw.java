@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -58,10 +59,11 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-            SimpleDomainEntity domain = data.getSummonByClass(SimpleDomainEntity.class);
+        if (abilityData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+            SimpleDomainEntity domain = sorcererData.getSummonByClass(SimpleDomainEntity.class);
 
             if (domain == null) return;
 
@@ -99,8 +101,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
         return (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get()) || data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) && super.isValid(owner);
     }
 
@@ -126,13 +127,15 @@ public class QuickDraw extends Ability implements Ability.IToggled {
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
+            if (victim.level().isClientSide) return;
+
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
-            if (victim.level().isClientSide || !data.hasToggled(JJKAbilities.QUICK_DRAW.get()) ||
+            if (data.hasToggled(JJKAbilities.QUICK_DRAW.get()) ||
                     !data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
             Entity attacker = event.getSource().getDirectEntity();

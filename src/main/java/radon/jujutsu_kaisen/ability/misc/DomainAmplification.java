@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -30,8 +31,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
         return data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
     }
 
@@ -110,7 +110,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 

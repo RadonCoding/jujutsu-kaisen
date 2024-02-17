@@ -16,6 +16,8 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -61,7 +63,7 @@ public class MobEventHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
@@ -114,9 +116,10 @@ public class MobEventHandler {
 
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            IChantData chantData = cap.getChantData();
 
             // Sukuna has multiple arms
             if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {
@@ -126,9 +129,9 @@ public class MobEventHandler {
             // Making mobs use chants
             if (owner.level() instanceof ServerLevel level) {
                 if (owner instanceof Mob) {
-                    List<String> chants = new ArrayList<>(data.getFirstChants(ability));
+                    List<String> chants = new ArrayList<>(chantData.getFirstChants(ability));
 
-                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * data.getMaximumOutput()))) == 0) {
+                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * sorcererData.getMaximumOutput()))) == 0) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ServerChantHandler.onChant(owner, chants.get(i));
 

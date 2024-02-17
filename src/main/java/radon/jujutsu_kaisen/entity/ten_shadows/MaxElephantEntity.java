@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -236,10 +237,9 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
 
         this.entityData.set(DATA_SHOOTING, data.isChanneling(JJKAbilities.WATER.get()));
     }
@@ -261,10 +261,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
 
         boolean channelling = data.isChanneling(JJKAbilities.WATER.get());
 

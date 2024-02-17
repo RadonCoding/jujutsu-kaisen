@@ -27,7 +27,9 @@ import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -147,9 +149,7 @@ public abstract class RadialScreen extends Screen {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
-
-        if (data == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
+        IMimicryData data = cap.getMimicryData();
 
         if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
             DisplayItem item = this.getCurrent().get(this.hovered);
@@ -219,11 +219,12 @@ public abstract class RadialScreen extends Screen {
 
         if (cap == null) return false;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
+        IMimicryData mimicryData = cap.getMimicryData();
 
-        return item.type == DisplayItem.Type.ABILITY && sorcererData.hasToggled(item.ability) ||
-                item.type == DisplayItem.Type.COPIED && sorcererData.getCurrentCopied() == item.copied ||
+        return item.type == DisplayItem.Type.ABILITY && abilityData.hasToggled(item.ability) ||
+                item.type == DisplayItem.Type.COPIED && mimicryData.getCurrentCopied() == item.copied ||
                 item.type == DisplayItem.Type.ABSORBED && curseManipulationData.getCurrentAbsorbed() == item.absorbed;
     }
 

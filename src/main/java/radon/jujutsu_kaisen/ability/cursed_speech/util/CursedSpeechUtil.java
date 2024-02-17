@@ -9,6 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -39,7 +40,7 @@ public class CursedSpeechUtil {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
-                ISorcererData data = cap.getSorcererData();
+                IAbilityData data = cap.getAbilityData();
 
                 if (data.hasToggled(JJKAbilities.INFINITY.get()) || data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))
                     return;

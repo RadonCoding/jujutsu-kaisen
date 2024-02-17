@@ -373,8 +373,8 @@
   "ability.jujutsu_kaisen.idle_transfiguration_imbuement": "Idle Transfiguration Imbuement",
 
   "ability.jujutsu_kaisen.ability_mode": "Ability Mode",
-  "ability.jujutsu_kaisen.ability_mode.enabled": "Activated ability mode",
-  "ability.jujutsu_kaisen.ability_mode.disabled": "Deactivated ability mode",
+  "ability.jujutsu_kaisen.ability_mode.enable": "Activated ability mode",
+  "ability.jujutsu_kaisen.ability_mode.disable": "Deactivated ability mode",
   "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",
   "ability.jujutsu_kaisen.shadow_travel": "Shadow Travel",

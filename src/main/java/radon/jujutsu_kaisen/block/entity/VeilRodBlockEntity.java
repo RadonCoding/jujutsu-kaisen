@@ -6,6 +6,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -23,6 +24,8 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
@@ -123,6 +126,9 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                     if (distance < pBlockEntity.size && distance >= pBlockEntity.size - 1) {
                         BlockPos pos = pPos.offset(x, y, z);
+                        BlockState state = pLevel.getBlockState(pos);
+
+                        if (!state.is(BlockTags.DOORS) && !state.is(BlockTags.TRAPDOORS) && !state.getShape(pLevel, pos).isEmpty()) continue;
 
                         boolean blocked = false;
 
@@ -143,7 +149,8 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                             ISorcererData domainCasterData = domainCasterCap.getSorcererData();
 
-                            if (domainCasterData.getAbilityPower() <= veilCasterData.getAbilityPower()) continue;
+                            // Closed domain expansions create a separate space inside the barrier
+                            if (!(domain instanceof ClosedDomainExpansionEntity) && domainCasterData.getAbilityPower() <= veilCasterData.getAbilityPower()) continue;
 
                             if (domain.isInsideBarrier(pos)) {
                                 if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
@@ -156,8 +163,6 @@ public class VeilRodBlockEntity extends BlockEntity {
                         if (blocked) continue;
 
                         BlockEntity existing = pLevel.getBlockEntity(pos);
-
-                        BlockState state = pLevel.getBlockState(pos);
 
                         CompoundTag saved = null;
 

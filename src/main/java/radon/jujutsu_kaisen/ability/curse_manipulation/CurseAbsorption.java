@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -99,15 +100,15 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
         if (attackerCap == null) return;
 
-        ISorcererData attackerData = attackerCap.getSorcererData();
+        IAbilityData attackerData = attackerCap.getAbilityData();
+
+        if (!attackerData.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
 
         IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (victimCap == null) return;
 
         ISorcererData victimData = victimCap.getSorcererData();
-
-        if (!attackerData.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
 
         attacker.swing(InteractionHand.MAIN_HAND, true);
 

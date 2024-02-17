@@ -14,6 +14,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -51,8 +52,7 @@ public class Barrage extends Ability {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        
+        IAbilityData data = cap.getAbilityData();
 
         for (int i = 0; i < DURATION; i++) {
             data.delayTickEvent(() -> {

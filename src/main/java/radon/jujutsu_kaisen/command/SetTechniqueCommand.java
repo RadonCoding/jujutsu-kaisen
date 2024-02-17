@@ -6,12 +6,14 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetTechniqueCommand {
@@ -29,13 +31,16 @@ public class SetTechniqueCommand {
 
         if (cap == null) return 0;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        data.setTechnique(technique);
-        data.clearToggled();
-        data.channel(null);
+        sorcererData.setTechnique(technique);
 
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+        abilityData.clearToggled();
+        abilityData.channel(null);
+
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(sorcererData.serializeNBT()), player);
 
         return 1;
     }

@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -76,10 +77,9 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
                 IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+                if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        
+                IAbilityData data = cap.getAbilityData();
 
                 int death = width - i;
 

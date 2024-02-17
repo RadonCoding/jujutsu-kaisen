@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -134,14 +135,14 @@ public class SimpleDomainEntity extends Entity {
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
+        if (!this.level().isClientSide && owner != null) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
-            if (data != null && !data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+            if (!data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                 this.discard();
                 return;
             }

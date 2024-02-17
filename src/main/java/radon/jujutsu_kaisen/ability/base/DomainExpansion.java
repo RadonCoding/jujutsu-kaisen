@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -32,6 +33,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -56,11 +58,12 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        if (data.hasToggled(this)) {
+        if (abilityData.hasToggled(this)) {
             if (target != null) {
-                DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
+                DomainExpansionEntity domain = sorcererData.getSummonByClass(DomainExpansionEntity.class);
                 return domain != null && domain.isInsideBarrier(target.blockPosition());
             }
         } else {
@@ -79,7 +82,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 }
             }
 
-            boolean result = owner.onGround() && data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ?
+            boolean result = owner.onGround() && sorcererData.getType() == JujutsuType.CURSE || sorcererData.isUnlocked(JJKAbilities.RCT1.get()) ?
                     owner.getHealth() / owner.getMaxHealth() < 0.8F : owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
             for (DomainExpansionEntity ignored : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
@@ -90,8 +93,8 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             Status status = this.getStatus(owner);
 
             if (result && (status == Status.SUCCESS)) {
-                if (data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    data.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                if (abilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    abilityData.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }
             return result;
@@ -148,11 +151,13 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
+        ISorcererData abilityData = cap.getSorcererData();
 
         DomainExpansionEntity domain = this.createBarrier(owner);
         data.addSummon(domain);
 
         if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
         }
     }
@@ -165,11 +170,14 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        data.unsummonByClass(DomainExpansionEntity.class);
+        ISorcererData sorcererData = cap.getSorcererData();
+        ISorcererData abilityData = cap.getSorcererData();
+
+        sorcererData.unsummonByClass(DomainExpansionEntity.class);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
         }
     }
 

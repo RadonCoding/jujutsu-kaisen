@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -61,18 +62,13 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final float LIGHTNING_DAMAGE = 5.0F;
 
     @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return target != null;
     }
 
     @Override
     public boolean isTechnique() {
         return false;
-    }
-
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
     }
 
     @Override
@@ -113,11 +109,12 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        float scale = data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
+        float scale = abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
 
-        if (data.getNature() == CursedEnergyNature.LIGHTNING) {
+        if (sorcererData.getNature() == CursedEnergyNature.LIGHTNING) {
             for (int i = 0; i < 4; i++) {
                 double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2 * scale);
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight() * 1.25F * scale);
@@ -220,13 +217,14 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+        if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
-        float increase = data.getExperience() * 0.005F;
+        float increase = sorcererData.getAbilityPower() * 0.5F;
 
-        switch (data.getNature()) {
+        switch (sorcererData.getNature()) {
             case ROUGH -> increase *= 1.5F;
             case LIGHTNING -> {
                 increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
@@ -246,7 +244,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             case DIVERGENT -> {
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
 
-                data.delayTickEvent(() -> {
+                abilityData.delayTickEvent(() -> {
                     victim.invulnerableTime = 0;
 
                     Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
@@ -255,7 +253,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                         victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-                        victim.setDeltaMovement(look.scale(1.0F + (data.getAbilityPower() * 0.1F)));
+                        victim.setDeltaMovement(look.scale(1.0F + (sorcererData.getAbilityPower() * 0.1F)));
                         victim.hurtMarked = true;
                     }
                 }, 5);
@@ -263,14 +261,14 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         };
 
         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-            float cost = increase * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            float cost = increase * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
-            if (data.getEnergy() < cost) return;
+            if (sorcererData.getEnergy() < cost) return;
 
-            data.useEnergy(cost);
+            sorcererData.useEnergy(cost);
 
             if (attacker instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
             }
         }
         event.setAmount(amount + increase);
@@ -292,11 +290,12 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+        if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
-        if (data.getNature() == CursedEnergyNature.LIGHTNING) {
+        if (sorcererData.getNature() == CursedEnergyNature.LIGHTNING) {
             if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
                     jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
                 event.setCanceled(true);
@@ -304,7 +303,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         }
 
         if (DamageUtil.isMelee(source)) {
-            switch (data.getNature()) {
+            switch (sorcererData.getNature()) {
                 case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
                         false, false, false));
                 case ROUGH -> {
@@ -315,7 +314,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
         }
 
-        float armor = data.getExperience() * (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.0075F : 0.005F);
+        float armor = sorcererData.getAbilityPower() * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.75F : 0.5F);
         float toughness = armor * 0.1F;
 
         float f = 2.0F + toughness / 4.0F;
@@ -323,14 +322,14 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         float blocked = amount * (1.0F - f1 / 25.0F);
 
         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-            float cost = blocked * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
-            if (data.getEnergy() < cost) return;
+            if (sorcererData.getEnergy() < cost) return;
 
-            data.useEnergy(cost);
+            sorcererData.useEnergy(cost);
 
             if (victim instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
             }
         }
         event.setAmount(blocked);

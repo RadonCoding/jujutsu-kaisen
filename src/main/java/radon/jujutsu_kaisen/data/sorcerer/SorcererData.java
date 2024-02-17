@@ -18,7 +18,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
-import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -26,13 +25,19 @@ import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.data.ability.DelayedTickEvent;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.contract.BindingVow;
+import radon.jujutsu_kaisen.data.contract.IContractData;
+import radon.jujutsu_kaisen.data.contract.Pact;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -57,11 +62,6 @@ public class SorcererData implements ISorcererData {
 
     private @Nullable ICursedTechnique additional;
 
-    private final Set<ICursedTechnique> copied;
-    private @Nullable ICursedTechnique currentCopied;
-
-    private int transfiguredSouls;
-
     private CursedEnergyNature nature;
 
     private float experience;
@@ -79,24 +79,8 @@ public class SorcererData implements ISorcererData {
 
     private long lastBlackFlashTime;
 
-    private @Nullable Ability channeled;
-    private int charge;
-
-    private final Set<Ability> toggled;
-
     private final Set<Trait> traits;
-    private final List<DelayedTickEvent> delayedTickEvents;
-    private final Map<Ability, Integer> cooldowns;
-    private final Map<Ability, Integer> disrupted;
-    private final Map<Ability, Integer> durations;
     private final Set<Integer> summons;
-    private final Map<UUID, Set<Pact>> acceptedPacts;
-    private final Map<UUID, Set<Pact>> requestedPactsCreations;
-    private final Map<UUID, Integer> createRequestExpirations;
-    private final Map<UUID, Set<Pact>> requestedPactsRemovals;
-    private final Set<BindingVow> bindingVows;
-    private final Map<BindingVow, Integer> bindingVowCooldowns;
-    private final Map<Ability, Set<String>> chants;
 
     private int fingers;
 
@@ -118,141 +102,12 @@ public class SorcererData implements ISorcererData {
 
         this.type = JujutsuType.SORCERER;
 
-        this.copied = new LinkedHashSet<>();
-
         this.output = 1.0F;
 
         this.lastBlackFlashTime = -1;
 
-        this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
-        this.delayedTickEvents = new ArrayList<>();
-        this.cooldowns = new HashMap<>();
-        this.disrupted = new HashMap<>();
-        this.durations = new HashMap<>();
         this.summons = new HashSet<>();
-        this.acceptedPacts = new HashMap<>();
-        this.requestedPactsCreations = new HashMap<>();
-        this.createRequestExpirations = new HashMap<>();
-        this.requestedPactsRemovals = new HashMap<>();
-        this.bindingVows = new HashSet<>();
-        this.bindingVowCooldowns = new HashMap<>();
-        this.chants = new HashMap<>();
-    }
-
-    private void updateCooldowns() {
-        Iterator<Map.Entry<Ability, Integer>> iter = this.cooldowns.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<Ability, Integer> entry = iter.next();
-
-            int remaining = entry.getValue();
-
-            if (remaining > 0) {
-                this.cooldowns.put(entry.getKey(), --remaining);
-            } else {
-                iter.remove();
-            }
-        }
-    }
-
-    private void updateDisrupted() {
-        Iterator<Map.Entry<Ability, Integer>> iter = this.disrupted.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<Ability, Integer> entry = iter.next();
-
-            int remaining = entry.getValue();
-
-            if (remaining > 0) {
-                this.disrupted.put(entry.getKey(), --remaining);
-            } else {
-                iter.remove();
-            }
-        }
-    }
-
-    private void updateDurations() {
-        Iterator<Map.Entry<Ability, Integer>> iter = this.durations.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<Ability, Integer> entry = iter.next();
-
-            Ability ability = entry.getKey();
-
-            if (!this.isChanneling(ability)) {
-                iter.remove();
-                continue;
-            }
-
-            int remaining = entry.getValue();
-
-            if (remaining >= 0) {
-                this.durations.put(entry.getKey(), --remaining);
-            } else {
-                if (ability instanceof Ability.IToggled) {
-                    if (this.hasToggled(ability)) {
-                        this.toggle(ability);
-                    }
-                } else if (ability instanceof Ability.IChannelened) {
-                    if (this.isChanneling(ability)) {
-                        this.channel(ability);
-                    }
-                }
-                iter.remove();
-            }
-        }
-    }
-
-    private void updateTickEvents() {
-        this.delayedTickEvents.removeIf(DelayedTickEvent::finished);
-
-        for (DelayedTickEvent current : new ArrayList<>(this.delayedTickEvents)) {
-            current.tick();
-
-            if (current.finished()) {
-                current.run();
-            }
-        }
-    }
-
-    private void updateToggled() {
-        List<Ability> remove = new ArrayList<>();
-
-        for (Ability ability : new ArrayList<>(this.toggled)) {
-            if (this.disrupted.containsKey(ability)) continue;
-
-            Ability.Status status = ability.isStillUsable(this.owner);
-
-            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
-                ability.run(this.owner);
-
-                ((Ability.IToggled) ability).applyModifiers(this.owner);
-            } else {
-                remove.add(ability);
-            }
-        }
-
-        for (Ability ability : remove) {
-            this.toggle(ability);
-        }
-    }
-
-    private void updateChanneled() {
-        if (this.channeled != null) {
-            if (this.disrupted.containsKey(this.channeled)) return;
-
-            Ability.Status status = this.channeled.isStillUsable(this.owner);
-
-            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && this.channeled instanceof Ability.IAttack)) {
-                this.channeled.run(this.owner);
-            } else {
-                this.channel(this.channeled);
-            }
-            this.charge++;
-        } else {
-            this.charge = 0;
-        }
     }
 
     private void updateSummons() {
@@ -269,40 +124,6 @@ public class SorcererData implements ISorcererData {
                 if (entity == null || !entity.isAlive() || entity.isRemoved()) {
                     iter.remove();
                 }
-            }
-        }
-    }
-
-    private void updateRequestExpirations() {
-        Iterator<Map.Entry<UUID, Integer>> iter = this.createRequestExpirations.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<UUID, Integer> entry = iter.next();
-
-            int remaining = entry.getValue();
-
-            if (remaining > 0) {
-                this.createRequestExpirations.put(entry.getKey(), --remaining);
-            } else {
-                iter.remove();
-                this.requestedPactsCreations.remove(entry.getKey());
-            }
-        }
-    }
-
-    private void updateBindingVowCooldowns() {
-        Iterator<Map.Entry<BindingVow, Integer>> iter = this.bindingVowCooldowns.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<BindingVow, Integer> entry = iter.next();
-
-            int remaining = entry.getValue();
-
-            if (remaining > 0) {
-                this.bindingVowCooldowns.put(entry.getKey(), --remaining);
-            } else {
-                iter.remove();
-                this.bindingVowCooldowns.remove(entry.getKey());
             }
         }
     }
@@ -335,43 +156,8 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void attack(DamageSource source, LivingEntity target) {
-        if (this.channeled instanceof Ability.IAttack attack) {
-            if (this.channeled.getStatus(this.owner) == Ability.Status.SUCCESS && attack.attack(source, this.owner, target)) {
-                this.channeled.charge(this.owner);
-                this.charge = 0;
-            }
-        }
-
-        for (Ability ability : this.toggled) {
-            // In-case any of IAttack's kill the target just break the loop
-            if (target.isDeadOrDying()) break;
-
-            if (!(ability instanceof Ability.IAttack attack)) continue;
-            if (ability.getStatus(this.owner) != Ability.Status.SUCCESS) continue;
-            if (!attack.attack(source, this.owner, target)) continue;
-
-            ability.charge(this.owner);
-        }
-
-        if (this.owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
-        }
-    }
-
-    @Override
     public void tick() {
         this.updateSummons();
-
-        this.updateCooldowns();
-        this.updateDisrupted();
-        this.updateDurations();
-        this.updateTickEvents();
-        this.updateToggled();
-        this.updateChanneled();
-
-        this.updateRequestExpirations();
-        this.updateBindingVowCooldowns();
 
         this.updateBrainDamage();
 
@@ -486,192 +272,24 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void createPact(UUID recipient, Pact pact) {
-        if (!this.acceptedPacts.containsKey(recipient)) {
-            this.acceptedPacts.put(recipient, new HashSet<>());
-        }
-        this.acceptedPacts.get(recipient).add(pact);
-    }
-
-    @Override
-    public boolean hasPact(UUID recipient, Pact pact) {
-        return this.acceptedPacts.getOrDefault(recipient, Set.of()).contains(pact);
-    }
-
-    @Override
-    public void removePact(UUID recipient, Pact pact) {
-        this.acceptedPacts.get(recipient).remove(pact);
-
-        if (this.acceptedPacts.get(recipient).isEmpty()) {
-            this.acceptedPacts.remove(recipient);
-        }
-    }
-
-    @Override
-    public void createPactCreationRequest(UUID recipient, Pact pact) {
-        if (!this.requestedPactsCreations.containsKey(recipient)) {
-            this.requestedPactsCreations.put(recipient, new HashSet<>());
-        }
-        this.requestedPactsCreations.get(recipient).add(pact);
-        this.createRequestExpirations.put(recipient, 30 * 20);
-    }
-
-    @Override
-    public void createPactRemovalRequest(UUID recipient, Pact pact) {
-        if (!this.requestedPactsRemovals.containsKey(recipient)) {
-            this.requestedPactsRemovals.put(recipient, new HashSet<>());
-        }
-        this.requestedPactsRemovals.get(recipient).add(pact);
-    }
-
-    @Override
-    public void removePactCreationRequest(UUID recipient, Pact pact) {
-        this.requestedPactsCreations.getOrDefault(recipient, new HashSet<>()).remove(pact);
-        this.createRequestExpirations.remove(recipient);
-    }
-
-    @Override
-    public void removePactRemovalRequest(UUID recipient, Pact pact) {
-        this.requestedPactsRemovals.getOrDefault(recipient, new HashSet<>()).remove(pact);
-    }
-
-    @Override
-    public boolean hasRequestedPactCreation(UUID recipient, Pact pact) {
-        return this.requestedPactsCreations.getOrDefault(recipient, Set.of()).contains(pact);
-    }
-
-    @Override
-    public boolean hasRequestedPactRemoval(UUID recipient, Pact pact) {
-        return this.requestedPactsRemovals.getOrDefault(recipient, Set.of()).contains(pact);
-    }
-
-    @Override
-    public void addBindingVow(BindingVow vow) {
-        this.bindingVows.add(vow);
-    }
-
-    @Override
-    public void removeBindingVow(BindingVow vow) {
-        this.bindingVows.remove(vow);
-    }
-
-    @Override
-    public boolean hasBindingVow(BindingVow vow) {
-        return this.bindingVows.contains(vow);
-    }
-
-    @Override
-    public void addBindingVowCooldown(BindingVow vow) {
-        this.bindingVowCooldowns.put(vow, 20 * 60 * 30);
-    }
-
-    @Override
-    public int getRemainingCooldown(BindingVow vow) {
-        return this.bindingVowCooldowns.get(vow);
-    }
-
-    @Override
-    public boolean isCooldownDone(BindingVow vow) {
-        return !this.bindingVowCooldowns.containsKey(vow);
-    }
-
-    @Override
-    public void addChant(Ability ability, String chant) {
-        if (!this.chants.containsKey(ability)) {
-            this.chants.put(ability, new LinkedHashSet<>());
-        }
-        this.chants.get(ability).add(chant);
-    }
-
-    @Override
-    public void addChants(Ability ability, Set<String> chants) {
-        this.chants.put(ability, chants);
-    }
-
-    @Override
-    public void removeChant(Ability ability, String chant) {
-        if (this.chants.containsKey(ability)) {
-            this.chants.get(ability).remove(chant);
-
-            if (this.chants.get(ability).isEmpty()) {
-                this.chants.remove(ability);
-            }
-        }
-    }
-
-    @Override
-    public boolean hasChant(Ability ability, String chant) {
-        List<String> chants = new ArrayList<>(this.chants.getOrDefault(ability, Set.of()));
-
-        if (chants.contains(chant)) return true;
-
-        chants.add(chant);
-
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
-            if (entry.getKey() == ability) continue;
-
-            List<String> current = new ArrayList<>(entry.getValue());
-
-            for (int i = 0; i < chants.size(); i++) {
-                if (i > current.size() - 1) break;
-                if (chants.get(i).equals(current.get(i))) return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean hasChants(Ability ability) {
-        return this.chants.containsKey(ability);
-    }
-
-    @Override
-    public boolean isChantsAvailable(Set<String> chants) {
-        for (Set<String> entry : this.chants.values()) {
-            if (entry.containsAll(chants)) return false;
-        }
-        return true;
-    }
-
-    @Override
-    public @Nullable Ability getAbility(String chant) {
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
-            if (entry.getValue().contains(chant)) return entry.getKey();
-        }
-        return null;
-    }
-
-    @Override
-    public @Nullable Ability getAbility(Set<String> chants) {
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
-            if (entry.getValue().equals(chants)) return entry.getKey();
-        }
-        return null;
-    }
-
-    @Override
-    public Set<String> getFirstChants() {
-        return this.chants.values().stream().map(set -> set.stream().findFirst().orElseThrow()).collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<String> getFirstChants(Ability ability) {
-        return this.chants.getOrDefault(ability, Set.of());
-    }
-
-    @Override
     public float getOutput() {
         return Math.min(this.getMaximumOutput(), this.output);
     }
 
     @Override
     public float getAbilityPower(Ability ability) {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0.0F;
+
+        IAbilityData data = cap.getAbilityData();
+
         float power = this.getRealPower() * ChantHandler.getOutput(this.owner, ability);
 
         if (this.technique != null) {
             Ability domain = this.technique.getDomain();
 
-            if (domain != null && this.toggled.contains(domain)) {
+            if (domain != null && data.hasToggled(domain)) {
                 power *= 1.2F;
             }
         }
@@ -680,12 +298,18 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getAbilityPower() {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0.0F;
+
+        IAbilityData data = cap.getAbilityData();
+
         float power = this.getRealPower() * this.getOutput();
 
         if (this.technique != null) {
             Ability domain = this.technique.getDomain();
 
-            if (domain != null && this.toggled.contains(domain)) {
+            if (domain != null && data.hasToggled(domain)) {
                 power *= 1.2F;
             }
         }
@@ -770,7 +394,9 @@ public class SorcererData implements ISorcererData {
 
         if (cap == null) return Set.of();
 
+        IAbilityData abilityData = cap.getAbilityData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
+        IMimicryData mimicryData = cap.getMimicryData();
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
@@ -782,9 +408,11 @@ public class SorcererData implements ISorcererData {
             techniques.add(this.additional);
         }
 
-        if (this.toggled.contains(JJKAbilities.RIKA.get())) {
-            if (this.currentCopied != null) {
-                techniques.add(this.currentCopied);
+        if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
+            ICursedTechnique copied = mimicryData.getCurrentCopied();
+
+            if (copied != null) {
+                techniques.add(copied);
             }
         }
 
@@ -805,6 +433,7 @@ public class SorcererData implements ISorcererData {
         if (cap == null) return Set.of();
 
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
+        IMimicryData mimicryData = cap.getMimicryData();
 
         Set<ICursedTechnique> techniques = new HashSet<>();
 
@@ -816,7 +445,7 @@ public class SorcererData implements ISorcererData {
             techniques.add(this.additional);
         }
 
-        techniques.addAll(this.copied);
+        techniques.addAll(mimicryData.getCopied());
         techniques.addAll(curseManipulationData.getAbsorbed());
         techniques.addAll(this.getMimicryTechniques());
 
@@ -894,63 +523,6 @@ public class SorcererData implements ISorcererData {
         return this.type;
     }
 
-    public void toggle(Ability ability) {
-        if (!this.owner.level().isClientSide && this.owner instanceof Player) {
-            if (ability.shouldLog(this.owner)) {
-                if (this.hasToggled(ability)) {
-                    this.owner.sendSystemMessage(ability.getDisableMessage());
-                } else {
-                    this.owner.sendSystemMessage(ability.getEnableMessage());
-                }
-            }
-        }
-
-        if (this.toggled.contains(ability)) {
-            this.toggled.remove(ability);
-
-            ((Ability.IToggled) ability).onDisabled(this.owner);
-
-            ((Ability.IToggled) ability).removeModifiers(this.owner);
-
-            NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
-        } else {
-            this.toggled.add(ability);
-
-            ((Ability.IToggled) ability).onEnabled(this.owner);
-        }
-        ServerVisualHandler.sync(this.owner);
-    }
-
-    @Override
-    public void clearToggled() {
-        this.toggled.clear();
-    }
-
-    @Override
-    public Set<Ability> getToggled() {
-        return this.toggled;
-    }
-
-    @Override
-    public void addCooldown(Ability ability) {
-        this.cooldowns.put(ability, ability.getRealCooldown(this.owner));
-    }
-
-    @Override
-    public int getRemainingCooldown(Ability ability) {
-        return this.cooldowns.getOrDefault(ability, 0);
-    }
-
-    @Override
-    public boolean isCooldownDone(Ability ability) {
-        return !this.cooldowns.containsKey(ability);
-    }
-
-    @Override
-    public void addDuration(Ability ability) {
-        this.durations.put(ability, ((Ability.IDurationable) ability).getRealDuration(this.owner));
-    }
-
     @Override
     public void increaseBrainDamage() {
         this.brainDamage = Math.min(JJKConstants.MAX_BRAIN_DAMAGE, this.brainDamage + 1);
@@ -982,16 +554,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void resetCooldowns() {
-        this.cooldowns.clear();
-    }
-
-    @Override
-    public void disrupt(Ability ability, int duration) {
-        this.disrupted.put(ability, duration);
-    }
-
-    @Override
     public void resetBurnout() {
         this.burnout = 0;
     }
@@ -1012,9 +574,15 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0.0F;
+
+        IContractData data = cap.getContractData();
+
         long time = this.owner.level().getLevelData().getDayTime();
         boolean night = time >= 13000 && time < 24000;
-        return (this.bindingVows.contains(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
+        return (data.hasBindingVow(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
                 ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) *
                         this.getRealPower() * (float) Math.log(this.getRealPower() + 1)) + this.extraEnergy;
     }
@@ -1073,106 +641,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public boolean isInZone() {
         return this.lastBlackFlashTime != -1 && ((this.owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
-    }
-
-    @Override
-    public void delayTickEvent(Runnable task, int delay) {
-        this.delayedTickEvents.add(new DelayedTickEvent(task, delay));
-    }
-
-    @Override
-    public void uncopy(ICursedTechnique technique) {
-        if (this.currentCopied == technique) {
-            this.currentCopied = null;
-        }
-        this.copied.remove(technique);
-    }
-
-    @Override
-    public void copy(@Nullable ICursedTechnique technique) {
-        this.copied.add(technique);
-    }
-
-    @Override
-    public Set<ICursedTechnique> getCopied() {
-        return this.copied;
-    }
-
-    @Override
-    public void setCurrentCopied(@Nullable ICursedTechnique technique) {
-        this.currentCopied = this.currentCopied == technique ? null : technique;
-        ServerVisualHandler.sync(this.owner);
-    }
-
-    @Override
-    public @Nullable ICursedTechnique getCurrentCopied() {
-        return this.currentCopied;
-    }
-
-    @Override
-    public int getTransfiguredSouls() {
-        return this.transfiguredSouls;
-    }
-
-    @Override
-    public void increaseTransfiguredSouls() {
-        this.transfiguredSouls++;
-    }
-
-    @Override
-    public void decreaseTransfiguredSouls() {
-        this.transfiguredSouls--;
-    }
-
-    @Override
-    public void useTransfiguredSouls(int amount) {
-        this.transfiguredSouls -= amount;
-    }
-
-    @Override
-    public @Nullable Ability getChanneled() {
-        return this.channeled;
-    }
-
-    @Override
-    public void channel(@Nullable Ability ability) {
-        if (this.channeled != null) {
-            ((Ability.IChannelened) this.channeled).onStop(this.owner);
-
-            if (this.channeled instanceof Ability.ICharged charged) {
-                if (charged.onRelease(this.owner)) {
-                    this.channeled.charge(this.owner);
-                }
-            }
-
-            if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
-                this.owner.sendSystemMessage(this.channeled.getDisableMessage());
-            }
-            NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
-        }
-
-        if (this.channeled == ability) {
-            this.channeled = null;
-        } else {
-            this.channeled = ability;
-
-            if (this.channeled != null) {
-                if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
-                    this.owner.sendSystemMessage(this.channeled.getEnableMessage());
-                }
-            }
-        }
-        ServerVisualHandler.sync(this.owner);
-    }
-
-    @Override
-    public boolean isChanneling(Ability ability) {
-        return this.channeled == ability && !this.disrupted.containsKey(this.channeled);
-    }
-
-    @Override
-    public int getCharge() {
-        return this.charge;
     }
 
     @Override
@@ -1399,10 +867,6 @@ public class SorcererData implements ISorcererData {
         return real;
     }
 
-    public boolean hasToggled(Ability ability) {
-        return this.toggled.contains(ability) && !this.disrupted.containsKey(ability);
-    }
-
     @Override
     public @Nullable ICursedTechnique getAdditional() {
         return this.additional;
@@ -1428,10 +892,6 @@ public class SorcererData implements ISorcererData {
         if (this.additional != null) {
             nbt.putString("additional", JJKCursedTechniques.getKey(this.additional).toString());
         }
-        if (this.currentCopied != null) {
-            nbt.putString("current_copied", JJKCursedTechniques.getKey(this.currentCopied).toString());
-        }
-        nbt.putInt("transfigured_souls", this.transfiguredSouls);
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
         nbt.putFloat("output", this.output);
@@ -1442,7 +902,6 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);
-        nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("fingers", this.fingers);
 
@@ -1457,53 +916,7 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("unlocked", unlockedTag);
 
-        ListTag copiedTag = new ListTag();
-
-        for (ICursedTechnique technique : this.copied) {
-            copiedTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
-        }
-        nbt.put("copied", copiedTag);
-
-        ListTag toggledTag = new ListTag();
-
-        for (Ability ability : this.toggled) {
-            ResourceLocation key = JJKAbilities.getKey(ability);
-
-            if (key == null) continue;
-
-            toggledTag.add(StringTag.valueOf(key.toString()));
-        }
-        nbt.put("toggled", toggledTag);
-
         nbt.put("traits", new IntArrayTag(this.traits.stream().map(Enum::ordinal).toList()));
-
-        ListTag cooldownsTag = new ListTag();
-
-        for (Map.Entry<Ability, Integer> entry : this.cooldowns.entrySet()) {
-            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
-
-            if (key == null) continue;
-
-            CompoundTag data = new CompoundTag();
-            data.putString("identifier", key.toString());
-            data.putInt("cooldown", entry.getValue());
-            cooldownsTag.add(data);
-        }
-        nbt.put("cooldowns", cooldownsTag);
-
-        ListTag disruptedTag = new ListTag();
-
-        for (Map.Entry<Ability, Integer> entry : this.disrupted.entrySet()) {
-            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
-
-            if (key == null) continue;
-
-            CompoundTag data = new CompoundTag();
-            data.putString("identifier", key.toString());
-            data.putInt("duration", entry.getValue());
-            disruptedTag.add(data);
-        }
-        nbt.put("disrupted", disruptedTag);
 
         ListTag summonsTag = new ListTag();
 
@@ -1511,60 +924,6 @@ public class SorcererData implements ISorcererData {
             summonsTag.add(IntTag.valueOf(identifier));
         }
         nbt.put("summons", summonsTag);
-
-        ListTag acceptedPactsTag = new ListTag();
-
-        for (Map.Entry<UUID, Set<Pact>> entry : this.acceptedPacts.entrySet()) {
-            CompoundTag data = new CompoundTag();
-            data.putUUID("recipient", entry.getKey());
-
-            ListTag pacts = new ListTag();
-
-            for (Pact pact : entry.getValue()) {
-                pacts.add(IntTag.valueOf(pact.ordinal()));
-            }
-            data.put("entries", pacts);
-
-            acceptedPactsTag.add(data);
-        }
-        nbt.put("accepted_pacts", acceptedPactsTag);
-
-        ListTag bindingVowsTag = new ListTag();
-
-        for (BindingVow vow : this.bindingVows) {
-            bindingVowsTag.add(IntTag.valueOf(vow.ordinal()));
-        }
-        nbt.put("binding_vows", bindingVowsTag);
-
-        ListTag bindingVowCooldownsTag = new ListTag();
-
-        for (Map.Entry<BindingVow, Integer> entry : this.bindingVowCooldowns.entrySet()) {
-            CompoundTag data = new CompoundTag();
-            data.putInt("vow", entry.getKey().ordinal());
-            data.putInt("cooldown", entry.getValue());
-        }
-        nbt.put("binding_vow_cooldowns", bindingVowCooldownsTag);
-
-        ListTag chantsTag = new ListTag();
-
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
-            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
-
-            if (key == null) continue;
-
-            CompoundTag data = new CompoundTag();
-            data.putString("ability", key.toString());
-
-            ListTag chants = new ListTag();
-
-            for (String chant : entry.getValue()) {
-                chants.add(StringTag.valueOf(chant));
-            }
-            data.put("entries", chants);
-
-            chantsTag.add(data);
-        }
-        nbt.put("chants", chantsTag);
 
         return nbt;
     }
@@ -1584,10 +943,6 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("additional")) {
             this.additional = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("additional")));
         }
-        if (nbt.contains("current_copied")) {
-            this.currentCopied = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("current_copied")));
-        }
-        this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
         this.output = nbt.getFloat("output");
@@ -1598,7 +953,6 @@ public class SorcererData implements ISorcererData {
         this.burnout = nbt.getInt("burnout");
         this.brainDamage = nbt.getInt("brain_damage");
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
-        this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.fingers = nbt.getInt("fingers");
 
@@ -1608,38 +962,10 @@ public class SorcererData implements ISorcererData {
             this.unlocked.add(JJKAbilities.getValue(new ResourceLocation(tag.getAsString())));
         }
 
-        this.copied.clear();
-
-        for (Tag tag : nbt.getList("copied", Tag.TAG_STRING)) {
-            this.copied.add(JJKCursedTechniques.getValue(new ResourceLocation(tag.getAsString())));
-        }
-
-        this.toggled.clear();
-
-        for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-            this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
-        }
-
         this.traits.clear();
 
         for (int index : nbt.getIntArray("traits")) {
             this.traits.add(Trait.values()[index]);
-        }
-
-        this.cooldowns.clear();
-
-        for (Tag key : nbt.getList("cooldowns", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-            this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
-                    data.getInt("cooldown"));
-        }
-
-        this.disrupted.clear();
-
-        for (Tag key : nbt.getList("disrupted", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-            this.disrupted.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
-                    data.getInt("duration"));
         }
 
         this.summons.clear();
@@ -1648,45 +974,6 @@ public class SorcererData implements ISorcererData {
 
         for (int i = 0; i < summonsTag.size(); i++) {
             this.summons.add(summonsTag.getInt(i));
-        }
-
-        this.acceptedPacts.clear();
-
-        for (Tag key : nbt.getList("accepted_pacts", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-
-            Set<Pact> pacts = new HashSet<>();
-
-            for (Tag entry : data.getList("entries", Tag.TAG_INT)) {
-                pacts.add(Pact.values()[((IntTag) entry).getAsInt()]);
-            }
-            this.acceptedPacts.put(data.getUUID("recipient"), pacts);
-        }
-
-        this.bindingVows.clear();
-
-        for (Tag key : nbt.getList("binding_vows", Tag.TAG_INT)) {
-            this.bindingVows.add(BindingVow.values()[((IntTag) key).getAsInt()]);
-        }
-
-        this.bindingVowCooldowns.clear();
-
-        for (Tag key : nbt.getList("binding_vow_cooldowns", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-            this.bindingVowCooldowns.put(BindingVow.values()[data.getInt("vow")], data.getInt("cooldown"));
-        }
-
-        this.chants.clear();
-
-        for (Tag key : nbt.getList("chants", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-
-            Set<String> chants = new LinkedHashSet<>();
-
-            for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
-                chants.add(entry.getAsString());
-            }
-            this.chants.put(JJKAbilities.getValue(new ResourceLocation(data.getString("ability"))), chants);
         }
     }
 }

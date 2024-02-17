@@ -192,9 +192,10 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
+
         this.init(data);
     }
 

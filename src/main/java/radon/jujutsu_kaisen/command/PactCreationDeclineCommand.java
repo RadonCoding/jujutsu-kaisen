@@ -9,11 +9,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.contract.Pact;
 
 public class PactCreationDeclineCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -34,7 +34,7 @@ public class PactCreationDeclineCommand {
 
         if (cap == null) return 0;
 
-        ISorcererData dstData = cap.getSorcererData();
+        IContractData dstData = cap.getContractData();
 
         if (dstData == null) return 0;
 

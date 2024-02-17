@@ -6,6 +6,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -33,12 +34,12 @@ public class PiercingWater extends Ability {
 
         if (cap == null) return false;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
-        return !sorcererData.hasToggled(JJKAbilities.MAX_ELEPHANT.get()) &&
+        return !abilityData.hasToggled(JJKAbilities.MAX_ELEPHANT.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.MAX_ELEPHANT.get()) &&
-                sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get());
+                abilityData.hasToggled(JJKAbilities.ABILITY_MODE.get());
     }
 
     @Override

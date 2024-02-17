@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -182,7 +183,7 @@ public abstract class DomainExpansionEntity extends Entity {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             if (!data.hasToggled(this.ability)) {
                 this.discard();
@@ -216,11 +217,12 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (victimCap != null) {
             ISorcererData victimSorcererData = victimCap.getSorcererData();
+            IAbilityData abilityData = victimCap.getAbilityData();
             ITenShadowsData victimTenShadowsData = victimCap.getTenShadowsData();
 
             if ((victim instanceof MahoragaEntity && victimTenShadowsData.isAdaptedTo(this.ability))) return false;
 
-            if (victimSorcererData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+            if (abilityData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                 SimpleDomainEntity simple = victimSorcererData.getSummonByClass(SimpleDomainEntity.class);
 
                 if (simple != null) {

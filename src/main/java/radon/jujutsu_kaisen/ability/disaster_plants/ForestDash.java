@@ -20,6 +20,11 @@ public class ForestDash extends Ability implements Ability.IChannelened {
     }
 
     @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
+    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.CHANNELED;
     }

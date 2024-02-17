@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -48,9 +49,9 @@ public abstract class LivingEntityMixin {
         } else {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             for (Ability ability : data.getToggled()) {
                 if (!(ability instanceof ITransformation transformation)) continue;
@@ -66,7 +67,7 @@ ISorcererData data = cap.getSorcererData();
         IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap != null) {
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             if (data.hasToggled(JJKAbilities.DISMANTLE_SKATING.get()) && instance.getFluidState().isEmpty()) {
                 return 1.0989F - 0.02F;

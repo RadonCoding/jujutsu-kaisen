@@ -7,6 +7,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -43,10 +44,7 @@ public class BlueMotion extends Ability {
 
         if (cap == null) return Status.FAILURE;
 
-        ISorcererData data = cap.getSorcererData();
-        
-        if (data == null) return Status.FAILURE;
-
+        IAbilityData data = cap.getAbilityData();
         return data.isCooldownDone(JJKAbilities.BLUE_STILL.get()) ? super.isTriggerable(owner) : Status.FAILURE;
     }
 

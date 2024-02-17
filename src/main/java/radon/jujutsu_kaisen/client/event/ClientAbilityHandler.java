@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -167,7 +168,7 @@ public class ClientAbilityHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (RotationUtil.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
@@ -304,17 +305,18 @@ public class ClientAbilityHandler {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
+        ISorcererData sorcererData = cap.getSorcererData();
 
         switch (status) {
             case ENERGY ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
             case COOLDOWN ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
-                            Math.max(1, data.getRemainingCooldown(ability) / 20)), false);
+                            Math.max(1, abilityData.getRemainingCooldown(ability) / 20)), false);
             case BURNOUT ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
-                            data.getBurnout() / 20), false);
+                            sorcererData.getBurnout() / 20), false);
             case FAILURE ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
         }
@@ -331,9 +333,7 @@ public class ClientAbilityHandler {
 
         if (cap == null) return Ability.Status.FAILURE;
 
-        ISorcererData data = cap.getSorcererData();
-        
-        if (data == null) return Ability.Status.FAILURE;
+        IAbilityData data = cap.getAbilityData();
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             Ability.Status status;

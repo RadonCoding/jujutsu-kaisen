@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -75,18 +76,20 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             if (victimCap == null) return;
 
-            ISorcererData victimData = victimCap.getSorcererData();
+            ISorcererData victimSorcererData = victimCap.getSorcererData();
+            IAbilityData victimAbilityData = victimCap.getAbilityData();
 
-            if (!victimData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
+            if (!victimAbilityData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
 
             if (DamageUtil.isMelee(source)) {
                 if (source.getEntity() instanceof LivingEntity attacker) {
                     IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
                     if (attackerCap != null) {
-                        ISorcererData attackerData = attackerCap.getSorcererData();
+                        ISorcererData attackerSorcererData = attackerCap.getSorcererData();
+                        IAbilityData attackerAbilityData = attackerCap.getAbilityData();
 
-                        if (attackerData.hasTrait(Trait.VESSEL) || attackerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                        if (attackerSorcererData.hasTrait(Trait.VESSEL) || attackerAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                             return;
                         }
                     }
@@ -97,9 +100,9 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             if (source.is(JJKDamageSources.SOUL)) return;
 
-            float cost = event.getAmount() * 2.0F * (victimData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-            if (victimData.getEnergy() < cost) return;
-            victimData.useEnergy(cost);
+            float cost = event.getAmount() * 2.0F * (victimSorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            if (victimSorcererData.getEnergy() < cost) return;
+            victimSorcererData.useEnergy(cost);
 
             int count = 8 + (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
 
@@ -111,7 +114,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             }
 
             if (victim instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimData.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimSorcererData.serializeNBT()), player);
             }
             event.setCanceled(true);
         }

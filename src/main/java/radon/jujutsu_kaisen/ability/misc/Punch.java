@@ -38,7 +38,7 @@ public class Punch extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        if (owner.getNavigation().isStuck()) return true;
+        if (owner.getNavigation().isStuck() || owner.isInWall()) return true;
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
@@ -95,16 +95,13 @@ public class Punch extends Ability {
 
         AABB bounds = AABB.ofSize(end, RANGE, RANGE, RANGE).inflate(1.0D);
 
-        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            if (pos.getCenter().distanceTo(bounds.getCenter()) > RANGE) return;
-            if (!HelperMethods.isDestroyable(level, owner, pos)) return;
-
-            owner.level().destroyBlock(pos, true, owner);
-        });
+        boolean hit = false;
 
         for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds,
                 entity -> entity != owner && owner.hasLineOfSight(entity))) {
             if (Math.sqrt(entity.distanceToSqr(bounds.getCenter())) > RANGE) continue;
+
+            hit = true;
 
             Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
             level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
@@ -128,6 +125,15 @@ public class Punch extends Ability {
                             .multiply(1.0D, 0.25D, 1.0D));
                 }
             }
+        }
+
+        if (!hit) {
+            BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+                if (pos.getCenter().distanceTo(bounds.getCenter()) > RANGE) return;
+                if (!HelperMethods.isDestroyable(level, owner, pos)) return;
+
+                owner.level().destroyBlock(pos, true, owner);
+            });
         }
     }
 
