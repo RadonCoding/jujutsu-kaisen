@@ -143,6 +143,8 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
+        pCompound.putBoolean("tame", this.isTame());
+
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
@@ -152,6 +154,8 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+
+        this.setTame(pCompound.getBoolean("tame"));
 
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
