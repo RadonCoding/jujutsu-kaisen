@@ -20,6 +20,7 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -102,7 +103,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                     if (cap == null) return;
 
-                    ISorcererData data = cap.getSorcererData();
+                    IAbilityData data = cap.getAbilityData();
 
                     data.delayTickEvent(() -> {
                         if (this.isRemoved()) return;
@@ -137,7 +138,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             this.first = false;
         }
 
-        int size = width * height / 4;
+        int size = width * height / 2;
         AABB bounds = this.getBounds();
 
         for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {

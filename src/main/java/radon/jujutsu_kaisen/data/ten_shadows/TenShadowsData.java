@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -49,9 +50,10 @@ public class TenShadowsData implements ITenShadowsData {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        if (!data.hasToggled(JJKAbilities.WHEEL.get())) return;
+        if (!abilityData.hasToggled(JJKAbilities.WHEEL.get())) return;
 
         Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
 
@@ -70,7 +72,7 @@ public class TenShadowsData implements ITenShadowsData {
                 }
                 this.adapted.put(entry.getKey(), this.adapted.getOrDefault(entry.getKey(), 0) + 1);
 
-                WheelEntity wheel = data.getSummonByClass(WheelEntity.class);
+                WheelEntity wheel = sorcererData.getSummonByClass(WheelEntity.class);
 
                 if (wheel != null) {
                     wheel.spin();

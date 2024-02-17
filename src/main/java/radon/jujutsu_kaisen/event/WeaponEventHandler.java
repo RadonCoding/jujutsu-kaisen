@@ -23,6 +23,7 @@ import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -153,7 +154,7 @@ public class WeaponEventHandler {
                 IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
                 if (victimCap != null) {
-                    ISorcererData victimData = victimCap.getSorcererData();
+                    IAbilityData victimData = victimCap.getAbilityData();
 
                     for (Ability ability : victimData.getToggled()) {
                         if (!ability.isTechnique()) continue;
@@ -182,7 +183,7 @@ public class WeaponEventHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             List<ItemStack> stacks = new ArrayList<>();
 

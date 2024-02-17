@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.ability.base.IImbuement;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -133,7 +134,7 @@ public class ImbuementHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             LivingEntity victim = event.getEntity();
 

@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -64,8 +65,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        
+        IAbilityData data = cap.getAbilityData();
 
         BlockPos center = owner.blockPosition();
 

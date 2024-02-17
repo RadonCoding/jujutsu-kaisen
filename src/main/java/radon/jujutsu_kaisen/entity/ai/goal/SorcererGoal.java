@@ -8,7 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -43,14 +45,16 @@ public class SorcererGoal extends Goal {
         if (ownerCap == null) return;
 
         ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+        IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
+        IMimicryData ownerMimicryData = ownerCap.getMimicryData();
 
-        if (ownerSorcererData.hasToggled(JJKAbilities.RIKA.get())) {
-            if (ownerSorcererData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
-                List<ICursedTechnique> copied = new ArrayList<>(ownerSorcererData.getCopied());
+        if (ownerAbilityData.hasToggled(JJKAbilities.RIKA.get())) {
+            if (ownerMimicryData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
+                List<ICursedTechnique> copied = new ArrayList<>(ownerMimicryData.getCopied());
 
                 if (!copied.isEmpty()) {
-                    ownerSorcererData.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
+                    ownerMimicryData.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
                 }
             }
         }
@@ -106,18 +110,18 @@ public class SorcererGoal extends Goal {
 
             if (ability.getActivationType(this.mob) == Ability.ActivationType.TOGGLED) {
                 if (success) {
-                    if (!ownerSorcererData.hasToggled(ability)) {
+                    if (!ownerAbilityData.hasToggled(ability)) {
                         AbilityHandler.trigger(this.mob, ability);
                     }
-                } else if (ownerSorcererData.hasToggled(ability)) {
+                } else if (ownerAbilityData.hasToggled(ability)) {
                     AbilityHandler.untrigger(this.mob, ability);
                 }
             } else if (ability.getActivationType(this.mob) == Ability.ActivationType.CHANNELED) {
                 if (success) {
-                    if (!ownerSorcererData.isChanneling(ability)) {
+                    if (!ownerAbilityData.isChanneling(ability)) {
                         AbilityHandler.trigger(this.mob, ability);
                     }
-                } else if (ownerSorcererData.isChanneling(ability)) {
+                } else if (ownerAbilityData.isChanneling(ability)) {
                     AbilityHandler.untrigger(this.mob, ability);
                 }
             } else if (success) {

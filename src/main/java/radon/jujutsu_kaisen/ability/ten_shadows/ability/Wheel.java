@@ -6,6 +6,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -71,12 +72,12 @@ public class Wheel extends Summon<WheelEntity> {
 
         if (cap == null) return false;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
-        return !sorcererData.hasToggled(JJKAbilities.MAHORAGA.get()) &&
+        return !abilityData.hasToggled(JJKAbilities.MAHORAGA.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.MAHORAGA.get()) &&
-                sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get());
+                abilityData.hasToggled(JJKAbilities.ABILITY_MODE.get());
     }
 
     @Override

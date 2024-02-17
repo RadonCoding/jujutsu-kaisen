@@ -14,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -100,9 +101,9 @@ public class WheelEntity extends Entity implements GeoEntity {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
-            if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) {
+            if (!data.hasToggled(JJKAbilities.WHEEL.get())) {
                 this.discard();
                 return;
             }
@@ -156,8 +157,7 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(JJKAbilities.WHEEL.get())) {
             data.toggle(JJKAbilities.WHEEL.get());

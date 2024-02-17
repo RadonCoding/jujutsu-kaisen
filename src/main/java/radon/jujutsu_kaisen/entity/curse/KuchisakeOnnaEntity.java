@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -152,9 +153,9 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
-        if (data != null && data.hasToggled(JJKAbilities.SCISSORS.get())) {
+        if (data.hasToggled(JJKAbilities.SCISSORS.get())) {
             AbilityHandler.trigger(this, JJKAbilities.SCISSORS.get());
         }
         this.start = null;
@@ -225,7 +226,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
 
@@ -242,7 +243,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
             IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
-                ISorcererData data = cap.getSorcererData();
+                IAbilityData data = cap.getAbilityData();
 
                 if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
             }

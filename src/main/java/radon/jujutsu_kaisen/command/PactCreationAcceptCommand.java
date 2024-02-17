@@ -9,12 +9,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.contract.Pact;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncContractDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class PactCreationAcceptCommand {
@@ -32,17 +33,17 @@ public class PactCreationAcceptCommand {
 
         if (src == null) return 0;
 
-        IJujutsuCapability srcCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability srcCap = src.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (srcCap == null) return 0;
 
-        ISorcererData srcData = srcCap.getSorcererData();
+        IContractData srcData = srcCap.getContractData();
 
         IJujutsuCapability dstCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (dstCap == null) return 0;
 
-        ISorcererData dstData = dstCap.getSorcererData();
+        IContractData dstData = dstCap.getContractData();
 
         if (srcData == null || dstData == null) return 0;
 
@@ -52,8 +53,8 @@ public class PactCreationAcceptCommand {
 
             dstData.removePactCreationRequest(src.getUUID(), pact);
 
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(dstData.serializeNBT()), dst);
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(srcData.serializeNBT()), src);
+            PacketHandler.sendToClient(new SyncContractDataS2CPacket(dstData.serializeNBT()), dst);
+            PacketHandler.sendToClient(new SyncContractDataS2CPacket(srcData.serializeNBT()), src);
 
             src.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_creation_accept", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), dst.getName()));
             dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_creation_accept", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), src.getName()));

@@ -5,8 +5,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.data.curse_manipulation.CurseManipulationData;
-import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 
 public class SorcererDataSerializer implements IAttachmentSerializer<CompoundTag, ISorcererData> {
     @Override

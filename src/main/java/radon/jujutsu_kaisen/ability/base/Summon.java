@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -97,12 +98,13 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (cap == null) return false;
 
         ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
-        if (!sorcererData.hasToggled(this) && this.isTenShadows()) {
-            if (sorcererData.hasToggled(JJKAbilities.ABILITY_MODE.get())) return false;
+        if (!abilityData.hasToggled(this) && this.isTenShadows()) {
+            if (abilityData.hasToggled(JJKAbilities.ABILITY_MODE.get())) return false;
 
-            for (Ability ability : sorcererData.getToggled()) {
+            for (Ability ability : abilityData.getToggled()) {
                 if (!(ability instanceof Summon<?> summon)) continue;
 
                 for (EntityType<?> type : this.getTypes()) {
@@ -256,7 +258,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
         if (cap == null) return 0.0F;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
         return this.isTenShadows() && this.isTamed(owner) && data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 0.0F : super.getRealCost(owner);
     }
 }

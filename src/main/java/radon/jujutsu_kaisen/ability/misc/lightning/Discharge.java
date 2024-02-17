@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -94,9 +95,9 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
-
-        return data.getNature() == CursedEnergyNature.LIGHTNING && data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && super.isValid(owner);
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
+        return sorcererData.getNature() == CursedEnergyNature.LIGHTNING && abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && super.isValid(owner);
     }
 
     @Override

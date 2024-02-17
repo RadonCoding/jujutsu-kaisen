@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.chant;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -36,9 +37,7 @@ public class ChantHandler {
 
         if (cap == null) return 0.0F;
 
-        ISorcererData data = cap.getSorcererData();
-        
-        if (data == null) return 0.0F;
+        IChantData data = cap.getChantData();
 
         Set<String> chants = data.getFirstChants(ability);
 
@@ -72,7 +71,7 @@ public class ChantHandler {
 
         if (cap == null) return null;
 
-        ISorcererData data = cap.getSorcererData();
+        IChantData data = cap.getChantData();
 
         Ability ability = data.getAbility(messages.get(messages.size() - 1));
 

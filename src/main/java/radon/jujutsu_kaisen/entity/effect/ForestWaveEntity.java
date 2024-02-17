@@ -8,6 +8,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -72,9 +73,9 @@ public class ForestWaveEntity extends JujutsuProjectile {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
-        if (data == null || !data.isChanneling(JJKAbilities.FOREST_WAVE.get())) {
+        if (!data.isChanneling(JJKAbilities.FOREST_WAVE.get())) {
             this.discard();
         }
     }

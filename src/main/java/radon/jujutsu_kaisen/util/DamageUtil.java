@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -58,7 +59,7 @@ public class DamageUtil {
 
             if (cap == null) return true;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
             return !data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
         }
         return true;

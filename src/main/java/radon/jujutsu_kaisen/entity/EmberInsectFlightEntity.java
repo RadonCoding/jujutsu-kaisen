@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -72,7 +73,7 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
             if (!data.hasToggled(JJKAbilities.EMBER_INSECT_FLIGHT.get())) {
                 this.discard();

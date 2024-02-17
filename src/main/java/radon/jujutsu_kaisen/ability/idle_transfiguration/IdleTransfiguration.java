@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -181,7 +182,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
             data.toggle(JJKAbilities.SOUL_DECIMATION.get());

@@ -15,6 +15,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -40,17 +42,20 @@ public class CursedEnergyOverlay {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
+        IIdleTransfigurationData idleTransfigurationData = cap.getIdleTransfigurationData();
 
         graphics.pose().pushPose();
         graphics.pose().scale(SCALE, SCALE, SCALE);
 
         List<Component> above = new ArrayList<>();
-        above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(data.getOutput() * 100)));
-        above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), data.getExperience()));
+        above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(sorcererData.getOutput() * 100)));
+        above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), sorcererData.getExperience()));
 
-        if (data.hasActiveTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
-            above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.transfigured_souls", JujutsuKaisen.MOD_ID), data.getTransfiguredSouls()));
+        if (sorcererData.hasActiveTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
+            above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.transfigured_souls", JujutsuKaisen.MOD_ID),
+                    idleTransfigurationData.getTransfiguredSouls()));
         }
 
         int aboveY = 26;
@@ -61,17 +66,17 @@ public class CursedEnergyOverlay {
         }
         graphics.pose().popPose();
 
-        if (data.getEnergy() > 0.0F) {
+        if (sorcererData.getEnergy() > 0.0F) {
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            Vector3f color = data.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
+            Vector3f color = sorcererData.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(sorcererData.getCursedEnergyColor()).toVector3f();
             RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
 
             graphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 10, 93, 18);
 
-            float energyWidth = (data.getEnergy() / data.getMaxEnergy()) * 93.0F;
+            float energyWidth = (sorcererData.getEnergy() / sorcererData.getMaxEnergy()) * 93.0F;
             graphics.blit(TEXTURE, 20, aboveY + 1, 0, 10, (int) energyWidth, 8, 93, 18);
 
             RenderSystem.depthMask(true);
@@ -82,8 +87,8 @@ public class CursedEnergyOverlay {
         graphics.pose().pushPose();
         graphics.pose().scale(SCALE, SCALE, SCALE);
 
-        if (data.getEnergy() > 0.0F) {
-            graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", data.getEnergy(), data.getMaxEnergy()),
+        if (sorcererData.getEnergy() > 0.0F) {
+            graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", sorcererData.getEnergy(), sorcererData.getMaxEnergy()),
                     Math.round(23 * (1.0F / SCALE)), Math.round((aboveY + 3.0F) * (1.0F / SCALE)), 16777215);
             aboveY += 4;
         }
@@ -100,7 +105,7 @@ public class CursedEnergyOverlay {
 
         for (ItemStack stack : stacks) {
             for (Ability ability : ImbuementHandler.getFullImbuements(stack)) {
-                int cooldown = data.getRemainingCooldown(ability);
+                int cooldown = abilityData.getRemainingCooldown(ability);
 
                 if (cooldown > 0) {
                     below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
@@ -108,20 +113,20 @@ public class CursedEnergyOverlay {
             }
         }
 
-        for (Ability ability : data.getToggled()) {
+        for (Ability ability : abilityData.getToggled()) {
             if (!(ability instanceof Ability.IAttack)) continue;
 
-            int cooldown = data.getRemainingCooldown(ability);
+            int cooldown = abilityData.getRemainingCooldown(ability);
 
             if (cooldown > 0) {
                 below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
             }
         }
 
-        Ability channeled = data.getChanneled();
+        Ability channeled = abilityData.getChanneled();
 
         if (channeled instanceof Ability.IAttack) {
-            int cooldown = data.getRemainingCooldown(channeled);
+            int cooldown = abilityData.getRemainingCooldown(channeled);
 
             if (cooldown > 0) {
                 below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), channeled.getName(), Math.round((float) cooldown / 20)));

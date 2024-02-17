@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.world.entity.LivingEntity;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -21,7 +22,7 @@ public abstract class Transformation extends Ability implements Ability.IToggled
 
         if (cap == null) return Status.FAILURE;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
         for (Ability ability : new ArrayList<>(data.getToggled())) {
             if (!(ability instanceof ITransformation transformation) || ability == this) continue;

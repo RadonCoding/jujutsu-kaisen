@@ -30,6 +30,11 @@ public class GreatSerpentGrab extends Ability {
     }
 
     @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
+    @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 

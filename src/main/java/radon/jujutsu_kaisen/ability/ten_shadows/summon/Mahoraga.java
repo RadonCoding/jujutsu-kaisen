@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -34,14 +35,14 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
         if (ownerCap == null) return false;
 
-        ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+        IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ITenShadowsData ownerTenShadowsData = ownerCap.getTenShadowsData();
 
         if (!this.isTamed(owner)) {
             return target.getHealth() > owner.getHealth() * 4 || owner.getHealth() / owner.getMaxHealth() <= 0.1F;
         }
 
-        if (ownerSorcererData.hasToggled(this)) {
+        if (ownerAbilityData.hasToggled(this)) {
             return owner.level().getGameTime() % 20 != 0 || HelperMethods.RANDOM.nextInt(10) != 0;
         }
 

@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.data.sorcerer;
+package radon.jujutsu_kaisen.data.contract;
 
 import net.minecraft.network.chat.Component;
 import radon.jujutsu_kaisen.JujutsuKaisen;

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -26,7 +27,7 @@ public abstract class TransfiguredSoul<T extends Entity> extends Summon<T> imple
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        IIdleTransfigurationData data = cap.getIdleTransfigurationData();
         data.useTransfiguredSouls(this.getSoulCost());
 
         super.run(owner);
@@ -38,7 +39,7 @@ public abstract class TransfiguredSoul<T extends Entity> extends Summon<T> imple
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+        IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
         if (data.getTransfiguredSouls() < this.getSoulCost()) return false;
 

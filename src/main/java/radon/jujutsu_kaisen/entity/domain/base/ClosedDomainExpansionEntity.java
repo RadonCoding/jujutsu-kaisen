@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -247,14 +248,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (cap == null) return;
 
-                    ISorcererData data = cap.getSorcererData();
-
                     if (instant) {
                         this.createBlock(radius - delay, pos, radius, distance);
                     } else {
                         if (delay == 0) {
                             this.createBlock(radius - delay, pos, radius, distance);
                         } else {
+                            IAbilityData data = cap.getAbilityData();
                             data.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
                         }
                     }

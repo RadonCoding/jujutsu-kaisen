@@ -12,6 +12,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -68,11 +69,11 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
             if (victim.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * this.getPower())) {
                 IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+                if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+                IAbilityData data = cap.getAbilityData();
 
-                if (data != null && (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) || data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
+                if (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) || data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) {
                     victim.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * this.getPower()), 0));
                 }
             }

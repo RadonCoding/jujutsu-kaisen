@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Transformation;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -33,7 +34,7 @@ public class HorseLegs extends Transformation {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(this)) {
             return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;

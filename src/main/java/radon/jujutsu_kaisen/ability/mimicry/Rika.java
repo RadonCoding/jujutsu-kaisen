@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -32,7 +33,7 @@ public class Rika extends Summon<RikaEntity> {
 
         if (ownerCap == null) return false;
 
-        ISorcererData ownerData = ownerCap.getSorcererData();
+        IAbilityData ownerData = ownerCap.getAbilityData();
 
         if (ownerData.hasToggled(this)) return target != null;
 

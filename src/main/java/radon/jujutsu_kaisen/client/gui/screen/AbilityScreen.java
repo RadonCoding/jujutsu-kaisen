@@ -9,7 +9,9 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -36,8 +38,10 @@ public class AbilityScreen extends RadialScreen {
         if (cap == null) return List.of();
 
         ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-        
+        IMimicryData mimicryData = cap.getMimicryData();
+
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType(this.minecraft.player) != MenuType.RADIAL);
 
@@ -48,8 +52,8 @@ public class AbilityScreen extends RadialScreen {
             items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
         }
 
-        if (sorcererData.hasToggled(JJKAbilities.RIKA.get())) {
-            Set<ICursedTechnique> copied = sorcererData.getCopied();
+        if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
+            Set<ICursedTechnique> copied = mimicryData.getCopied();
             items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
         }
 
@@ -72,16 +76,17 @@ public class AbilityScreen extends RadialScreen {
 
         if (cap == null) return;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-        
+        IMimicryData mimicryData = cap.getMimicryData();
+
         DisplayItem item = this.getCurrent().get(this.hovered);
 
         switch (item.type) {
             case ABILITY -> {
                 Ability ability = item.ability;
 
-                if (sorcererData.hasToggled(ability) || sorcererData.isChanneling(ability)) {
+                if (abilityData.hasToggled(ability) || abilityData.isChanneling(ability)) {
                     AbilityHandler.untrigger(this.minecraft.player, ability);
                     PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                 } else {
@@ -92,7 +97,7 @@ public class AbilityScreen extends RadialScreen {
             }
             case CURSE -> PacketHandler.sendToServer(new CurseSummonC2SPacket(item.curse.getValue()));
             case COPIED -> {
-                sorcererData.setCurrentCopied(item.copied);
+                mimicryData.setCurrentCopied(item.copied);
                 PacketHandler.sendToServer(new SetCopiedC2SPacket(item.copied));
             }
             case ABSORBED -> {

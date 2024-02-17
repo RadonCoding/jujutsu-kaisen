@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -204,10 +205,9 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
 
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
 
         this.setShooting(data.isChanneling(JJKAbilities.BLUE_FIRE.get()));
     }
@@ -224,10 +224,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
 
         boolean channelling = data.isChanneling(JJKAbilities.BLUE_FIRE.get());
 

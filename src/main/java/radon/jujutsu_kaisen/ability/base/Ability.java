@@ -13,8 +13,10 @@ import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -60,17 +62,25 @@ public abstract class Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        return ability.isScalable(owner) ? data.getRealPower() : ability.isChantable() ? data.getAbilityPower(ability) : data.getAbilityPower();
+        if (ability.isScalable(owner)) {
+            if (ability.isChantable()) {
+                return data.getAbilityPower(ability);
+            }
+            return data.getAbilityPower();
+        }
+        return data.getRealPower();
     }
 
     public float getPower(LivingEntity owner) {
         return getPower(this, owner);
     }
 
+    // Whether or not the ability scales off of the output of the caster
     public boolean isScalable(LivingEntity owner) {
         return this.getActivationType(owner) != ActivationType.TOGGLED;
     }
 
+    // Whether or not the ability is chantable
     public boolean isChantable() {
         return this.isTechnique();
     }
@@ -204,7 +214,7 @@ public abstract class Ability {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
         if (this.isTechnique() && data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
             if (!this.isNotDisabledFromDA() || !data.hasToggled(this)) {
@@ -223,8 +233,7 @@ public abstract class Ability {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
 
         if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
             data.addDuration(this);
@@ -236,16 +245,16 @@ public abstract class Ability {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
         if (owner instanceof Player player && player.getAbilities().instabuild) return;
 
-        data.useEnergy(this.getRealCost(owner));
+        sorcererData.useEnergy(this.getRealCost(owner));
 
         if (this.getRealCooldown(owner) == 0) return;
 
-        data.addCooldown(this);
+        abilityData.addCooldown(this);
     }
 
     public Status getStatus(LivingEntity owner) {
@@ -255,16 +264,15 @@ public abstract class Ability {
 
         if (cap == null) return Status.FAILURE;
 
-        ISorcererData data = cap.getSorcererData();
-
-        if (data == null) return Status.FAILURE;
+        IAbilityData abilityData = cap.getAbilityData();
+        ISorcererData sorcererData = cap.getSorcererData();
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-            if (this.isTechnique() && data.hasBurnout()) {
+            if (this.isTechnique() && sorcererData.hasBurnout()) {
                 return Status.BURNOUT;
             }
 
-            if (!data.isCooldownDone(this)) {
+            if (!abilityData.isCooldownDone(this)) {
                 return Status.COOLDOWN;
             }
 
@@ -354,20 +362,19 @@ public abstract class Ability {
 
         if (cap == null) return 0.0F;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IMimicryData mimicryData = cap.getMimicryData();
 
-        if (data == null) return 0.0F;
-
-        ICursedTechnique copied = data.getCurrentCopied();
+        ICursedTechnique copied = mimicryData.getCurrentCopied();
 
         if (copied != null && copied.getAbilities().contains(this)) {
             cost *= 1.5F;
         }
-        if (data.hasTrait(Trait.SIX_EYES)) {
+        if (sorcererData.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
 
-        float output = this.isScalable(owner) ? this.isChantable() ? ChantHandler.getOutput(owner, this) : data.getOutput() : 1.0F;
+        float output = this.isScalable(owner) ? this.isChantable() ? ChantHandler.getOutput(owner, this) : sorcererData.getOutput() : 1.0F;
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * output));
     }
 
@@ -409,10 +416,7 @@ public abstract class Ability {
 
             if (cap == null) return 0;
 
-            ISorcererData data = cap.getSorcererData();
-
-            if (data == null) return 0;
-
+            IAbilityData data = cap.getAbilityData();
             return data.getCharge();
         }
     }

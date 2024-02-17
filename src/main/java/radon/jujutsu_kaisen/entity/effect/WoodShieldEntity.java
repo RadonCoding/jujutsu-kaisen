@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -96,11 +97,11 @@ public class WoodShieldEntity extends Mob {
         if (!this.level().isClientSide && owner != null) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            IAbilityData data = cap.getAbilityData();
 
-            if (data == null || !data.hasToggled(JJKAbilities.WOOD_SHIELD.get())) {
+            if (!data.hasToggled(JJKAbilities.WOOD_SHIELD.get())) {
                 this.discard();
                 return;
             }

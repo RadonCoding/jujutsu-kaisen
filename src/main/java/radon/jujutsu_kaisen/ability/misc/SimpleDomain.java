@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -125,13 +126,14 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
+            if (!abilityData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
 
-            SimpleDomainEntity domain = data.getSummonByClass(SimpleDomainEntity.class);
+            SimpleDomainEntity domain = sorcererData.getSummonByClass(SimpleDomainEntity.class);
 
             if (domain != null) {
                 domain.hurt(event.getSource(), event.getAmount());

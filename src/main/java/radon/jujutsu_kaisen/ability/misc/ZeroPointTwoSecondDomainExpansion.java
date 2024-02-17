@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -105,20 +106,21 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        data.delayTickEvent(() -> {
-            ICursedTechnique technique = data.getTechnique();
+        abilityData.delayTickEvent(() -> {
+            ICursedTechnique technique = sorcererData.getTechnique();
 
             if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return;
 
             AbilityHandler.trigger(owner, ability);
 
-            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
+            DomainExpansionEntity domain = sorcererData.getSummonByClass(DomainExpansionEntity.class);
 
             if (domain == null) return;
 
-            data.delayTickEvent(() -> {
+            abilityData.delayTickEvent(() -> {
                 for (Entity entity : domain.getAffected()) {
                     if (entity instanceof LivingEntity living) {
                         ability.onHitEntity(domain, owner, living, true);
@@ -128,7 +130,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
             }, 4);
 
             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-                data.addCooldown(ability);
+                abilityData.addCooldown(ability);
             }
         }, 20);
     }

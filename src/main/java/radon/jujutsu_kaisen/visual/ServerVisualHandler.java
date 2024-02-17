@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.visual;
 
 import net.minecraft.world.entity.LivingEntity;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -16,10 +17,11 @@ public class ServerVisualHandler {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), data.getActiveTechniques(), data.getTechnique(), data.getType(),
-                data.getExperience(), data.getCursedEnergyColor());
+        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(), sorcererData.getActiveTechniques(), sorcererData.getTechnique(), sorcererData.getType(),
+                sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
         PacketHandler.broadcast(new SyncVisualDataS2CPacket(entity.getUUID(), client.serializeNBT()));
     }
 }

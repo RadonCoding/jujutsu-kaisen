@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -34,8 +35,7 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        
+        IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
             data.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());

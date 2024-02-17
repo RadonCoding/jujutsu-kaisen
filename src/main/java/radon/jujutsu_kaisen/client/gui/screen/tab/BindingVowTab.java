@@ -9,11 +9,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
+import radon.jujutsu_kaisen.data.contract.BindingVow;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.BindingVowListWidget;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -68,9 +68,9 @@ public class BindingVowTab extends JJKTab {
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        IContractData data = cap.getContractData();
 
         if (this.vow != null && data != null && !data.isCooldownDone(this.vow.get())) {
             int seconds = data.getRemainingCooldown(this.vow.get()) / 20;
@@ -96,10 +96,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        IContractData data = cap.getContractData();
 
         this.add.active = this.vow != null && !data.hasBindingVow(this.vow.get()) && data.isCooldownDone(this.vow.get());
         this.remove.active = this.vow != null && data.hasBindingVow(this.vow.get()) && data.isCooldownDone(this.vow.get());
@@ -123,9 +122,9 @@ ISorcererData data = cap.getSorcererData();
 
             IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            IContractData data = cap.getContractData();
 
             PacketHandler.sendToServer(new AddBindingVowC2SPacket(this.vow.get()));
             data.addBindingVow(this.vow.get());
@@ -142,9 +141,9 @@ ISorcererData data = cap.getSorcererData();
 
             IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            IContractData data = cap.getContractData();
 
             PacketHandler.sendToServer(new RemoveBindingVowC2SPacket(this.vow.get()));
             data.removeBindingVow(this.vow.get());

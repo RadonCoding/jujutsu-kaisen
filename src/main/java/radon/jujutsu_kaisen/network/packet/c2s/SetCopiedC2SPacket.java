@@ -8,6 +8,9 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -38,10 +41,11 @@ public class SetCopiedC2SPacket implements CustomPacketPayload {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
+            IMimicryData mimicryData = cap.getMimicryData();
 
-            if (data.hasToggled(JJKAbilities.RIKA.get()) && data.getCopied().contains(this.technique)) {
-                data.setCurrentCopied(this.technique);
+            if (abilityData.hasToggled(JJKAbilities.RIKA.get()) && mimicryData.hasCopied(this.technique)) {
+                mimicryData.setCurrentCopied(this.technique);
             }
         });
     }

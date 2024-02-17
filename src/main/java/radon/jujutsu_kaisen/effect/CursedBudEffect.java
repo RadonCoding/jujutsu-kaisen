@@ -5,6 +5,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -51,9 +52,10 @@ public class CursedBudEffect extends JJKEffect {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        if (data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+        if (abilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
             pLivingEntity.removeEffect(this);
             return;
         }
@@ -64,11 +66,11 @@ public class CursedBudEffect extends JJKEffect {
             AMOUNTS.remove(pLivingEntity.getUUID());
         }
 
-        float previous = AMOUNTS.getOrDefault(pLivingEntity.getUUID(), data.getEnergy());
+        float previous = AMOUNTS.getOrDefault(pLivingEntity.getUUID(), sorcererData.getEnergy());
 
-        if (previous > data.getEnergy()) {
-            pLivingEntity.hurt(pLivingEntity.level().damageSources().generic(), (previous - data.getEnergy()) * 0.25F);
+        if (previous > sorcererData.getEnergy()) {
+            pLivingEntity.hurt(pLivingEntity.level().damageSources().generic(), (previous - sorcererData.getEnergy()) * 0.25F);
         }
-        AMOUNTS.put(pLivingEntity.getUUID(), data.getEnergy());
+        AMOUNTS.put(pLivingEntity.getUUID(), sorcererData.getEnergy());
     }
 }

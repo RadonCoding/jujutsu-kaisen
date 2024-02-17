@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -35,8 +36,7 @@ public class UncopyAbilityC2SPacket implements CustomPacketPayload {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
-
+            IMimicryData data = cap.getMimicryData();
             data.uncopy(this.technique);
         });
     }

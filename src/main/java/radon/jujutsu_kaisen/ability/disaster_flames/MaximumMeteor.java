@@ -11,6 +11,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -31,20 +32,21 @@ public class MaximumMeteor extends Ability {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        ICursedTechnique technique = data.getTechnique();
+        ICursedTechnique technique = sorcererData.getTechnique();
 
         if (technique != null) {
             Ability domain = technique.getDomain();
 
             if (domain != null) {
-                if (data.hasToggled(domain)) {
+                if (abilityData.hasToggled(domain)) {
                     return false;
                 }
             }
         }
-        return (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
+        return (sorcererData.getType() == JujutsuType.CURSE || sorcererData.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
                 owner.getHealth() / owner.getMaxHealth() < 0.4F);
     }
 

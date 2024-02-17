@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.curse_manipulation.EnhanceCurse;
 import radon.jujutsu_kaisen.ability.curse_manipulation.MiniUzumaki;
+import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -78,8 +79,7 @@ public class ChantTab extends JJKTab {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-
+        IChantData data = cap.getChantData();
         data.getFirstChants(this.ability.get()).forEach(chant -> consumer.accept(result.apply(chant)));
     }
 
@@ -111,7 +111,7 @@ public class ChantTab extends JJKTab {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        IChantData data = cap.getChantData();
 
         String text = this.text.getValue().toLowerCase();
 
@@ -160,7 +160,7 @@ public class ChantTab extends JJKTab {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IChantData data = cap.getChantData();
 
             PacketHandler.sendToServer(new AddChantC2SPacket(JJKAbilities.getKey(this.ability.get()), text));
             data.addChant(this.ability.get(), text);
@@ -176,7 +176,7 @@ public class ChantTab extends JJKTab {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            IChantData data = cap.getChantData();
 
             PacketHandler.sendToServer(new RemoveChantC2SPacket(JJKAbilities.getKey(this.ability.get()), this.chant.get()));
             data.removeChant(this.ability.get(), this.chant.get());

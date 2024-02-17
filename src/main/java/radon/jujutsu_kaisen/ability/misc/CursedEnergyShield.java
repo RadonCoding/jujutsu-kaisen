@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -19,6 +20,11 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 public class CursedEnergyShield extends Ability implements Ability.IChannelened {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return false;
+    }
+
+    @Override
+    public boolean isChantable() {
         return false;
     }
 
@@ -45,8 +51,7 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
         return data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && super.isValid(owner);
     }
 

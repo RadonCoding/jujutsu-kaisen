@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
@@ -58,15 +61,16 @@ public class YutaOkkotsuEntity extends SorcererEntity {
 
 
     @Override
-    public void init(ISorcererData data) {
-        super.init(data);
-
-        data.copy(JJKCursedTechniques.CURSED_SPEECH.get());
-    }
-
-    @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
+
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        IMimicryData data = cap.getMimicryData();
+
+        data.copy(JJKCursedTechniques.CURSED_SPEECH.get());
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.GREEN_HANDLE_KATANA.get()));
     }

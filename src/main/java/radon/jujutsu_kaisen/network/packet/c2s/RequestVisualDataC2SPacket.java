@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -40,10 +41,11 @@ public class RequestVisualDataC2SPacket implements CustomPacketPayload {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
 
-            ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(),
-                    data.getActiveTechniques(), data.getTechnique(), data.getType(), data.getExperience(), data.getCursedEnergyColor());
+            ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(),
+                    sorcererData.getActiveTechniques(), sorcererData.getTechnique(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
             PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, client.serializeNBT()), sender);
         });
     }

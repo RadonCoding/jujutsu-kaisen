@@ -6,6 +6,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -17,6 +18,11 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 public class Refill extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return false;
+    }
+
+    @Override
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 
@@ -63,8 +69,7 @@ public class Refill extends Ability {
 
         if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
-
+        IAbilityData data = cap.getAbilityData();
         return data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }
 
