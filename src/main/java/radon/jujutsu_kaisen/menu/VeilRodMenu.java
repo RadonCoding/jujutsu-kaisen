@@ -54,7 +54,6 @@ public class VeilRodMenu extends AbstractContainerMenu {
             }
             return false;
         });
-        this.sendAllDataToRemote();
     }
 
     public int getSize() {
@@ -71,7 +70,6 @@ public class VeilRodMenu extends AbstractContainerMenu {
             }
             return false;
         });
-        this.sendAllDataToRemote();
     }
 
     @Override

@@ -31,17 +31,33 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
     public VeilRodScreen(VeilRodMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+
+        this.menu.addSlotListener(new ContainerListener() {
+            @Override
+            public void slotChanged(@NotNull AbstractContainerMenu pContainerToSend, int pDataSlotIndex, @NotNull ItemStack pStack) {
+
+            }
+
+            @Override
+            public void dataChanged(@NotNull AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
+                VeilRodScreen.this.sizeSlider.setValue(VeilRodScreen.this.menu.getSize());
+                VeilRodScreen.this.activate.active = !VeilRodScreen.this.menu.isActive();
+                VeilRodScreen.this.deactivate.active = VeilRodScreen.this.menu.isActive();
+            }
+        });
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
 
-        int newSize = this.sizeSlider.getValueInt();
+        if (this.oldSize != 0) {
+            int newSize = this.sizeSlider.getValueInt();
 
-        if (newSize != this.oldSize) {
-            PacketHandler.sendToServer(new SetVeilSizeC2SPacket(newSize));
-            this.oldSize = newSize;
+            if (newSize != this.oldSize) {
+                PacketHandler.sendToServer(new SetVeilSizeC2SPacket(newSize));
+                this.oldSize = newSize;
+            }
         }
     }
 
@@ -79,20 +95,6 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
             PacketHandler.sendToServer(new ToggleVeilC2SPacket(false));
             this.activate.active = true;
         }).pos(i + 89, j + 47).size(54, 16).build());
-
-        this.menu.addSlotListener(new ContainerListener() {
-            @Override
-            public void slotChanged(@NotNull AbstractContainerMenu pContainerToSend, int pDataSlotIndex, @NotNull ItemStack pStack) {
-
-            }
-
-            @Override
-            public void dataChanged(@NotNull AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
-                VeilRodScreen.this.sizeSlider.setValue(VeilRodScreen.this.menu.getSize());
-                VeilRodScreen.this.activate.active = !VeilRodScreen.this.menu.isActive();
-                VeilRodScreen.this.deactivate.active = VeilRodScreen.this.menu.isActive();
-            }
-        });
     }
 
     @Override
