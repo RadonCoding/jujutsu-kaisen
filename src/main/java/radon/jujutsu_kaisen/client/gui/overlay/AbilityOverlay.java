@@ -188,6 +188,8 @@ public class AbilityOverlay {
 
         if (mc.player == null) return;
 
+        if (mc.player.isSpectator()) return;
+
         if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.SCROLL) {
             abilities = JJKAbilities.getAbilities(mc.player);
             abilities.removeIf(ability -> ability.getMenuType(mc.player) != MenuType.MELEE);

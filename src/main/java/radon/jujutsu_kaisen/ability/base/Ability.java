@@ -198,8 +198,6 @@ public abstract class Ability {
     }
 
     public boolean isValid(LivingEntity owner) {
-        if (owner instanceof Player player && player.isSpectator()) return false;
-
         if (this.isUnlockable() && !this.isUnlocked(owner)) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);

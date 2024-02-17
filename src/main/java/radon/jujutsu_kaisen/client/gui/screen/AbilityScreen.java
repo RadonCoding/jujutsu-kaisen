@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
@@ -27,6 +28,8 @@ public class AbilityScreen extends RadialScreen {
     @Override
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
+
+        if (this.minecraft.player.isSpectator()) return List.of();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
