@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
@@ -152,7 +153,7 @@ public class JJKEventHandler {
             Entity entity = event.getEntity();
             Vec3 center = event.getPos().getCenter();
 
-            if (!VeilHandler.canDestroy(entity, entity.level(), center.x, center.y, center.z)) {
+            if (!VeilHandler.canDestroy(entity, (Level) event.getLevel(), center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
