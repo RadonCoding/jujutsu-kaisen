@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
@@ -190,7 +191,7 @@ public class AbilityData implements IAbilityData {
         }
 
         if (this.owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(this.serializeNBT()), player);
         }
     }
 

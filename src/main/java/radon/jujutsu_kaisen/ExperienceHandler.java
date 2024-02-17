@@ -96,9 +96,9 @@ public class ExperienceHandler {
 
         IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data != null && data.getExperience() > 0.0F) {
             float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
@@ -230,9 +230,9 @@ ISorcererData data = cap.getSorcererData();
 
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             float targetStrength = calculateStrength(target) * 1.5F;
             float ownerStrength = calculateStrength(owner);
