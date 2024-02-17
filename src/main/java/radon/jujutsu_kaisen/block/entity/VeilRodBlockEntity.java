@@ -234,6 +234,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+        this.sendUpdates();
     }
 
     public int getSize() {
@@ -242,12 +243,21 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public void setSize(int size) {
         this.size = size;
-        this.setChanged();
+        this.sendUpdates();
     }
 
     public void setOwner(UUID ownerUUID) {
         this.ownerUUID = ownerUUID;
         this.setChanged();
+    }
+
+    public void sendUpdates() {
+        if (this.level != null) {
+            this.level.setBlocksDirty(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition));
+            this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
+            this.level.updateNeighborsAt(this.worldPosition, this.level.getBlockState(this.worldPosition).getBlock());
+            this.setChanged();
+        }
     }
 
     @Override
