@@ -34,13 +34,11 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     protected void containerTick() {
         super.containerTick();
 
-        int size = this.sizeSlider.getValueInt();
+        int newSize = this.sizeSlider.getValueInt();
 
-        if (size != this.oldSize) {
-            if (this.minecraft != null && this.minecraft.player != null) {
-                PacketHandler.sendToServer(new SetVeilSizeC2SPacket(size));
-            }
-            this.oldSize = size;
+        if (newSize != this.oldSize) {
+            PacketHandler.sendToServer(new SetVeilSizeC2SPacket(newSize));
+            this.oldSize = newSize;
         }
     }
 
