@@ -103,6 +103,10 @@ public abstract class Ability {
         return this.getPointsCost() > 0;
     }
 
+    public boolean isUsableInSpectator() {
+        return false;
+    }
+
     protected int getPointsCost() {
         return 0;
     }
@@ -208,6 +212,7 @@ public abstract class Ability {
     }
 
     public boolean isValid(LivingEntity owner) {
+        if (!this.isUsableInSpectator() && owner.isSpectator()) return false;
         if (this.isUnlockable() && !this.isUnlocked(owner)) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);

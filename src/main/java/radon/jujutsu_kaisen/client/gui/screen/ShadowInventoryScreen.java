@@ -35,8 +35,6 @@ public class ShadowInventoryScreen extends RadialScreen {
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
-        if (this.minecraft.player.isSpectator()) return List.of();
-
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return List.of();

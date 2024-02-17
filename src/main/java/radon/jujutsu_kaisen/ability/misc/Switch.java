@@ -37,6 +37,11 @@ public class Switch extends Ability {
     }
 
     @Override
+    public boolean isUsableInSpectator() {
+        return true;
+    }
+
+    @Override
     public boolean isTechnique() {
         return false;
     }
@@ -78,7 +83,7 @@ public class Switch extends Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        return data.hasTrait(Trait.VESSEL) && data.getFingers() > 0;
+        return data.hasTrait(Trait.VESSEL) && data.getFingers() > 0 && super.isValid(owner);
     }
 
     @Override

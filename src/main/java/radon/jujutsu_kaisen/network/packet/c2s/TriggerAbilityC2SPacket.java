@@ -30,8 +30,6 @@ public class TriggerAbilityC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            if (sender.isSpectator()) return;
-
             Ability ability = JJKAbilities.getValue(this.key);
 
             if (ability == null) return;

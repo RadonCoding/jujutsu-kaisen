@@ -175,6 +175,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     public @NotNull Vec3 getPassengerRidingPosition(Entity pEntity) {
         return new Vec3(
                 new Vector3f(0.0F, -pEntity.getBbHeight() + 0.8F, 0.0F)
+                        .add(0.0F, 0.5F, 0.0F)
                         .rotateY(-this.yBodyRot * (float) (Math.PI / 180.0)))
                 .add(this.position());
     }
