@@ -4,24 +4,22 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 
-public class SetSizeC2SPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "set_size_serverbound");
+public class ToggleVeilC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "toggle_veil_serverbound");
 
-    private final int size;
+    private final boolean active;
 
-    public SetSizeC2SPacket(int size) {
-        this.size = size;
+    public ToggleVeilC2SPacket(boolean active) {
+        this.active = active;
     }
 
-    public SetSizeC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readInt());
+    public ToggleVeilC2SPacket(FriendlyByteBuf buf) {
+        this(buf.readBoolean());
     }
 
     public void handle(PlayPayloadContext ctx) {
@@ -32,14 +30,14 @@ public class SetSizeC2SPacket implements CustomPacketPayload {
                 if (!menu.stillValid(sender)) {
                     return;
                 }
-                menu.setSize(Mth.clamp(this.size, ConfigHolder.SERVER.minimumVeilSize.get(), ConfigHolder.SERVER.maximumVeilSize.get()));
+                menu.setActive(this.active);
             }
         });
     }
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeInt(this.size);
+        pBuffer.writeBoolean(this.active);
     }
 
     @Override
