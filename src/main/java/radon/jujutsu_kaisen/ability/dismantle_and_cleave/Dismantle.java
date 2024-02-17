@@ -66,7 +66,9 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
         float power = this.getPower(owner) * DomainExpansion.getStrength(owner, false);
 
         DismantleProjectile dismantle = new DismantleProjectile(owner, power,
-                (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, false);
+                (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(),
+                HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH * 2, (DismantleProjectile.MAX_LENGTH + 1) * 2),
+                true, false);
         dismantle.setDomain(true);
         owner.level().addFreshEntity(dismantle);
 
