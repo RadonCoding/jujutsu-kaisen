@@ -69,7 +69,7 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity target = pResult.getEntity();
 
-        if (!target.getUUID().equals(this.target)) return;
+        if (target.getUUID() != this.target) return;
 
         this.grabbed = true;
         this.pos = target.position();
