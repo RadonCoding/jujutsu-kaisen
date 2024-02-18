@@ -49,8 +49,9 @@ public class VeilRodBlockEntity extends BlockEntity {
     public UUID ownerUUID;
 
     private boolean active;
-    private int counter;
     private int size;
+
+    private int counter;
 
     public List<Modifier> modifiers;
 
@@ -263,8 +264,9 @@ public class VeilRodBlockEntity extends BlockEntity {
             pTag.putUUID("owner", this.ownerUUID);
         }
         pTag.putBoolean("active", this.active);
-        pTag.putInt("counter", this.counter);
         pTag.putInt("size", this.size);
+
+        pTag.putInt("counter", this.counter);
 
         if (this.modifiers != null) {
             pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
@@ -279,8 +281,9 @@ public class VeilRodBlockEntity extends BlockEntity {
             this.ownerUUID = pTag.getUUID("owner");
         }
         this.active = pTag.getBoolean("active");
-        this.counter = pTag.getInt("counter");
         this.size = pTag.getInt("size");
+
+        this.counter = pTag.getInt("counter");
 
         if (pTag.contains("modifiers")) {
             this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
