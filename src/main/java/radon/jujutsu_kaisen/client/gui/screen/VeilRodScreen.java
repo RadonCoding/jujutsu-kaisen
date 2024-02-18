@@ -89,11 +89,9 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
         this.activate = this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.activate", JujutsuKaisen.MOD_ID)), ignored -> {
             PacketHandler.sendToServer(new ToggleVeilC2SPacket(true));
-            this.deactivate.active = true;
         }).pos(i + 33, j + 47).size(54, 16).build());
         this.deactivate = this.addRenderableWidget(ExtendedButton.builder(Component.translatable(String.format("gui.%s.veil_rod.deactivate", JujutsuKaisen.MOD_ID)), ignored -> {
             PacketHandler.sendToServer(new ToggleVeilC2SPacket(false));
-            this.activate.active = true;
         }).pos(i + 89, j + 47).size(54, 16).build());
     }
 
