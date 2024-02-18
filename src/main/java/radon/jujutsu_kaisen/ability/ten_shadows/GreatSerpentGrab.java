@@ -44,7 +44,8 @@ public class GreatSerpentGrab extends Ability {
 
         ITenShadowsData data = cap.getTenShadowsData();
 
-        return data.hasTamed(JJKEntities.GREAT_SERPENT.get()) && JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
+        return data.hasTamed(JJKEntities.GREAT_SERPENT.get()) && !data.isDead(JJKEntities.GREAT_SERPENT.get()) &&
+                JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
     }
 
     @Override
