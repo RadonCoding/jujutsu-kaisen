@@ -72,11 +72,6 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        return this.sizeSlider.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY) && super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
-    }
-
-    @Override
     protected void init() {
         super.init();
 

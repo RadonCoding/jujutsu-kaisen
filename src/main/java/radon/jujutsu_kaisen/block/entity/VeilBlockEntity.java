@@ -50,7 +50,8 @@ public class VeilBlockEntity extends BlockEntity {
 
         pBlockEntity.counter = 0;
 
-        if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || be.getSize() != pBlockEntity.size) {
+        if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) ||
+                be.getSize() != pBlockEntity.size || !be.isActive()) {
             pBlockEntity.destroy();
         }
     }
