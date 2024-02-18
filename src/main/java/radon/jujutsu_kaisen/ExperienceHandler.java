@@ -130,7 +130,7 @@ public class ExperienceHandler {
             List<BattleData> battlesToRemove = new ArrayList<>();
 
             for (BattleData battle : current) {
-                if (battle.getOwnerUUID().equals(entity.getUUID()) || battle.getTargetUUID().equals(entity.getUUID())) {
+                if (battle.getOwnerUUID() == entity.getUUID() || battle.getTargetUUID() == entity.getUUID()) {
                     battle.end(level);
                     battlesToRemove.add(battle);
                 }
@@ -267,7 +267,7 @@ public class ExperienceHandler {
         public void attack(UUID attackerUUID, float damage) {
             this.totalDamageDealt += damage;
 
-            if (attackerUUID.equals(this.ownerUUID)) {
+            if (attackerUUID == this.ownerUUID) {
                 this.damageDealtByOwner += damage;
             }
         }
