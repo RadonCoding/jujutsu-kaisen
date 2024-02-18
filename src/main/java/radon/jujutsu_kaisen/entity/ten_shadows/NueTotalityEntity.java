@@ -162,7 +162,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         return PlayState.STOP;
     }
 
-    private PlayState flyIdlePredicate(AnimationState<NueEntity> animationState) {
+    private PlayState flyIdlePredicate(AnimationState<NueTotalityEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(FLY);
         }
