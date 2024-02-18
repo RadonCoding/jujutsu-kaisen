@@ -11,6 +11,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -38,7 +39,7 @@ public class Punch extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        if (owner.getNavigation().isStuck() || owner.isInWall()) return true;
+        if (owner.isInWall() || RotationUtil.getLookAtHit(owner, RANGE) instanceof BlockHitResult) return true;
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
