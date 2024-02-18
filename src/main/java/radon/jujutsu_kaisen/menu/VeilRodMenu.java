@@ -5,6 +5,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -24,11 +25,22 @@ public class VeilRodMenu extends AbstractContainerMenu {
         this.addDataSlot(this.size);
 
         this.access.evaluate((level, pos) -> {
+            if (level.isClientSide) return null;
+
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
                 return be.getSize();
             }
             return ConfigHolder.SERVER.minimumVeilSize.get();
         }).ifPresent(this::setSize);
+
+        this.access.evaluate((level, pos) -> {
+            if (level.isClientSide) return null;
+
+            if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
+                return be.isActive();
+            }
+            return false;
+        }).ifPresent(this::setActive);
     }
 
     public VeilRodMenu(int pContainerId) {
@@ -38,6 +50,12 @@ public class VeilRodMenu extends AbstractContainerMenu {
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setData(int pId, int pData) {
+        super.setData(pId, pData);
+        this.broadcastChanges();
     }
 
     public boolean isActive() {
@@ -54,7 +72,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
             }
             return false;
         });
-        this.broadcastChanges();
+        this.access.execute(Level::blockEntityChanged);
     }
 
     public int getSize() {
@@ -71,7 +89,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
             }
             return false;
         });
-        this.broadcastChanges();
+        this.access.execute(Level::blockEntityChanged);
     }
 
     @Override
