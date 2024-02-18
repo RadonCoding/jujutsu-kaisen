@@ -264,7 +264,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<TranquilDeerEntity>> TRANQUIL_DEER = ENTITIES.register("tranquil_deer", () ->
             EntityType.Builder.<TranquilDeerEntity>of(TranquilDeerEntity::new, MobCategory.MISC)
-                    .sized(3.8F, 3.6F)
+                    .sized(3.0F, 3.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "tranquil_deer")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<PiercingBullEntity>> PIERCING_BULL = ENTITIES.register("piercing_bull", () ->
