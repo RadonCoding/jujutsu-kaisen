@@ -232,6 +232,10 @@ public class VeilRodBlockEntity extends BlockEntity {
         }
     }
 
+    public boolean isActive() {
+        return this.active;
+    }
+
     public void setActive(boolean active) {
         this.active = active;
         this.setChanged();
