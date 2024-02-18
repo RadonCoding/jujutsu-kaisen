@@ -55,6 +55,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
     @Override
     public void setData(int pId, int pData) {
         super.setData(pId, pData);
+
         this.broadcastChanges();
     }
 
