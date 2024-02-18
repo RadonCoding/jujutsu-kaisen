@@ -82,7 +82,7 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public boolean isAllowed(Entity entity) {
-        if (entity.getUUID().equals(this.ownerUUID)) return true;
+        if (entity.getUUID() == this.ownerUUID) return true;
 
         IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
