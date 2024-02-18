@@ -37,12 +37,8 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideable, IJumpInputListener {
-    private static final EntityDataAccessor<Integer> DATA_FLIGHT = SynchedEntityData.defineId(NueTotalityEntity.class, EntityDataSerializers.INT);
-
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    private static final RawAnimation FLY_1 = RawAnimation.begin().thenLoop("move.fly_1");
-    private static final RawAnimation FLY_2 = RawAnimation.begin().thenLoop("move.fly_2");
-    private static final RawAnimation FLY_3 = RawAnimation.begin().thenLoop("move.fly_3");
+    private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
     private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
     private static final RawAnimation FLIGHT_FEET = RawAnimation.begin().thenLoop("misc.flight_feet");
     private static final RawAnimation GRAB_FEET = RawAnimation.begin().thenLoop("misc.grab_feet");
@@ -101,27 +97,8 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_FLIGHT, 0);
-    }
-
-    @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-
-        LivingEntity passenger = this.getControllingPassenger();
-
-        Vec3 movement = passenger == null ? this.getDeltaMovement() : new Vec3(passenger.xxa, 0.0D, passenger.zza);
-
-        if (this.jump) {
-            this.setFlight(NueEntity.Flight.ASCEND);
-        } else if (movement.length() > 1.0D) {
-            this.setFlight(NueEntity.Flight.SPRINT);
-        } else {
-            this.setFlight(NueEntity.Flight.NORMAL);
-        }
 
         LivingEntity target = this.getTarget();
 
@@ -170,14 +147,6 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         return navigation;
     }
 
-    private NueEntity.Flight getFlight() {
-        return NueEntity.Flight.values()[this.entityData.get(DATA_FLIGHT)];
-    }
-
-    private void setFlight(NueEntity.Flight flight) {
-        this.entityData.set(DATA_FLIGHT, flight.ordinal());
-    }
-
     private PlayState feetPredicate(AnimationState<NueTotalityEntity> animationState) {
         if (this.isVehicle()) {
             return animationState.setAndContinue(GRAB_FEET);
@@ -193,16 +162,11 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         return PlayState.STOP;
     }
 
-    private PlayState flyIdlePredicate(AnimationState<NueTotalityEntity> animationState) {
+    private PlayState flyIdlePredicate(AnimationState<NueEntity> animationState) {
         if (animationState.isMoving()) {
-            return switch (this.getFlight()) {
-                case ASCEND -> animationState.setAndContinue(FLY_1);
-                case SPRINT -> animationState.setAndContinue(FLY_2);
-                default -> animationState.setAndContinue(FLY_3);
-            };
-        } else {
-            return animationState.setAndContinue(IDLE);
+            return animationState.setAndContinue(FLY);
         }
+        return animationState.setAndContinue(IDLE);
     }
 
     @Override

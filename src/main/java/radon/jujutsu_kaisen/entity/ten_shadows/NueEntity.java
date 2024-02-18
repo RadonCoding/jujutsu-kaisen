@@ -266,10 +266,4 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
         this.refreshDimensions();
     }
-
-    enum Flight {
-        ASCEND,
-        SPRINT,
-        NORMAL
-    }
 }
