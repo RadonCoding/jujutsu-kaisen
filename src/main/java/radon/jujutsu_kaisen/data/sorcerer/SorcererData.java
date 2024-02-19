@@ -574,17 +574,24 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
+        if (this.maxEnergy > 0.0F) return this.maxEnergy;
+
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0.0F;
 
         IContractData data = cap.getContractData();
 
-        long time = this.owner.level().getLevelData().getDayTime();
-        boolean night = time >= 13000 && time < 24000;
-        return (data.hasBindingVow(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
-                ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) *
-                        this.getRealPower() * (float) Math.log(this.getRealPower() + 1)) + this.extraEnergy;
+        float amount = (float) (ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() * Math.pow(this.getRealPower(), 2));
+
+        amount += this.extraEnergy;
+
+        if (data.hasBindingVow(BindingVow.OVERTIME)) {
+            long time = this.owner.level().getLevelData().getDayTime();
+            boolean night = time >= 13000 && time < 24000;
+            amount *= night ? 1.2F : 0.9F;
+        }
+        return amount;
     }
 
     @Override
