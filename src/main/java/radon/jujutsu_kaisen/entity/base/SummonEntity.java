@@ -86,7 +86,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
 
-        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker)) {
+        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker) && attacker != this) {
             this.setTarget(attacker);
         }
     }
