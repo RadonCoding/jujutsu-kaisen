@@ -98,7 +98,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
         if (cap == null) return false;
 
-        ISorcererData sorcererData = cap.getSorcererData();
         IAbilityData abilityData = cap.getAbilityData();
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
