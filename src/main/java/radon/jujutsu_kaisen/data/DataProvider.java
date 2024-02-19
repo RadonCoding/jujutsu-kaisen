@@ -90,10 +90,15 @@ public class DataProvider {
 
         if (cap == null) return;
 
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
     }
 
     @SubscribeEvent
@@ -104,9 +109,14 @@ public class DataProvider {
 
         if (cap == null) return;
 
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
     }
 }

@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncMimicryDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
 
@@ -102,7 +103,7 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
         ownerMimicryData.copy(copied);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(ownerMimicryData.serializeNBT()), player);
         }
         return true;
     }
