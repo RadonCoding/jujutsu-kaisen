@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +27,16 @@ public class JogoEntity extends DisasterCurse {
 
     public JogoEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity pTarget) {
+        if (pTarget == this) {
+            for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+                System.out.println(ste);
+            }
+        }
+        super.setTarget(pTarget);
     }
 
     @Override
