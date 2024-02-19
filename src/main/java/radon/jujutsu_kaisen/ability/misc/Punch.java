@@ -47,6 +47,9 @@ public class Punch extends Ability {
                 return true;
             }
         }
+
+        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return false;
+
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
