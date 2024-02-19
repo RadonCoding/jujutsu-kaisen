@@ -233,13 +233,11 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
         int result = PLAYFUL_CLOUD;
 
-        if (target.getArmorCoverPercentage() > 0) {
-            result = SPLIT_SOUL_KATANA;
-        }
-
         IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap != null) {
+            result = SPLIT_SOUL_KATANA;
+
             IAbilityData data = cap.getAbilityData();
 
             for (Ability toggled : data.getToggled()) {
