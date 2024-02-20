@@ -65,7 +65,10 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
         if (abilityData.hasToggled(this)) {
             DomainExpansionEntity domain = sorcererData.getSummonByClass(DomainExpansionEntity.class);
-            return domain != null && domain.isInsideBarrier(target.blockPosition());
+
+            if (domain == null) return false;
+
+            return domain.isInsideBarrier(target.blockPosition());
         } else {
             if (this instanceof DomainExpansion.IClosedDomain closed) {
                 int radius = Math.round(closed.getRadius(owner));
