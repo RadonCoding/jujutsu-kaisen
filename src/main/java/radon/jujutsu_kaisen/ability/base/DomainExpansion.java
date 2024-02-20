@@ -54,6 +54,8 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target == null) return false;
+
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return false;
@@ -62,13 +64,9 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         IAbilityData abilityData = cap.getAbilityData();
 
         if (abilityData.hasToggled(this)) {
-            if (target != null) {
-                DomainExpansionEntity domain = sorcererData.getSummonByClass(DomainExpansionEntity.class);
-                return domain != null && domain.isInsideBarrier(target.blockPosition());
-            }
+            DomainExpansionEntity domain = sorcererData.getSummonByClass(DomainExpansionEntity.class);
+            return domain != null && domain.isInsideBarrier(target.blockPosition());
         } else {
-            if (target == null) return false;
-
             if (this instanceof DomainExpansion.IClosedDomain closed) {
                 int radius = Math.round(closed.getRadius(owner));
                 Vec3 direction = RotationUtil.getTargetAdjustedLookAngle(owner);
@@ -99,7 +97,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             }
             return result;
         }
-        return false;
     }
 
     public static float getStrength(LivingEntity owner, boolean instant) {
