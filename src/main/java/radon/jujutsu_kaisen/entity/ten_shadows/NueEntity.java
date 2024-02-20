@@ -150,7 +150,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     public float getExperience() {
-        return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_3.getRequiredExperience();
+        return this.isTame() ? super.getExperience() : SorcererGrade.SEMI_GRADE_2.getRequiredExperience();
     }
 
     @Nullable
