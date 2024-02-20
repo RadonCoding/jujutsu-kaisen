@@ -43,7 +43,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
         }
 
         if (ownerAbilityData.hasToggled(this)) {
-            return owner.level().getGameTime() % 20 != 0 || HelperMethods.RANDOM.nextInt(10) != 0;
+            return owner.level().getGameTime() % 20 != 0 || HelperMethods.RANDOM.nextInt(20) != 0;
         }
 
         IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
