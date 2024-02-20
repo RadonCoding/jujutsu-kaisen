@@ -112,16 +112,13 @@ public class LightningEntity extends JujutsuProjectile {
 
                     AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                             this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                    double centerX = bounds.getCenter().x;
-                    double centerY = bounds.getCenter().y;
-                    double centerZ = bounds.getCenter().z;
 
                     for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
                         for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                             for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                                 BlockPos pos = new BlockPos(x, y, z);
 
-                                double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                                double distance = Math.sqrt(x * x + y * y + z * z);
 
                                 if (distance <= radius) {
                                     if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {

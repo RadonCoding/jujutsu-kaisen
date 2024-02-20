@@ -127,14 +127,8 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                     this.createWave(owner);
                 }
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                this.setPos(spawn.x, spawn.y, spawn.z);
-
-                double d0 = look.horizontalDistance();
-                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
-                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
-                this.yRotO = this.getYRot();
-                this.xRotO = this.getXRot();
+                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                        .add(look));
             }
         } else {
             this.discard();

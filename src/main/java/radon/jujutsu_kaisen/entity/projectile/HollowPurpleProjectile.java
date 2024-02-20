@@ -28,7 +28,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final float SPEED = 5.0F;
     private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 30.0F;
-    private static final float MAX_RADIUS = 10.0F;
+    private static final float MAX_RADIUS = 6.0F;
     private static final float RADIUS = 2.0F;
     private static final int ANIMATION = 20;
 
@@ -41,20 +41,22 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(look.scale(this.getRadius() * 0.5F)));
+                .add(look.scale(this.getRadius())));
     }
 
     public float getRadius() {
-        return Math.min(MAX_RADIUS, RADIUS * this.getPower());
+        return Math.max(Mth.PI, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
     }
 
     private void hurtEntities() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        double radius = Math.max(Math.PI, this.getRadius());
+        double radius = this.getRadius();
         AABB bounds = this.getBoundingBox().inflate(radius);
 
         for (Entity entity : this.level().getEntities(owner, bounds)) {
+            if (Math.sqrt(entity.distanceToSqr(bounds.getCenter())) > radius) continue;
+
             if (entity == this) continue;
 
             if (entity instanceof Projectile) {
@@ -70,8 +72,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         for (int i = 0; i < SPEED; i++) {
-            double radius = Math.max(Math.PI, this.getRadius());
+            double radius = this.getRadius();
             AABB bounds = this.getBoundingBox().inflate(radius);
+
             double centerX = bounds.getCenter().x;
             double centerY = bounds.getCenter().y;
             double centerZ = bounds.getCenter().z;
@@ -84,13 +87,13 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
                         double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                        if (distance <= radius) {
-                            if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
-                                if (state.getFluidState().isEmpty()) {
-                                    this.level().destroyBlock(pos, false);
-                                } else {
-                                    this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                                }
+                        if (distance > radius) continue;
+
+                        if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
+                            if (state.getFluidState().isEmpty()) {
+                                this.level().destroyBlock(pos, false);
+                            } else {
+                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                             }
                         }
                     }
@@ -105,7 +108,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void renderBlue(Vec3 center) {
-        float radius = (float) Math.max(Math.PI, this.getRadius()) * 0.5F;
+        float radius = this.getRadius();
         int count = (int) (radius * Math.PI * 2);
 
         for (int i = 0; i < count; i++) {
@@ -142,7 +145,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void renderRed(Vec3 center) {
-        float radius = (float) Math.max(Math.PI, this.getRadius()) * 0.5F;
+        float radius = this.getRadius();
         int count = (int) (radius * Math.PI * 2);
 
         for (int i = 0; i < count; i++) {
@@ -207,7 +210,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        float radius = (float) Math.max(Math.PI, this.getRadius());
+        float radius = this.getRadius() * 2.0F;
         int count = (int) (radius * Math.PI * 2);
 
         for (int i = 0; i < count; i++) {
@@ -271,15 +274,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     owner.swing(InteractionHand.MAIN_HAND);
                 }
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                        .add(look.scale(this.getRadius() * 0.5F));
-                this.setPos(spawn.x, spawn.y, spawn.z);
-
-                double d0 = look.horizontalDistance();
-                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
-                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
-                this.yRotO = this.getYRot();
-                this.xRotO = this.getXRot();
+                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                        .add(look.scale(this.getRadius())));
             }
         } else {
             if (!this.level().isClientSide) {
