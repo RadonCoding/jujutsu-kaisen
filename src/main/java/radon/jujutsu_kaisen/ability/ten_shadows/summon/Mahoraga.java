@@ -99,6 +99,4 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     protected MahoragaEntity summon(LivingEntity owner) {
         return new MahoragaEntity(owner, this.isTamed(owner));
     }
-
-
 }

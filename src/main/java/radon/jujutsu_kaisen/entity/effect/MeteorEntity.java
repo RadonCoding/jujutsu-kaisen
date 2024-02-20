@@ -327,9 +327,10 @@ public class MeteorEntity extends JujutsuProjectile {
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState state = this.level().getBlockState(pos);
 
-                    double distance = Math.sqrt(x * x + y * y + z * z);
+                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance > radius) continue;
+
                     if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
 
                     if (state.getFluidState().isEmpty()) {

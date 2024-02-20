@@ -23,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -197,6 +198,11 @@ public class ToadEntity extends TenShadowsSummon {
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Tongue", this::tonguePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Howl", this::howlPredicate));
+    }
+
+    @Override
+    public float getExperience() {
+        return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_4.getRequiredExperience();
     }
 
     @Nullable

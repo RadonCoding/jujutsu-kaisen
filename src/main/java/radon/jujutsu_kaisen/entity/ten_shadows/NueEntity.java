@@ -19,6 +19,7 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -145,6 +146,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         controllerRegistrar.add(new AnimationController<>(this, "Fly/Idle", 5, this::flyIdlePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
+    }
+
+    @Override
+    public float getExperience() {
+        return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_3.getRequiredExperience();
     }
 
     @Nullable
