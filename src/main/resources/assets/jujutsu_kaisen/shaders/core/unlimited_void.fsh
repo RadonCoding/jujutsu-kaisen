@@ -43,7 +43,7 @@ const vec4[] COLORS = vec4[](
 );
 
 void main() {
-    vec4 color = texture2D(Sampler0, portal_layer_uv(0.0, uv3d.p - (65.0 * sign(view.y))) * 0.125) * COLORS[0];
+    vec4 color = texture(Sampler0, portal_layer_uv(0.0, uv3d.p - (65.0 * sign(view.y))) * 0.125) * COLORS[0];
 
     vec2 uv_offset = vec2(0.0, LayerOffset);
 
@@ -56,7 +56,7 @@ void main() {
             float layer_view_depth = uv3d.p + layer_depth;
 
             if (sign(layer_view_depth) != sign(view.y)) {
-                color += texture2D(Sampler1, portal_layer_uv(layer_rotation, layer_view_depth) * layer_scale + uv_offset) * COLORS[i];
+                color += texture(Sampler1, portal_layer_uv(layer_rotation, layer_view_depth) * layer_scale + uv_offset) * COLORS[i];
             }
         }
     }
