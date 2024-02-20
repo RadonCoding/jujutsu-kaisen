@@ -60,7 +60,7 @@ public class WorldSlash extends Ability {
     @Override
     public Status isTriggerable(LivingEntity owner) {
         if (!(owner instanceof MahoragaEntity)) {
-            if (ChantHandler.getOutput(owner, this) < 2.0F) return Status.FAILURE;
+            if (ChantHandler.getOutput(owner, this) < 1.2F) return Status.FAILURE;
         }
         return super.isTriggerable(owner);
     }
