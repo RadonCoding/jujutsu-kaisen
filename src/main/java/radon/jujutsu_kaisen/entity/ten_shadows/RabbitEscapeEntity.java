@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -218,6 +219,11 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
     @Override
     protected void doPush(@NotNull Entity p_20971_) {
 
+    }
+
+    @Override
+    public float getExperience() {
+        return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_4.getRequiredExperience();
     }
 
     @Nullable

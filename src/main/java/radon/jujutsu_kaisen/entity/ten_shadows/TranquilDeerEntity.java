@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -130,6 +131,11 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Idle", this::walkRunIdlePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+    }
+
+    @Override
+    public float getExperience() {
+        return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_1.getRequiredExperience();
     }
 
     @Nullable

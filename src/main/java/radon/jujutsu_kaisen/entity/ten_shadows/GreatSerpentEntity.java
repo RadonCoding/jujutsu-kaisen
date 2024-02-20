@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -252,6 +253,11 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
+    }
+
+    @Override
+    public float getExperience() {
+        return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_2.getRequiredExperience();
     }
 
     @Nullable

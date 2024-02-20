@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -242,6 +243,11 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         IAbilityData data = cap.getAbilityData();
 
         this.entityData.set(DATA_SHOOTING, data.isChanneling(JJKAbilities.WATER.get()));
+    }
+
+    @Override
+    public float getExperience() {
+        return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_2.getRequiredExperience();
     }
 
     @Override

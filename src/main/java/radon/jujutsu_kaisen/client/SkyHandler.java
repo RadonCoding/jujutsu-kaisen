@@ -192,7 +192,7 @@ public class SkyHandler {
         RenderSystem.setShader(GameRenderer::getPositionShader);
 
         Vec3 vec3 = mc.gameRenderer.getMainCamera().getPosition().subtract(2.0D, 2.0D, 2.0D).scale(0.25D);
-        Vec3 vec31 = CubicSampler.gaussianSampleVec3(vec3, (p_194161_, p_194162_, p_194163_) -> Vec3.fromRGB24(7907327));
+        Vec3 vec31 = CubicSampler.gaussianSampleVec3(vec3, (var1, var2, var3) -> Vec3.fromRGB24(7907327));
         float f1 = Mth.cos(overworld.getTimeOfDay(partialTick) * ((float) Math.PI * 2.0F)) * 2.0F + 0.5F;
         f1 = Mth.clamp(f1, 0.0F, 1.0F);
         float f2 = (float) vec31.x * f1;
@@ -208,33 +208,6 @@ public class SkyHandler {
         optional.get().drawWithShader(poseStack.last().pose(), projection, shader);
         VertexBuffer.unbind();
         RenderSystem.enableBlend();
-
-        /*float[] color = overworld.effects().getSunriseColor(overworld.getTimeOfDay(partialTick), partialTick);
-
-        if (color != null) {
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            poseStack.pushPose();
-            poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-            float f5 = Mth.sin(overworld.getSunAngle(partialTick)) < 0.0F ? 180.0F : 0.0F;
-            poseStack.mulPose(Axis.ZP.rotationDegrees(f5));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            float f6 = color[0];
-            float f7 = color[1];
-            float f8 = color[2];
-            Matrix4f matrix4f = poseStack.last().pose();
-            buffer.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-            buffer.vertex(matrix4f, 0.0F, 100.0F, 0.0F).color(f6, f7, f8, color[3]).endVertex();
-
-            for (int j = 0; j <= 16; ++j) {
-                float f9 = (float)j * ((float) Math.PI * 2.0F) / 16.0F;
-                float f10 = Mth.sin(f9);
-                float f11 = Mth.cos(f9);
-                buffer.vertex(matrix4f, f10 * 120.0F, f11 * 120.0F, -f11 * 40.0F * color[3]).color(color[0], color[1], color[2], 0.0F).endVertex();
-            }
-            BufferUploader.drawWithShader(buffer.end());
-            poseStack.popPose();
-        }*/
 
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         poseStack.pushPose();

@@ -332,7 +332,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     @Override
     public float getExperience() {
-        return Math.max(SorcererGrade.SPECIAL_GRADE.getRequiredExperience(), super.getExperience());
+        return this.isTame() ? super.getExperience() : SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }
 
     @Override

@@ -159,13 +159,17 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         AABB bounds = new AABB(collision.x - radius, collision.y - radius, collision.z - radius,
                 collision.x + radius, collision.y + radius, collision.z + radius);
 
+        double centerX = bounds.getCenter().x;
+        double centerY = bounds.getCenter().y;
+        double centerZ = bounds.getCenter().z;
+
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                 for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState state = owner.level().getBlockState(pos);
 
-                    double distance = Math.sqrt(x * x + y * y + z * z);
+                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance > radius) continue;
 

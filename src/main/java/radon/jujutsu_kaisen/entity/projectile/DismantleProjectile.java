@@ -202,8 +202,6 @@ public class DismantleProjectile extends JujutsuProjectile {
                     }
 
                     if (destroyed) {
-                        ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, current.getCenter().x, current.getCenter().y, current.getCenter().z,
-                                0, 1.0D, 0.0D, 0.0D, 1.0D);
                         this.destroyed++;
                     }
                 }
