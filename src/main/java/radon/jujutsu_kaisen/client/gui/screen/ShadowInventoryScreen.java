@@ -40,7 +40,7 @@ public class ShadowInventoryScreen extends RadialScreen {
         if (cap == null) return List.of();
 
         ITenShadowsData data = cap.getTenShadowsData();
-        return new ArrayList<>(data.getShadowInventory().stream().map(DisplayItem::new).toList());
+        return data.getShadowInventory().stream().map(DisplayItem::new).toList();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ShadowInventoryScreen extends RadialScreen {
         DisplayItem item = this.getCurrent().get(this.hovered);
 
         if (item.type == DisplayItem.Type.ITEM) {
-            PacketHandler.sendToServer(new ShadowInventoryTakeC2SPacket((page + 1) * this.hovered));
+            PacketHandler.sendToServer(new ShadowInventoryTakeC2SPacket((page * MAX_ITEMS) + this.hovered));
         }
     }
 }

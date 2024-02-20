@@ -52,6 +52,8 @@ public abstract class RadialScreen extends Screen {
     protected static final int RADIUS_IN = 50;
     protected static final int RADIUS_OUT = RADIUS_IN * 2;
 
+    protected static final int MAX_ITEMS = 12;
+
     private final List<List<DisplayItem>> pages = new ArrayList<>();
 
     protected int hovered = -1;
@@ -80,17 +82,17 @@ public abstract class RadialScreen extends Screen {
 
         List<DisplayItem> items = this.getItems();
 
-        int count = items.size() / 12;
+        int count = items.size() / MAX_ITEMS;
 
         for (int i = 0; i < count; i++) {
-            int index = i * 12;
-            this.pages.add(items.subList(index, index + 12));
+            int index = i * MAX_ITEMS;
+            this.pages.add(items.subList(index, index + MAX_ITEMS));
         }
 
-        int remainder = items.size() % 12;
+        int remainder = items.size() % MAX_ITEMS;
 
         if (remainder > 0) {
-            int index = count * 12;
+            int index = count * MAX_ITEMS;
             this.pages.add(items.subList(index, index + remainder));
         }
         if (page >= this.pages.size()) {
@@ -464,13 +466,23 @@ public abstract class RadialScreen extends Screen {
             if (this.pages.size() > 1) {
                 if (this.pages.size() - 1 > page) {
                     if (pMouseX > (double) this.width / 2 && pMouseX < this.width && pMouseY > 0 && pMouseY < this.height) {
-                        if (++this.hover == 20) page++;
+                        if (++this.hover == 20) {
+                            page++;
+                        }
+                        if (this.hover == 3 * 20) {
+                            this.hover = 0;
+                        }
                         return;
                     }
                 }
                 if (page > 0) {
                     if (pMouseX > 0 && pMouseX < (double) this.width / 2 && pMouseY > 0 && pMouseY < this.height) {
-                        if (++this.hover == 20) page--;
+                        if (++this.hover == 20) {
+                            page--;
+                        }
+                        if (this.hover == 3 * 20) {
+                            this.hover = 0;
+                        }
                         return;
                     }
                 }
