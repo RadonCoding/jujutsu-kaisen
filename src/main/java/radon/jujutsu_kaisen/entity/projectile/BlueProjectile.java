@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -80,13 +81,15 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private float getRadius() {
-        return Math.max(RADIUS, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
+        return Math.max(Mth.PI, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
     }
 
     private void breakBlocks() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        AABB bounds = this.getBoundingBox();
+        float radius = this.getRadius();
+        AABB bounds = this.getBoundingBox().inflate(radius);
+
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
         double centerZ = bounds.getCenter().z;
@@ -99,13 +102,13 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= this.getRadius()) {
-                        if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
-                            if (state.getFluidState().isEmpty()) {
-                                this.level().destroyBlock(pos, false);
-                            } else {
-                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                            }
+                    if (distance > radius) continue;
+
+                    if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
+                        if (state.getFluidState().isEmpty()) {
+                            this.level().destroyBlock(pos, false);
+                        } else {
+                            this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                         }
                     }
                 }
@@ -135,6 +138,7 @@ public class BlueProjectile extends JujutsuProjectile {
         float radius = this.getRadius() * 2.0F;
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
+
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
         double centerZ = bounds.getCenter().z;
@@ -149,15 +153,15 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= radius) {
-                        if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
-                            if (this.level().destroyBlock(pos, false)) {
-                                FallingBlockEntity entity = FallingBlockEntity.fall(this.level(), pos, state);
-                                entity.noPhysics = true;
+                    if (distance > radius) continue;
 
-                                if (((ServerLevel) this.level()).getEntity(entity.getUUID()) == null) {
-                                    this.level().addFreshEntity(entity);
-                                }
+                    if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
+                        if (this.level().destroyBlock(pos, false)) {
+                            FallingBlockEntity entity = FallingBlockEntity.fall(this.level(), pos, state);
+                            entity.noPhysics = true;
+
+                            if (((ServerLevel) this.level()).getEntity(entity.getUUID()) == null) {
+                                this.level().addFreshEntity(entity);
                             }
                         }
                     }

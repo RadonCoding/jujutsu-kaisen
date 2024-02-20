@@ -205,7 +205,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance >= radius) continue;
+                    if (distance > radius) continue;
 
                     BlockPos pos = center.offset(x, y, z);
 
@@ -238,7 +238,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance >= radius) continue;
+                    if (distance > radius) continue;
 
                     BlockPos pos = center.offset(x, y, z);
 

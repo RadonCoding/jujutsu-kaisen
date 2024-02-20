@@ -157,9 +157,6 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
         AABB bounds = new AABB(collision.x - radius, collision.y - radius, collision.z - radius,
                 collision.x + radius, collision.y + radius, collision.z + radius);
-        double centerX = bounds.getCenter().x;
-        double centerY = bounds.getCenter().y;
-        double centerZ = bounds.getCenter().z;
 
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -167,7 +164,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState state = owner.level().getBlockState(pos);
 
-                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                    double distance = Math.sqrt(x * x + y * y + z * z);
 
                     if (distance > radius) continue;
 
