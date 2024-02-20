@@ -35,9 +35,9 @@ public class Toad extends Summon<ToadEntity> {
         IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(this)) {
-            return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
+            return owner.level().getGameTime() % 20 != 0 || HelperMethods.RANDOM.nextInt(20) != 0;
         }
-        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(10) == 0;
+        return owner.level().getGameTime() % 20 == 0 && HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override

@@ -38,9 +38,9 @@ public class PiercingBull extends Summon<PiercingBullEntity> {
         IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(this)) {
-            return owner.level().getGameTime() % 20 != 0 || HelperMethods.RANDOM.nextInt(10) != 0;
+            return owner.level().getGameTime() % 20 != 0 || HelperMethods.RANDOM.nextInt(20) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(40) == 0;
+        return owner.level().getGameTime() % 20 == 0 && HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override
