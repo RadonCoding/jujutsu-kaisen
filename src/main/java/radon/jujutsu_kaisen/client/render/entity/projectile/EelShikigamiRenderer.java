@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.layer.EelShikigamiEyesLayer;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
@@ -16,6 +17,8 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class EelShikigamiRenderer extends GeoEntityRenderer<EelShikigamiProjectile> {
     public EelShikigamiRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "eel_shikigami")));
+
+        this.addRenderLayer(new EelShikigamiEyesLayer(this));
     }
 
     @Override
