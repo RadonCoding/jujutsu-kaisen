@@ -44,7 +44,7 @@ public class Slam extends Ability implements Ability.ICharged {
                 .add(0.0D, owner.getBbHeight(), 0.0D)
                 .add(0.0D, 0.5D, 0.0D));
 
-        if (owner.getNavigation().isStuck() && owner.level().getBlockState(above).getShape(owner.level(), above).isEmpty()) return true;
+        if (owner.getNavigation().isStuck() && owner.level().getBlockState(above).getCollisionShape(owner.level(), above).isEmpty()) return true;
 
         return owner.hasLineOfSight(target);
     }
