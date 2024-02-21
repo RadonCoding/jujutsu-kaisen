@@ -175,7 +175,7 @@ public class VeilRodBlockEntity extends BlockEntity {
                         BlockPos pos = pPos.offset(x, y, z);
                         BlockState state = pLevel.getBlockState(pos);
 
-                        if (!state.is(BlockTags.DOORS) && !state.is(BlockTags.TRAPDOORS) && !state.getShape(pLevel, pos).isEmpty()) continue;
+                        if (!state.is(BlockTags.DOORS) && !state.is(BlockTags.TRAPDOORS) && !state.getCollisionShape(pLevel, pos).isEmpty()) continue;
 
                         boolean blocked = false;
 
