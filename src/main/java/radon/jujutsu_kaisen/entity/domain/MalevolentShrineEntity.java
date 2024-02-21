@@ -118,14 +118,13 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                                 if (!this.isAffected(pos)) continue;
 
-                                owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
-                                        1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
-
                                 if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
                                     owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
                                             Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                     if (this.random.nextInt(10) == 0) {
+                                        owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
+                                                1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
                                         ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
                                                 0.0D, 0.0D, 0.0D, 0.0D);
                                     }
