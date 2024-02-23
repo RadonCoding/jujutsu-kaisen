@@ -218,7 +218,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaximumOutput() {
-        return (this.isInZone() ? 1.2F : 1.0F) * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
+        return Math.max(0.1F, (this.isInZone() ? 1.2F : 1.0F) * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE)));
     }
 
     @Override

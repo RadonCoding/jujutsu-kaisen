@@ -14,6 +14,8 @@ public class PerfectBodyVisual implements IVisual {
 
         if (client == null) return;
 
+        client.mouth = 0;
+
         client.mouth++;
     }
 
