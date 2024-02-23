@@ -104,13 +104,12 @@ public class PiercingBullEntity extends TenShadowsSummon {
 
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
-
-        for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {
-            if (entity == this ||!entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * data.getAbilityPower())) continue;
+        for (Entity entity : this.level().getEntities(null, this.getBoundingBox().inflate(1.0D))) {
+            if ((this.isTame() && entity == this.getOwner()) || entity == this || !entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * data.getAbilityPower())) continue;
 
             entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(data.getAbilityPower()));
             entity.hurtMarked = true;
