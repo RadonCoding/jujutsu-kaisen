@@ -26,7 +26,7 @@ public class SkyHandler {
     private static final ResourceLocation UNLIMITED_VOID = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/unlimited_void.png");
 
     private static final float UNLIMITED_VOID_SPLATTER_RADIUS = 64.0F;
-    private static final int UNLIMITED_VOID_SPLATTER_FRAMES = 3;
+    private static final int UNLIMITED_VOID_SPLATTER_FRAMES = 2;
 
     private static TextureTarget unlimitedVoidTarget;
     private static VertexBuffer unlimitedVoidBuffer;
@@ -189,7 +189,7 @@ public class SkyHandler {
 
         int frame = 0;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 8; i++) {
             RenderSystem.setShaderTexture(0, new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/misc/unlimited_void_splatter_%d.png", frame + 1)));
 
             poseStack.pushPose();
