@@ -100,7 +100,7 @@ public class ClientAbilityHandler {
         }
 
         @SubscribeEvent
-        public static void onPlayerMouseClick(InputEvent.InteractionKeyMappingTriggered event) {
+        public static void onInteractionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;

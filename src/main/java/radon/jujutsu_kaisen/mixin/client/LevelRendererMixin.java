@@ -49,7 +49,6 @@ public class LevelRendererMixin {
 
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 6, shift = At.Shift.AFTER))
     private void renderLevel(PoseStack pPoseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera pCamera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f pProjectionMatrix, CallbackInfo ci) {
-        this.renderBuffers.bufferSource().endBatch(JJKRenderTypes.daySky());
-        this.renderBuffers.bufferSource().endBatch(JJKRenderTypes.nightSky());
+        this.renderBuffers.bufferSource().endBatch(JJKRenderTypes.unlimitedVoid());
     }
 }
