@@ -5,9 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,28 +39,9 @@ public class JJKRenderTypes extends RenderType {
                     .createCompositeState(false)));
     private static final RenderType UNLIMITED_VOID = create("unlimited_void", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
             false, false, RenderType.CompositeState.builder()
-                    .setShaderState(new ShaderStateShard(JJKShaders::getUnlimitedVoidShader))
-                    .setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_SKY_LOCATION, false, false)
-                            .add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build())
-                    .createCompositeState(false));
-    private static final RenderType DAY_SKY = create("day_sky", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
-            false, false, RenderType.CompositeState.builder()
                     .setShaderState(new ShaderStateShard(JJKShaders::getSkyShader))
                     .setTextureState(new EmptyTextureStateShard(() -> {
-                        TextureTarget target = SkyHandler.getDayTarget();
-
-                        if (target != null) {
-                            RenderSystem.setShaderTexture(0, target.getColorTextureId());
-                        } else {
-                            RenderSystem.setShaderTexture(0, 0);
-                        }
-                    }, () -> {}))
-                    .createCompositeState(false));
-    private static final RenderType NIGHT_SKY = create("night_sky", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
-            false, false, RenderType.CompositeState.builder()
-                    .setShaderState(new ShaderStateShard(JJKShaders::getSkyShader))
-                    .setTextureState(new EmptyTextureStateShard(() -> {
-                        TextureTarget target = SkyHandler.getNightTarget();
+                        TextureTarget target = SkyHandler.getUnlimitedVoidTarget();
 
                         if (target != null) {
                             RenderSystem.setShaderTexture(0, target.getColorTextureId());
@@ -95,14 +74,6 @@ public class JJKRenderTypes extends RenderType {
 
     public static RenderType unlimitedVoid() {
         return UNLIMITED_VOID;
-    }
-
-    public static RenderType daySky() {
-        return DAY_SKY;
-    }
-
-    public static RenderType nightSky() {
-        return NIGHT_SKY;
     }
 
     public static @NotNull RenderType lightning() {
