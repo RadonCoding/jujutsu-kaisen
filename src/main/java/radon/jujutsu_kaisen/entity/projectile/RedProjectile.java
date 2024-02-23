@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -25,6 +26,7 @@ import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -124,20 +126,22 @@ public class RedProjectile extends JujutsuProjectile {
             } else if (this.getTime() >= DELAY) {
                 if (!this.level().isClientSide) {
                     if (this.chanted) {
+                        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                        if (cap == null) return;
+
+                        IAbilityData data = cap.getAbilityData();
+
                         for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
                             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                                 if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner) != Ability.Status.SUCCESS) {
                                     continue;
                                 }
+                                data.addCooldown(JJKAbilities.HOLLOW_PURPLE.get());
                             }
 
                             if (owner instanceof ServerPlayer player) {
-                                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                                PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(data.serializeNBT()), player);
                             }
                             HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
                             this.level().addFreshEntity(explosion);
