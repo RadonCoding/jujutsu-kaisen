@@ -189,14 +189,16 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (!owner.level().isClientSide) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return Status.FAILURE;
+            if (cap == null) return Status.FAILURE;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
-        if (!data.hasSummonOfClass(this.clazz)) {
-            return Status.FAILURE;
+            if (!data.hasSummonOfClass(this.clazz)) {
+                return Status.FAILURE;
+            }
         }
         return super.isStillUsable(owner);
     }
@@ -238,6 +240,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (cap == null) return;
 
         ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
         if (this.shouldRemove()) {
             sorcererData.unsummonByClass(this.clazz);
@@ -247,6 +250,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
         }
     }
 
