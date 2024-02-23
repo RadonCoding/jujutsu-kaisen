@@ -242,12 +242,6 @@ public class ExplosionHandler {
     }
 
     public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        if (damage == 0) {
-            for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-                System.out.println(ste);
-            }
-            throw new RuntimeException();
-        }
         explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire));
     }
 
