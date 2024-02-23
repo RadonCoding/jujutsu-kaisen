@@ -56,11 +56,8 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (original != null) {
             if (original.isAir()) {
-                if (!this.getBlockState().getFluidState().isEmpty()) {
-                    this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-                } else {
-                    this.level.destroyBlock(this.getBlockPos(), false);
-                }
+                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
 
@@ -73,11 +70,7 @@ public class DomainBlockEntity extends BlockEntity {
                 }
             }
         } else {
-            if (!this.getBlockState().getFluidState().isEmpty()) {
-                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-            } else {
-                this.level.destroyBlock(this.getBlockPos(), false);
-            }
+            this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
         }
     }
 
