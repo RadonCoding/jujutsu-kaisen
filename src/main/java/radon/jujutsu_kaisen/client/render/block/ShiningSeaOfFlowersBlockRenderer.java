@@ -8,14 +8,16 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.block.entity.UnlimitedVoidBlockEntity;
+import radon.jujutsu_kaisen.block.entity.SelfEmbodimentOfPerfectionBlockEntity;
+import radon.jujutsu_kaisen.block.entity.ShiningSeaOfFlowersBlockEntity;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.client.SkyHandler;
 
-public class UnlimitedVoidRenderer implements BlockEntityRenderer<UnlimitedVoidBlockEntity> {
-    public UnlimitedVoidRenderer(BlockEntityRendererProvider.Context ignored) {
+public class ShiningSeaOfFlowersBlockRenderer implements BlockEntityRenderer<ShiningSeaOfFlowersBlockEntity> {
+    public ShiningSeaOfFlowersBlockRenderer(BlockEntityRendererProvider.Context ignored) {
     }
 
-    public void render(@NotNull UnlimitedVoidBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void render(@NotNull ShiningSeaOfFlowersBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         Matrix4f matrix4f = pPoseStack.last().pose();
         this.renderCube(matrix4f, pBuffer.getBuffer(this.renderType()));
     }
@@ -37,6 +39,6 @@ public class UnlimitedVoidRenderer implements BlockEntityRenderer<UnlimitedVoidB
     }
 
     protected RenderType renderType() {
-        return JJKRenderTypes.unlimitedVoid();
+        return JJKRenderTypes.skybox(SkyHandler.getShiningSeaOfFlowersTarget());
     }
 }

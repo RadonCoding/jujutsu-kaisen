@@ -14,8 +14,8 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 
-public class NightSkyBlock extends DomainBlock implements EntityBlock {
-    public NightSkyBlock(Properties pProperties) {
+public class HorizonOfTheCaptivatingSkandhaBlock extends DomainBlock implements EntityBlock {
+    public HorizonOfTheCaptivatingSkandhaBlock(Properties pProperties) {
         super(pProperties);
     }
 
@@ -26,11 +26,11 @@ public class NightSkyBlock extends DomainBlock implements EntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return JJKBlockEntities.NIGHT_SKY.get().create(pPos, pState);
+        return JJKBlockEntities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get().create(pPos, pState);
     }
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.NIGHT_SKY.get(), DomainBlockEntity::tick);
+        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), DomainBlockEntity::tick);
     }
 }

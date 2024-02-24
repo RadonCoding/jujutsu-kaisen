@@ -102,6 +102,11 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
     @Override
     public List<Block> getBlocks() {
+        return List.of(JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get());
+    }
+
+    @Override
+    public List<Block> getFloorBlocks() {
         return List.of(JJKBlocks.DOMAIN.get());
     }
 }
