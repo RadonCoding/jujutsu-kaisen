@@ -18,6 +18,7 @@ public class SkyHandler {
     private static final ResourceLocation SELF_EMDOBIMENT_OF_PERFECTION = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/self_embodiment_of_perfection.png");
     private static final ResourceLocation HORIZON_OF_THE_CAPTIVATING_SKANDHA = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/horizon_of_the_captivating_skandha.png");
     private static final ResourceLocation SHINING_SEA_OF_FLOWERS = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/shining_sea_of_flowers.png");
+    private static final ResourceLocation AUTHENTIC_MUTUAL_LOVE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/authentic_mutual_love.png");
 
     private static final float UNLIMITED_VOID_SPLATTER_RADIUS = 64.0F;
     private static final int UNLIMITED_VOID_SPLATTER_FRAMES = 2;
@@ -34,6 +35,9 @@ public class SkyHandler {
 
     private static TextureTarget shiningSeaOfFlowersTarget;
     private static VertexBuffer shiningSeaOfFlowersBuffer;
+
+    private static TextureTarget authenticMutualLoveTarget;
+    private static VertexBuffer authenticMutualLoveBuffer;
 
     private static int skyWidth = -1;
     private static int skyHeight = -1;
@@ -52,6 +56,10 @@ public class SkyHandler {
 
     public static TextureTarget getShiningSeaOfFlowersTarget() {
         return shiningSeaOfFlowersTarget;
+    }
+
+    public static TextureTarget getAuthenticMutualLoveTarget() {
+        return authenticMutualLoveTarget;
     }
 
     private static BufferBuilder.RenderedBuffer createSphericalBuffer() {
@@ -169,6 +177,16 @@ public class SkyHandler {
         return shiningSeaOfFlowersBuffer;
     }
 
+    private static VertexBuffer getAuthenticMutualLoveBuffer() {
+        if (authenticMutualLoveBuffer == null) {
+            BufferBuilder.RenderedBuffer buffer = createSphericalBuffer();
+            authenticMutualLoveBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+            authenticMutualLoveBuffer.bind();
+            authenticMutualLoveBuffer.upload(buffer);
+        }
+        return authenticMutualLoveBuffer;
+    }
+
     public static void renderSky(PoseStack poseStack, Matrix4f projection) {
         Minecraft mc = Minecraft.getInstance();
         Window window = mc.getWindow();
@@ -244,6 +262,17 @@ public class SkyHandler {
 
         shiningSeaOfFlowersTarget.unbindRead();
         shiningSeaOfFlowersTarget.unbindWrite();
+
+        if (authenticMutualLoveTarget == null || update) {
+            if (authenticMutualLoveTarget != null) {
+                authenticMutualLoveTarget.destroyBuffers();
+            }
+            authenticMutualLoveTarget = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
+        }
+
+        authenticMutualLoveTarget.bindWrite(true);
+
+        renderBasicSky(poseStack, projection, AUTHENTIC_MUTUAL_LOVE, getAuthenticMutualLoveBuffer());
 
         mc.gameRenderer.setRenderBlockOutline(true);
         current.bindWrite(true);

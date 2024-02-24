@@ -54,7 +54,7 @@ public class AuthenticMutualLove extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN.get());
+        return List.of(JJKBlocks.AUTHENTIC_MUTUAL_LOVE.get());
     }
 
     @Override

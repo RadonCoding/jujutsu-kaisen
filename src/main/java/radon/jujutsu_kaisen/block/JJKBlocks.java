@@ -68,27 +68,6 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
-    public static DeferredHolder<Block, DomainBlock> SELF_EMBODIMENT_OF_PERFECTION = BLOCKS.register("self_emdobiment_of_perfection", () ->
-            new SelfEmbodimentOfPerfectionBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
-
-    public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
-            new HorizonOfTheCaptivatingSkandhaBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
-
-    public static DeferredHolder<Block, DomainBlock> SHINING_SEA_OF_FLOWERS = BLOCKS.register("shining_sea_of_flowers", () ->
-            new ShiningSeaOfFlowersBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
-
     public static DeferredHolder<Block, DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
@@ -107,6 +86,12 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
+    public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
+            new HorizonOfTheCaptivatingSkandhaBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
     public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
@@ -114,6 +99,12 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
+    public static DeferredHolder<Block, DomainBlock> SHINING_SEA_OF_FLOWERS = BLOCKS.register("shining_sea_of_flowers", () ->
+            new ShiningSeaOfFlowersBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
     public static DeferredHolder<Block, DomainBlock> SHINING_SEA_OF_FLOWERS_FILL = BLOCKS.register("shining_sea_of_flowers_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
@@ -159,6 +150,12 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
 
+    public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE = BLOCKS.register("authentic_mutual_love", () ->
+            new AuthenticMutuaLoveBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
     public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE_ONE = BLOCKS.register("authentic_mutual_love_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
@@ -173,6 +170,13 @@ public class JJKBlocks {
                     .noLootTable()));
     public static DeferredHolder<Block, DomainBlock> AUTHENTIC_MUTUAL_LOVE_THREE = BLOCKS.register("authentic_mutual_love_three", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
+    public static DeferredHolder<Block, DomainBlock> SELF_EMBODIMENT_OF_PERFECTION = BLOCKS.register("self_emdobiment_of_perfection", () ->
+            new SelfEmbodimentOfPerfectionBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)

@@ -350,6 +350,7 @@ public class JJKClientEventHandler {
             event.registerBlockEntityRenderer(JJKBlockEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionBlockRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), HorizonOfTheCaptivatingSkandhaBlockRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.SHINING_SEA_OF_FLOWERS.get(), ShiningSeaOfFlowersBlockRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.AUTHENTIC_MUTUAL_LOVE.get(), AuthenticMutualLoveBlockRenderer::new);
         }
 
         @SubscribeEvent

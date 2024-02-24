@@ -59,6 +59,11 @@ public class JJKBlockEntities {
                             JJKBlocks.SHINING_SEA_OF_FLOWERS.get())
                     .build(null));
 
+    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<AuthenticMutualLoveBlockEntity>> AUTHENTIC_MUTUAL_LOVE = BLOCK_ENTITIES.register("authentic_mutual_love", () ->
+            BlockEntityType.Builder.of(AuthenticMutualLoveBlockEntity::new,
+                            JJKBlocks.AUTHENTIC_MUTUAL_LOVE.get())
+                    .build(null));
+
     public static DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->
             BlockEntityType.Builder.of(DisplayCaseBlockEntity::new,
                             JJKBlocks.DISPLAY_CASE.get())
