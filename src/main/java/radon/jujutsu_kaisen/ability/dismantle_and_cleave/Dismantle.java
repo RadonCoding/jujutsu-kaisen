@@ -73,7 +73,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
         owner.level().addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {
-            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 0.05F, 1.0F);
         }
     }
 
