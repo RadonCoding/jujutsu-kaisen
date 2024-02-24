@@ -137,6 +137,10 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public boolean onRelease(LivingEntity owner) {
+        int charge = this.getCharge(owner);
+
+        if (charge == 0) return false;
+
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return false;
@@ -151,7 +155,7 @@ public class Slam extends Ability implements Ability.ICharged {
         owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
 
         if (!owner.level().isClientSide) {
-            TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
+            TARGETS.put(owner.getUUID(), ((float) Math.min(20, charge) / 20));
         }
 
         data.delayTickEvent(() -> {
