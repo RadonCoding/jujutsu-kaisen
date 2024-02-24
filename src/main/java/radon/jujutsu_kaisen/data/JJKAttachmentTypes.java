@@ -44,7 +44,7 @@ public class JJKAttachmentTypes {
             AttachmentType.<IAbilityData>builder(holder -> new AbilityData((LivingEntity) holder)).serialize(new AbilityDataSerializer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<IChantData>> CHANT = ATTACHMENT_TYPES.register("chant_data",
             AttachmentType.<IChantData>builder(holder -> new ChantData()).serialize(new ChantDataSerializer()).copyOnDeath()::build);
-    public static final Supplier<AttachmentType<IContractData>> CONTRACT = ATTACHMENT_TYPES.register("contrac<t",
+    public static final Supplier<AttachmentType<IContractData>> CONTRACT = ATTACHMENT_TYPES.register("contract",
             AttachmentType.<IContractData>builder(holder -> new ContractData()).serialize(new ContractDataSerializer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<ITenShadowsData>> TEN_SHADOWS = ATTACHMENT_TYPES.register("ten_shadows",
             AttachmentType.<ITenShadowsData>builder(holder -> new TenShadowsData((LivingEntity) holder)).serialize(new TenShadowsDataSerializer()).copyOnDeath()::build);
