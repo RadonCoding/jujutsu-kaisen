@@ -7,6 +7,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.entity.domain.SelfEmbodimentOfPerfectionEntity;
 
 public class JJKBlockEntities {
     public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, JujutsuKaisen.MOD_ID);
@@ -43,14 +44,19 @@ public class JJKBlockEntities {
                             JJKBlocks.UNLIMITED_VOID.get())
                     .build(null));
 
-    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<DaySkyBlockEntity>> DAY_SKY = BLOCK_ENTITIES.register("day_sky", () ->
-            BlockEntityType.Builder.of(DaySkyBlockEntity::new,
-                            JJKBlocks.DAY_SKY.get())
+    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<SelfEmbodimentOfPerfectionBlockEntity>> SELF_EMBODIMENT_OF_PERFECTION = BLOCK_ENTITIES.register("self_embodiment_of_perfection", () ->
+            BlockEntityType.Builder.of(SelfEmbodimentOfPerfectionBlockEntity::new,
+                            JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get())
                     .build(null));
 
-    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<NightSkyBlockEntity>> NIGHT_SKY = BLOCK_ENTITIES.register("night_sky", () ->
-            BlockEntityType.Builder.of(NightSkyBlockEntity::new,
-                            JJKBlocks.NIGHT_SKY.get())
+    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<HorizonOTheCaptivatingSkandhaBlockEntity>> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCK_ENTITIES.register("horizon_of_the_captivating_skandha", () ->
+            BlockEntityType.Builder.of(HorizonOTheCaptivatingSkandhaBlockEntity::new,
+                            JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get())
+                    .build(null));
+
+    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<ShiningSeaOfFlowersBlockEntity>> SHINING_SEA_OF_FLOWERS = BLOCK_ENTITIES.register("shining_sea_of_flowers", () ->
+            BlockEntityType.Builder.of(ShiningSeaOfFlowersBlockEntity::new,
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS.get())
                     .build(null));
 
     public static DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->

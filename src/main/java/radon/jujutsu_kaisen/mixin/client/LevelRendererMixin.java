@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.client.SkyHandler;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 
 import java.util.ArrayList;
@@ -25,8 +26,6 @@ import java.util.List;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
-    @Shadow @Final private RenderBuffers renderBuffers;
-
     @Redirect(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;entitiesForRendering()Ljava/lang/Iterable;"))
     public Iterable<Entity> entitiesForRendering(ClientLevel instance) {
         Iterable<Entity> iter = instance.entitiesForRendering();
@@ -36,19 +35,14 @@ public class LevelRendererMixin {
         iter.forEach(entity -> {
             result.add(entity);
 
-            if (entity.isMultipartEntity() && entity.getParts() != null) {
-                for (PartEntity<?> part : entity.getParts()) {
-                    if (part instanceof JJKPartEntity<?>) {
-                        result.add(part);
-                    }
+            if (!entity.isMultipartEntity()) return;
+
+            for (PartEntity<?> part : entity.getParts()) {
+                if (part instanceof JJKPartEntity<?>) {
+                    result.add(part);
                 }
             }
         });
         return result;
-    }
-
-    @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 6, shift = At.Shift.AFTER))
-    private void renderLevel(PoseStack pPoseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera pCamera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f pProjectionMatrix, CallbackInfo ci) {
-        this.renderBuffers.bufferSource().endBatch(JJKRenderTypes.unlimitedVoid());
     }
 }

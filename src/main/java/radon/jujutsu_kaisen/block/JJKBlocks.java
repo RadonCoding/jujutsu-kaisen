@@ -19,6 +19,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.domain.*;
+import radon.jujutsu_kaisen.block.entity.SelfEmbodimentOfPerfectionBlockEntity;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 
 import javax.annotation.Nullable;
@@ -59,23 +60,30 @@ public class JJKBlocks {
                     .noLootTable()
                     .air()));
 
-    public static DeferredHolder<Block, DomainBlock> DAY_SKY = BLOCKS.register("day_sky", () ->
-            new DaySkyBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
-
-    public static DeferredHolder<Block, DomainBlock> NIGHT_SKY = BLOCKS.register("night_sky", () ->
-            new NightSkyBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
-
 
     public static DeferredHolder<Block, DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
             new UnlimitedVoidBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
+    public static DeferredHolder<Block, DomainBlock> SELF_EMBODIMENT_OF_PERFECTION = BLOCKS.register("self_emdobiment_of_perfection", () ->
+            new SelfEmbodimentOfPerfectionBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
+    public static DeferredHolder<Block, DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
+            new HorizonOfTheCaptivatingSkandhaBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
+    public static DeferredHolder<Block, DomainBlock> SHINING_SEA_OF_FLOWERS = BLOCKS.register("shining_sea_of_flowers", () ->
+            new ShiningSeaOfFlowersBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)

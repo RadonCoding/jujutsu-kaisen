@@ -17,9 +17,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
 import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
+import radon.jujutsu_kaisen.client.render.block.*;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
@@ -38,8 +40,6 @@ import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
-import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
-import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
 import radon.jujutsu_kaisen.client.render.entity.effect.*;
@@ -78,7 +78,7 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRenderLevelStage(RenderLevelStageEvent event) {
             if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-                SkyHandler.renderSky(event.getPoseStack(), event.getPartialTick(), event.getProjectionMatrix());
+                SkyHandler.renderSky(event.getPoseStack(), event.getProjectionMatrix());
             }
         }
 
@@ -345,8 +345,11 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), TransfiguredSoulRenderer::new);
 
-            event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseBlockRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidBlockRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionBlockRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), HorizonOfTheCaptivatingSkandhaBlockRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.SHINING_SEA_OF_FLOWERS.get(), ShiningSeaOfFlowersBlockRenderer::new);
         }
 
         @SubscribeEvent

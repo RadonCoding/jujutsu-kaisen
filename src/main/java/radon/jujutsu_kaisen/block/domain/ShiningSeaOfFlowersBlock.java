@@ -14,8 +14,8 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 
-public class DaySkyBlock extends DomainBlock implements EntityBlock {
-    public DaySkyBlock(Properties pProperties) {
+public class ShiningSeaOfFlowersBlock extends DomainBlock implements EntityBlock {
+    public ShiningSeaOfFlowersBlock(Properties pProperties) {
         super(pProperties);
     }
 
@@ -26,11 +26,11 @@ public class DaySkyBlock extends DomainBlock implements EntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return JJKBlockEntities.DAY_SKY.get().create(pPos, pState);
+        return JJKBlockEntities.SHINING_SEA_OF_FLOWERS.get().create(pPos, pState);
     }
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DAY_SKY.get(), DomainBlockEntity::tick);
+        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.SHINING_SEA_OF_FLOWERS.get(), DomainBlockEntity::tick);
     }
 }

@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.DisplayCaseBlockEntity;
 
-public class DisplayCaseRenderer implements BlockEntityRenderer<DisplayCaseBlockEntity> {
-    public DisplayCaseRenderer(BlockEntityRendererProvider.Context ignored) {
+public class DisplayCaseBlockRenderer implements BlockEntityRenderer<DisplayCaseBlockEntity> {
+    public DisplayCaseBlockRenderer(BlockEntityRendererProvider.Context ignored) {
     }
 
     @Override

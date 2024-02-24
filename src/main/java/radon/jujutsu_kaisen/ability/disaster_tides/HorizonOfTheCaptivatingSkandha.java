@@ -24,21 +24,6 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     private static final float DAMAGE = 10.0F;
 
     @Override
-    public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DAY_SKY.get());
-    }
-
-    @Override
-    public List<Block> getFillBlocks() {
-        return List.of(JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL.get());
-    }
-
-    @Override
-    public List<Block> getDecorationBlocks() {
-        return List.of(JJKBlocks.FAKE_WATER_DOMAIN.get());
-    }
-
-    @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         if (instant || owner.level().getGameTime() % 20 == 0) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -70,6 +55,21 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
         owner.level().addFreshEntity(domain);
 
         return domain;
+    }
+
+    @Override
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get());
+    }
+
+    @Override
+    public List<Block> getFillBlocks() {
+        return List.of(JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL.get());
+    }
+
+    @Override
+    public List<Block> getDecorationBlocks() {
+        return List.of(JJKBlocks.FAKE_WATER_DOMAIN.get());
     }
 
     @Override
