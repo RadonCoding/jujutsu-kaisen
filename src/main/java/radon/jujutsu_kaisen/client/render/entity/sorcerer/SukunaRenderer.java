@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -19,12 +18,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
+
+import java.util.Optional;
 
 public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerModel<SukunaEntity>> {
     private final PlayerModel<SukunaEntity> normal;
@@ -48,14 +47,15 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
 
         assert mc.level != null;
 
-        EntityType<?> type = pEntity.getKey();
+        Optional<GameProfile> profile = pEntity.getPlayer();
 
-        if (type == EntityType.PLAYER) {
-            GameProfile profile = pEntity.getPlayer();
+        if (profile.isPresent()) {
             ClientPacketListener conn = Minecraft.getInstance().getConnection();
-            PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
-            this.model = (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
+            PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.get().getId());
+            this.model = (info == null ? DefaultPlayerSkin.get(profile.get().getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
         } else {
+            EntityType<?> type = pEntity.getEntity();
+
             LivingEntity entity = (LivingEntity) type.create(mc.level);
             if (entity == null) return;
             LivingEntityRenderer<?, ?> renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
@@ -67,15 +67,16 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull SukunaEntity pEntity) {
-        EntityType<?> type = pEntity.getKey();
+        Optional<GameProfile> profile = pEntity.getPlayer();
 
-        if (type == EntityType.PLAYER) {
-            GameProfile profile = pEntity.getPlayer();
+        if (profile.isPresent()) {
             ClientPacketListener conn = Minecraft.getInstance().getConnection();
-            PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
-            this.model = (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
-            return (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).texture();
+            PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.get().getId());
+            this.model = (info == null ? DefaultPlayerSkin.get(profile.get().getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
+            return (info == null ? DefaultPlayerSkin.get(profile.get().getId()) : info.getSkin()).texture();
         } else {
+            EntityType<?> type = pEntity.getEntity();
+
             Minecraft mc = Minecraft.getInstance();
             assert mc.level != null;
             Entity entity = type.create(mc.level);
