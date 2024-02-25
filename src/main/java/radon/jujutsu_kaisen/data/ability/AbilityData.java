@@ -16,7 +16,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
 import javax.annotation.Nullable;
@@ -214,6 +213,8 @@ public class AbilityData implements IAbilityData {
 
             ((Ability.IToggled) ability).removeModifiers(this.owner);
 
+            ability.cooldown(this.owner);
+
             NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
             this.toggled.add(ability);
@@ -257,6 +258,9 @@ public class AbilityData implements IAbilityData {
             if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                 this.owner.sendSystemMessage(this.channeled.getDisableMessage());
             }
+
+            this.channeled.cooldown(this.owner);
+
             NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         }
 
