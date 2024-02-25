@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
@@ -23,7 +24,6 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
@@ -69,10 +69,10 @@ public class SukunaEntity extends SorcererEntity {
         this.fingers = fingers;
         this.vessel = vessel;
 
-        this.entityData.set(DATA_ENTITY, EntityType.getKey(owner.getType()).toString());
+        this.setEntity(owner.getType());
 
         if (owner instanceof Player player) {
-            this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), player.getGameProfile())));
+            this.setPlayer(player.getGameProfile());
         }
     }
 
@@ -116,12 +116,21 @@ public class SukunaEntity extends SorcererEntity {
         }
     }
 
-    public EntityType<?> getKey() {
+    public EntityType<?> getEntity() {
         return EntityType.byString(this.entityData.get(DATA_ENTITY)).orElseThrow();
     }
 
-    public GameProfile getPlayer() {
-        return NbtUtils.readGameProfile(this.entityData.get(DATA_PLAYER).orElseThrow());
+    public void setEntity(EntityType<?> type) {
+        this.entityData.set(DATA_ENTITY, BuiltInRegistries.ENTITY_TYPE.getKey(type).toString());
+    }
+
+    public Optional<GameProfile> getPlayer() {
+        Optional<CompoundTag> player = this.entityData.get(DATA_PLAYER);
+        return player.map(NbtUtils::readGameProfile);
+    }
+
+    public void setPlayer(GameProfile profile) {
+        this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), profile)));
     }
 
     public GameType getOriginal(ServerPlayer player) {
@@ -145,7 +154,7 @@ public class SukunaEntity extends SorcererEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && this.vessel && this.getKey() == EntityType.PLAYER && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && this.vessel && this.getEntity() == EntityType.PLAYER && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -206,8 +215,8 @@ public class SukunaEntity extends SorcererEntity {
             pCompound.putInt("original", this.original.ordinal());
         }
 
-        pCompound.putString("entity",  this.entityData.get(DATA_ENTITY));
-        this.entityData.get(DATA_PLAYER).ifPresent(player -> pCompound.put("player", player));
+        pCompound.putString("entity", this.getEntity().toString());
+        this.getPlayer().ifPresent(player -> pCompound.put("player", NbtUtils.writeGameProfile(new CompoundTag(), player)));
     }
 
     @Override
@@ -228,7 +237,7 @@ public class SukunaEntity extends SorcererEntity {
         this.entityData.set(DATA_ENTITY, pCompound.getString("entity"));
 
         if (pCompound.contains("player")) {
-            this.entityData.set(DATA_PLAYER, Optional.of(pCompound.getCompound("player")));
+            this.setPlayer(NbtUtils.readGameProfile(pCompound.getCompound("player")));
         }
     }
 

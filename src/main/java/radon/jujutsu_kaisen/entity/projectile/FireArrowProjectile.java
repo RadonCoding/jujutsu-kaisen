@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.BetterSmokeParticle;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.CharredEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -59,7 +60,13 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (entity == owner) return;
 
-        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());
+        if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower())) return;
+
+        if (!(entity instanceof LivingEntity living)) return;
+
+        if (!living.isDeadOrDying()) return;
+
+        this.level().addFreshEntity(new CharredEntity(living));
     }
 
     @Override
