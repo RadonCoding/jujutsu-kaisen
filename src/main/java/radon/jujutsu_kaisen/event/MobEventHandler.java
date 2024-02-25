@@ -72,12 +72,6 @@ public class MobEventHandler {
             if (!data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
                 AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
             }
-
-            if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                }
-            }
         }
 
         @SubscribeEvent

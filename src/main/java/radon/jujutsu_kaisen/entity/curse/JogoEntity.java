@@ -30,16 +30,6 @@ public class JogoEntity extends DisasterCurse {
     }
 
     @Override
-    public void setTarget(@Nullable LivingEntity pTarget) {
-        if (pTarget == this) {
-            for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-                System.out.println(ste);
-            }
-        }
-        super.setTarget(pTarget);
-    }
-
-    @Override
     protected boolean isCustom() {
         return false;
     }
