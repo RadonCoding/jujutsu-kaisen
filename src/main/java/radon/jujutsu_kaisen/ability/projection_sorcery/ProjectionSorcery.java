@@ -117,8 +117,14 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         Vec3 end = start.add(look.scale(charge * 4));
         HitResult result = RotationUtil.getHitResult(owner, start, end);
 
-        Vec3 next = result.getType() == HitResult.Type.MISS ? end : result instanceof BlockHitResult block ?
-                block.getBlockPos().getCenter().add(0.0D, 0.5D, 0.0D) : result.getLocation();
+        Vec3 next;
+
+        if (result.getType() == HitResult.Type.MISS) {
+            next = end;
+        } else {
+            BlockPos pos = BlockPos.containing(result.getLocation().subtract(look));
+            next = pos.getCenter();
+        }
 
         int index = this.getCharge(owner);
 
