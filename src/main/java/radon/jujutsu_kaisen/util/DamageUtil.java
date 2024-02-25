@@ -46,7 +46,7 @@ public class DamageUtil {
     }
 
     public static boolean isBlockable(LivingEntity target, DamageSource source) {
-        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) || source.is(JJKDamageSources.SOUL)) return false;
+        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) || source.is(DamageTypes.STARVE) || source.is(JJKDamageSources.SOUL)) return false;
 
         if (source.getDirectEntity() instanceof Projectile projectile && !isBlockable(target, projectile)) return false;
 

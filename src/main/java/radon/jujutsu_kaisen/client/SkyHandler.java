@@ -117,6 +117,43 @@ public class SkyHandler {
         return builder.end();
     }
 
+    private static BufferBuilder.RenderedBuffer createBoxBuffer() {
+        BufferBuilder builder = Tesselator.getInstance().getBuilder();
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+
+        builder.vertex(-100.0F, -100.0F, -100.0F).uv(0.0F, 0.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, -100.0F, 100.0F).uv(0.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, -100.0F, 100.0F).uv(1.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, -100.0F, -100.0F).uv(1.0F / 3.0F, 0.0F).color(255, 255, 255, 255).endVertex();
+
+        builder.vertex(-100.0F, 100.0F, 100.0F).uv(1.0F / 3.0F, 0.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, 100.0F, -100.0F).uv(1.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, 100.0F, -100.0F).uv(2.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, 100.0F, 100.0F).uv(2.0F / 3.0F, 0.0F).color(255, 255, 255, 255).endVertex();
+
+        builder.vertex(100.0F, 100.0F, 100.0F).uv(2.0F / 3.0F, 0.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, -100.0F, 100.0F).uv(2.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, -100.0F, 100.0F).uv(1.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, 100.0F, 100.0F).uv(1.0F, 0.0F).color(255, 255, 255, 255).endVertex();
+
+        builder.vertex(-100.0F, 100.0F, 100.0F).uv(0.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, -100.0F, 100.0F).uv(0.0F, 1.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, -100.0F, -100.0F).uv(1.0F / 3.0F, 1.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, 100.0F, -100.0F).uv(1.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+
+        builder.vertex(-100.0F, 100.0F, -100.0F).uv(1.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(-100.0F, -100.0F, -100.0F).uv(1.0F / 3.0F, 1.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, -100.0F, -100.0F).uv(2.0F / 3.0F, 1.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, 100.0F, -100.0F).uv(2.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+
+        builder.vertex(100.0F, 100.0F, -100.0F).uv(2.0F / 3.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, -100.0F, -100.0F).uv(2.0F / 3.0F, 1.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, -100.0F, 100.0F).uv(1.0F, 1.0F).color(255, 255, 255, 255).endVertex();
+        builder.vertex(100.0F, 100.0F, 100.0F).uv(1.0F, 0.5F).color(255, 255, 255, 255).endVertex();
+
+        return builder.end();
+    }
+
     private static VertexBuffer getUnlimitedVoidBuffer() {
         if (unlimitedVoidBuffer == null) {
             BufferBuilder.RenderedBuffer buffer = createSphericalBuffer();
@@ -149,7 +186,7 @@ public class SkyHandler {
 
     private static VertexBuffer getSelfEmbodimentOfPerfectionBuffer() {
         if (selfEmbodimentOfPerfectionBuffer == null) {
-            BufferBuilder.RenderedBuffer buffer = createSphericalBuffer();
+            BufferBuilder.RenderedBuffer buffer = createBoxBuffer();
             selfEmbodimentOfPerfectionBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             selfEmbodimentOfPerfectionBuffer.bind();
             selfEmbodimentOfPerfectionBuffer.upload(buffer);
@@ -159,7 +196,7 @@ public class SkyHandler {
 
     private static VertexBuffer getHorizonOfTheCaptivatingSkandhaBuffer() {
         if (horizonOfTheCaptivatingSkandhaBuffer == null) {
-            BufferBuilder.RenderedBuffer buffer = createSphericalBuffer();
+            BufferBuilder.RenderedBuffer buffer = createBoxBuffer();
             horizonOfTheCaptivatingSkandhaBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             horizonOfTheCaptivatingSkandhaBuffer.bind();
             horizonOfTheCaptivatingSkandhaBuffer.upload(buffer);
@@ -169,7 +206,7 @@ public class SkyHandler {
 
     private static VertexBuffer getShiningSeaOfFlowersBuffer() {
         if (shiningSeaOfFlowersBuffer == null) {
-            BufferBuilder.RenderedBuffer buffer = createSphericalBuffer();
+            BufferBuilder.RenderedBuffer buffer = createBoxBuffer();
             shiningSeaOfFlowersBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             shiningSeaOfFlowersBuffer.bind();
             shiningSeaOfFlowersBuffer.upload(buffer);
@@ -179,7 +216,7 @@ public class SkyHandler {
 
     private static VertexBuffer getAuthenticMutualLoveBuffer() {
         if (authenticMutualLoveBuffer == null) {
-            BufferBuilder.RenderedBuffer buffer = createSphericalBuffer();
+            BufferBuilder.RenderedBuffer buffer = createBoxBuffer();
             authenticMutualLoveBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             authenticMutualLoveBuffer.bind();
             authenticMutualLoveBuffer.upload(buffer);

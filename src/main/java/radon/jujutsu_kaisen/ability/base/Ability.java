@@ -250,16 +250,27 @@ public abstract class Ability {
 
         if (cap == null) return;
 
-        ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
+        ISorcererData data = cap.getSorcererData();
 
         if (owner instanceof Player player && player.getAbilities().instabuild) return;
 
-        sorcererData.useEnergy(this.getRealCost(owner));
+        data.useEnergy(this.getRealCost(owner));
 
-        if (this.getRealCooldown(owner) == 0) return;
+        if (this.getActivationType(owner) == ActivationType.INSTANT) {
+            this.cooldown(owner);
+        }
+    }
 
-        abilityData.addCooldown(this);
+    public void cooldown(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        IAbilityData data = cap.getAbilityData();
+
+        if (this.getRealCooldown(owner) > 0) {
+            data.addCooldown(this);
+        }
     }
 
     public Status getStatus(LivingEntity owner) {
