@@ -557,10 +557,6 @@ public class JJKEntities {
                     .sized(0.25F, 0.25F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul")
                             .toString()));
-    public static DeferredHolder<EntityType<?>, EntityType<CharredEntity>> CHARRED = ENTITIES.register("charred", () ->
-            EntityType.Builder.<CharredEntity>of(CharredEntity::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "charred")
-                            .toString()));
 
     @SubscribeEvent
     public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
