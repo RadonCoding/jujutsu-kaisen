@@ -5,7 +5,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -60,21 +59,18 @@ public class Switch extends Ability {
 
         if (cap == null) return;
 
-        ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
+        ISorcererData data = cap.getSorcererData();
 
         SukunaEntity sukuna;
 
-        if ((sukuna = sorcererData.getSummonByClass(SukunaEntity.class)) != null) {
-            sorcererData.removeSummon(sukuna);
+        if ((sukuna = data.getSummonByClass(SukunaEntity.class)) != null) {
+            data.removeSummon(sukuna);
             sukuna.discard();
         } else {
-            sukuna = new SukunaEntity(owner, sorcererData.getFingers(), true);
+            sukuna = new SukunaEntity(owner, data.getFingers(), true);
             EntityUtil.convertTo(owner, sukuna, true, false);
 
-            sorcererData.addSummon(sukuna);
-
-            abilityData.clearToggled();
+            data.addSummon(sukuna);
         }
     }
 

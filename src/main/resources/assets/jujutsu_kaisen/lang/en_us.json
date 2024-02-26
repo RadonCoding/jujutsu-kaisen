@@ -225,7 +225,7 @@
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
   "ability.jujutsu_kaisen.fail.burnout": "Burnout: %1$d seconds",
-  "ability.jujutsu_kaisen.fail.throat_damage": "Your throat is still damaged for %1$d seconds",
+  "ability.jujutsu_kaisen.fail.throat": "Your throat is still damaged for %1$d seconds",
 
   "ability.jujutsu_kaisen.shockwave": "Shockwave",
   "ability.jujutsu_kaisen.sky_strike": "Sky Strike",
