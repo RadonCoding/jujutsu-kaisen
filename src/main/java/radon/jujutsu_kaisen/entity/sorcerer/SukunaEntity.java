@@ -215,7 +215,7 @@ public class SukunaEntity extends SorcererEntity {
             pCompound.putInt("original", this.original.ordinal());
         }
 
-        pCompound.putString("entity", this.getEntity().toString());
+        pCompound.putString("entity", BuiltInRegistries.ENTITY_TYPE.getKey(this.getEntity()).toString());
         this.getPlayer().ifPresent(player -> pCompound.put("player", NbtUtils.writeGameProfile(new CompoundTag(), player)));
     }
 
