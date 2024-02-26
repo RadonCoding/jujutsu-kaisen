@@ -14,11 +14,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class GetCrushed extends Ability {
+public class GetCrushed extends CursedSpeech {
     private static final float DAMAGE = 15.0F;
     private static final double CRUSH_POWER = 3.0D;
 
@@ -35,6 +36,8 @@ public class GetCrushed extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        super.run(owner);
+
         if (owner.level().isClientSide) return;
 
         CursedSpeechUtil.attack(owner, entity -> {
@@ -78,6 +81,11 @@ public class GetCrushed extends Ability {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.get_crushed", JujutsuKaisen.MOD_ID), owner.getName()));
             }
         });
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 2 * 20;
     }
 
     @Override

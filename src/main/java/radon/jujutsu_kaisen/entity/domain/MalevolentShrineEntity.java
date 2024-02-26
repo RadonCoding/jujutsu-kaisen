@@ -151,7 +151,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     public void tick() {
         super.tick();
 
-        if (this.getTime() >= MalevolentShrine.DELAY && this.getTime() % 10 == 0) {
+        if (this.getTime() >= MalevolentShrine.DELAY && this.getTime() % 10 == 0 && this.checkSureHitEffect()) {
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
                 if (!(entity instanceof ServerPlayer player)) continue;
 

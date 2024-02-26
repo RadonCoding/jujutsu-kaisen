@@ -17,6 +17,9 @@ import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.curse_manipulation.CurseManipulationData;
 import radon.jujutsu_kaisen.data.curse_manipulation.CurseManipulationDataSerializer;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.cursed_speech.CursedSpeechData;
+import radon.jujutsu_kaisen.data.cursed_speech.CursedSpeechDataSerializer;
+import radon.jujutsu_kaisen.data.cursed_speech.ICursedSpeechData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationDataSerialzer;
@@ -56,4 +59,6 @@ public class JJKAttachmentTypes {
             AttachmentType.<IIdleTransfigurationData>builder(holder -> new IdleTransfigurationData()).serialize(new IdleTransfigurationDataSerialzer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<IMimicryData>> MIMICRY = ATTACHMENT_TYPES.register("mimicry",
             AttachmentType.<IMimicryData>builder(holder -> new MimicryData((LivingEntity) holder)).serialize(new MimicryDataSerializer()).copyOnDeath()::build);
+    public static final Supplier<AttachmentType<ICursedSpeechData>> CURSED_SPEECH = ATTACHMENT_TYPES.register("cursed_speech",
+            AttachmentType.<ICursedSpeechData>builder(holder -> new CursedSpeechData()).serialize(new CursedSpeechDataSerializer()).copyOnDeath()::build);
 }

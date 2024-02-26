@@ -40,7 +40,8 @@ public abstract class Ability {
         SUCCESS,
         ENERGY,
         COOLDOWN,
-        BURNOUT
+        BURNOUT,
+        THROAT
     }
 
     public enum Classification {
