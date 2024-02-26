@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.cursed_speech.ICursedSpeechData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -307,8 +308,11 @@ public class ClientAbilityHandler {
 
         IAbilityData abilityData = cap.getAbilityData();
         ISorcererData sorcererData = cap.getSorcererData();
+        ICursedSpeechData cursedSpeechData = cap.getCursedSpeechData();
 
         switch (status) {
+            case FAILURE ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
             case ENERGY ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
             case COOLDOWN ->
@@ -317,8 +321,9 @@ public class ClientAbilityHandler {
             case BURNOUT ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
                             sorcererData.getBurnout() / 20), false);
-            case FAILURE ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
+            case THROAT ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID),
+                            cursedSpeechData.getThroatDamage() / 20), false);
         }
         return status == Ability.Status.SUCCESS;
     }

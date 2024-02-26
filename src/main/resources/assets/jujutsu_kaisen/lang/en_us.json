@@ -14,6 +14,7 @@
   "gui.jujutsu_kaisen.ability_overlay.cooldown": "Cooldown: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.soul_cost": "Soul Cost: %1$d",
+  "gui.jujutsu_kaisen.ability_overlay.throat_damage": "Throat Damage: %1$d",
 
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
@@ -220,10 +221,11 @@
   "item.jujutsu_kaisen.veil_rod.griefing.allow": "Allow griefing",
   "item.jujutsu_kaisen.veil_rod.griefing.deny": "Deny griefing",
 
+  "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
   "ability.jujutsu_kaisen.fail.burnout": "Burnout: %1$d seconds",
-  "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
+  "ability.jujutsu_kaisen.fail.throat_damage": "Your throat is still damaged for %1$d seconds",
 
   "ability.jujutsu_kaisen.shockwave": "Shockwave",
   "ability.jujutsu_kaisen.sky_strike": "Sky Strike",

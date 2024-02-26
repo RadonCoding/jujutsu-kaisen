@@ -12,12 +12,13 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class BlastAway extends Ability {
+public class BlastAway extends CursedSpeech {
     private static final float DAMAGE = 5.0F;
     private static final double LAUNCH_POWER = 2.0D;
 
@@ -34,6 +35,8 @@ public class BlastAway extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        super.run(owner);
+
         if (owner.level().isClientSide) return;
 
         CursedSpeechUtil.attack(owner, entity -> {
@@ -55,6 +58,11 @@ public class BlastAway extends Ability {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.blast_away", JujutsuKaisen.MOD_ID), owner.getName()));
             }
         });
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 2 * 20;
     }
 
     @Override

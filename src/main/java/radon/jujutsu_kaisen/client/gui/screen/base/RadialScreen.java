@@ -24,6 +24,8 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
+import radon.jujutsu_kaisen.ability.cursed_speech.base.ICursedSpeech;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -337,6 +339,11 @@ public abstract class RadialScreen extends Screen {
                     if (item instanceof ITransfiguredSoul soul) {
                         Component soulCostText = Component.translatable(String.format("gui.%s.ability_overlay.soul_cost", JujutsuKaisen.MOD_ID), soul.getSoulCost());
                         lines.add(soulCostText);
+                    }
+
+                    if (item instanceof ICursedSpeech speech) {
+                        Component throatDamageText = Component.translatable(String.format("gui.%s.ability_overlay.throat_damage", JujutsuKaisen.MOD_ID), speech.getThroatDamage());
+                        lines.add(throatDamageText);
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
                     Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),

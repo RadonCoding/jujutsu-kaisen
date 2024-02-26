@@ -42,6 +42,7 @@ public class DataProvider {
         cap.getProjectionSorceryData().tick();
         cap.getIdleTransfigurationData().tick();
         cap.getMimicryData().tick();
+        cap.getCursedSpeechData().tick();
     }
 
     @SubscribeEvent
@@ -99,6 +100,7 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
     }
 
     @SubscribeEvent
@@ -118,5 +120,6 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
     }
 }

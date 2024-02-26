@@ -8,6 +8,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.cursed_speech.ICursedSpeechData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
@@ -66,5 +67,10 @@ public class JujutsuCapability implements IJujutsuCapability {
     @Override
     public IMimicryData getMimicryData() {
         return this.owner.getData(JJKAttachmentTypes.MIMICRY);
+    }
+
+    @Override
+    public ICursedSpeechData getCursedSpeechData() {
+        return this.owner.getData(JJKAttachmentTypes.CURSED_SPEECH);
     }
 }

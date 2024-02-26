@@ -8,11 +8,12 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class DontMove extends Ability {
+public class DontMove extends CursedSpeech {
     private static final int DURATION = 20;
 
     @Override
@@ -28,6 +29,8 @@ public class DontMove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        super.run(owner);
+
         if (owner.level().isClientSide) return;
 
         CursedSpeechUtil.attack(owner, entity -> {
@@ -39,6 +42,11 @@ public class DontMove extends Ability {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
             }
         });
+    }
+
+    @Override
+    public int getThroatDamage() {
+        return 20;
     }
 
     @Override

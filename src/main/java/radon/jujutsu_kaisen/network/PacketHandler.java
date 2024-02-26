@@ -46,6 +46,9 @@ public class PacketHandler {
         registrar.play(SyncMimicryDataS2CPacket.IDENTIFIER, SyncMimicryDataS2CPacket::new, handler -> handler
                 .client(SyncMimicryDataS2CPacket::handle)
                 .server(SyncMimicryDataS2CPacket::handle));
+        registrar.play(SyncCursedSpeechDataS2CPacket.IDENTIFIER, SyncCursedSpeechDataS2CPacket::new, handler -> handler
+                .client(SyncCursedSpeechDataS2CPacket::handle)
+                .server(SyncCursedSpeechDataS2CPacket::handle));
         registrar.play(CameraShakeS2CPacket.IDENTIFIER, CameraShakeS2CPacket::new, handler -> handler
                 .client(CameraShakeS2CPacket::handle)
                 .server(CameraShakeS2CPacket::handle));
