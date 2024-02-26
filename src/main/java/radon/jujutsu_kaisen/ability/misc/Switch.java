@@ -1,19 +1,20 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class Switch extends Ability {
@@ -59,18 +60,25 @@ public class Switch extends Ability {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
         SukunaEntity sukuna;
 
-        if ((sukuna = data.getSummonByClass(SukunaEntity.class)) != null) {
-            data.removeSummon(sukuna);
+        if ((sukuna = sorcererData.getSummonByClass(SukunaEntity.class)) != null) {
+            sorcererData.removeSummon(sukuna);
             sukuna.discard();
         } else {
-            sukuna = new SukunaEntity(owner, data.getFingers(), true);
+            sukuna = new SukunaEntity(owner, sorcererData.getFingers(), true);
             EntityUtil.convertTo(owner, sukuna, true, false);
 
-            data.addSummon(sukuna);
+            sorcererData.addSummon(sukuna);
+
+            abilityData.clear();
+
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
+            }
         }
     }
 

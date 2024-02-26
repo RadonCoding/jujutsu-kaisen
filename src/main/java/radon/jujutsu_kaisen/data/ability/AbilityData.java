@@ -230,8 +230,9 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
-    public void clearToggled() {
+    public void clear() {
         this.toggled.clear();
+        this.channeled = null;
     }
 
     @Override

@@ -5,7 +5,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -14,10 +13,8 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
-import radon.jujutsu_kaisen.data.projection_sorcery.ProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
@@ -62,7 +59,7 @@ public class DataProvider {
             sorcererData.resetBlackFlash();
 
             IAbilityData abilityData = cap.getAbilityData();
-            abilityData.clearToggled();
+            abilityData.clear();
             abilityData.resetCooldowns();
 
             ITenShadowsData tenShadowsData = cap.getTenShadowsData();
