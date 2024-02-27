@@ -94,7 +94,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
+        return 10 * 20;
     }
 
     @Override
