@@ -19,13 +19,23 @@ public class RotationUtil {
             LivingEntity target = targeting.getTarget();
 
             if (target != null) {
+                double inaccuracy = (float) (14 - entity.level().getDifficulty().getId() * 4);
                 Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                 double d0 = end.x - start.x;
                 double d1 = end.y - start.y;
                 double d2 = end.z - start.z;
-                double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-                float yaw = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F);
-                float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI))));
+
+                Vec3 offset = new Vec3(d0, d1, d2).normalize()
+                        .add(
+                                HelperMethods.RANDOM.triangle(0.0D, 0.0172275D * inaccuracy),
+                                HelperMethods.RANDOM.triangle(0.0D, 0.0172275D * inaccuracy),
+                                HelperMethods.RANDOM.triangle(0.0D, 0.0172275D * inaccuracy)
+                        );
+
+                double d3 = Math.sqrt(offset.x * offset.x + offset.z * offset.z);
+
+                float yaw = Mth.wrapDegrees((float) (Mth.atan2(offset.z,offset.x) * (double) (180.0F / (float) Math.PI)) - 90.0F);
+                float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(offset.y, d3) * (double) (180.0F / (float) Math.PI))));
 
                 entity.setYRot(yaw);
                 entity.yRotO = yaw;
