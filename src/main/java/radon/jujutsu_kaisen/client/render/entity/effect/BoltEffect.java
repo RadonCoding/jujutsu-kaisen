@@ -99,7 +99,7 @@ public class BoltEffect {
                     float maxDiff = this.renderInfo.spreadFactor * segmentDiffScale * totalDistance * this.renderInfo.randomFunction.getRandom(this.random);
                     Vec3 randVec = findRandomOrthogonalVector(diff, random);
                     perpendicularDist = this.renderInfo.segmentSpreader.getSegmentAdd(perpendicularDist, randVec, maxDiff, segmentDiffScale, progress);
-                    // new vector is original + current progress through segments + perpendicular change
+                    // New vector is original + current progress through segments + perpendicular change
                     segmentEnd = this.start.add(diff.scale(progress)).add(perpendicularDist);
                 }
                 float boltSize = this.size * (0.5F + (1 - progress) * 0.5F);
@@ -107,17 +107,17 @@ public class BoltEffect {
                 quads.add(quadData.getLeft());
 
                 if (segmentEnd == this.end) {
-                    break; // break if we've reached the defined end point
+                    break; // Break if we've reached the defined end point
                 } else if (!data.isBranch) {
-                    // continue the bolt if this is the primary (non-branch) segment
+                    // Continue the bolt if this is the primary (non-branch) segment
                     drawQueue.add(new BoltInstructions(segmentEnd, progress, perpendicularDist, quadData.getRight(), false));
                 } else if (this.random.nextFloat() < this.renderInfo.branchContinuationFactor) {
-                    // branch continuation
+                    // Branch continuation
                     drawQueue.add(new BoltInstructions(segmentEnd, progress, perpendicularDist, quadData.getRight(), true));
                 }
 
                 while (this.random.nextFloat() < this.renderInfo.branchInitiationFactor * (1 - progress)) {
-                    // branch initiation (probability decreases as progress increases)
+                    // Branch initiation (probability decreases as progress increases)
                     drawQueue.add(new BoltInstructions(segmentEnd, progress, perpendicularDist, quadData.getRight(), true));
                 }
             }
@@ -150,19 +150,9 @@ public class BoltEffect {
         return Pair.of(quads, new QuadCache(end, endRight, endBack));
     }
 
-    private static class QuadCache {
-
-        private final Vec3 prevEnd, prevEndRight, prevEndBack;
-
-        private QuadCache(Vec3 prevEnd, Vec3 prevEndRight, Vec3 prevEndBack) {
-            this.prevEnd = prevEnd;
-            this.prevEndRight = prevEndRight;
-            this.prevEndBack = prevEndBack;
-        }
-    }
+    private record QuadCache(Vec3 prevEnd, Vec3 prevEndRight, Vec3 prevEndBack) { }
 
     protected static class BoltInstructions {
-
         private final Vec3 start;
         private final Vec3 perpendicularDist;
         private final QuadCache cache;
@@ -178,8 +168,7 @@ public class BoltEffect {
         }
     }
 
-    public class BoltQuads {
-
+    public static class BoltQuads {
         private final List<Vec3> vecs = new ArrayList<>();
 
         protected void addQuad(Vec3... quadVecs) {
@@ -197,10 +186,12 @@ public class BoltEffect {
          * A steady linear increase in perpendicular noise.
          */
         SpreadFunction LINEAR_ASCENT = (progress) -> progress;
+
         /**
          * A steady linear increase in perpendicular noise, followed by a steady decrease after the halfway point.
          */
         SpreadFunction LINEAR_ASCENT_DESCENT = (progress) -> (progress - Math.max(0, 2 * progress - 1)) / 0.5F;
+
         /**
          * Represents a unit sine wave from 0 to PI, scaled by progress.
          */
@@ -217,7 +208,6 @@ public class BoltEffect {
     }
 
     public interface SegmentSpreader {
-
         /** Don't remember where the last segment left off, just randomly move from the straight-line vector. */
         SegmentSpreader NO_MEMORY = (perpendicularDist, randVec, maxDiff, scale, progress) -> randVec.scale(maxDiff);
 
@@ -227,7 +217,7 @@ public class BoltEffect {
                 float nextDiff = maxDiff * (1 - memoryFactor);
                 Vec3 cur = randVec.scale(nextDiff);
                 if (progress > 0.5F) {
-                    // begin to come back to the center after we pass halfway mark
+                    // Begin to come back to the center after we pass halfway mark
                     cur = cur.add(perpendicularDist.scale(-1 * (1 - spreadScale)));
                 }
                 return perpendicularDist.add(cur);
@@ -238,7 +228,6 @@ public class BoltEffect {
     }
 
     public interface SpawnFunction {
-
         /** Allow for bolts to be spawned each update call without any delay. */
         SpawnFunction NO_DELAY = (rand) -> Pair.of(0F, 0F);
         /** Will re-spawn a bolt each time one expires. */
@@ -278,11 +267,10 @@ public class BoltEffect {
     }
 
     public interface FadeFunction {
-
         /** No fade; render the bolts entirely throughout their lifespan. */
         FadeFunction NONE = (totalBolts, lifeScale) -> Pair.of(0, totalBolts);
 
-        /** Remder bolts with a segment-by-segment 'fade' in and out, with a specified fade duration (applied to start and finish). */
+        /** Render bolts with a segment-by-segment 'fade' in and out, with a specified fade duration (applied to start and finish). */
         static FadeFunction fade(float fade) {
             return (totalBolts, lifeScale) -> {
                 int start = lifeScale > (1 - fade) ? (int) (totalBolts * (lifeScale - (1 - fade)) / fade) : 0;
@@ -299,6 +287,7 @@ public class BoltEffect {
 
         /** How much variance is allowed in segment lengths (parallel to straight line). */
         private float parallelNoise = 0.1F;
+
         /**
          * How much variance is allowed perpendicular to the straight line vector. Scaled by distance and spread function.
          */
