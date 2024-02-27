@@ -43,7 +43,7 @@ import java.util.UUID;
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
     public static final int INTERVAL = 10;
-    private static final float COST = 0.5F;
+    private static final float COST = 0.1F;
 
     @Nullable
     public UUID ownerUUID;
@@ -136,24 +136,6 @@ public class VeilRodBlockEntity extends BlockEntity {
         if (pBlockEntity.ownerUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner))
             return;
 
-        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return;
-
-            ISorcererData data = cap.getSorcererData();
-
-            float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
-
-            if (data.getEnergy() < cost) return;
-
-            data.useEnergy(cost);
-
-            if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-            }
-        }
-
         BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
 
         for (Modifier modifier : pBlockEntity.modifiers) {
@@ -220,6 +202,25 @@ public class VeilRodBlockEntity extends BlockEntity {
                         }
 
                         if (!(existing instanceof VeilBlockEntity)) {
+                            // Creating a new veil block consumes cursed energy from the caster
+                            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                                if (cap == null) continue;
+
+                                ISorcererData data = cap.getSorcererData();
+
+                                float cost = COST * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+
+                                if (data.getEnergy() < cost) continue;
+
+                                data.useEnergy(cost);
+
+                                if (owner instanceof ServerPlayer player) {
+                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                                }
+                            }
+
                             pLevel.setBlock(pos, replacement,
                                     Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
                         }
