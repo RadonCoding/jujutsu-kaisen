@@ -14,8 +14,12 @@ import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
 import javax.annotation.Nullable;
@@ -171,6 +175,12 @@ public class AbilityData implements IAbilityData {
 
     @Override
     public void attack(DamageSource source, LivingEntity target) {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
         if (this.channeled instanceof Ability.IAttack attack) {
             if (this.channeled.getStatus(this.owner) == Ability.Status.SUCCESS && attack.attack(source, this.owner, target)) {
                 this.channeled.charge(this.owner);
@@ -190,6 +200,7 @@ public class AbilityData implements IAbilityData {
         }
 
         if (this.owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(this.serializeNBT()), player);
         }
     }
