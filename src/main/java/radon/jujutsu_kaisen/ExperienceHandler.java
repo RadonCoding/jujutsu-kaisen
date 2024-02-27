@@ -104,7 +104,7 @@ public class ExperienceHandler {
             float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
             data.setExperience(Math.max(0.0F, data.getExperience() - penalty));
 
-            int points = (int) Math.floor(penalty * 0.1F);
+            int points = Math.round(penalty * 0.1F);
 
             if (points > 0) {
                 data.setPoints(Math.max(0, data.getPoints() - points));
@@ -249,7 +249,7 @@ public class ExperienceHandler {
                 }
             }
 
-            int points = (int) Math.floor(experience * 0.1F);
+            int points = Math.round(experience * 0.1F);
 
             if (points > 0) {
                 data.addPoints(points);
