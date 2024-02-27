@@ -257,7 +257,7 @@ public abstract class Ability {
 
         data.useEnergy(this.getRealCost(owner));
 
-        if (this.getActivationType(owner) == ActivationType.INSTANT) {
+        if (this instanceof IAttack || this.getActivationType(owner) == ActivationType.INSTANT) {
             this.cooldown(owner);
         }
     }
