@@ -180,8 +180,9 @@ public class SukunaEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.0F;
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() + (this.fingers * (max / 20));
+        float min = SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F;
+        return min + (this.fingers * ((max - min) / 20));
     }
 
     @Override
