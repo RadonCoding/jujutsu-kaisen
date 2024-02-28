@@ -161,14 +161,12 @@ public class SorcererData implements ISorcererData {
 
         this.updateBrainDamage();
 
-        if (!this.owner.level().isClientSide) {
-            if (this.owner instanceof ServerPlayer player) {
-                if (!this.initialized) {
-                    this.initialized = true;
-                    this.generate(player);
-                }
-                this.checkAdvancements(player);
+        if (this.owner instanceof ServerPlayer player) {
+            if (!this.initialized) {
+                this.initialized = true;
+                this.generate(player);
             }
+            this.checkAdvancements(player);
         }
 
         if (this.burnout > 0) {
@@ -815,7 +813,7 @@ public class SorcererData implements ISorcererData {
             }
         }
 
-        if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.HEAVENLY_RESTRICTION)) &&
+        if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION)) &&
                 HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
@@ -832,19 +830,19 @@ public class SorcererData implements ISorcererData {
             }
             this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.VESSEL)) && this.type == JujutsuType.SORCERER &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.VESSEL)) && this.type == JujutsuType.SORCERER &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
                 this.addTrait(Trait.VESSEL);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || traits.contains(Trait.SIX_EYES)) &&
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.SIX_EYES)) &&
                     HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }
 
-            assert this.technique != null;
-
-            owner.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
+            if (this.technique != null) {
+                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
+            }
 
             if (this.type == JujutsuType.CURSE) {
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.curse", JujutsuKaisen.MOD_ID)));
