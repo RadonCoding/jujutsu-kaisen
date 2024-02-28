@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.entity.effect.LightningEntity;
+import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Lightning extends Ability {
@@ -28,8 +29,9 @@ public class Lightning extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-        return HelperMethods.RANDOM.nextInt(20) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= LightningEntity.RANGE;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (owner.distanceTo(target) > LightningEntity.RANGE) return false;
+        return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override
