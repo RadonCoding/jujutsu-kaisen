@@ -53,7 +53,7 @@ public class TargetingStickItem extends Item {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        if (!pLevel.isClientSide) {
+        if (pLevel.isClientSide) {
             ItemStack stack = pPlayer.getItemInHand(pUsedHand);
             Optional<UUID> entity = getEntity(stack);
 
