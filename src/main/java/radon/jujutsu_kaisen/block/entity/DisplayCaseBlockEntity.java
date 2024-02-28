@@ -54,24 +54,24 @@ public class DisplayCaseBlockEntity extends BlockEntity {
         super(JJKBlockEntities.DISPLAY_CASE.get(), pPos, pBlockState);
     }
 
-    private static @Nullable Entity getRandomCurse(Level level, float energy) {
+    private static @Nullable Entity getRandomCurse(Level level, int energy) {
         List<Entity> pool = new ArrayList<>();
 
         for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
             if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer &&
-                    SorcererUtil.getPower(sorcerer.getExperience()) <= energy) {
+                    sorcerer.getGrade().ordinal() <= energy - 1) {
                 pool.add(entity);
             }
         }
         return pool.isEmpty() ? null : pool.get(HelperMethods.RANDOM.nextInt(pool.size()));
     }
 
-    public float getEnergy() {
+    public int getEnergy() {
         if (this.stack.getItem() instanceof CursedObjectItem obj) {
             int index = Mth.clamp(obj.getGrade().ordinal() - 1, 0, SorcererGrade.values().length - 1);
-            return SorcererUtil.getPower(SorcererGrade.values()[index].getRequiredExperience());
+            return SorcererGrade.values()[index].ordinal() + 1;
         }
-        return 0.0F;
+        return 0;
     }
 
     private static boolean isRightDistanceToPlayerAndSpawnPoint(ServerLevel pLevel, ChunkAccess pChunk, BlockPos.MutableBlockPos pPos, double pDistance) {
@@ -143,7 +143,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         if (pLevel.isClientSide) return;
 
-        float energy = pBlockEntity.getEnergy();
+        int energy = pBlockEntity.getEnergy();
 
         int centerX = pPos.getX() >> 4;
         int centerZ = pPos.getZ() >> 4;
