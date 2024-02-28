@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.entity.effect.LightningEntity;
 import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -21,6 +22,7 @@ public class ShootPureLove extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (((RikaEntity) owner).isOpen()) return true;
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (owner.distanceTo(target) > PureLoveBeamEntity.RANGE) return false;
         return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
