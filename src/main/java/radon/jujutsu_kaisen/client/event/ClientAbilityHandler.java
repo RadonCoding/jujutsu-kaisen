@@ -307,7 +307,6 @@ public class ClientAbilityHandler {
         if (cap == null) return false;
 
         IAbilityData abilityData = cap.getAbilityData();
-        ISorcererData sorcererData = cap.getSorcererData();
         ICursedSpeechData cursedSpeechData = cap.getCursedSpeechData();
 
         switch (status) {
@@ -318,9 +317,6 @@ public class ClientAbilityHandler {
             case COOLDOWN ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
                             Math.max(1, abilityData.getRemainingCooldown(ability) / 20)), false);
-            case BURNOUT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
-                            sorcererData.getBurnout() / 20), false);
             case THROAT ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID),
                             cursedSpeechData.getThroatDamage() / 20), false);

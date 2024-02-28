@@ -40,7 +40,6 @@ public abstract class Ability {
         SUCCESS,
         ENERGY,
         COOLDOWN,
-        BURNOUT,
         THROAT
     }
 
@@ -220,10 +219,17 @@ public abstract class Ability {
 
         if (cap == null) return false;
 
-        IAbilityData data = cap.getAbilityData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
-        if (this.isTechnique() && data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-            if (!this.isNotDisabledFromDA() || !data.hasToggled(this)) {
+        if (this.isTechnique()) {
+            if (abilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                if (!this.isNotDisabledFromDA() || !abilityData.hasToggled(this)) {
+                    return false;
+                }
+            }
+
+            if (sorcererData.hasBurnout()) {
                 return false;
             }
         }
@@ -281,15 +287,10 @@ public abstract class Ability {
 
         if (cap == null) return Status.FAILURE;
 
-        IAbilityData abilityData = cap.getAbilityData();
-        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-            if (this.isTechnique() && sorcererData.hasBurnout()) {
-                return Status.BURNOUT;
-            }
-
-            if (!abilityData.isCooldownDone(this)) {
+            if (!data.isCooldownDone(this)) {
                 return Status.COOLDOWN;
             }
 
