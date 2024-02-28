@@ -81,6 +81,4 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     protected boolean canTame() {
         return true;
     }
-
-
 }
