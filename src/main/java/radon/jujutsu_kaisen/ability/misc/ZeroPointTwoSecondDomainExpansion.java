@@ -128,10 +128,6 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
                 }
                 domain.discard();
             }, 4);
-
-            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-                abilityData.addCooldown(ability);
-            }
         }, 20);
     }
 
