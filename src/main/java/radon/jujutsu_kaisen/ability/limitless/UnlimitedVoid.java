@@ -27,6 +27,8 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
 
         entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * getStrength(owner, instant)),
                 0, false, false, false));
+        entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(10 * 20 * getStrength(owner, instant)),
+                1, false, false, false));
         entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * getStrength(owner, instant)),
                 4, false, false, false));
 
