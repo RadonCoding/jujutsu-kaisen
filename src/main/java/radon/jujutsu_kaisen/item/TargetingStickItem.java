@@ -36,6 +36,8 @@ public class TargetingStickItem extends Item {
 
         if (nbt == null) return Optional.empty();
 
+        if (!nbt.contains("entity")) return Optional.empty();
+
         return Optional.of(nbt.getUUID("entity"));
     }
 
