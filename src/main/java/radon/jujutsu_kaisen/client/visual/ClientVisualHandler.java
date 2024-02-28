@@ -60,7 +60,7 @@ public class ClientVisualHandler {
     public static ClientVisualHandler.ClientData get(Entity entity) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.level == null || mc.player == null) return null;
+        if (mc.player == null) return null;
 
         if (synced.containsKey(entity.getUUID())) {
             return synced.get(entity.getUUID());

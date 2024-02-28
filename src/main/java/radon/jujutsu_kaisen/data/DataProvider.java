@@ -89,7 +89,7 @@ public class DataProvider {
         if (cap == null) return;
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
@@ -109,7 +109,7 @@ public class DataProvider {
         if (cap == null) return;
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
