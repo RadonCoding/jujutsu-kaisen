@@ -202,9 +202,6 @@ public class AbilityOverlay {
 
             if (selected == null) return;
 
-            if (!selected.isValid(mc.player) || !JJKAbilities.getAbilities(mc.player).contains(selected)) {
-                selected = null;
-            }
             renderToggle(gui, graphics, width, height, selected);
         }
     };
