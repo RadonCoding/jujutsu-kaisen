@@ -116,26 +116,24 @@
   "item.jujutsu_kaisen.mimicry_katana.technique": "Technique: %1$s",
   "item.jujutsu_kaisen.jet_black_shadow_sword": "Jet-Black Shadow Sword",
 
+  "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
+  "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",
+  "item.jujutsu_kaisen.blindfold": "Blindfold",
+
   "item.jujutsu_kaisen.sukuna_finger": "Sukuna Finger",
   "item.jujutsu_kaisen.cursed_totem": "Cursed Totem",
   "item.jujutsu_kaisen.cursed_compass": "Cursed Compass",
   "item.jujutsu_kaisen.cursed_music_disc": "Cursed Music Disc",
   "item.jujutsu_kaisen.cursed_eye_of_ender": "Cursed Eye of Ender",
 
+  "item.jujutsu_kaisen.cursed_spirit_orb": "Cursed Spirit Orb",
+  "item.jujutsu_kaisen.transfigured_soul": "Transfigured Soul",
+
   "item.jujutsu_kaisen.sorcerer_flesh": "Sorcerer Flesh",
   "item.jujutsu_kaisen.curse_flesh": "Curse Flesh",
   "item.jujutsu_kaisen.merged_flesh": "Merged Flesh",
 
-  "item.jujutsu_kaisen.cursed_spirit_orb": "Cursed Spirit Orb",
-
-  "item.jujutsu_kaisen.transfigured_soul": "Transfigured Soul",
-
-  "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
-  "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",
-
-  "item.jujutsu_kaisen.blindfold": "Blindfold",
-
-  "item.jujutsu_kaisen.sorcerer_leggings": "Sorcerer Leggings",
+  "item.jujutsu_kaisen.targeting_stick": "Targeting Stick",
 
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
   "item.jujutsu_kaisen.satoru_gojo_spawn_egg": "Spawn Satoru Gojo",
@@ -564,6 +562,9 @@
   "chat.jujutsu_kaisen.not_strong_enough": "Seems your body isn't strong enough to handle that yet",
 
   "chat.jujutsu_kaisen.enhance_curse": "Experience: %1$f/%2$f",
+
+  "chat.jujutsu_kaisen.targeting_stick.add": "First target set, hit another entity to start the battle",
+  "chat.jujutsu_kaisen.targeting_stick.reset": "Successfully reset targets",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
   "entity.jujutsu_kaisen.authentic_mutual_love": "Authentic Mutual Love",

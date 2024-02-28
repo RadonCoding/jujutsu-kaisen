@@ -102,6 +102,9 @@ public class JJKItems {
     public static DeferredHolder<Item, Item> ALTAR = ITEMS.register("altar",
             () -> new BlockItem(JJKBlocks.ALTAR.get(), new Item.Properties()));
 
+    public static DeferredHolder<Item, Item> TARGETING_STICK = ITEMS.register("targeting_stick",
+            () -> new TargetingStickItem(new Item.Properties()));
+
     public static DeferredHolder<Item, DeferredSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
             () -> new DeferredSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 0x2d2d2d, 0xfefefe, new Item.Properties()));
     public static DeferredHolder<Item, DeferredSpawnEggItem> SATORU_GOJO_SPAWN_EGG = ITEMS.register("satoru_gojo_spawn_egg",
