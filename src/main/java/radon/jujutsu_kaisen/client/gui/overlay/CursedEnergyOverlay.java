@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 
 import java.util.ArrayList;
@@ -51,7 +52,11 @@ public class CursedEnergyOverlay {
         graphics.pose().scale(SCALE, SCALE, SCALE);
 
         List<Component> above = new ArrayList<>();
-        above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(sorcererData.getOutput() * 100)));
+
+        if (!sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(sorcererData.getOutput() * 100)));
+        }
+
         above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), sorcererData.getExperience()));
 
         if (sorcererData.hasActiveTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
