@@ -97,9 +97,9 @@ public class OutputRCT extends Ability {
         for (int i = 0; i < 8; i++) {
             ownerData.delayTickEvent(() -> {
                 for (int j = 0; j < 8; j++) {
-                    double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - target.getLookAngle().scale(0.35D).x;
+                    double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F);
                     double y = target.getY() + HelperMethods.RANDOM.nextDouble() * (target.getBbHeight());
-                    double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - target.getLookAngle().scale(0.35D).z;
+                    double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F);
                     double speed = (target.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
                     level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.RCT, target.getBbWidth() * 0.5F,
                             0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
