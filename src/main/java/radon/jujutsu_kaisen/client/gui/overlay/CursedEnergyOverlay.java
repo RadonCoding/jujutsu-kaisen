@@ -96,8 +96,10 @@ public class CursedEnergyOverlay {
 
         List<Component> below = new ArrayList<>();
 
-        if (sorcererData.getBurnout() > 0) {
-            below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.burnout", JujutsuKaisen.MOD_ID)).withStyle(ChatFormatting.DARK_RED));
+        int burnout = sorcererData.getBurnout();
+
+        if (burnout > 0) {
+            below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.burnout", JujutsuKaisen.MOD_ID), Math.round((float) burnout / 20)).withStyle(ChatFormatting.DARK_RED));
         }
 
         List<ItemStack> stacks = new ArrayList<>();
