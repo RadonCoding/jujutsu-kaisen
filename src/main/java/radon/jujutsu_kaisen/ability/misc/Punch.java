@@ -42,7 +42,7 @@ public class Punch extends Ability {
         if (owner.isInWall()) return true;
         if (target == null || target.isDeadOrDying()) return false;
 
-        if (owner.getNavigation().isStuck() && RotationUtil.getLookAtHit(owner, 1.0D) instanceof BlockHitResult hit) {
+        if (RotationUtil.getLookAtHit(owner, 1.0D) instanceof BlockHitResult hit) {
             if (owner.level().getBlockState(hit.getBlockPos()).getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                 return true;
             }
