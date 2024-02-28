@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.client.layer.PiranhaShikigamiEyesLayer;
 import radon.jujutsu_kaisen.entity.projectile.PiranhaShikigamiProjectile;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
@@ -17,8 +16,6 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class PiranhaShikigamiRenderer extends GeoEntityRenderer<PiranhaShikigamiProjectile> {
     public PiranhaShikigamiRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "piranha_shikigami")));
-
-        this.addRenderLayer(new PiranhaShikigamiEyesLayer(this));
     }
 
     @Override
