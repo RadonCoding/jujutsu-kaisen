@@ -60,6 +60,8 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        if (this.level().isClientSide) return super.hurt(pSource, pAmount);
+
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return super.hurt(pSource, pAmount);
