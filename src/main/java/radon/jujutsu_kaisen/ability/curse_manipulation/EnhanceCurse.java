@@ -100,21 +100,27 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
         if (owner.level().isClientSide) return;
 
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (ownerCap == null) return;
+
+        ISorcererData ownerData = ownerCap.getSorcererData();
+
         CursedSpirit target = this.getTarget(owner);
 
         if (target == null) return;
 
-        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+        if (targetCap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData targetData = targetCap.getSorcererData();
 
-        data.addExperience(20.0F);
+        targetData.setExperience(Math.min(ownerData.getExperience(), targetData.getExperience() + 20.0F));
 
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.enhance_curse", JujutsuKaisen.MOD_ID),
-                    data.getExperience(), ConfigHolder.SERVER.maximumExperienceAmount.get()), false), player);
+                    targetData.getExperience(), ConfigHolder.SERVER.maximumExperienceAmount.get()), false), player);
         }
     }
 
