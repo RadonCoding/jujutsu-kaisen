@@ -38,7 +38,7 @@ public class SimpleDomainEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_MAX_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
 
-    private static final float STRENGTH = 500.0F;
+    private static final float STRENGTH = 1000.0F;
     private static final double X_STEP = 0.025D;
     public static final float RADIUS = 2.0F;
     private static final float MAX_RADIUS = 4.0F;
