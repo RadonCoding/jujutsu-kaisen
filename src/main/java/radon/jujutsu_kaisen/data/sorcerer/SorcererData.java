@@ -9,7 +9,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -18,14 +17,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
-import net.neoforged.neoforge.common.NeoForge;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.chant.ChantHandler;
-import radon.jujutsu_kaisen.data.ability.DelayedTickEvent;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -33,9 +30,7 @@ import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.data.contract.BindingVow;
 import radon.jujutsu_kaisen.data.contract.IContractData;
-import radon.jujutsu_kaisen.data.contract.Pact;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
@@ -46,7 +41,6 @@ import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
@@ -584,7 +578,7 @@ public class SorcererData implements ISorcererData {
 
         amount += this.extraEnergy;
 
-        if (data.hasBindingVow(BindingVow.OVERTIME)) {
+        if (data.hasBindingVow(JJKBindingVows.OVERTIME.get())) {
             long time = this.owner.level().getLevelData().getDayTime();
             boolean night = time >= 13000 && time < 24000;
             amount *= night ? 1.2F : 0.9F;

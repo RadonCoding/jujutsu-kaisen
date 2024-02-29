@@ -16,8 +16,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.contract.IContractData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.contract.Pact;
+import radon.jujutsu_kaisen.pact.JJKPacts;
+import radon.jujutsu_kaisen.pact.Pact;
 
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class QuestionRemovePactC2SPacket implements CustomPacketPayload {
     }
 
     public QuestionRemovePactC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readUUID(), buf.readEnum(Pact.class));
+        this(buf.readUUID(), JJKPacts.getValue(buf.readResourceLocation()));
     }
 
     public void handle(PlayPayloadContext ctx) {
@@ -55,11 +55,11 @@ public class QuestionRemovePactC2SPacket implements CustomPacketPayload {
             if (player != null) {
                 Component accept = Component.translatable(String.format("chat.%s.pact_question_accept", JujutsuKaisen.MOD_ID))
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/pactremovalaccept %s %s", sender.getName().getString(), this.pact.name())))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/pactremovalaccept %s %s", sender.getName().getString(), this.pact.getName())))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(String.format("chat.%s.pact_question_remove", JujutsuKaisen.MOD_ID)))));
                 Component decline = Component.translatable(String.format("chat.%s.pact_question_decline", JujutsuKaisen.MOD_ID))
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.RED)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/pactremovaldecline %s %s", sender.getName().getString(), this.pact.name())))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/pactremovaldecline %s %s", sender.getName().getString(), this.pact.getName())))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(String.format("chat.%s.pact_question_remove", JujutsuKaisen.MOD_ID)))));
 
                 Component message = Component.translatable(String.format("chat.%s.pact_question_remove", JujutsuKaisen.MOD_ID), accept, decline,
@@ -73,7 +73,7 @@ public class QuestionRemovePactC2SPacket implements CustomPacketPayload {
     @Override
     public void write(FriendlyByteBuf pBuffer) {
         pBuffer.writeUUID(this.identifier);
-        pBuffer.writeEnum(this.pact);
+        pBuffer.writeResourceLocation(JJKPacts.getKey(this.pact));
     }
 
     @Override

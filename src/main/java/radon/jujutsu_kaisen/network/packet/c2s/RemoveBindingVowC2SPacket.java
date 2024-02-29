@@ -7,11 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.binding_vow.BindingVow;
+import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.contract.IContractData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.contract.BindingVow;
 
 public class RemoveBindingVowC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "remove_binding_vow_serverbound");
@@ -23,7 +23,7 @@ public class RemoveBindingVowC2SPacket implements CustomPacketPayload {
     }
 
     public RemoveBindingVowC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readEnum(BindingVow.class));
+        this(JJKBindingVows.getValue(buf.readResourceLocation()));
     }
 
     public void handle(PlayPayloadContext ctx) {
@@ -45,7 +45,7 @@ public class RemoveBindingVowC2SPacket implements CustomPacketPayload {
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeEnum(this.vow);
+        pBuffer.writeResourceLocation(JJKBindingVows.getKey(this.vow));
     }
 
     @Override

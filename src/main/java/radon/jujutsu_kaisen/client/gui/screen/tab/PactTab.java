@@ -10,18 +10,19 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.contract.IContractData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.contract.Pact;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.PactListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.PlayerListWidget;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.QuestionCreatePactC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.QuestionRemovePactC2SPacket;
+import radon.jujutsu_kaisen.pact.JJKPacts;
+import radon.jujutsu_kaisen.pact.Pact;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -72,8 +73,8 @@ public class PactTab extends JJKTab {
     }
 
     public <T extends ObjectSelectionList.Entry<T>> void buildPactList(Consumer<T> consumer, Function<Pact, T> result) {
-        for (Pact pact : Pact.values()) {
-            consumer.accept(result.apply(pact));
+        for (DeferredHolder<Pact, ? extends Pact> entry : JJKPacts.PACTS.getEntries()) {
+            consumer.accept(result.apply(entry.get()));
         }
     }
 

@@ -8,12 +8,14 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.binding_vow.BindingVow;
+import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.data.contract.IContractData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.contract.BindingVow;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.BindingVowListWidget;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -46,8 +48,8 @@ public class BindingVowTab extends JJKTab {
     }
 
     public <T extends ObjectSelectionList.Entry<T>> void buildBindingVowList(Consumer<T> consumer, Function<BindingVow, T> result) {
-        for (BindingVow vow : BindingVow.values()) {
-            consumer.accept(result.apply(vow));
+        for (DeferredHolder<BindingVow, ? extends BindingVow> entry : JJKBindingVows.BINDING_VOWS.getEntries()) {
+            consumer.accept(result.apply(entry.get()));
         }
     }
 

@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.data.contract;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.UnknownNullability;
+import radon.jujutsu_kaisen.binding_vow.BindingVow;
+import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
+import radon.jujutsu_kaisen.pact.JJKPacts;
+import radon.jujutsu_kaisen.pact.Pact;
 
 import java.util.*;
 
@@ -170,7 +172,7 @@ public class ContractData implements IContractData {
             ListTag pacts = new ListTag();
 
             for (Pact pact : entry.getValue()) {
-                pacts.add(IntTag.valueOf(pact.ordinal()));
+                pacts.add(StringTag.valueOf(JJKPacts.getKey(pact).toString()));
             }
             data.put("entries", pacts);
 
@@ -181,7 +183,7 @@ public class ContractData implements IContractData {
         ListTag bindingVowsTag = new ListTag();
 
         for (BindingVow vow : this.bindingVows) {
-            bindingVowsTag.add(IntTag.valueOf(vow.ordinal()));
+            bindingVowsTag.add(StringTag.valueOf(JJKBindingVows.getKey(vow).toString()));
         }
         nbt.put("binding_vows", bindingVowsTag);
 
@@ -189,7 +191,7 @@ public class ContractData implements IContractData {
 
         for (Map.Entry<BindingVow, Integer> entry : this.bindingVowCooldowns.entrySet()) {
             CompoundTag data = new CompoundTag();
-            data.putInt("vow", entry.getKey().ordinal());
+            data.putString("vow", JJKBindingVows.getKey(entry.getKey()).toString());
             data.putInt("cooldown", entry.getValue());
         }
         nbt.put("binding_vow_cooldowns", bindingVowCooldownsTag);
@@ -207,7 +209,7 @@ public class ContractData implements IContractData {
             Set<Pact> pacts = new HashSet<>();
 
             for (Tag entry : data.getList("entries", Tag.TAG_INT)) {
-                pacts.add(Pact.values()[((IntTag) entry).getAsInt()]);
+                pacts.add(JJKPacts.getValue(new ResourceLocation(entry.getAsString())));
             }
             this.acceptedPacts.put(data.getUUID("recipient"), pacts);
         }
@@ -215,14 +217,14 @@ public class ContractData implements IContractData {
         this.bindingVows.clear();
 
         for (Tag key : nbt.getList("binding_vows", Tag.TAG_INT)) {
-            this.bindingVows.add(BindingVow.values()[((IntTag) key).getAsInt()]);
+            this.bindingVows.add(JJKBindingVows.getValue(new ResourceLocation(key.getAsString())));
         }
 
         this.bindingVowCooldowns.clear();
 
-        for (Tag key : nbt.getList("binding_vow_cooldowns", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-            this.bindingVowCooldowns.put(BindingVow.values()[data.getInt("vow")], data.getInt("cooldown"));
+        for (Tag entry : nbt.getList("binding_vow_cooldowns", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) entry;
+            this.bindingVowCooldowns.put(JJKBindingVows.getValue(new ResourceLocation(data.getString("vow"))), data.getInt("cooldown"));
         }
     }
 }
