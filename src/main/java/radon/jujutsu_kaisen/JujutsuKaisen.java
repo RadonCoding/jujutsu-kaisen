@@ -8,6 +8,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
@@ -25,6 +26,7 @@ import radon.jujutsu_kaisen.item.JJKCreativeTabs;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.JJKRecipeSerializers;
 import radon.jujutsu_kaisen.menu.JJKMenus;
+import radon.jujutsu_kaisen.pact.JJKPacts;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.world.gen.biome.modifier.JJKBiomeModifiers;
 import radon.jujutsu_kaisen.world.gen.loot.JJKLootModifiers;
@@ -42,6 +44,8 @@ public class JujutsuKaisen {
 
         JJKAbilities.ABILITIES.register(bus);
         JJKCursedTechniques.CURSED_TECHNIQUES.register(bus);
+        JJKBindingVows.BINDING_VOWS.register(bus);
+        JJKPacts.PACTS.register(bus);
 
         JJKEntities.ENTITIES.register(bus);
         JJKEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
