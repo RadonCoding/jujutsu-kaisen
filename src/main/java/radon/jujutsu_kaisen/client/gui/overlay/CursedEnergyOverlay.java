@@ -59,9 +59,11 @@ public class CursedEnergyOverlay {
 
         above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), sorcererData.getExperience()));
 
-        if (sorcererData.hasActiveTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
-            above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.transfigured_souls", JujutsuKaisen.MOD_ID),
-                    idleTransfigurationData.getTransfiguredSouls()));
+        if (!sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (sorcererData.hasActiveTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
+                above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.transfigured_souls", JujutsuKaisen.MOD_ID),
+                        idleTransfigurationData.getTransfiguredSouls()));
+            }
         }
 
         int aboveY = 26;

@@ -81,6 +81,26 @@ public class DataProvider {
     }
 
     @SubscribeEvent
+    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
+    }
+
+    @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
