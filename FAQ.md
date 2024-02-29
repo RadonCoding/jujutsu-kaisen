@@ -67,7 +67,7 @@ All of these chances can be adjusted in the config, you can also change whether 
 
 ### Natures
 
-Cursed energy natures can be obtained when you first join a world based on a random chance. this chance can be adjusted in the config.
+Cursed energy natures can be obtained when you first join a world based on a random chance. This chance can be adjusted in the config.
 
 By default sorcerers will have the **Basic** cursed energy nature which will shield against damage and increase melee attack damage when **Cursed Energy Flow** is active.
 
@@ -85,12 +85,29 @@ The **Divergent** cursed energy nature will make your punches have two impacts, 
 When first joining a world you'll either be a sorcerer or a cursed spirit.
 
 Sorcerers can awaken **Reverse Cursed Technique** while curses will be able to heal by default.
+**Reverse Cursed Technique** is unlocked by dying as a sorcerer (grade 1 or above required) with a random chance you can edit in server config, if you're successful, you'll ignore the death damage and unlock RCT.
+If the player dies while holding a totem of immortality, the chance to get RCT is halved but you won't die when unsuccessful.
 
 Curses can eat **cursed objects** to gain more cursed energy, this will also give them access to basic cursed energy manipulation such as **Cursed Energy Blast** and **Cursed Energy Bomb**.
 
 Curses are vulnerable to sorcerers that are able to **output reverse cursed technique** and will take significant damage from it.
 
 Curses by default will not take damage from attacks not imbued with cursed energy.
+
+### Grades
+
+By gaining more experience, you'll gain a higher grade. You can see your grade in the **jujutsu menu**. HP is increased when moving to a higher grade
+Required xp for every grade is:
+**Grade 4:** 0xp
+**Grade 3:** 50xp
+**Semi-Grade 2:** 100xp
+**Grade 2:** 200xp
+**Semi-Grade 1:** 400xp
+**Grade 1:** 800xp
+**Special Grade 1:** 1600xp
+**Special Grade:** 3200xp
+
+The amount of xp needed to be classified as experienced(for now means they you use domain amplification during a domain expansion) is 3000xp by default, but can be changed in server config.
 
 ### Domains
 
