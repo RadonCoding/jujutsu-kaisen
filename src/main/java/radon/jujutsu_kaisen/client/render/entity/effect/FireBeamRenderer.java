@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -18,26 +19,31 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.client.model.entity.effect.CursedEnergyBlastModel;
+import radon.jujutsu_kaisen.client.model.entity.effect.FireBeamModel;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
 import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
 import radon.jujutsu_kaisen.entity.effect.WaterTorrentEntity;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 
 public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/fire_beam.png");
+    private static final ResourceLocation CHARGE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/fire_beam_charge.png");
     private static final int TEXTURE_WIDTH = 16;
     private static final int TEXTURE_HEIGHT = 512;
     private static final float BEAM_RADIUS = 0.5F;
     private boolean clearerView = false;
 
+    private final FireBeamModel model;
+
     public FireBeamRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
-    }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull FireBeamEntity pEntity) {
-        return TEXTURE;
+        this.model = new FireBeamModel(pContext.bakeLayer(FireBeamModel.LAYER));
     }
 
     @Override
@@ -45,34 +51,54 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
         this.clearerView = Minecraft.getInstance().player == pEntity.getOwner() &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
-        double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
-        double collidePosY = pEntity.prevCollidePosY + (pEntity.collidePosY - pEntity.prevCollidePosY) * pPartialTick;
-        double collidePosZ = pEntity.prevCollidePosZ + (pEntity.collidePosZ - pEntity.prevCollidePosZ) * pPartialTick;
-        double posX = pEntity.xo + (pEntity.getX() - pEntity.xo) * pPartialTick;
-        double posY = pEntity.yo + (pEntity.getY() - pEntity.yo) * pPartialTick;
-        double posZ = pEntity.zo + (pEntity.getZ() - pEntity.zo) * pPartialTick;
-        float yaw = pEntity.prevYaw + (pEntity.renderYaw - pEntity.prevYaw) * pPartialTick;
-        float pitch = pEntity.prevPitch + (pEntity.renderPitch - pEntity.prevPitch) * pPartialTick;
+        float yaw = (pEntity.prevYaw + (pEntity.renderYaw - pEntity.prevYaw) * pPartialTick) * Mth.RAD_TO_DEG;
+        float pitch = (pEntity.prevPitch + (pEntity.renderPitch - pEntity.prevPitch) * pPartialTick) * Mth.RAD_TO_DEG;
 
-        float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
-        int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
+        if (!this.clearerView) {
+            Vector3f color = ParticleColors.FIRE_YELLOW;
 
-        if (frame < 0) {
-            frame = pEntity.getFrames() * 2;
+            float age = pEntity.getTime() + pPartialTick;
+
+            pPoseStack.pushPose();
+
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
+            pPoseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
+
+            VertexConsumer charge = pBuffer.getBuffer(JJKRenderTypes.glow(CHARGE));
+            this.model.setupAnim(pEntity, 0.0F, 0.0F, age, 0.0F, 0.0F);
+            this.model.renderToBuffer(pPoseStack, charge, pPackedLight, OverlayTexture.NO_OVERLAY, color.x, color.y, color.z, 1.0F);
+
+            pPoseStack.popPose();
         }
 
-        pPoseStack.pushPose();
-        pPoseStack.scale(pEntity.getScale(), pEntity.getScale(), pEntity.getScale());
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        if (pEntity.getTime() >= FireBeamEntity.CHARGE) {
+            double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
+            double collidePosY = pEntity.prevCollidePosY + (pEntity.collidePosY - pEntity.prevCollidePosY) * pPartialTick;
+            double collidePosZ = pEntity.prevCollidePosZ + (pEntity.collidePosZ - pEntity.prevCollidePosZ) * pPartialTick;
+            double posX = pEntity.xo + (pEntity.getX() - pEntity.xo) * pPartialTick;
+            double posY = pEntity.yo + (pEntity.getY() - pEntity.yo) * pPartialTick;
+            double posZ = pEntity.zo + (pEntity.getZ() - pEntity.zo) * pPartialTick;
 
-        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
+            float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
+            int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
 
-        float brightness = 1.0F - ((float) pEntity.getTime() / (pEntity.getCharge() + pEntity.getDuration() + pEntity.getFrames()));
+            if (frame < 0) {
+                frame = pEntity.getFrames() * 2;
+            }
 
-        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer,
-                brightness, pPackedLight);
+            pPoseStack.pushPose();
+            pPoseStack.scale(pEntity.getScale(), pEntity.getScale(), pEntity.getScale());
+            pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
 
-        pPoseStack.popPose();
+            VertexConsumer beam = pBuffer.getBuffer(JJKRenderTypes.glow(TEXTURE));
+
+            float brightness = 1.0F - ((float) pEntity.getTime() / (pEntity.getCharge() + pEntity.getDuration() + pEntity.getFrames()));
+
+            this.renderBeam(length, yaw, pitch, frame, pPoseStack, beam,
+                    brightness, pPackedLight);
+
+            pPoseStack.popPose();
+        }
     }
 
     private void drawCube(float length, int frame, PoseStack poseStack, VertexConsumer consumer, float brightness, int packedLight) {
@@ -135,6 +161,11 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
                 .uv2(packedLight)
                 .normal(matrix3f, 0.0F, 1.0F, 0.0F)
                 .endVertex();
+    }
+
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull FireBeamEntity pEntity) {
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override

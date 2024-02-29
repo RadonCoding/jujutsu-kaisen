@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.client.model.entity.CursedEnergyBlastModel;
+import radon.jujutsu_kaisen.client.model.entity.effect.CursedEnergyBlastModel;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
 
@@ -38,7 +37,7 @@ public class CursedEnergyBlastRenderer extends EntityRenderer<CursedEnergyBlastE
         Vector3f color = ParticleColors.getCursedEnergyColor(owner);
 
         float age = pEntity.getTime() + pPartialTick;
-        float fraction = age / (float) (CursedEnergyBlastEntity.DURATION);
+        float fraction = age / (float) CursedEnergyBlastEntity.DURATION;
         float opacity = (float) Math.max((1.0F - Math.pow(fraction, 4.0F)) * 0.4F, 0.00001F);
 
         pPoseStack.pushPose();
@@ -50,6 +49,7 @@ public class CursedEnergyBlastRenderer extends EntityRenderer<CursedEnergyBlastE
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.energy(this.getTextureLocation(pEntity)));
         this.model.setupAnim(pEntity, 0.0F, 0.0F, age, 0.0F, 0.0F);
         this.model.renderToBuffer(pPoseStack, consumer, pPackedLight, OverlayTexture.NO_OVERLAY, color.x, color.y, color.z, opacity);
+
         pPoseStack.popPose();
     }
 

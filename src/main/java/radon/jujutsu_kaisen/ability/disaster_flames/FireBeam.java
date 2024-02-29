@@ -40,11 +40,6 @@ public class FireBeam extends Ability {
     }
 
     @Override
-    public MenuType getMenuType(LivingEntity owner) {
-        return MenuType.MELEE;
-    }
-
-    @Override
     public Classification getClassification() {
         return Classification.FIRE;
     }
