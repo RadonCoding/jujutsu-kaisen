@@ -6,11 +6,11 @@ import net.minecraft.resources.ResourceLocation;
 public class Pact {
     public Component getName() {
         ResourceLocation key = JJKPacts.getKey(this);
-        return Component.translatable(String.format("binding_vow.%s.%s", key.getNamespace(), key.getPath()));
+        return Component.translatable(String.format("pact.%s.%s", key.getNamespace(), key.getPath()));
     }
 
     public Component getDescription() {
         ResourceLocation key = JJKPacts.getKey(this);
-        return Component.translatable(String.format("binding_vow.%s.%s.description", key.getNamespace(), key.getPath()));
+        return Component.translatable(String.format("pact.%s.%s.description", key.getNamespace(), key.getPath()));
     }
 }
