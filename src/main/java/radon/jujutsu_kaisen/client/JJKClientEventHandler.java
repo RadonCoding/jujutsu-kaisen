@@ -78,7 +78,7 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRenderLevelStage(RenderLevelStageEvent event) {
             if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-                SkyHandler.renderSky(event.getPoseStack(), event.getProjectionMatrix());
+                SkyHandler.renderSky(event.getPoseStack(), event.getProjectionMatrix(), event.getCamera(), event.getPartialTick());
             }
         }
 
