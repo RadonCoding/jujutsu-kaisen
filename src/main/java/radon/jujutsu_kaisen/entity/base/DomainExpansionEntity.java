@@ -40,6 +40,7 @@ public abstract class DomainExpansionEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
 
     public static final int OFFSET = 5;
+    private static final float SIMPLE_DOMAIN_DAMAGE = 5.0F;
 
     @Nullable
     private UUID ownerUUID;
@@ -232,7 +233,8 @@ public abstract class DomainExpansionEntity extends Entity {
 
                     ISorcererData ownerSorcererData = ownerCap.getSorcererData();
 
-                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower(this.ability) * 10.0F);
+                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability),
+                            ownerSorcererData.getAbilityPower(this.ability) * SIMPLE_DOMAIN_DAMAGE);
                 }
             }
         }
