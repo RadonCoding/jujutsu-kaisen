@@ -220,11 +220,11 @@ public class AbilityData implements IAbilityData {
         if (this.toggled.contains(ability)) {
             this.toggled.remove(ability);
 
+            ability.cooldown(this.owner);
+
             ((Ability.IToggled) ability).onDisabled(this.owner);
 
             ((Ability.IToggled) ability).removeModifiers(this.owner);
-
-            ability.cooldown(this.owner);
 
             NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
