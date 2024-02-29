@@ -6,10 +6,13 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
@@ -160,6 +163,7 @@ public class SkyHandler {
             unlimitedVoidBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             unlimitedVoidBuffer.bind();
             unlimitedVoidBuffer.upload(buffer);
+            VertexBuffer.unbind();
         }
         return unlimitedVoidBuffer;
     }
@@ -180,6 +184,7 @@ public class SkyHandler {
             unlimitedVoidSplatterBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             unlimitedVoidSplatterBuffer.bind();
             unlimitedVoidSplatterBuffer.upload(buffer);
+            VertexBuffer.unbind();
         }
         return unlimitedVoidSplatterBuffer;
     }
@@ -190,6 +195,7 @@ public class SkyHandler {
             selfEmbodimentOfPerfectionBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             selfEmbodimentOfPerfectionBuffer.bind();
             selfEmbodimentOfPerfectionBuffer.upload(buffer);
+            VertexBuffer.unbind();
         }
         return selfEmbodimentOfPerfectionBuffer;
     }
@@ -200,6 +206,7 @@ public class SkyHandler {
             horizonOfTheCaptivatingSkandhaBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             horizonOfTheCaptivatingSkandhaBuffer.bind();
             horizonOfTheCaptivatingSkandhaBuffer.upload(buffer);
+            VertexBuffer.unbind();
         }
         return horizonOfTheCaptivatingSkandhaBuffer;
     }
@@ -210,6 +217,7 @@ public class SkyHandler {
             shiningSeaOfFlowersBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             shiningSeaOfFlowersBuffer.bind();
             shiningSeaOfFlowersBuffer.upload(buffer);
+            VertexBuffer.unbind();
         }
         return shiningSeaOfFlowersBuffer;
     }
@@ -220,11 +228,12 @@ public class SkyHandler {
             authenticMutualLoveBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             authenticMutualLoveBuffer.bind();
             authenticMutualLoveBuffer.upload(buffer);
+            VertexBuffer.unbind();
         }
         return authenticMutualLoveBuffer;
     }
 
-    public static void renderSky(PoseStack poseStack, Matrix4f projection) {
+    public static void renderSky(PoseStack poseStack, Matrix4f projection, Camera camera, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
         Window window = mc.getWindow();
         int ww = window.getWidth();
@@ -267,7 +276,7 @@ public class SkyHandler {
 
         selfEmbodimentOfPerfectionTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, SELF_EMDOBIMENT_OF_PERFECTION, getSelfEmbodimentOfPerfectionBuffer());
+        renderBasicSky(poseStack, projection, camera, partialTicks, SELF_EMDOBIMENT_OF_PERFECTION, getSelfEmbodimentOfPerfectionBuffer());
 
         selfEmbodimentOfPerfectionTarget.unbindRead();
         selfEmbodimentOfPerfectionTarget.unbindWrite();
@@ -281,7 +290,7 @@ public class SkyHandler {
 
         horizonOfTheCaptivatingSkandhaTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, HORIZON_OF_THE_CAPTIVATING_SKANDHA, getHorizonOfTheCaptivatingSkandhaBuffer());
+        renderBasicSky(poseStack, projection, camera, partialTicks, HORIZON_OF_THE_CAPTIVATING_SKANDHA, getHorizonOfTheCaptivatingSkandhaBuffer());
 
         horizonOfTheCaptivatingSkandhaTarget.unbindRead();
         horizonOfTheCaptivatingSkandhaTarget.unbindWrite();
@@ -295,7 +304,7 @@ public class SkyHandler {
 
         shiningSeaOfFlowersTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, SHINING_SEA_OF_FLOWERS, getShiningSeaOfFlowersBuffer());
+        renderBasicSky(poseStack, projection, camera, partialTicks, SHINING_SEA_OF_FLOWERS, getShiningSeaOfFlowersBuffer());
 
         shiningSeaOfFlowersTarget.unbindRead();
         shiningSeaOfFlowersTarget.unbindWrite();
@@ -309,22 +318,23 @@ public class SkyHandler {
 
         authenticMutualLoveTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, AUTHENTIC_MUTUAL_LOVE, getAuthenticMutualLoveBuffer());
+        renderBasicSky(poseStack, projection, camera, partialTicks, AUTHENTIC_MUTUAL_LOVE, getAuthenticMutualLoveBuffer());
 
         mc.gameRenderer.setRenderBlockOutline(true);
         current.bindWrite(true);
     }
 
-    public static void renderBasicSky(PoseStack poseStack, Matrix4f projection, ResourceLocation texture, VertexBuffer buffer) {
+    public static void renderBasicSky(PoseStack poseStack, Matrix4f projection, Camera camera, float partialTicks, ResourceLocation texture, VertexBuffer buffer) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.level == null || mc.player == null) return;
 
-        FogRenderer.levelFogColor();
         RenderSystem.clear(16640, Minecraft.ON_OSX);
-        RenderSystem.depthMask(false);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
+        FogRenderer.levelFogColor();
+        RenderSystem.depthMask(false);
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
 
         buffer.bind();
@@ -332,7 +342,6 @@ public class SkyHandler {
         VertexBuffer.unbind();
 
         RenderSystem.depthMask(true);
-        RenderSystem.disableBlend();
         FogRenderer.setupNoFog();
     }
 
