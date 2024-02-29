@@ -13,6 +13,7 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -42,8 +43,10 @@ public class Punch extends Ability {
         if (owner.isInWall()) return true;
         if (target == null || target.isDeadOrDying()) return false;
 
-        if (RotationUtil.getLookAtHit(owner, 1.0D) instanceof BlockHitResult hit) {
-            if (owner.level().getBlockState(hit.getBlockPos()).getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+        HitResult hit = RotationUtil.getLookAtHit(owner, 1.0D);
+
+        if (hit.getType() == HitResult.Type.BLOCK) {
+            if (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos()).getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                 return true;
             }
         }
