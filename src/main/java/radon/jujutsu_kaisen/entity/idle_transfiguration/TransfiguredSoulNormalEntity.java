@@ -22,7 +22,6 @@ public class TransfiguredSoulNormalEntity extends TransfiguredSoulVariantEntity 
         super(JJKEntities.TRANSFIGURED_SOUL_NORMAL.get(), owner);
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.TRANSFIGURED_SOUL_NORMAL.get();

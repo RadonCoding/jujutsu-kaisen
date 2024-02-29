@@ -192,7 +192,6 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         return this.cache;
     }
 
-    @Nullable
     public abstract Summon<?> getAbility();
 
     protected boolean shouldToggleOnDeath() {

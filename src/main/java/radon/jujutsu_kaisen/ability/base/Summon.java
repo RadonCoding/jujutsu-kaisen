@@ -112,7 +112,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
                     if (summon.getFusions().contains(type)) return false;
                 }
                 for (EntityType<?> fusion : this.getFusions()) {
-                    if (!tenShadowsData.hasTamed(fusion)) return false;
                     if (summon.getTypes().contains(fusion)) return false;
                     if (summon.getFusions().contains(fusion)) return false;
                 }

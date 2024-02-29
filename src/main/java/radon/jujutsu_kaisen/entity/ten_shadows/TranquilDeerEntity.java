@@ -138,7 +138,6 @@ public class TranquilDeerEntity extends TenShadowsSummon {
         return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_1.getRequiredExperience();
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.TRANQUIL_DEER.get();

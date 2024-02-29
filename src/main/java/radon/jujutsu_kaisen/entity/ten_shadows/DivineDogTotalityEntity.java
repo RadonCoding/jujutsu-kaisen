@@ -104,7 +104,6 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.DIVINE_DOG_TOTALITY.get();

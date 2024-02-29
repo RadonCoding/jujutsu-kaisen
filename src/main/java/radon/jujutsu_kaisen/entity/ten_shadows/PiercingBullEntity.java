@@ -156,7 +156,6 @@ public class PiercingBullEntity extends TenShadowsSummon {
         return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_1.getRequiredExperience();
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.PIERCING_BULL.get();

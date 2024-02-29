@@ -29,7 +29,6 @@ public class PolymorphicSoulIsomerEntity extends TransfiguredSoulEntity {
                 .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D);
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.POLYMORPHIC_SOUL_ISOMER.get();

@@ -137,7 +137,6 @@ public class AgitoEntity extends TenShadowsSummon {
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.AGITO.get();

@@ -260,7 +260,6 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_2.getRequiredExperience();
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.GREAT_SERPENT.get();

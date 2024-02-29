@@ -153,7 +153,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         return this.isTame() ? super.getExperience() : SorcererGrade.SEMI_GRADE_2.getRequiredExperience();
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.NUE.get();

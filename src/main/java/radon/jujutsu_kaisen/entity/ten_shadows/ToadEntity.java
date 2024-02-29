@@ -205,7 +205,6 @@ public class ToadEntity extends TenShadowsSummon {
         return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_4.getRequiredExperience();
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return this.hasWings() ? JJKAbilities.TOAD_FUSION.get() : JJKAbilities.TOAD.get();

@@ -205,7 +205,6 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         if (!this.isCustom()) this.createGoals();
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return null;
