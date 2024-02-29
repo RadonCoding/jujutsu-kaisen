@@ -40,7 +40,7 @@ public class Punch extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (owner.isInWall()) return true;
+        if (owner.isInWall() || owner.getNavigation().isStuck()) return true;
         if (target == null || target.isDeadOrDying()) return false;
 
         HitResult hit = RotationUtil.getLookAtHit(owner, 1.0D);
