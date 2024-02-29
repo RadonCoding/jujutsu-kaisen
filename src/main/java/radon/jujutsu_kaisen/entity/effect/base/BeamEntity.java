@@ -78,6 +78,10 @@ public abstract class BeamEntity extends JujutsuProjectile {
         return false;
     }
 
+    protected boolean breaksBlocks() {
+        return true;
+    }
+
     protected boolean isStill() {
         return false;
     }
@@ -179,9 +183,11 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
                                 if (distance > radius) continue;
 
-                                if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
+                                if (this.breaksBlocks()) {
+                                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
 
-                                this.level().destroyBlock(pos, false);
+                                    this.level().destroyBlock(pos, false);
+                                }
 
                                 if (!this.causesFire()) continue;
 
