@@ -9,18 +9,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.command.argument.PactArgument;
 import radon.jujutsu_kaisen.data.contract.IContractData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.contract.Pact;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.pact.Pact;
 
 public class PactRemovalDeclineCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactremovaldecline")
                 .then(Commands.argument("player", EntityArgument.entity())
-                        .then(Commands.argument("pact", EnumArgument.enumArgument(Pact.class))
-                                .executes(ctx -> decline(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("pact", Pact.class))))));
+                        .then(Commands.argument("pact", PactArgument.pact())
+                                .executes(ctx -> decline(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), PactArgument.getPact(ctx, "pact"))))));
 
         dispatcher.register(Commands.literal("pactremovaldecline").redirect(node));
     }

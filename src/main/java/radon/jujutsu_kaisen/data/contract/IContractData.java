@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.data.contract;
 
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import radon.jujutsu_kaisen.binding_vow.BindingVow;
+import radon.jujutsu_kaisen.pact.Pact;
 
 import java.util.UUID;
 

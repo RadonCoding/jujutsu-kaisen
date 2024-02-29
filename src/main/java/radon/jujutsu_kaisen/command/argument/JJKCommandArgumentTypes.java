@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.command;
+package radon.jujutsu_kaisen.command.argument;
 
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -7,8 +7,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.command.argument.CursedTechniqueArgument;
 
 public class JJKCommandArgumentTypes {
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, JujutsuKaisen.MOD_ID);

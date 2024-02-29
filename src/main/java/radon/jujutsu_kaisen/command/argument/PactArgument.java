@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.command;
+package radon.jujutsu_kaisen.command.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -9,19 +9,19 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.resources.ResourceLocation;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.pact.JJKPacts;
+import radon.jujutsu_kaisen.pact.Pact;
 
 import java.util.concurrent.CompletableFuture;
 
-public class CursedTechniqueArgument implements ArgumentType<ResourceLocation> {
-    public static CursedTechniqueArgument cursedTechnique() {
-        return new CursedTechniqueArgument();
+public class PactArgument implements ArgumentType<ResourceLocation> {
+    public static PactArgument pact() {
+        return new PactArgument();
     }
 
-    public static ICursedTechnique getTechnique(CommandContext<CommandSourceStack> pContext, String pArgument) throws CommandSyntaxException {
+    public static Pact getPact(CommandContext<CommandSourceStack> pContext, String pArgument) throws CommandSyntaxException {
         ResourceLocation key = pContext.getArgument(pArgument, ResourceLocation.class);
-        return JJKCursedTechniques.getValue(key);
+        return JJKPacts.getValue(key);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CursedTechniqueArgument implements ArgumentType<ResourceLocation> {
         Object obj = pContext.getSource();
 
         if (obj instanceof SharedSuggestionProvider) {
-            SharedSuggestionProvider.suggestResource(JJKCursedTechniques.CURSED_TECHNIQUE_REGISTRY.keySet(), pBuilder);
+            SharedSuggestionProvider.suggestResource(JJKPacts.PACT_REGISTRY.keySet(), pBuilder);
         }
         return pBuilder.buildFuture();
     }
