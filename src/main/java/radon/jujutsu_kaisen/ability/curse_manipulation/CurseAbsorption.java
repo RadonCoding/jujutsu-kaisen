@@ -90,6 +90,8 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     }
 
     private static void check(LivingEntity victim, DamageSource source) {
+        if (victim.level().isClientSide) return;
+
         if (!DamageUtil.isMelee(source)) return;
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
