@@ -15,4 +15,6 @@ public class JJKCommandArgumentTypes {
 
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> CURSED_TECHNIQUE = COMMAND_ARGUMENT_TYPES.register("cursed_technique", () ->
             ArgumentTypeInfos.registerByClass(CursedTechniqueArgument.class, SingletonArgumentInfo.contextFree(CursedTechniqueArgument::cursedTechnique)));
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> PACT = COMMAND_ARGUMENT_TYPES.register("pact", () ->
+            ArgumentTypeInfos.registerByClass(PactArgument.class, SingletonArgumentInfo.contextFree(PactArgument::pact)));
 }
