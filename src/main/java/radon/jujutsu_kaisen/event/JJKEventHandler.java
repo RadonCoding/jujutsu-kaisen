@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.CursedEnergyFlow;
 import radon.jujutsu_kaisen.ability.misc.Slam;
+import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -55,6 +56,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.pact.JJKPacts;
 import radon.jujutsu_kaisen.util.*;
 
 import java.util.ArrayList;
@@ -413,6 +415,8 @@ public class JJKEventHandler {
         public static void onNewRegistry(NewRegistryEvent event) {
             event.register(JJKAbilities.ABILITY_REGISTRY);
             event.register(JJKCursedTechniques.CURSED_TECHNIQUE_REGISTRY);
+            event.register(JJKBindingVows.BINDING_VOW_REGISTRY);
+            event.register(JJKPacts.PACT_REGISTRY);
         }
     }
 }
