@@ -120,7 +120,7 @@ public class JJKEventHandler {
             float armor = data.getExperience() * 0.002F;
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                armor *= 3.0F;
+                armor *= 2.0F;
             }
             float toughness = armor * 0.1F;
 
