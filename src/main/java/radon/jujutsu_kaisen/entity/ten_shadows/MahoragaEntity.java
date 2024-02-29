@@ -345,7 +345,6 @@ public class MahoragaEntity extends TenShadowsSummon {
         return List.of(JJKAbilities.WHEEL.get());
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.MAHORAGA.get();

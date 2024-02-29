@@ -35,7 +35,6 @@ public class TransfiguredSoulSmallEntity extends TransfiguredSoulVariantEntity {
                 .add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.TRANSFIGURED_SOUL_SMALL.get();

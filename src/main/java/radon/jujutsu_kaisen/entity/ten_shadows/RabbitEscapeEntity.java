@@ -226,7 +226,6 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
         return this.isTame() ? super.getExperience() : SorcererGrade.GRADE_4.getRequiredExperience();
     }
 
-    @Nullable
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.RABBIT_ESCAPE.get();
