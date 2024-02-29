@@ -256,6 +256,11 @@ public class JJKEventHandler {
         public static void onLivingFall(LivingFallEvent event) {
             LivingEntity victim = event.getEntity();
 
+            if (Slam.TARGETS.containsKey(victim.getUUID())) {
+                Slam.onHitGround(victim, event.getDistance());
+                event.setDamageMultiplier(0.0F);
+            }
+
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;
@@ -269,11 +274,6 @@ public class JJKEventHandler {
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 event.setDistance(event.getDistance() * 0.1F);
-            }
-
-            if (Slam.TARGETS.containsKey(victim.getUUID())) {
-                Slam.onHitGround(victim, event.getDistance());
-                event.setDamageMultiplier(0.0F);
             }
         }
 
