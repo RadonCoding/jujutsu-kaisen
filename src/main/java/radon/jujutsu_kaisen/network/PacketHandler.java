@@ -162,6 +162,9 @@ public class PacketHandler {
         registrar.play(ClearChantsC2SPacket.IDENTIFIER, ClearChantsC2SPacket::new, handler -> handler
                 .client(ClearChantsC2SPacket::handle)
                 .server(ClearChantsC2SPacket::handle));
+        registrar.play(TransformationRightClickC2SPacket.IDENTIFIER, TransformationRightClickC2SPacket::new, handler -> handler
+                .client(TransformationRightClickC2SPacket::handle)
+                .server(TransformationRightClickC2SPacket::handle));
     }
 
     public static <MSG extends CustomPacketPayload> void broadcast(MSG message) {
