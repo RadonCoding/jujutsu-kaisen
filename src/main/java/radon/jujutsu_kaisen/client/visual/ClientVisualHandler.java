@@ -72,8 +72,12 @@ public class ClientVisualHandler {
             ISorcererData sorcererData = cap.getSorcererData();
             IAbilityData abilityData = cap.getAbilityData();
 
-            return new ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(), sorcererData.getActiveTechniques(),
+            ClientData client = new ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(), sorcererData.getActiveTechniques(),
                     sorcererData.getTechnique(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
+
+            synced.put(mc.player.getUUID(), client);
+
+            return client;
         }
         return null;
     }

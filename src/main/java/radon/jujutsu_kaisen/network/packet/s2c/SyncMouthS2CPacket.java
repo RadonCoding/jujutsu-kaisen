@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.visual.visual.PerfectBodyVisual;
 
@@ -35,7 +36,7 @@ public class SyncMouthS2CPacket implements CustomPacketPayload {
     }
 
     @Override
-    public ResourceLocation id() {
+    public @NotNull ResourceLocation id() {
         return IDENTIFIER;
     }
 }
