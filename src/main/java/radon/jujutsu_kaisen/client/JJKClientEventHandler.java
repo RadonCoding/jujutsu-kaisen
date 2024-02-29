@@ -17,10 +17,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
 import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
+import radon.jujutsu_kaisen.client.model.entity.effect.CursedEnergyBlastModel;
+import radon.jujutsu_kaisen.client.model.entity.effect.FireBeamModel;
 import radon.jujutsu_kaisen.client.render.block.*;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
@@ -175,6 +176,7 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(CursedEnergyBlastModel.LAYER, CursedEnergyBlastModel::createBodyLayer);
+            event.registerLayerDefinition(FireBeamModel.LAYER, FireBeamModel::createBodyLayer);
 
             event.registerLayerDefinition(TojiFushiguroModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(TojiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);

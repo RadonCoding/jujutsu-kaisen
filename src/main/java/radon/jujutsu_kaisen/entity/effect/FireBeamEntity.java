@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FireBeamEntity extends BeamEntity {
     public static final double RANGE = 32.0D;
+    public static final int CHARGE = 20;
 
     public FireBeamEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -50,16 +51,11 @@ public class FireBeamEntity extends BeamEntity {
 
     @Override
     public int getCharge() {
-        return 0;
+        return CHARGE;
     }
 
     @Override
     protected boolean causesFire() {
-        return true;
-    }
-
-    @Override
-    protected boolean isStill() {
         return true;
     }
 

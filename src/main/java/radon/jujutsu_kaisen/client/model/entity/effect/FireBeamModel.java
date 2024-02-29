@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.model.entity;
+package radon.jujutsu_kaisen.client.model.entity.effect;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -11,16 +11,17 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
+import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
 
-public class CursedEnergyBlastModel extends EntityModel<CursedEnergyBlastEntity> {
-    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_blast"), "main");
+public class FireBeamModel extends EntityModel<FireBeamEntity> {
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_beam"), "main");
 
     private final ModelPart body1;
     private final ModelPart body2;
     private final ModelPart body3;
     private final ModelPart body4;
 
-    public CursedEnergyBlastModel(ModelPart root) {
+    public FireBeamModel(ModelPart root) {
         this.body1 = root.getChild("body1");
         this.body2 = root.getChild("body2");
         this.body3 = root.getChild("body3");
@@ -33,22 +34,22 @@ public class CursedEnergyBlastModel extends EntityModel<CursedEnergyBlastEntity>
 
         part.addOrReplaceChild("body1", CubeListBuilder.create()
                 .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
-                PartPose.offset(0.0F, 16.0F, 0.0F));
+                .addBox(-4.0F, -4.0F, -4.0F, 8, 8, 8, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 2.0F, 0.0F));
         part.addOrReplaceChild("body2", CubeListBuilder.create()
                 .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
-                PartPose.offset(0.0F, 16.0F, 0.0F));
+                .addBox(-4.0F, -4.0F, -4.0F, 8, 8, 8, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 2.0F, 0.0F));
         part.addOrReplaceChild("body3", CubeListBuilder.create()
                 .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
-                PartPose.offset(0.0F, 16.0F, 0.0F));
+                .addBox(-4.0F, -4.0F, -4.0F, 8,8, 8, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 2.0F, 0.0F));
         part.addOrReplaceChild("body4", CubeListBuilder.create()
                 .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
-                PartPose.offset(0.0F, 16.0F, 0.0F));
+                .addBox(-4.0F, -4.0F, -8.0F, 8, 8, 8, CubeDeformation.NONE),
+                PartPose.offset(0.0F, 2.0F, 0.0F));
 
-        return LayerDefinition.create(mesh, 64, 64);
+        return LayerDefinition.create(mesh, 16, 16);
     }
 
     @Override
@@ -66,8 +67,8 @@ public class CursedEnergyBlastModel extends EntityModel<CursedEnergyBlastEntity>
     }
 
     @Override
-    public void setupAnim(@NotNull CursedEnergyBlastEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        float fraction = pAgeInTicks / CursedEnergyBlastEntity.DURATION;
+    public void setupAnim(@NotNull FireBeamEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+        float fraction = Math.min(1.0F, pAgeInTicks / FireBeamEntity.CHARGE);
         float scale = (float) (Math.pow(fraction, 0.5F) * 3 + 0.05F * Math.cos(pAgeInTicks * 3));
 
         this.setScale(this.body4, scale * 0.4F, scale * 0.4F, scale * 0.4F);
