@@ -80,7 +80,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
         super.onAddedToWorld();
 
         for (int i = 0; i < this.segments.length; i++) {
-            Vec3 offset = this.position().add(this.getLookAngle().scale((i + 1) * this.segments[i].getBbWidth()));
+            Vec3 offset = this.position().subtract(this.getLookAngle().scale((i + 1) * this.segments[i].getBbWidth()));
             this.segments[i].moveTo(offset.x, offset.y, offset.z, this.random.nextFloat() * 360.0F, 0.0F);
         }
     }
@@ -168,7 +168,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
             this.segments[i].setPos(destX, destY, destZ);
 
             double distance = Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z));
-            this.segments[i].setRot((float) (Math.atan2(diff.z, diff.x) * 180.0D / Math.PI) + 90.0F, -(float) (Math.atan2(diff.y, distance) * 180.0D / Math.PI));
+            this.segments[i].setRot((float) (Math.atan2(diff.z, diff.x) * 180.0D / Math.PI) - 90.0F, -(float) (Math.atan2(diff.y, distance) * 180.0D / Math.PI));
         }
     }
 
