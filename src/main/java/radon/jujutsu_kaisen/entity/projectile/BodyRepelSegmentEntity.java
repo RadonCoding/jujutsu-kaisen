@@ -42,7 +42,7 @@ public class BodyRepelSegmentEntity extends JJKPartEntity<BodyRepelProjectile> i
     }
 
     private void collideWithEntity(Entity entity) {
-        if (!(entity instanceof BodyRepelSegmentEntity)) {
+        if (!(entity instanceof BodyRepelProjectile)) {
             entity.push(this);
         }
     }
