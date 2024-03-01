@@ -316,7 +316,7 @@ public class MeteorEntity extends JujutsuProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         float radius = this.getSize();
-        AABB bounds = AABB.ofSize(this.position(), radius * 2, radius * 2, radius * 2);
+        AABB bounds = AABB.ofSize(this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D), radius * 2, radius * 2, radius * 2);
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
         double centerZ = bounds.getCenter().z;
