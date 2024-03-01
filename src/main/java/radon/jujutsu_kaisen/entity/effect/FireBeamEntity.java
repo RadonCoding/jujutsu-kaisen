@@ -41,7 +41,7 @@ public class FireBeamEntity extends BeamEntity {
 
     @Override
     protected float getDamage() {
-        return 15.0F;
+        return 10.0F;
     }
 
     @Override
