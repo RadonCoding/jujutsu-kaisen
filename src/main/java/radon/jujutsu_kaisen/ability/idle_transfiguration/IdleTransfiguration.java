@@ -146,6 +146,18 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
             if (target == null) return;
 
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            ISorcererData data = cap.getSorcererData();
+
+            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
+
+            if (domain == null) return;
+
+            if (!domain.isInsideBarrier(target.blockPosition())) return;
+
             this.run(owner, target);
         }
     }
