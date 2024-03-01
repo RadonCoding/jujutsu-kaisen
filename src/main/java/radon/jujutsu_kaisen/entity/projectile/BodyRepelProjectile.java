@@ -17,6 +17,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -253,11 +254,13 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
         if (entity == owner) return;
 
         entity.hurt(this.damageSources().thrown(this, owner), DAMAGE * this.souls);
+
+        this.discard();
     }
 
     @Override
-    protected void onHit(@NotNull HitResult pResult) {
-        super.onHit(pResult);
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        super.onHitBlock(pResult);
 
         this.discard();
     }
