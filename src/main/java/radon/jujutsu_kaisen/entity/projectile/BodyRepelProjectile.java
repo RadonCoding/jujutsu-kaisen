@@ -47,7 +47,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
 
     private int souls;
 
-    private BodyRepelSegmentEntity[] segments;
+    private final BodyRepelSegmentEntity[] segments;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -58,7 +58,6 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
 
         for (int i = 0; i < this.segments.length; i++) {
             this.segments[i] = new BodyRepelSegmentEntity(this);
-            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
         }
         this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
     }
@@ -74,6 +73,16 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
         EntityUtil.offset(this, look, new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
 
         this.setDeltaMovement(look.scale(SPEED));
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        for (int i = 0; i < this.segments.length; i++) {
+            Vec3 offset = this.position().subtract(this.getLookAngle().scale(i * 0.1D));
+            this.segments[i].moveTo(offset.x, offset.y, offset.z, this.random.nextFloat() * 360.0F, 0.0F);
+        }
     }
 
     @Override
@@ -137,7 +146,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
             Entity leader = i == 0 ? this : this.segments[i - 1];
             Vec3 follow = leader.position();
 
-            float angle = (((leader.getYRot() + 90.0F) * Mth.PI) / 180.0F);
+            float angle = (((leader.getYRot() + 180.0F) * Mth.PI) / 180.0F);
 
             double f = (leader.getBbWidth() / 2) + (this.segments[i].getBbWidth() / 2);
 
