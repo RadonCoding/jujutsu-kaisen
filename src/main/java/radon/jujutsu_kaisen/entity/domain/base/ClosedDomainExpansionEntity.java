@@ -156,6 +156,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (distance >= radius - 1) {
             block = JJKBlocks.DOMAIN.get();
+        } else if (existing instanceof DomainBlockEntity) {
+            block = JJKBlocks.DOMAIN_AIR.get();
         } else if (!state.isAir() && state.getCollisionShape(this.level(), pos).isEmpty() || !state.getFluidState().isEmpty()) {
             block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : JJKBlocks.DOMAIN_AIR.get();
         } else {
