@@ -145,6 +145,6 @@ public class SkyStrikeEntity extends JujutsuProjectile {
     private HitResult getHitResult() {
         Vec3 startPos = new Vec3(this.getX(), this.getY(), this.getZ());
         Vec3 endPos = new Vec3(this.getX(), this.level().getMinBuildHeight(), this.getZ());
-        return this.level().clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        return this.level().clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
     }
 }
