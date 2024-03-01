@@ -80,7 +80,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
         super.onAddedToWorld();
 
         for (int i = 0; i < this.segments.length; i++) {
-            Vec3 offset = this.position().subtract(this.getLookAngle().scale(i * 0.1D));
+            Vec3 offset = this.position().subtract(this.getLookAngle().scale((i + 1) * this.segments[i].getBbWidth()));
             this.segments[i].moveTo(offset.x, offset.y, offset.z, this.random.nextFloat() * 360.0F, 0.0F);
         }
     }
