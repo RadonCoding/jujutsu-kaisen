@@ -208,7 +208,7 @@ public class ContractData implements IContractData {
 
             Set<Pact> pacts = new HashSet<>();
 
-            for (Tag entry : data.getList("entries", Tag.TAG_INT)) {
+            for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
                 pacts.add(JJKPacts.getValue(new ResourceLocation(entry.getAsString())));
             }
             this.acceptedPacts.put(data.getUUID("recipient"), pacts);
@@ -216,7 +216,7 @@ public class ContractData implements IContractData {
 
         this.bindingVows.clear();
 
-        for (Tag key : nbt.getList("binding_vows", Tag.TAG_INT)) {
+        for (Tag key : nbt.getList("binding_vows", Tag.TAG_STRING)) {
             this.bindingVows.add(JJKBindingVows.getValue(new ResourceLocation(key.getAsString())));
         }
 

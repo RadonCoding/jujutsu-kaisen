@@ -26,12 +26,6 @@ public class BodyRepelSegmentRenderer extends GeoEntityRenderer<BodyRepelSegment
     public void preRender(PoseStack poseStack, BodyRepelSegmentEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float diff = animatable.getYRot() - animatable.yRotO;
 
-        if (diff > 180.0F) {
-            diff -= 360.0F;
-        } else if (diff < -180.0F) {
-            diff += 360.0F;
-        }
-
         float yaw = animatable.yRotO + diff * partialTick;
         float pitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
 
