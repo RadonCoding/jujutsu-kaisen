@@ -346,7 +346,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BLAST.get(), CursedEnergyBlastRenderer::new);
             event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), TransfiguredSoulRenderer::new);
-            event.registerEntityRenderer(JJKEntities.BODY_REPEL.get(), BodyRepelHeadRenderer::new);
 
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseBlockRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidBlockRenderer::new);
