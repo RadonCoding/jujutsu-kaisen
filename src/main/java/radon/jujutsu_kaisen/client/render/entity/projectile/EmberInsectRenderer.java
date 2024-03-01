@@ -15,13 +15,13 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EmberInsectRenderer<T extends Entity & GeoEntity> extends GeoEntityRenderer<T> {
+public class EmberInsectRenderer extends GeoEntityRenderer<EmberInsectProjectile> {
     public EmberInsectRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect")));
     }
 
     @Override
-    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, EmberInsectProjectile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
