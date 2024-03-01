@@ -54,7 +54,6 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
         for (int i = 0; i < this.segments.length; i++) {
             this.segments[i] = new RainbowDragonSegmentEntity(this, i);
-            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
         }
         this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
     }
