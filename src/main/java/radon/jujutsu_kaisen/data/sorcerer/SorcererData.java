@@ -622,6 +622,8 @@ public class SorcererData implements ISorcererData {
 
         this.output = this.getMaximumOutput();
 
+        this.burnout = 0;
+
         if (this.owner instanceof ServerPlayer player) {
             PlayerUtil.giveAdvancement(player, "black_flash");
         }
