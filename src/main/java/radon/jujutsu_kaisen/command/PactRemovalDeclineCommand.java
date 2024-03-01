@@ -34,12 +34,10 @@ public class PactRemovalDeclineCommand {
 
         if (cap == null) return 0;
 
-        IContractData dstData = cap.getContractData();
+        IContractData data = cap.getContractData();
 
-        if (dstData == null) return 0;
-
-        if (dstData.hasRequestedPactRemoval(src.getUUID(), pact)) {
-            dstData.removePactRemovalRequest(src.getUUID(), pact);
+        if (data.hasRequestedPactRemoval(src.getUUID(), pact)) {
+            data.removePactRemovalRequest(src.getUUID(), pact);
 
             dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_removal_decline", JujutsuKaisen.MOD_ID), src.getName(), pact.getName().getString().toLowerCase()));
         } else {
