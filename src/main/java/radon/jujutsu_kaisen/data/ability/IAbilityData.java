@@ -32,6 +32,8 @@ public interface IAbilityData extends INBTSerializable<CompoundTag> {
 
     void addCooldown(Ability ability);
 
+    void removeCooldown(Ability ability);
+
     int getRemainingCooldown(Ability ability);
 
     boolean isCooldownDone(Ability ability);

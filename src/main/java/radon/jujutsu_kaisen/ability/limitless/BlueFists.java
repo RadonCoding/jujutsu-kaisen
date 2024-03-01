@@ -76,8 +76,6 @@ public class BlueFists extends Ability implements Ability.IToggled, Ability.IAtt
 
         ((ServerLevel) owner.level()).getChunkSource().broadcastAndSend(owner, new ClientboundAnimatePacket(target, ClientboundAnimatePacket.CRITICAL_HIT));
 
-        target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BLUE_FISTS.get()), DAMAGE * this.getPower(owner));
-
-        return true;
+        return target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BLUE_FISTS.get()), DAMAGE * this.getPower(owner));
     }
 }

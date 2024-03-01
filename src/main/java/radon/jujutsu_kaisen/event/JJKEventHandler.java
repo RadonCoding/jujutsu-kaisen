@@ -228,7 +228,7 @@ public class JJKEventHandler {
             data.attack(event.getSource(), victim);
 
             // If the target died from the IAttack's then cancel (yes this is very scuffed lmao)
-            if (victim.isDeadOrDying()) event.setCanceled(true);
+            if (victim.getHealth() - event.getAmount() <= 0.0F) event.setCanceled(true);
         }
 
         @SubscribeEvent

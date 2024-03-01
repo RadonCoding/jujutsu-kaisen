@@ -306,6 +306,11 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
+    public void removeCooldown(Ability ability) {
+        this.cooldowns.remove(ability);
+    }
+
+    @Override
     public int getRemainingCooldown(Ability ability) {
         return this.cooldowns.getOrDefault(ability, 0);
     }
