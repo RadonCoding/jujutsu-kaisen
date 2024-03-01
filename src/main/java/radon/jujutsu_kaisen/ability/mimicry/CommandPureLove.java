@@ -42,15 +42,23 @@ public class CommandPureLove extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+        if (ownerCap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData ownerData = ownerCap.getSorcererData();
 
-        RikaEntity rika = data.getSummonByClass(RikaEntity.class);
+        RikaEntity rika = ownerData.getSummonByClass(RikaEntity.class);
 
         if (rika == null) return;
+
+        IJujutsuCapability rikaCap = rika.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (rikaCap == null) return;
+
+        IAbilityData rikaData = rikaCap.getAbilityData();
+
+        rikaData.removeCooldown(JJKAbilities.SHOOT_PURE_LOVE.get());
 
         if (JJKAbilities.SHOOT_PURE_LOVE.get().getStatus(rika) != Status.SUCCESS) return;
 

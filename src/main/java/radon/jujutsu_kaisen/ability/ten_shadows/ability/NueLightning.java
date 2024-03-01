@@ -65,8 +65,6 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
         return 1.0F;
     }
 
-
-
     @Override
     public Classification getClassification() {
         return Classification.LIGHTNING;
