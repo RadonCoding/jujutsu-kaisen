@@ -65,7 +65,7 @@ public class QuestionCreatePactC2SPacket implements CustomPacketPayload {
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(String.format("chat.%s.pact_question_decline", JujutsuKaisen.MOD_ID)))));
 
                 Component message = Component.translatable(String.format("chat.%s.pact_question_create", JujutsuKaisen.MOD_ID), accept, decline,
-                        JJKPacts.getKey(this.pact).toString(), sender.getName());
+                        this.pact.getName(), sender.getName());
 
                 player.sendSystemMessage(message);
             }

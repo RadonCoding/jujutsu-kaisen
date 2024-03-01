@@ -45,11 +45,6 @@ public class PactTab extends JJKTab {
         super(minecraft, screen, type, index, page, Items.WRITABLE_BOOK.getDefaultInstance(), TITLE, BACKGROUND, false);
     }
 
-    @Nullable
-    public PlayerListWidget.Entry getSelectedPlayer() {
-        return this.player;
-    }
-
     public void setSelectedPlayer(PlayerListWidget.Entry entry) {
         this.player = entry;
     }
