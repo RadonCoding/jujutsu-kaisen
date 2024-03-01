@@ -77,15 +77,6 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        for (BodyRepelSegmentEntity segment : this.segments) {
-            segment.moveTo(this.getX(), this.getY(), this.getZ(), this.random.nextFloat() * 360.0F, 0.0F);
-        }
-    }
-
-    @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_TIME, 0);
     }
@@ -144,19 +135,15 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
             this.segments[i].tick();
 
             Entity leader = i == 0 ? this : this.segments[i - 1];
-            Vec3 follow = leader.position();
+            Vec3 follow = leader.position().add(this.getDeltaMovement());
 
             float angle = (((leader.getYRot() + 180.0F) * Mth.PI) / 180.0F);
 
             double f = (leader.getBbWidth() / 2) + (this.segments[i].getBbWidth() / 2);
 
-            if (i == 0) {
-                f -= this.segments[i].getBbWidth() / 2;
-            }
-
             double force = 0.05D + (1.0D / (i + 1)) * 0.5D;
 
-            double idealX = Mth.sin(angle) * force;
+            double idealX = -Mth.sin(angle) * force;
             double idealZ = Mth.cos(angle) * force;
 
             double groundY = this.segments[i].isInWall() ? follow.y + f : follow.y;
@@ -172,7 +159,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
             this.segments[i].setPos(destX, destY, destZ);
 
             double distance = Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z));
-            this.segments[i].setRot((float) (Math.atan2(diff.z, diff.x) * 180.0D / Math.PI), -(float) (Math.atan2(diff.y, distance) * 180.0D / Math.PI));
+            this.segments[i].setRot((float) (Math.atan2(diff.z, diff.x) * 180.0D / Math.PI) + 90.0F, -(float) (Math.atan2(diff.y, distance) * 180.0D / Math.PI));
         }
     }
 
