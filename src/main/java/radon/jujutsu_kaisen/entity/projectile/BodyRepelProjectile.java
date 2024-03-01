@@ -80,9 +80,8 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        for (int i = 0; i < this.segments.length; i++) {
-            Vec3 offset = this.position().subtract(this.getLookAngle().scale((i + 1) * this.segments[i].getBbWidth()));
-            this.segments[i].moveTo(offset.x, offset.y, offset.z, this.random.nextFloat() * 360.0F, 0.0F);
+        for (BodyRepelSegmentEntity segment : this.segments) {
+            segment.moveTo(this.getX(), this.getY(), this.getZ(), this.random.nextFloat() * 360.0F, 0.0F);
         }
     }
 
@@ -149,11 +148,15 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
 
             float angle = (((leader.getYRot() + 180.0F) * Mth.PI) / 180.0F);
 
-            double f = i == 0 ? leader.getBbWidth() / 2 : (leader.getBbWidth() / 2) + (this.segments[i].getBbWidth() / 2);
+            double f = (leader.getBbWidth() / 2) + (this.segments[i].getBbWidth() / 2);
+
+            if (i == 0) {
+                f -= this.segments[i].getBbWidth() / 2;
+            }
 
             double force = 0.05D + (1.0D / (i + 1)) * 0.5D;
 
-            double idealX = -Mth.sin(angle) * force;
+            double idealX = Mth.sin(angle) * force;
             double idealZ = Mth.cos(angle) * force;
 
             double groundY = this.segments[i].isInWall() ? follow.y + f : follow.y;
@@ -169,7 +172,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
             this.segments[i].setPos(destX, destY, destZ);
 
             double distance = Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z));
-            this.segments[i].setRot((float) (Math.atan2(diff.z, diff.x) * 180.0D / Math.PI) + 90.0F, -(float) (Math.atan2(diff.y, distance) * 180.0D / Math.PI));
+            this.segments[i].setRot((float) (Math.atan2(diff.z, diff.x) * 180.0D / Math.PI), -(float) (Math.atan2(diff.y, distance) * 180.0D / Math.PI));
         }
     }
 
@@ -255,7 +258,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
 
         entity.hurt(this.damageSources().thrown(this, owner), DAMAGE * this.souls);
 
-        this.discard();
+        //this.discard();
     }
 
     @Override
