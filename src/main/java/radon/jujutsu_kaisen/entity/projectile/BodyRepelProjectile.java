@@ -41,7 +41,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class BodyRepelProjectile extends Projectile implements GeoEntity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BodyRepelProjectile.class, EntityDataSerializers.INT);
 
-    private static final double SPEED = 1.0D;
+    private static final double SPEED = 3.0D;
     private static final float DAMAGE = 10.0F;
 
     private static final int MAX_SEGMENTS = 24;
