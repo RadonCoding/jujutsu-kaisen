@@ -370,7 +370,6 @@
   "ability.jujutsu_kaisen.transfigured_soul_normal": "Transfigured Soul: Normal",
   "ability.jujutsu_kaisen.transfigured_soul_large": "Transfigured Soul: Large",
   "ability.jujutsu_kaisen.polymorphic_soul_isomer": "Polymorphic Soul Isomer",
-  "ability.jujutsu_kaisen.body_repel": "Body Repel",
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing": "Instant Spirit Body of Distorted Killing",
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing.enable": "Activated instant spirit body of distorted killing",
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing.disable": "Deactivated instant spirit body of distorted killing",
@@ -681,7 +680,6 @@
   "entity.jujutsu_kaisen.cursed_energy_blast": "Cursed Energy Blast",
   "entity.jujutsu_kaisen.eel_grapple": "Eel Grapple",
   "entity.jujutsu_kaisen.transfigured_soul": "Transfigured Soul",
-  "entity.jujutsu_kaisen.body_repel": "Body Repel",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",
