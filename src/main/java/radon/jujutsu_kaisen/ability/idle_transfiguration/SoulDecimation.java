@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -37,8 +38,6 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
         if (cap == null) return ActivationType.TOGGLED;
 
         ISorcererData data = cap.getSorcererData();
-
-        if (data == null) return ActivationType.TOGGLED;
 
         return data.hasSummonOfClass(DomainExpansionEntity.class) ? ActivationType.INSTANT : ActivationType.TOGGLED;
     }
@@ -86,6 +85,18 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
             LivingEntity target = IdleTransfiguration.getTarget(owner);
 
             if (target == null) return;
+
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            ISorcererData data = cap.getSorcererData();
+
+            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
+
+            if (domain == null) return;
+
+            if (!domain.isInsideBarrier(target.blockPosition())) return;
 
             this.run(owner, target);
         }
