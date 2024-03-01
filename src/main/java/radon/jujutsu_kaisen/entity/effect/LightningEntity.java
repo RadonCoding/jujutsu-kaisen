@@ -214,6 +214,6 @@ public class LightningEntity extends JujutsuProjectile {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        return distance < 1024;
+        return distance < 1024.0D;
     }
 }

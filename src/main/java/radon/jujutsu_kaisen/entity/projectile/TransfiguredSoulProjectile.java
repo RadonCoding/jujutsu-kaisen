@@ -29,7 +29,6 @@ public class TransfiguredSoulProjectile extends Projectile {
 
     private static final double SPEED = 5.0D;
     private static final float DAMAGE = 10.0F;
-    private static final int DURATION = 5 * 20;
 
     public TransfiguredSoulProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -93,11 +92,6 @@ public class TransfiguredSoulProjectile extends Projectile {
             this.discard();
         } else {
             super.tick();
-
-            if (this.getTime() >= DURATION) {
-                this.discard();
-                return;
-            }
 
             HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 

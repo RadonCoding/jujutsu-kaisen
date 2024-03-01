@@ -129,7 +129,7 @@ public class WormCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public @Nullable PartEntity<?>[] getParts() {
+    public PartEntity<?> @NotNull [] getParts() {
         return this.segments;
     }
 

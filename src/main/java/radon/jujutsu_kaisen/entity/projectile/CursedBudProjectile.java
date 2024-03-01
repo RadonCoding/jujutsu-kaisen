@@ -31,7 +31,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity {
     public static final int DELAY = 20;
-    private static final int DURATION = 3 * 20;
     private static final int EFFECT = 5 * 20;
     private static final double SPEED = 3.0D;
     private static final float DAMAGE = 5.0F;
@@ -117,8 +116,6 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
                     }
-                } else if (this.getTime() >= DURATION) {
-                    this.discard();
                 } else if (this.getTime() == DELAY) {
                     this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 }
