@@ -137,7 +137,7 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
             Entity leader = i == 0 ? this : this.segments[i - 1];
             Vec3 follow = leader.position();
 
-            float angle = (((180.0F - leader.getYRot()) * Mth.PI) / 180.0F);
+            float angle = (((leader.getYRot() - 90.0F) * Mth.PI) / 180.0F);
 
             double f = (leader.getBbWidth() / 2) + (this.segments[i].getBbWidth() / 2);
 
@@ -244,6 +244,13 @@ public class BodyRepelProjectile extends Projectile implements GeoEntity {
         if (entity == owner) return;
 
         entity.hurt(this.damageSources().thrown(this, owner), DAMAGE * this.souls);
+    }
+
+    @Override
+    protected void onHit(@NotNull HitResult pResult) {
+        super.onHit(pResult);
+
+        this.discard();
     }
 
     @Override

@@ -153,4 +153,11 @@ public class TransfiguredSoulProjectile extends Projectile {
 
         entity.hurt(this.damageSources().thrown(this, owner), DAMAGE);
     }
+
+    @Override
+    protected void onHit(@NotNull HitResult pResult) {
+        super.onHit(pResult);
+
+        this.discard();
+    }
 }
