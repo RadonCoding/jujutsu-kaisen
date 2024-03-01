@@ -370,6 +370,7 @@
   "ability.jujutsu_kaisen.transfigured_soul_normal": "Transfigured Soul: Normal",
   "ability.jujutsu_kaisen.transfigured_soul_large": "Transfigured Soul: Large",
   "ability.jujutsu_kaisen.polymorphic_soul_isomer": "Polymorphic Soul Isomer",
+  "ability.jujutsu_kaisen.body_repel": "Body Repel",
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing": "Instant Spirit Body of Distorted Killing",
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing.enable": "Activated instant spirit body of distorted killing",
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing.disable": "Deactivated instant spirit body of distorted killing",
@@ -537,6 +538,7 @@
   "chat.jujutsu_kaisen.points": "You've gained %1$d points from your battle",
   "chat.jujutsu_kaisen.points_penalty": "You lost %1$d points by dying",
   "chat.jujutsu_kaisen.charge": "Charge: %1$d%%",
+  "chat.jujutsu_kaisen.souls": "Souls: %1$d",
 
   "chat.jujutsu_kaisen.pact_request_create": "Sent a pact creation request to %1$s",
   "chat.jujutsu_kaisen.pact_request_remove": "Sent a pact removal request to %1$s",
@@ -679,6 +681,7 @@
   "entity.jujutsu_kaisen.cursed_energy_blast": "Cursed Energy Blast",
   "entity.jujutsu_kaisen.eel_grapple": "Eel Grapple",
   "entity.jujutsu_kaisen.transfigured_soul": "Transfigured Soul",
+  "entity.jujutsu_kaisen.body_repel": "Body Repel",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",

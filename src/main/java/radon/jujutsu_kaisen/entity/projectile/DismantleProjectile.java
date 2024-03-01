@@ -39,7 +39,6 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
 
-    private static final int DURATION = 10;
     public static final int MIN_LENGTH = 3;
     public static final int MAX_LENGTH = 12;
 
@@ -232,7 +231,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2) || this.getTime() >= DURATION) {
+        if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {
             this.discard();
         }
     }

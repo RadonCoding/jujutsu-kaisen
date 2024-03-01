@@ -264,6 +264,17 @@ public abstract class DomainExpansionEntity extends Entity {
     }
 
     @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        double d0 = this.getBoundingBox().getSize() * 10.0D;
+
+        if (Double.isNaN(d0)) {
+            d0 = 1.0D;
+        }
+        d0 *= 64.0D * getViewScale();
+        return pDistance < d0 * d0;
+    }
+
+    @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         LivingEntity entity = this.getOwner();
         return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());

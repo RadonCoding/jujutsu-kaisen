@@ -148,6 +148,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, TransfiguredSoulNormal> TRANSFIGURED_SOUL_NORMAL = ABILITIES.register("transfigured_soul_normal", TransfiguredSoulNormal::new);
     public static DeferredHolder<Ability, TransfiguredSoulLarge> TRANSFIGURED_SOUL_LARGE = ABILITIES.register("transfigured_soul_large", TransfiguredSoulLarge::new);
     public static DeferredHolder<Ability, PolymorphicSoulIsomer> POLYMORPHIC_SOUL_ISOMER = ABILITIES.register("polymorphic_soul_isomer", PolymorphicSoulIsomer::new);
+    public static DeferredHolder<Ability, BodyRepel> BODY_REPEL = ABILITIES.register("body_repel", BodyRepel::new);
     public static DeferredHolder<Ability, InstantSpiritBodyOfDistortedKilling> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static DeferredHolder<Ability, SelfEmbodimentOfPerfection> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
 
