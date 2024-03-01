@@ -36,7 +36,7 @@ public class Explode extends CursedSpeech {
 
         CursedSpeechUtil.attack(owner, entity -> {
             ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner)),
-                    20, this.getPower(owner), owner, JJKDamageSources.jujutsuAttack(owner, this), false);
+                    20, this.getPower(owner) * 0.25F, owner, JJKDamageSources.jujutsuAttack(owner, this), false);
 
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
