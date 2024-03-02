@@ -42,8 +42,6 @@ public class ClientVisualHandler {
 
         if (mc.player == null) return;
 
-        if (identifier == mc.player.getUUID()) return;
-
         if (!synced.containsKey(identifier)) {
             synced.put(identifier, new ClientData(nbt));
             return;
