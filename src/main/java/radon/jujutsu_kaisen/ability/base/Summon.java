@@ -101,7 +101,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         IAbilityData abilityData = cap.getAbilityData();
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
-        if (!abilityData.hasToggled(this) && this.isTenShadows()) {
+        if (this.isTenShadows() && !abilityData.hasToggled(this)) {
             if (abilityData.hasToggled(JJKAbilities.ABILITY_MODE.get())) return false;
 
             for (Ability ability : abilityData.getToggled()) {

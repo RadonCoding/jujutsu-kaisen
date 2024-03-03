@@ -19,8 +19,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 
 public class PiercingWater extends Ability {
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
@@ -64,6 +62,4 @@ public class PiercingWater extends Ability {
     public float getCost(LivingEntity owner) {
         return 100.0F;
     }
-
-
 }
