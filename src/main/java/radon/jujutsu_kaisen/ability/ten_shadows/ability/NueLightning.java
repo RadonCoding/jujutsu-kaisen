@@ -46,6 +46,7 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
         ITenShadowsData tenShadowsData = cap.getTenShadowsData();
 
         return !abilityData.hasToggled(JJKAbilities.NUE.get()) &&
+                !abilityData.hasToggled(JJKAbilities.NUE_TOTALITY.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.NUE.get()) &&
                 abilityData.hasToggled(JJKAbilities.ABILITY_MODE.get());
     }
