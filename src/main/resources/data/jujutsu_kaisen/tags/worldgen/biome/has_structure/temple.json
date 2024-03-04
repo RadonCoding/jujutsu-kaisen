@@ -1,6 +1,6 @@
 {
   "values": [
-    "#minecraft:is_mountain",
+    "#forge:is_mountain",
     "#minecraft:is_hill",
     "#minecraft:is_taiga",
     "#minecraft:is_jungle",
