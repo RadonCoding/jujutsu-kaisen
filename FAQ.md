@@ -86,7 +86,7 @@ When first joining a world you'll either be a sorcerer or a cursed spirit.
 
 Sorcerers can awaken **Reverse Cursed Technique** while curses will be able to heal by default.
 **Reverse Cursed Technique** is unlocked by dying as a sorcerer (grade 1 or above required) with a random chance you can edit in server config, if you're successful, you'll ignore the death damage and unlock RCT.
-If the player dies while holding a totem of immortality, the chance to get RCT is halved but you won't die when unsuccessful.
+If the player dies while holding a totem of immortality, the chance to get RCT is doubled.
 
 Curses can eat **cursed objects** to gain more cursed energy, this will also give them access to basic cursed energy manipulation such as **Cursed Energy Blast** and **Cursed Energy Bomb**.
 
