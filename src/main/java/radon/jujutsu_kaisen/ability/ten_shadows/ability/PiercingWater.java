@@ -4,6 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -61,5 +62,10 @@ public class PiercingWater extends Ability {
     @Override
     public float getCost(LivingEntity owner) {
         return 100.0F;
+    }
+
+    @Override
+    public MenuType getMenuType(LivingEntity owner) {
+        return MenuType.MELEE;
     }
 }
