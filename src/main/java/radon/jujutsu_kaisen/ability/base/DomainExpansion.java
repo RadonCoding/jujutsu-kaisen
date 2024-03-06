@@ -188,7 +188,13 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 2.0F;
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0.0F;
+
+        IAbilityData data = cap.getAbilityData();
+
+        return data.hasToggled(this) ? 2.0F : 1000.0F;
     }
 
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
