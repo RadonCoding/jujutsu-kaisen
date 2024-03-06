@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -19,8 +20,10 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -36,9 +39,10 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class ToadEntity extends TenShadowsSummon {
+
     private static final EntityDataAccessor<Integer> DATA_RITUAL = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_CAN_SHOOT = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -47,8 +51,16 @@ public class ToadEntity extends TenShadowsSummon {
     private static final RawAnimation TONGUE = RawAnimation.begin().thenPlayAndHold("attack.tongue");
     private static final RawAnimation HOWL = RawAnimation.begin().thenPlayAndHold("misc.howl");
 
+    private static final int COUNT = 3;
     private static final int RANGE = 20;
     private static final int SHOOT_INTERVAL = 20;
+
+    @Nullable
+    private UUID leaderUUID;
+    @Nullable
+    private ToadEntity cachedLeader;
+
+    private boolean original;
 
     public ToadEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -67,6 +79,105 @@ public class ToadEntity extends TenShadowsSummon {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
+    }
+
+    public ToadEntity(EntityType<? extends TamableAnimal> type, ToadEntity leader) {
+        this(type, leader, leader.isTame(), false);
+
+        this.setLeader(leader);
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        if (!this.canShoot()) {
+            this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
+        }
+
+        LivingEntity owner = this.getOwner();
+
+        if (this.isTame() && owner != null && this.hasWings()) {
+            for (AbstractArrow arrow : this.level().getEntitiesOfClass(AbstractArrow.class, owner.getBoundingBox().inflate(1.0D))) {
+                if (arrow.getOwner() != this.getOwner()) {
+                    this.shoot(arrow);
+                    arrow.discard();
+                }
+            }
+        }
+
+        LivingEntity target = this.getTarget();
+
+        if (target != null && target.isAlive() && !target.isRemoved()) {
+            this.lookControl.setLookAt(target, 30.0F, 30.0F);
+
+            if (this.hasLineOfSight(target) && this.distanceTo(target) <= RANGE) {
+                if (this.getTime() % SHOOT_INTERVAL == 0) {
+                    this.shoot(target);
+                }
+            }
+
+            double d0 = this.getAttributeValue(Attributes.FOLLOW_RANGE);
+            AABB bounds = AABB.unitCubeFromLowerCorner(this.position()).inflate(d0, 10.0D, d0);
+            this.level().getEntitiesOfClass(ToadEntity.class, bounds, EntitySelector.NO_SPECTATORS).stream()
+                    .filter(entity -> entity != this)
+                    .filter(entity -> entity.getTarget() == null)
+                    .filter(entity -> !entity.isAlliedTo(this.getTarget()))
+                    .filter(entity -> (entity.getLeader() != null && entity.getLeader() == this.getLeader()) || this.getLeader() == entity || entity.getLeader() == this)
+                    .forEach(entity -> entity.setTarget(this.getTarget()));
+        } else {
+            ToadEntity leader = this.getLeader();
+
+            if (leader != null && !leader.isRemoved() && leader.isAlive()) {
+                if (this.distanceTo(leader) >= 1.0D) {
+                    this.lookControl.setLookAt(leader, 10.0F, (float) this.getMaxHeadXRot());
+                    this.navigation.moveTo(leader, 1.0D);
+                }
+            } else if (!this.original) {
+                this.discard();
+            }
+        }
+    }
+
+    public void setLeader(@Nullable ToadEntity leader) {
+        if (leader != null) {
+            this.leaderUUID = leader.getUUID();
+            this.cachedLeader = leader;
+        }
+    }
+
+    @Nullable
+    public ToadEntity getLeader() {
+        if (this.cachedLeader != null && !this.cachedLeader.isRemoved()) {
+            return this.cachedLeader;
+        } else if (this.leaderUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedLeader = (ToadEntity) ((ServerLevel) this.level()).getEntity(this.leaderUUID);
+            return this.cachedLeader;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    protected boolean shouldDespawn() {
+        return this.original && super.shouldDespawn();
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        if (this.getLeader() == null) {
+            this.original = true;
+
+            for (int i = 0; i < COUNT; i++) {
+                ToadEntity entity = new ToadEntity((EntityType<? extends TamableAnimal>) this.getType(), this);
+                entity.setPos(this.position());
+                this.level().addFreshEntity(entity);
+            }
+        }
     }
 
     @Override
@@ -131,6 +242,10 @@ public class ToadEntity extends TenShadowsSummon {
         return false;
     }
 
+    public int getRitual() {
+        return this.entityData.get(DATA_RITUAL);
+    }
+
     public void setRitual(int duration) {
         this.entityData.set(DATA_RITUAL, duration);
     }
@@ -147,14 +262,24 @@ public class ToadEntity extends TenShadowsSummon {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("ritual", this.entityData.get(DATA_RITUAL));
+        if (this.leaderUUID != null) {
+            pCompound.putUUID("leader", this.leaderUUID);
+        }
+        pCompound.putBoolean("original", this.original);
+
+        pCompound.putInt("ritual", this.getRitual());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.entityData.set(DATA_RITUAL, pCompound.getInt("ritual"));
+        if (pCompound.hasUUID("leader")) {
+            this.leaderUUID = pCompound.getUUID("leader");
+        }
+        this.original = pCompound.getBoolean("original");
+
+        this.setRitual(pCompound.getInt("ritual"));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -216,36 +341,6 @@ public class ToadEntity extends TenShadowsSummon {
 
     public void setCanShoot(boolean canShoot) {
         this.entityData.set(DATA_CAN_SHOOT, canShoot);
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        if (!this.canShoot()) {
-            this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
-        }
-        
-        LivingEntity owner = this.getOwner();
-
-        if (this.isTame() && owner != null && this.hasWings()) {
-            for (AbstractArrow arrow : this.level().getEntitiesOfClass(AbstractArrow.class, owner.getBoundingBox().inflate(1.0D))) {
-                if (arrow.getOwner() != this.getOwner()) {
-                    this.shoot(arrow);
-                    arrow.discard();
-                }
-            }
-        }
-
-        LivingEntity target = this.getTarget();
-
-        if (target != null && target.isAlive() && !target.isRemoved()) {
-            this.lookControl.setLookAt(target, 30.0F, 30.0F);
-
-            if (this.hasLineOfSight(target) && this.distanceTo(target) <= RANGE) {
-                if (this.getTime() % SHOOT_INTERVAL == 0) {
-                    this.shoot(target);
-                }
-            }
-        }
     }
 
     @Override
