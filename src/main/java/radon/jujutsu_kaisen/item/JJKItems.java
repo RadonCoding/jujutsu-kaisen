@@ -160,6 +160,8 @@ public class JJKItems {
             () -> new DeferredSpawnEggItem(JJKEntities.RAINBOW_DRAGON, 0xffffff, 0xffea59, new Item.Properties()));
     public static DeferredHolder<Item, DeferredSpawnEggItem> DINO_CURSE_SPAWN_EGG = ITEMS.register("dino_curse_spawn_egg",
             () -> new DeferredSpawnEggItem(JJKEntities.DINO_CURSE, 0x2d405c, 0xb7f6fe, new Item.Properties()));
+    public static DeferredHolder<Item, DeferredSpawnEggItem> KO_GUY_SPAWN_EGG = ITEMS.register("ko_guy_spawn_egg",
+            () -> new DeferredSpawnEggItem(JJKEntities.KO_GUY, 0x8e855a, 0x59476b, new Item.Properties()));
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial CUSTOM_MODEL = new JJKArmorMaterial("custom_model", 0, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.EMPTY, 0.0F, 0.0F, () -> Ingredient.EMPTY);

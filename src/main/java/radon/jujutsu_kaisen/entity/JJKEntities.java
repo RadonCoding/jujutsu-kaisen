@@ -138,6 +138,11 @@ public class JJKEntities {
                     .sized(4.0F, 3.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dino_curse")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<KoGuyEntity>> KO_GUY = ENTITIES.register("ko_guy", () ->
+            EntityType.Builder.<KoGuyEntity>of(KoGuyEntity::new, MobCategory.AMBIENT)
+                    .sized(2.0F, 2.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "ko_guy")
+                            .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<AbsorbedPlayerEntity>> ABSORBED_PLAYER = ENTITIES.register("absorbed_player", () ->
             EntityType.Builder.<AbsorbedPlayerEntity>of(AbsorbedPlayerEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "absorbed_player")
@@ -613,6 +618,7 @@ public class JJKEntities {
         event.put(FINGER_BEARER.get(), SorcererEntity.createAttributes().build());
         event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
         event.put(DINO_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(KO_GUY.get(), SorcererEntity.createAttributes().build());
         event.put(ABSORBED_PLAYER.get(), SorcererEntity.createAttributes().build());
 
         event.put(WOOD_SHIELD.get(), Mob.createMobAttributes().build());
