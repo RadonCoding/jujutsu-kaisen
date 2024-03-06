@@ -232,6 +232,9 @@ public class AbilityData implements IAbilityData {
 
             ((Ability.IToggled) ability).onEnabled(this.owner);
         }
+
+        ability.run(this.owner);
+
         ServerVisualHandler.sync(this.owner);
     }
 
@@ -285,6 +288,7 @@ public class AbilityData implements IAbilityData {
                 if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                     this.owner.sendSystemMessage(this.channeled.getEnableMessage());
                 }
+                this.channeled.run(this.owner);
             }
         }
         ServerVisualHandler.sync(this.owner);

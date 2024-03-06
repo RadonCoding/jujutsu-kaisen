@@ -19,7 +19,7 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
 
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(10 * 20 * getStrength(owner, instant)),
                 4, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(10 * 20* getStrength(owner, instant)),
+        entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(10 * 20 * getStrength(owner, instant)),
                 4, false, false, false));
         entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, Math.round(10 * 20 * getStrength(owner, instant)),
                 4, false, false, false));
