@@ -34,8 +34,8 @@ public class RotationUtil {
 
                 double d3 = Math.sqrt(offset.x * offset.x + offset.z * offset.z);
 
-                float yaw = Mth.wrapDegrees((float) (Mth.atan2(offset.z,offset.x) * (double) (180.0F / (float) Math.PI)) - 90.0F);
-                float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(offset.y, d3) * (double) (180.0F / (float) Math.PI))));
+                float yaw = Mth.wrapDegrees((float) (Mth.atan2(offset.z,offset.x) * (double) (180.0F / Mth.PI)) - 90.0F);
+                float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(offset.y, d3) * (double) (180.0F / Mth.PI))));
 
                 entity.setYRot(yaw);
                 entity.yRotO = yaw;
@@ -102,8 +102,8 @@ public class RotationUtil {
     }
 
     public static Vec3 calculateViewVector(float pitch, float yaw) {
-        float f = pitch * ((float) Math.PI / 180.0F);
-        float f1 = -yaw * ((float) Math.PI / 180.0F);
+        float f = pitch * (Mth.PI / 180.0F);
+        float f1 = -yaw * (Mth.PI / 180.0F);
         float f2 = Mth.cos(f1);
         float f3 = Mth.sin(f1);
         float f4 = Mth.cos(f);

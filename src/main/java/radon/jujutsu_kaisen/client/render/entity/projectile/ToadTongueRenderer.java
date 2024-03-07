@@ -40,8 +40,8 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
         relative = relative.normalize();
         float f1 = (float) Math.acos(relative.y);
         float f2 = (float) Math.atan2(relative.z, relative.x);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees((((float) Math.PI / 2.0F) - f2) * (180.0F / (float) Math.PI)));
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(f1 * (180.0F / (float) Math.PI)));
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(((Mth.PI / 2.0F) - f2) * (180.0F / Mth.PI)));
+        pPoseStack.mulPose(Axis.XP.rotationDegrees(f1 * (180.0F / Mth.PI)));
 
         float f3 = -1.0F;
         int j = 255;
@@ -51,10 +51,10 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
         float f5 = 0.2F;
         float f6 = 0.0F;
         float f7 = -0.2F;
-        float f8 = Mth.cos(f3 + ((float) Math.PI / 2.0F)) * 0.2F;
-        float f9 = Mth.sin(f3 + ((float) Math.PI / 2.0F)) * 0.2F;
-        float f10 = Mth.cos(f3 + ((float) Math.PI * 1.5F)) * 0.2F;
-        float f11 = Mth.sin(f3 + ((float) Math.PI * 1.5F)) * 0.2F;
+        float f8 = Mth.cos(f3 + (Mth.PI / 2.0F)) * 0.2F;
+        float f9 = Mth.sin(f3 + (Mth.PI / 2.0F)) * 0.2F;
+        float f10 = Mth.cos(f3 + (Mth.PI * 1.5F)) * 0.2F;
+        float f11 = Mth.sin(f3 + (Mth.PI * 1.5F)) * 0.2F;
         float f12 = 0.0F;
         float f13 = f0 + f12;
         float f14 = 0.75F;

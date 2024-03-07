@@ -134,8 +134,8 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             this.setPos(spawn.x, spawn.y, spawn.z);
 
             double d0 = look.horizontalDistance();
-            this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
-            this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
+            this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / Mth.PI)));
+            this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / Mth.PI)));
             this.yRotO = this.getYRot();
             this.xRotO = this.getXRot();
         }

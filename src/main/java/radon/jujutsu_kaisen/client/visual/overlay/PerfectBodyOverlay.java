@@ -163,16 +163,16 @@ public class PerfectBodyOverlay implements IOverlay {
         humanoid.setupAnim(entity, f5, f8, f7, f2, f6);
 
         if (model.attackTime <= 0) {
-            humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+            humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - (Mth.PI * 0.1F);
         }
-        humanoid.rightArm.zRot += humanoid.rightArm.zRot * 0.5F - ((float) Math.PI * 0.125F);
+        humanoid.rightArm.zRot += humanoid.rightArm.zRot * 0.5F - (Mth.PI * 0.125F);
         humanoid.rightSleeve.copyFrom(humanoid.rightArm);
         humanoid.rightArm.render(poseStack, skin, packedLight, OverlayTexture.NO_OVERLAY);
 
         if (model.attackTime <= 0) {
-            humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+            humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - (Mth.PI * 0.1F);
         }
-        humanoid.leftArm.zRot -= humanoid.leftArm.zRot * 0.5F - ((float) Math.PI * 0.025F);
+        humanoid.leftArm.zRot -= humanoid.leftArm.zRot * 0.5F - (Mth.PI * 0.025F);
         humanoid.leftSleeve.copyFrom(humanoid.leftArm);
         humanoid.leftArm.render(poseStack, skin, packedLight, OverlayTexture.NO_OVERLAY);
 

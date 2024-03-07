@@ -64,9 +64,9 @@ public class GunItem extends ArmorItem implements GeoItem {
                 poseStack.scale(2.5F, 2.5F, 2.5F);
 
                 float f = Mth.sqrt(swingProcess);
-                float f1 = Mth.sin(f * (float) Math.PI);
-                float f2 = 0.4F * Mth.sin(f * ((float) Math.PI * 2.0F));
-                float f3 = -0.3F * Mth.sin(swingProcess * (float) Math.PI);
+                float f1 = Mth.sin(f * Mth.PI);
+                float f2 = 0.4F * Mth.sin(f * (Mth.PI * 2.0F));
+                float f3 = -0.3F * Mth.sin(swingProcess * Mth.PI);
                 poseStack.translate(0.0F, f2 - 0.3F * f1, f3);
 
                 return true;

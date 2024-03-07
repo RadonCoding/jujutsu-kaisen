@@ -76,7 +76,7 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
         this.renderStart(frame, pPoseStack, consumer, color, pPackedLight);
 
         if (pEntity.getTime() > pEntity.getCharge()) {
-            this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, color, pPackedLight);
+            this.renderBeam(length, 180.0F / Mth.PI * yaw, 180.0F / Mth.PI * pitch, frame, pPoseStack, consumer, color, pPackedLight);
 
             pPoseStack.pushPose();
             pPoseStack.translate(collidePosX - posX, collidePosY - posY, collidePosZ - posZ);
