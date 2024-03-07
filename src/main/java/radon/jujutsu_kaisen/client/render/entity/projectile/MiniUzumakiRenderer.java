@@ -69,7 +69,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
 
             this.renderStart(frame, pPoseStack, consumer, pPackedLight);
 
-            this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
+            this.renderBeam(length, 180.0F / Mth.PI * yaw, 180.0F / Mth.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
 
             pPoseStack.pushPose();
             pPoseStack.translate(collidePosX - posX, collidePosY - posY, collidePosZ - posZ);

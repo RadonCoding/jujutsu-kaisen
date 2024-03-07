@@ -64,7 +64,7 @@ public class PiercingWaterRenderer extends EntityRenderer<PiercingWaterEntity> {
 
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
 
-        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
+        this.renderBeam(length, 180.0F / Mth.PI * yaw, 180.0F / Mth.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
 
         pPoseStack.popPose();
     }

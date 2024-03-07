@@ -139,9 +139,9 @@ public class Dash extends Ability {
         if (hit.getType() == HitResult.Type.MISS) {
             float f = owner.getYRot();
             float f1 = owner.getXRot();
-            float f2 = -Mth.sin(f * ((float) Math.PI / 180.0F)) * Mth.cos(f1 * ((float) Math.PI / 180.0F));
-            float f3 = -Mth.sin(f1 * ((float) Math.PI / 180.0F));
-            float f4 = Mth.cos(f * ((float) Math.PI / 180.0F)) * Mth.cos(f1 * ((float) Math.PI / 180.0F));
+            float f2 = -Mth.sin(f * (Mth.PI / 180.0F)) * Mth.cos(f1 * (Mth.PI / 180.0F));
+            float f3 = -Mth.sin(f1 * (Mth.PI / 180.0F));
+            float f4 = Mth.cos(f * (Mth.PI / 180.0F)) * Mth.cos(f1 * (Mth.PI / 180.0F));
             float f5 = Mth.sqrt(f2 * f2 + f3 * f3 + f4 * f4);
             f2 *= power / f5;
             f3 *= power / f5;

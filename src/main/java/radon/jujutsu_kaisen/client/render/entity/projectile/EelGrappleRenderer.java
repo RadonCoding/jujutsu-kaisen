@@ -37,8 +37,8 @@ public class EelGrappleRenderer extends GeoEntityRenderer<EelGrappleProjectile> 
         relative = relative.normalize();
         float f1 = (float) Math.acos(relative.y);
         float f2 = (float) Math.atan2(relative.z, relative.x);
-        poseStack.mulPose(Axis.YP.rotationDegrees(((((float) Math.PI / 2.0F) - f2) * (180.0F / (float) Math.PI)) - 180.0F));
-        poseStack.mulPose(Axis.XN.rotationDegrees((f1 * (180.0F / (float) Math.PI)) - 90.0F));
+        poseStack.mulPose(Axis.YP.rotationDegrees((((Mth.PI / 2.0F) - f2) * (180.0F / Mth.PI)) - 180.0F));
+        poseStack.mulPose(Axis.XN.rotationDegrees((f1 * (180.0F / Mth.PI)) - 90.0F));
 
         GeoBone tail = this.model.getBone("tail").orElseThrow();
         tail.setScaleZ(f0);

@@ -95,14 +95,14 @@ public class TransformationHandler {
 
                 if (!custom) {
                     float f1 = Mth.sqrt(swing);
-                    float f2 = -0.3F * Mth.sin(f1 * (float) Math.PI);
-                    float f3 = 0.4F * Mth.sin(f1 * ((float) Math.PI * 2.0F));
-                    float f4 = -0.4F * Mth.sin(swing * (float) Math.PI);
+                    float f2 = -0.3F * Mth.sin(f1 * Mth.PI);
+                    float f3 = 0.4F * Mth.sin(f1 * (Mth.PI * 2.0F));
+                    float f4 = -0.4F * Mth.sin(swing * Mth.PI);
                     event.getPoseStack().translate(f * (f2 + 0.64000005F), f3 - 0.6F + equip * -0.6F, f4 - 0.71999997F);
 
                     event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f * 45.0F));
-                    float f5 = Mth.sin(swing * swing * (float) Math.PI);
-                    float f6 = Mth.sin(f1 * (float) Math.PI);
+                    float f5 = Mth.sin(swing * swing * Mth.PI);
+                    float f6 = Mth.sin(f1 * Mth.PI);
                     event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f * f6 * 70.0F));
                     event.getPoseStack().mulPose(Axis.ZP.rotationDegrees(f * f5 * -20.0F));
                     event.getPoseStack().translate(f * -1.0F, 3.6F, 3.5F);

@@ -172,8 +172,8 @@ public abstract class RadialScreen extends Screen {
     }
 
     private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
-        Quaternionf quaternionf = (new Quaternionf()).rotateZ((float) Math.PI);
-        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(angleYComponent * 20.0F * ((float) Math.PI / 180.0F));
+        Quaternionf quaternionf = (new Quaternionf()).rotateZ(Mth.PI);
+        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(angleYComponent * 20.0F * (Mth.PI / 180.0F));
         quaternionf.mul(quaternionf1);
 
         if (pEntity instanceof LivingEntity living) {

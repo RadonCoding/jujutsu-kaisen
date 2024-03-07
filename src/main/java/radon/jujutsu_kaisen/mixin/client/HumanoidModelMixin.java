@@ -31,12 +31,12 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
         if (PerfectBodyOverlay.shouldRenderExtraArms(pEntity, client)) {
             if (this.rightArmPose == HumanoidModel.ArmPose.EMPTY || this.rightArmPose == HumanoidModel.ArmPose.ITEM) {
-                this.rightArm.xRot += this.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
-                this.rightArm.zRot -= this.rightArm.zRot * 0.5F - ((float) Math.PI * 0.1F);
+                this.rightArm.xRot += this.rightArm.xRot * 0.5F - (Mth.PI * 0.1F);
+                this.rightArm.zRot -= this.rightArm.zRot * 0.5F - (Mth.PI * 0.1F);
             }
             if (this.leftArmPose == HumanoidModel.ArmPose.EMPTY || this.leftArmPose == HumanoidModel.ArmPose.ITEM) {
-                this.leftArm.xRot += this.leftArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
-                this.leftArm.zRot += this.leftArm.zRot * 0.5F - ((float) Math.PI * 0.1F);
+                this.leftArm.xRot += this.leftArm.xRot * 0.5F - (Mth.PI * 0.1F);
+                this.leftArm.zRot += this.leftArm.zRot * 0.5F - (Mth.PI * 0.1F);
             }
         }
     }
