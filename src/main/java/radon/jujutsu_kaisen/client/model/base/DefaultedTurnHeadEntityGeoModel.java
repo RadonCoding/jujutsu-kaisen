@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.model.base;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
