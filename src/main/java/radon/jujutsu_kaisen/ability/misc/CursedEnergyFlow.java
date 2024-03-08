@@ -52,6 +52,7 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
@@ -303,13 +304,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         }
 
         if (DamageUtil.isMelee(source)) {
-            switch (sorcererData.getNature()) {
-                case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
-                        false, false, false));
-                case ROUGH -> {
-                    if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
-                        attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
-                    }
+            if (sorcererData.getNature() == CursedEnergyNature.ROUGH) {
+                if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
+                    attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
                 }
             }
         }
