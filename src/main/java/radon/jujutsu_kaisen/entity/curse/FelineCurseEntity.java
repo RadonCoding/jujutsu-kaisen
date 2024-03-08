@@ -12,6 +12,8 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
@@ -148,18 +150,26 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
         }
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
+
+        if (this.isTame()) {
+            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, this.canFly()));
+
+            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
+            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
+        } else {
+            this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
+
+            if (this.targetsSorcerers()) {
+                this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
+            }
+            if (this.targetsCurses()) {
+                this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
+            }
+        }
+        this.goalSelector.addGoal(goal++, new ChantGoal<>(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-
-        if (this.targetsSorcerers()) {
-            this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
-        }
-        if (this.targetsCurses()) {
-            this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
-        }
     }
 
     @Override

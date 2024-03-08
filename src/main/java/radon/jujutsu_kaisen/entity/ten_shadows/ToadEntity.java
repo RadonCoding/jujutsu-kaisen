@@ -81,8 +81,8 @@ public class ToadEntity extends TenShadowsSummon {
         this.yHeadRotO = this.yHeadRot;
     }
 
-    public ToadEntity(EntityType<? extends TamableAnimal> type, ToadEntity leader) {
-        this(type, leader, leader.isTame(), false);
+    public ToadEntity(EntityType<? extends TamableAnimal> type, ToadEntity leader, LivingEntity owner) {
+        this(type, owner, leader.isTame(), false);
 
         this.setLeader(leader);
     }
@@ -173,7 +173,7 @@ public class ToadEntity extends TenShadowsSummon {
             this.original = true;
 
             for (int i = 0; i < COUNT; i++) {
-                ToadEntity entity = new ToadEntity((EntityType<? extends TamableAnimal>) this.getType(), this);
+                ToadEntity entity = new ToadEntity((EntityType<? extends TamableAnimal>) this.getType(), this, owner);
                 entity.setPos(this.position());
                 this.level().addFreshEntity(entity);
             }
