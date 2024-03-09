@@ -40,7 +40,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public abstract class DomainExpansion extends Ability implements Ability.IToggled {
-    public static final int BURNOUT = 30 * 20;
+    public static final int BURNOUT = 10 * 20;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
