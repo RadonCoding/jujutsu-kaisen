@@ -42,7 +42,7 @@ public class RCT3 extends RCT2 {
         int burnout = data.getBurnout();
 
         if (burnout > 0) {
-            data.setBurnout(Math.max(0, burnout - 5));
+            data.setBurnout(Math.max(0, burnout - 10));
 
             if (this.getCharge(owner) % 20 == 0) {
                 data.increaseBrainDamage();

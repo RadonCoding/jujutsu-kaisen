@@ -31,13 +31,15 @@ public class DomainCustomizationTab extends JJKTab {
     public void tick() {
         float size = (float) this.sizeSlider.getValue();
 
-        if (size != this.oldSize) {
+        if (this.oldSize == 0.0F) {
+            this.oldSize = size;
+        } else if (size != this.oldSize) {
             if (this.minecraft != null && this.minecraft.player != null) {
                 IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+                if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 PacketHandler.sendToServer(new SetDomainSizeC2SPacket(size));
                 data.setDomainSize(size);
@@ -62,10 +64,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
-
+        ISorcererData data = cap.getSorcererData();
 
         int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
         int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;

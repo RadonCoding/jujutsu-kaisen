@@ -128,7 +128,7 @@ public class ServerConfig {
 
         builder.comment("Domains").push("domains");
         this.minimumDomainSize = builder.comment("Minimum size for a domain")
-                .defineInRange("minimumDomainSize", 0.5F, 0.2F, 1.0F);
+                .defineInRange("minimumDomainSize", 0.2F, 0.2F, 1.0F);
         this.maximumDomainSize = builder.comment("Maximum size for a domain")
                 .defineInRange("maximumDomainSize", 1.5F, 1.0F, 10.0F);
         builder.pop();
