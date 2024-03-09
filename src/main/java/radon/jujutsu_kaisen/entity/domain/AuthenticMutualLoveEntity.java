@@ -45,15 +45,11 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         this.technique = data.getCurrentCopied();
 
-        List<BlockPos> floor = this.getFloor();
-
-        if (floor.isEmpty()) return;
-
         Set<ICursedTechnique> copied = data.getCopied();
 
         if (copied.isEmpty()) return;
 
-        int total = floor.size() / 8;
+        int total = radius / 8;
         int share = total / copied.size();
 
         List<ICursedTechnique> all = new ArrayList<>();
@@ -64,7 +60,23 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         Iterator<ICursedTechnique> iter = all.iterator();
 
-        while (iter.hasNext() && !floor.isEmpty()) {
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+
+        List<BlockPos> floor = new ArrayList<>();
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
+                double distance = Math.sqrt(x * x + z * z);
+
+                if (distance > radius) continue;
+
+                BlockPos pos = center.offset(x, 0, z);
+
+                floor.add(pos);
+            }
+        }
+
+        while (iter.hasNext()) {
             ICursedTechnique technique = iter.next();
             BlockPos pos = floor.get(this.random.nextInt(floor.size()));
             this.offsets.put(pos, technique);

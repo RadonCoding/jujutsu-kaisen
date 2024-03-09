@@ -218,32 +218,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
-    protected List<BlockPos> getFloor() {
-        int radius = this.getRadius() - 1;
-
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
-
-        List<BlockPos> floor = new ArrayList<>();
-
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-
-                    if (distance > radius) continue;
-
-                    BlockPos pos = center.offset(x, y, z);
-
-                    if (this.level().getBlockState(pos).getCollisionShape(this.level(), pos).isEmpty() || !this.level().getBlockState(pos.above()).isAir() ||
-                            !this.level().getBlockState(pos).getFluidState().isEmpty()) continue;
-
-                    floor.add(pos);
-                }
-            }
-        }
-        return floor;
-    }
-
     protected void createBarrier(boolean instant) {
         this.total = 0;
 
