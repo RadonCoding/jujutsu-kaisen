@@ -351,8 +351,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private void check() {
         int radius = this.getRadius();
 
-        Vec3 behind = this.position().add(0.0D, radius, 0.0D);
-        BlockPos center = BlockPos.containing(behind);
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
         int count = 0;
 
@@ -416,14 +415,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         boolean completed = this.getTime() >= radius * 2;
 
         if (this.getTime() <= radius * 2) {
-            int centerY = Mth.floor(this.getY() + radius);
+            BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
                 if (!this.positions.containsKey(entity.getUUID())) {
                     this.positions.put(entity.getUUID(), entity.position());
                 }
-                if (entity.getY() < centerY) {
-                    entity.teleportTo(entity.getX(), centerY, entity.getZ());
+                if (entity.getY() < center.getY()) {
+                    entity.teleportTo(entity.getX(), center.getY(), entity.getZ());
                 }
             }
         }
