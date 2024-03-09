@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -185,9 +186,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Block block;
 
         if (pos.getY() < center.getY()) {
-            block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
-        } else if (pos.getY() == center.getY()) {
-          block = decoration.get(this.random.nextInt(decoration.size()));
+            RandomSource rng = RandomSource.create(69420);
+
+            if (pos.getY() == center.getY() - 1 && rng.nextInt(radius / 2) == 0) {
+                block = decoration.get(this.random.nextInt(decoration.size()));
+            } else {
+                block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
+            }
         } else {
             if (distance >= radius - 1) {
                 block = JJKBlocks.DOMAIN.get();
