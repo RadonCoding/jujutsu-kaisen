@@ -146,7 +146,7 @@ public class ServerConfig {
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
         this.quickDrawCost = builder.comment("The amount of points quick draw costs to unlock")
-                .defineInRange("simpleDomainCost", 50, 1, 10000);
+                .defineInRange("quickDrawCost", 50, 1, 10000);
         this.fallingBlossomEmotionCost = builder.comment("The amount of points falling blossom emotion costs to unlock")
                 .defineInRange("fallingBlossomEmotionCost", 50, 1, 10000);
         this.domainExpansionCost = builder.comment("The amount of points domain expansion costs to unlock")
