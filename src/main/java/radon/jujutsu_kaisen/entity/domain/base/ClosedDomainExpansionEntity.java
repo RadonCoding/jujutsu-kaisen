@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
@@ -53,6 +54,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private int total;
 
     private final Map<UUID, Vec3> positions = new HashMap<>();
+    private final RandomSource decorator = RandomSource.create(69420);
 
     public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
         super(pType, pLevel);
@@ -186,9 +188,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Block block;
 
         if (pos.getY() < center.getY()) {
-            RandomSource rng = RandomSource.create(69420);
-
-            if (pos.getY() == center.getY() - 1 && rng.nextInt(radius / 2) == 0) {
+            if (pos.getY() == center.getY() - 1 && this.decorator.nextInt(radius / 2) == 0) {
                 block = decoration.get(this.random.nextInt(decoration.size()));
             } else {
                 block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
@@ -445,11 +445,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         boolean completed = this.getTime() >= radius * 2;
 
         if (this.getTime() <= radius * 2) {
+            int centerY = Mth.floor(this.getY() + radius);
+
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
                 if (!this.positions.containsKey(entity.getUUID())) {
                     this.positions.put(entity.getUUID(), entity.position());
                 }
-                entity.teleportTo(entity.getX(), Math.floor(this.getY() + radius), entity.getZ());
+                if (entity.getY() < centerY) {
+                    entity.teleportTo(entity.getX(), centerY, entity.getZ());
+                }
             }
         }
 
