@@ -128,6 +128,7 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         if (this.offsets.containsKey(pos)) {
             this.level().addFreshEntity(new MimicryKatanaEntity(this, this.offsets.get(pos), pos.getCenter().add(0.0D, 0.5D, 0.0D)));
+            this.offsets.remove(pos);
         }
     }
 }
