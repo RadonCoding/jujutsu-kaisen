@@ -444,7 +444,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 if (!this.positions.containsKey(entity.getUUID())) {
                     this.positions.put(entity.getUUID(), entity.position());
                 }
-                entity.teleportTo(entity.getX(), this.getY() + radius, entity.getZ());
+                entity.teleportTo(entity.getX(), Math.floor(this.getY() + radius), entity.getZ());
             }
         }
 
