@@ -73,7 +73,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return this.entityData.get(DATA_RITUAL) == 0 && super.hurt(pSource, pAmount);
+        return this.getRitual() == 0 && super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -108,6 +108,10 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     protected void setVariant(Variant variant) {
         this.entityData.set(DATA_VARIANT, variant.ordinal());
+    }
+
+    public int getRitual() {
+        return this.entityData.get(DATA_RITUAL);
     }
 
     public void setRitual(int duration) {
@@ -220,7 +224,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("variant", this.entityData.get(DATA_VARIANT));
-        pCompound.putInt("ritual", this.entityData.get(DATA_RITUAL));
+        pCompound.putInt("ritual", this.getRitual());
     }
 
     @Override
@@ -248,7 +252,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     private PlayState howlPredicate(AnimationState<DivineDogEntity> animationState) {
-        if (this.entityData.get(DATA_RITUAL) > 0) {
+        if (this.getRitual() > 0) {
             return animationState.setAndContinue(HOWL);
         }
         animationState.getController().forceAnimationReset();
@@ -284,7 +288,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     public void tick() {
-        int ritual = this.entityData.get(DATA_RITUAL);
+        int ritual = this.getRitual();
 
         if (ritual > 0) {
             this.entityData.set(DATA_RITUAL, --ritual);
