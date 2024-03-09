@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -30,6 +31,10 @@ public class JJKBlocks {
     }
 
     private static boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+        return false;
+    }
+
+    private static Boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos, EntityType<?> pType) {
         return false;
     }
 
@@ -205,6 +210,7 @@ public class JJKBlocks {
                     .strength(100.0F, 14.0F)
                     .isViewBlocking(JJKBlocks::never)
                     .isSuffocating(JJKBlocks::never)
+                    .isValidSpawn(JJKBlocks::never)
                     .noOcclusion()));
 
     public static DeferredHolder<Block, FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
