@@ -270,10 +270,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             return List.of();
         }
 
-        default boolean canPlaceFloor(ClosedDomainExpansionEntity domain, BlockPos pos) {
-            return true;
-        }
-
         default boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
             return true;
         }
