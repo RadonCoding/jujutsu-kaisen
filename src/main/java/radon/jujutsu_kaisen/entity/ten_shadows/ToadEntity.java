@@ -89,6 +89,8 @@ public class ToadEntity extends TenShadowsSummon {
 
     @Override
     protected void customServerAiStep() {
+        if (this.getRitual() > 0) return;
+
         if (!this.canShoot()) {
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
         }
@@ -187,7 +189,7 @@ public class ToadEntity extends TenShadowsSummon {
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return this.entityData.get(DATA_RITUAL) == 0 && super.hurt(pSource, pAmount);
+        return this.getRitual() == 0 && super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -315,7 +317,7 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     private PlayState howlPredicate(AnimationState<ToadEntity> animationState) {
-        if (this.entityData.get(DATA_RITUAL) > 0) {
+        if (this.getRitual() > 0) {
             return animationState.setAndContinue(HOWL);
         }
         animationState.getController().forceAnimationReset();
@@ -350,7 +352,7 @@ public class ToadEntity extends TenShadowsSummon {
 
     @Override
     public void tick() {
-        int ritual = this.entityData.get(DATA_RITUAL);
+        int ritual = this.getRitual();
 
         if (ritual > 0) {
             this.entityData.set(DATA_RITUAL, --ritual);
