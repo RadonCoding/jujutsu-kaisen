@@ -62,9 +62,4 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
                 JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(),
                 JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get());
     }
-
-    @Override
-    public boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
-        return domain.level().getBlockState(pos.below()).is(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
-    }
 }

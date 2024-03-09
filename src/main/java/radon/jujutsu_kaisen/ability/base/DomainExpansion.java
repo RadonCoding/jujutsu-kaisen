@@ -270,10 +270,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             return List.of();
         }
 
-        default boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
-            return true;
-        }
-
         @Nullable
         default ParticleOptions getEnvironmentParticle() {
             return null;

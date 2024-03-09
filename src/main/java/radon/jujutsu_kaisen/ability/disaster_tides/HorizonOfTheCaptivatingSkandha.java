@@ -66,15 +66,4 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     public List<Block> getFillBlocks() {
         return List.of(JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL.get());
     }
-
-    @Override
-    public List<Block> getDecorationBlocks() {
-        return List.of(JJKBlocks.FAKE_WATER_DOMAIN.get());
-    }
-
-    @Override
-    public boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
-        LivingEntity owner = domain.getOwner();
-        return owner != null && pos.getY() < owner.getBlockY();
-    }
 }

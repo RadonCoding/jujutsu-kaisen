@@ -54,7 +54,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private int total;
 
     private final Map<UUID, Vec3> positions = new HashMap<>();
-    private final RandomSource decorator = RandomSource.create(69420);
 
     public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
         super(pType, pLevel);
@@ -188,7 +187,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Block block;
 
         if (pos.getY() < center.getY()) {
-            if (pos.getY() == center.getY() - 1 && this.decorator.nextInt(radius) < 5) {
+            if (pos.getY() == center.getY() - 1) {
                 block = decoration.get(this.random.nextInt(decoration.size()));
             } else {
                 block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
