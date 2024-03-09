@@ -184,7 +184,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         Block block;
 
-        if (pos.getY() <= center.getY()) {
+        if (pos.getY() < center.getY()) {
             block = floor.isEmpty() ? blocks.get(this.random.nextInt(blocks.size())) : floor.get(this.random.nextInt(floor.size()));
         } else {
             if (distance >= radius - 1) {
