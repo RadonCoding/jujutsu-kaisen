@@ -35,7 +35,6 @@ import java.util.*;
 public class BlackFlashHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        private static final float MAX_DAMAGE = 50.0F;
         private static final int CLEAR_INTERVAL = 5 * 20;
 
         private static final Map<UUID, Integer> TIMERS = new HashMap<>();
@@ -121,7 +120,7 @@ public class BlackFlashHandler {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
             }
 
-            event.setAmount(Math.min(MAX_DAMAGE, (float) Math.pow(event.getAmount(), 2.5D)));
+            event.setAmount((float) Math.pow(event.getAmount(), 2.5D));
 
             attacker.level().addFreshEntity(new BlackFlashEntity(attacker, victim));
 
