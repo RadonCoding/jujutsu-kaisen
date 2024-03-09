@@ -168,6 +168,8 @@ public class ToadEntity extends TenShadowsSummon {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
+        if (this.getRitual() > 0) return;
+
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
