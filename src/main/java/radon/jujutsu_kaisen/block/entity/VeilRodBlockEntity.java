@@ -63,6 +63,7 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public boolean isValid() {
+        if (!this.active) return false;
         if (!(this.level instanceof ServerLevel serverLevel)) return false;
         if (this.ownerUUID == null) return false;
 
@@ -123,8 +124,6 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
-        if (!pBlockEntity.active) return;
-
         VeilHandler.veil(pLevel.dimension(), pPos);
 
         if (++pBlockEntity.counter != INTERVAL) return;
