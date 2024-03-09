@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -157,6 +158,8 @@ public class VeilRodBlockEntity extends BlockEntity {
                         BlockState state = pLevel.getBlockState(pos);
 
                         if (!state.is(BlockTags.DOORS) && !state.is(BlockTags.TRAPDOORS) && !state.getCollisionShape(pLevel, pos).isEmpty()) continue;
+
+                        if (pos.getY() < pLevel.getMinBuildHeight()) continue;
 
                         boolean blocked = false;
 
