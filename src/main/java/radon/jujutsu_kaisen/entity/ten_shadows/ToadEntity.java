@@ -104,6 +104,15 @@ public class ToadEntity extends TenShadowsSummon {
             }
         }
 
+        ToadEntity leader = this.getLeader();
+
+        if (!this.original) {
+            if (leader == null || leader.isRemoved() || !leader.isAlive()) {
+                this.discard();
+                return;
+            }
+        }
+
         LivingEntity target = this.getTarget();
 
         if (target != null && target.isAlive() && !target.isRemoved()) {
@@ -123,16 +132,10 @@ public class ToadEntity extends TenShadowsSummon {
                     .filter(entity -> !entity.isAlliedTo(this.getTarget()))
                     .filter(entity -> (entity.getLeader() != null && entity.getLeader() == this.getLeader()) || this.getLeader() == entity || entity.getLeader() == this)
                     .forEach(entity -> entity.setTarget(this.getTarget()));
-        } else {
-            ToadEntity leader = this.getLeader();
-
-            if (leader != null && !leader.isRemoved() && leader.isAlive()) {
-                if (this.distanceTo(leader) >= 1.0D) {
-                    this.lookControl.setLookAt(leader, 10.0F, (float) this.getMaxHeadXRot());
-                    this.navigation.moveTo(leader, 1.0D);
-                }
-            } else if (!this.original) {
-                this.discard();
+        } else if (leader != null) {
+            if (this.distanceTo(leader) >= 1.0D) {
+                this.lookControl.setLookAt(leader, 10.0F, (float) this.getMaxHeadXRot());
+                this.navigation.moveTo(leader, 1.0D);
             }
         }
     }
