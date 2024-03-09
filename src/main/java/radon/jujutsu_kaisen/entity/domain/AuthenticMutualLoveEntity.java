@@ -49,7 +49,7 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         if (copied.isEmpty()) return;
 
-        int share = (radius * 2) / copied.size();
+        int share = (radius * 4) / copied.size();
 
         List<ICursedTechnique> all = new ArrayList<>();
 
