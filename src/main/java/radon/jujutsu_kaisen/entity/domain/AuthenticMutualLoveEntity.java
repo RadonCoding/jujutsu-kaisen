@@ -57,8 +57,6 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
             all.addAll(Collections.nCopies(share, technique));
         }
 
-        Iterator<ICursedTechnique> iter = all.iterator();
-
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius - 1, 0.0D));
 
         List<BlockPos> floor = new ArrayList<>();
@@ -74,6 +72,8 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
                 floor.add(pos);
             }
         }
+
+        Iterator<ICursedTechnique> iter = all.iterator();
 
         while (iter.hasNext()) {
             ICursedTechnique technique = iter.next();
