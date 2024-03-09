@@ -89,8 +89,6 @@ public class ToadEntity extends TenShadowsSummon {
 
     @Override
     protected void customServerAiStep() {
-        if (this.getRitual() > 0) return;
-
         if (!this.canShoot()) {
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
         }

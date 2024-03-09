@@ -20,10 +20,15 @@
 					]
 				},
 				{
-					"name": "head",
+					"name": "head_wrapper",
 					"parent": "body",
 					"pivot": [0, 14.15388, 3.71827],
-					"rotation": [-22.5, 0, 0],
+					"rotation": [-22.5, 0, 0]
+				},
+				{
+					"name": "head",
+					"parent": "head_wrapper",
+					"pivot": [0, 14.15388, 3.71827],
 					"cubes": [
 						{"origin": [-4.5, 12.50583, -3.35014], "size": [9, 2, 8], "uv": [26, 12]}
 					]
