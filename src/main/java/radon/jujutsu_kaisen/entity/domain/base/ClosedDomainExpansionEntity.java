@@ -4,9 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
@@ -23,6 +27,8 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -32,19 +38,20 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
 
     private int total;
+
+    private final Map<UUID, Vec3> positions = new HashMap<>();
 
     public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
         super(pType, pLevel);
@@ -89,6 +96,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         this.entityData.set(DATA_RADIUS, pCompound.getInt("radius"));
         this.total = pCompound.getInt("total");
+
+        for (Tag key : pCompound.getList("positions", Tag.TAG_COMPOUND)) {
+            CompoundTag nbt = (CompoundTag) key;
+            this.positions.put(nbt.getUUID("identifier"), new Vec3(nbt.getDouble("pos_x"),
+                    nbt.getDouble("pos_y"), nbt.getDouble("pos_z")));
+        }
     }
 
     @Override
@@ -97,6 +110,21 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         pCompound.putInt("radius", this.getRadius());
         pCompound.putInt("total", this.total);
+
+        ListTag positionsTag = new ListTag();
+
+        for (Map.Entry<UUID, Vec3> entry : this.positions.entrySet()) {
+            CompoundTag nbt = new CompoundTag();
+            nbt.putUUID("identifier", entry.getKey());
+
+            Vec3 position = entry.getValue();
+            nbt.putDouble("pos_x", position.x);
+            nbt.putDouble("pos_y", position.y);
+            nbt.putDouble("pos_z", position.z);
+
+            positionsTag.add(nbt);
+        }
+        pCompound.put("positions", positionsTag);
     }
 
     public int getRadius() {
@@ -152,34 +180,25 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         List<Block> floor = domain.getFloorBlocks();
         List<Block> decoration = domain.getDecorationBlocks();
 
-        Block block = null;
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
-        if (distance >= radius - 1) {
-            block = JJKBlocks.DOMAIN.get();
-        } else if (!state.isAir() && state.getCollisionShape(this.level(), pos).isEmpty() || !state.getFluidState().isEmpty()) {
-            block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : JJKBlocks.DOMAIN_AIR.get();
+        Block block;
+
+        if (pos.getY() <= center.getY()) {
+            block = floor.isEmpty() ? blocks.get(this.random.nextInt(blocks.size())) : floor.get(this.random.nextInt(floor.size()));
         } else {
-            if (distance >= radius - 2) {
+            if (distance >= radius - 1) {
+                block = JJKBlocks.DOMAIN.get();
+            } else if (distance >= radius - 2) {
                 block = blocks.get(this.random.nextInt(blocks.size()));
-            } else if (!state.isAir()) {
-                if (!floor.isEmpty() && domain.canPlaceFloor(this, pos)) {
-                    block = floor.get(this.random.nextInt(floor.size()));
-                } else {
-                    block = fill.get(this.random.nextInt(fill.size()));
-                }
             } else {
-                if (!decoration.isEmpty() && domain.canPlaceDecoration(this, pos)) {
-                    block = decoration.get(this.random.nextInt(decoration.size()));
-                }
+                block = JJKBlocks.DOMAIN_AIR.get();
             }
         }
-
-        if (block == null) return;
 
         owner.level().removeBlockEntity(pos);
 
         if (!this.level().getBlockState(pos.above()).isAir() && !(this.level().getBlockEntity(pos.above()) instanceof DomainBlockEntity)) {
-            BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
             this.createBlock(delay, pos.above(), radius, Math.sqrt(pos.above().distSqr(center)));
         }
 
@@ -389,6 +408,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             closed.createBarrier(true);
         }
+
+        for (Map.Entry<UUID, Vec3> entry : this.positions.entrySet()) {
+            UUID identifier = entry.getKey();
+
+            Entity entity = ((ServerLevel) this.level()).getEntity(identifier);
+
+            if (entity == null) continue;
+
+            Vec3 pos = entry.getValue();
+
+            entity.teleportTo(pos.x, pos.y, pos.z);
+        }
     }
 
     @Override
@@ -405,6 +436,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         int radius = this.getRadius();
         boolean completed = this.getTime() >= radius * 2;
+
+        if (this.getTime() <= radius * 2) {
+            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
+                if (!this.positions.containsKey(entity.getUUID())) {
+                    this.positions.put(entity.getUUID(), entity.position());
+                }
+                entity.teleportTo(entity.getX(), this.getY() + radius, entity.getZ());
+            }
+        }
 
         if (this.checkSureHitEffect()) {
             this.doSureHitEffect(owner);

@@ -86,15 +86,15 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
             pCompound.putString("technique", JJKCursedTechniques.getKey(this.technique).toString());
         }
 
-        ListTag offsets = new ListTag();
+        ListTag offsetsTag = new ListTag();
 
         for (Map.Entry<BlockPos, ICursedTechnique> entry : this.offsets.entrySet()) {
             CompoundTag nbt = new CompoundTag();
             nbt.put("pos", NbtUtils.writeBlockPos(entry.getKey()));
             nbt.putString("technique", JJKCursedTechniques.getKey(entry.getValue()).toString());
-            offsets.add(nbt);
+            offsetsTag.add(nbt);
         }
-        pCompound.put("offsets", offsets);
+        pCompound.put("offsets", offsetsTag);
     }
 
     @Override
