@@ -1,13 +1,20 @@
 package radon.jujutsu_kaisen.event;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -66,22 +73,37 @@ public class RCTEventHandler {
 
             if (HelperMethods.RANDOM.nextInt(chance) != 0) return;
 
-            victim.setHealth(victim.getMaxHealth() / 2);
-            data.unlock(JJKAbilities.RCT1.get());
-
             if (victim instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             }
+
+            event.setCanceled(true);
+
+            data.unlock(JJKAbilities.RCT1.get());
+
+            victim.setHealth(1.0F);
 
             for (InteractionHand hand : InteractionHand.values()) {
                 ItemStack stack = victim.getItemInHand(hand);
 
                 if (stack.is(Items.TOTEM_OF_UNDYING) && CommonHooks.onLivingUseTotem(victim, source, stack, hand)) {
+                    ItemStack copy = stack.copy();
                     stack.shrink(1);
-                    break;
+
+                    if (victim instanceof ServerPlayer serverplayer) {
+                        serverplayer.awardStat(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING), 1);
+                        CriteriaTriggers.USED_TOTEM.trigger(serverplayer, copy);
+                        victim.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
+                    }
+
+                    victim.removeEffectsCuredBy(EffectCures.PROTECTED_BY_TOTEM);
+                    victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
+                    victim.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
+                    victim.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
+                    victim.level().broadcastEntityEvent(victim, EntityEvent.TALISMAN_ACTIVATE);
+                    return;
                 }
             }
-            event.setCanceled(true);
         }
     }
 }
