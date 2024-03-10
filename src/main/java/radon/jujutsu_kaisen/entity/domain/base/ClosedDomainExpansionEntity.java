@@ -66,7 +66,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public ClosedDomainExpansionEntity(EntityType<? > pType, LivingEntity owner, DomainExpansion ability, int radius) {
         super(pType, owner, ability);
 
-        Vec3 direction = RotationUtil.getTargetAdjustedLookAngle(owner);
+        float yaw = RotationUtil.getTargetAdjustedYRot(owner);
+        Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
         Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
         this.moveTo(behind.x, behind.y, behind.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 

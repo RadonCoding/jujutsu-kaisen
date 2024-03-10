@@ -89,7 +89,7 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
         Vec3 pos = owner.position()
                 .add(owner.getUpVector(1.0F).scale(entity.getBbHeight()))
                 .subtract(look.multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
-        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
 
         double d0 = look.horizontalDistance();
         entity.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / Mth.PI)));
