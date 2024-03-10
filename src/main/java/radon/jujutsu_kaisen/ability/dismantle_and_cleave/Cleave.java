@@ -148,7 +148,8 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
             if (!success || !(target instanceof Mob) && !(target instanceof Player)) return;
 
-            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
+                    JJKSounds.CLEAVE.get(), SoundSource.MASTER, domain == null ? 1.0F : 0.05F, 1.0F);
         }, 20);
     }
 
