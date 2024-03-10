@@ -157,18 +157,18 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
             IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimCap != null) {
-                IAbilityData victimData = victimCap.getAbilityData();
+            if (victimCap == null) return;
 
-                for (Ability ability : victimData.getToggled()) {
-                    if (!ability.isTechnique()) continue;
+            IAbilityData victimData = victimCap.getAbilityData();
 
-                    victimData.disrupt(ability, 20);
-                }
+            for (Ability ability : victimData.getToggled()) {
+                if (!ability.isTechnique()) continue;
 
-                if (victim instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(victimData.serializeNBT()), player);
-                }
+                victimData.disrupt(ability, 20);
+            }
+
+            if (victim instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(victimData.serializeNBT()), player);
             }
         }
 
