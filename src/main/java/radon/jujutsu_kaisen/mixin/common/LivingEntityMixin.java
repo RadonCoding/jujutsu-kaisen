@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IFlight;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -41,11 +42,16 @@ public abstract class LivingEntityMixin {
             if (client == null) return;
 
             for (Ability ability : client.toggled) {
-                if (!(ability instanceof ITransformation transformation)) continue;
-                if (!transformation.getItem().canElytraFly(transformation.getItem().getDefaultInstance(), entity))
-                    continue;
+                if (!(ability instanceof IFlight flight)) continue;
+                if (!flight.canFly(entity)) continue;
                 cir.setReturnValue(true);
             }
+
+            if (!(client.channeled instanceof IFlight flight)) return;
+
+            if (!flight.canFly(entity)) return;
+
+            cir.setReturnValue(true);
         } else {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -54,11 +60,18 @@ public abstract class LivingEntityMixin {
             IAbilityData data = cap.getAbilityData();
 
             for (Ability ability : data.getToggled()) {
-                if (!(ability instanceof ITransformation transformation)) continue;
-                if (!transformation.getItem().canElytraFly(transformation.getItem().getDefaultInstance(), entity))
-                    continue;
+                if (!(ability instanceof IFlight flight)) continue;
+                if (!flight.canFly(entity)) continue;
                 cir.setReturnValue(true);
             }
+
+            Ability channeled = data.getChanneled();
+
+            if (!(channeled instanceof IFlight flight)) return;
+
+            if (!flight.canFly(entity)) return;
+
+            cir.setReturnValue(true);
         }
     }
 

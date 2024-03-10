@@ -16,7 +16,8 @@ public class ForestDash extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) && owner.distanceTo(target) >= 3.0D;
+        if (target == null || target.isDeadOrDying()) return false;
+        return owner.hasLineOfSight(target) && owner.distanceTo(target) >= 3.0D;
     }
 
     @Override
