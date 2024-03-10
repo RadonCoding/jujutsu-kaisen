@@ -230,7 +230,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             case LIGHTNING -> {
                 increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
 
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
+                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 5 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
                 victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
                 for (int i = 0; i < 8; i++) {
@@ -311,7 +311,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
         }
 
-        float armor = sorcererData.getAbilityPower() * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 10.0F : 5.0F);
+        float armor = sorcererData.getAbilityPower() * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 5.0F : 2.5F);
         float toughness = armor * 0.1F;
 
         float f = 2.0F + toughness / 4.0F;
