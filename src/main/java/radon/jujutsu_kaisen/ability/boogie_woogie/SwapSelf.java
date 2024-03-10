@@ -33,7 +33,7 @@ public class SwapSelf extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return this.getTarget(owner) == target && HelperMethods.RANDOM.nextInt(5) == 0;
+        return this.getTarget(owner) == target && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
