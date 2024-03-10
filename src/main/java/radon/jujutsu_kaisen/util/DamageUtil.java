@@ -52,17 +52,7 @@ public class DamageUtil {
 
         if (source.getDirectEntity() instanceof DomainExpansionEntity) return false;
 
-        if (source.getEntity() == target) return false;
-
-        if (source.getEntity() instanceof LivingEntity attacker && isMelee(source)) {
-            IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return true;
-
-            IAbilityData data = cap.getAbilityData();
-            return !data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
-        }
-        return true;
+        return source.getEntity() != target;
     }
 
     public static boolean isMelee(DamageSource source) {

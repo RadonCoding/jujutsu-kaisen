@@ -86,10 +86,9 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
                     IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
                     if (attackerCap != null) {
-                        ISorcererData attackerSorcererData = attackerCap.getSorcererData();
-                        IAbilityData attackerAbilityData = attackerCap.getAbilityData();
+                        ISorcererData data = attackerCap.getSorcererData();
 
-                        if (attackerSorcererData.hasTrait(Trait.VESSEL) || attackerAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                        if (data.hasTrait(Trait.VESSEL)) {
                             return;
                         }
                     }
