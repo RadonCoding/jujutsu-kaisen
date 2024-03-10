@@ -50,7 +50,7 @@ public class JJKCursedTechniques {
         for (DeferredHolder<ICursedTechnique, ? extends ICursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
             ICursedTechnique technique = entry.get();
 
-            if (technique.getAbilities().contains(ability)) return technique;
+            if (technique.getAbilities().contains(ability) || technique.getDomain() == ability) return technique;
         }
         return null;
     }

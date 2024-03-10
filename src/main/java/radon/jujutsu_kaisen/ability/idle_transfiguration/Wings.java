@@ -5,11 +5,12 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.base.IFlight;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class Wings extends Transformation {
+public class Wings extends Transformation implements IFlight {
     private static final float SPEED = 0.01F;
 
     @Override
@@ -77,5 +78,10 @@ public class Wings extends Transformation {
     @Override
     public void onDisabled(LivingEntity owner) {
 
+    }
+
+    @Override
+    public boolean canFly(LivingEntity owner) {
+        return !owner.onGround() && new Vec3(owner.xxa, 0.0D, owner.zza).length() > 1.0E-7D;
     }
 }

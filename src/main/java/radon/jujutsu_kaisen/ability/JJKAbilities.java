@@ -89,7 +89,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, BlueFists> BLUE_FISTS = ABILITIES.register("blue_fists", BlueFists::new);
     public static DeferredHolder<Ability, HollowPurple> HOLLOW_PURPLE = ABILITIES.register("hollow_purple", HollowPurple::new);
     public static DeferredHolder<Ability, Teleport> TELEPORT = ABILITIES.register("teleport", Teleport::new);
-    public static DeferredHolder<Ability, Fly> FLY = ABILITIES.register("fly", Fly::new);
+    public static DeferredHolder<Ability, AzureGlide> AZURE_GLIDE = ABILITIES.register("azure_glide", AzureGlide::new);
     public static DeferredHolder<Ability, UnlimitedVoid> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
 
     public static DeferredHolder<Ability, Dismantle> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);

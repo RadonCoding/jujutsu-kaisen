@@ -40,22 +40,12 @@ public class WingsItem extends ArmorItem implements GeoItem {
             private WingsRenderer renderer;
 
             @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
+            public @NotNull HumanoidModel<?> getHumanoidArmorModel(@NotNull LivingEntity livingEntity, @NotNull ItemStack itemStack, @NotNull EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 if (this.renderer == null) this.renderer = new WingsRenderer();
                 this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return this.renderer;
             }
         });
-    }
-
-    @Override
-    public boolean canElytraFly(ItemStack stack, LivingEntity entity) {
-        return !entity.onGround() && new Vec3(entity.xxa, 0.0D, entity.zza).length() > 1.0E-7D;
-    }
-
-    @Override
-    public boolean elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks) {
-        return true;
     }
 
     private PlayState flyPredicate(AnimationState<WingsItem> animationState) {
