@@ -5,8 +5,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -70,6 +72,17 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
     @Override
     public int getDuration() {
         return 5;
+    }
+
+    @Nullable
+    @Override
+    public Ability getParent(LivingEntity owner) {
+        return JJKAbilities.CURSED_ENERGY_FLOW.get();
+    }
+
+    @Override
+    public int getPointsCost() {
+        return ConfigHolder.SERVER.airFrameCost.get();
     }
 
     @Override
