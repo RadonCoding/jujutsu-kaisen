@@ -54,6 +54,7 @@ public class ServerConfig {
 
     public final ModConfigSpec.BooleanValue realisticShikigami;
     public final ModConfigSpec.IntValue abilityModeCost;
+    public final ModConfigSpec.IntValue airFrameCost;
 
     public final ModConfigSpec.IntValue cursedEnergyNatureRarity;
     public final ModConfigSpec.IntValue curseRarity;
@@ -187,6 +188,8 @@ public class ServerConfig {
                 .define("realisticShikigami", true);
         this.abilityModeCost = builder.comment("The amount of points ability mode costs to unlock")
                 .defineInRange("abilityModeCost", 300, 1, 10000);
+        this.airFrameCost = builder.comment("The amount of points air frame costs to unlock")
+                .defineInRange("airFrameCost", 300, 1, 10000);
         builder.pop();
 
         builder.comment("Rarity").push("rarity");
