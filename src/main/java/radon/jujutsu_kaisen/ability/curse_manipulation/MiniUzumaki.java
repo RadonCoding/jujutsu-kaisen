@@ -23,11 +23,6 @@ public class MiniUzumaki extends Ability {
     }
 
     @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
-    }
-
-    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
@@ -36,7 +31,7 @@ public class MiniUzumaki extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        MiniUzumakiProjectile uzumaki = new MiniUzumakiProjectile(owner);
+        MiniUzumakiProjectile uzumaki = new MiniUzumakiProjectile(owner, this.getPower(owner));
         owner.level().addFreshEntity(uzumaki);
     }
 

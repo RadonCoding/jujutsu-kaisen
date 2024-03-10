@@ -59,6 +59,10 @@ public class JujutsuProjectile extends Projectile {
         this.entityData.set(DATA_POWER, power);
     }
 
+    protected void addPower(float power) {
+        this.entityData.set(DATA_POWER, this.getPower() + power);
+    }
+
     public float getPower() {
         return this.entityData.get(DATA_POWER);
     }

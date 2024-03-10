@@ -31,10 +31,11 @@ public class MiniUzumakiProjectile extends BeamEntity {
         this.noCulling = true;
     }
 
-    public MiniUzumakiProjectile(LivingEntity owner) {
+    public MiniUzumakiProjectile(LivingEntity owner, float power) {
         this(JJKEntities.MINI_UZUMAKI.get(), owner.level());
 
         this.setOwner(owner);
+        this.setPower(power);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -75,7 +76,7 @@ public class MiniUzumakiProjectile extends BeamEntity {
 
         ISorcererData weakestData = weakestCap.getSorcererData();
 
-        this.setPower(SorcererUtil.getPower(weakestData.getExperience()));
+        this.addPower(SorcererUtil.getPower(weakestData.getExperience()));
 
         if (SorcererUtil.getGrade(weakestData.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && weakestData.getTechnique() != null) {
             ownerCurseManipulationData.absorb(weakestData.getTechnique());
