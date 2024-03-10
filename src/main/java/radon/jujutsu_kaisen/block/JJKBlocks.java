@@ -61,6 +61,7 @@ public class JJKBlocks {
                     .noLootTable()));
     public static DeferredHolder<Block, DomainAirBlock> DOMAIN_AIR = BLOCKS.register("domain_air", () ->
             new DomainAirBlock(BlockBehaviour.Properties.of()
+                    .lightLevel(pState -> 14)
                     .noCollission()
                     .noLootTable()
                     .air()));
