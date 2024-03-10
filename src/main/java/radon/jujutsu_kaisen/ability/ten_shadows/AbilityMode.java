@@ -68,17 +68,6 @@ public class AbilityMode extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public boolean isDisplayed(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData data = cap.getSorcererData();
-
-        return data.hasTechnique(JJKCursedTechniques.TEN_SHADOWS.get()) && super.isDisplayed(owner);
-    }
-
-    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
     }

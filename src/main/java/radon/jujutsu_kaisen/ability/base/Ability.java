@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -100,6 +101,17 @@ public abstract class Ability {
 
     // Used for skill tree
     public boolean isDisplayed(LivingEntity owner) {
+        if (this.isTechnique()) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return false;
+
+            ISorcererData data = cap.getSorcererData();
+
+            if (!data.hasTechnique(JJKCursedTechniques.getTechnique(this))) {
+                return false;
+            }
+        }
         return this.getPointsCost() > 0;
     }
 
