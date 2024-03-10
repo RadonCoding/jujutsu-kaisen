@@ -237,8 +237,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         } else {
             this.setYRot(this.target.yBodyRot);
 
-            Vec3 pos = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)
-                    .subtract(0.0D, this.target.getBbHeight() / 2.0F, 0.0D);
+            Vec3 pos = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
             this.target.teleportTo(pos.x, pos.y, pos.z);
         }
     }
