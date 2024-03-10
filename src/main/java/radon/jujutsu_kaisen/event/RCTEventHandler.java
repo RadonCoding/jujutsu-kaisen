@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -42,9 +43,9 @@ public class RCTEventHandler {
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+            if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data.isUnlocked(JJKAbilities.RCT1.get())) return;
             if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
@@ -59,6 +60,7 @@ ISorcererData data = cap.getSorcererData();
 
                 if (stack.is(Items.TOTEM_OF_UNDYING)) {
                     chance /= 2;
+                    break;
                 }
             }
 
@@ -69,6 +71,15 @@ ISorcererData data = cap.getSorcererData();
 
             if (victim instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+            }
+
+            for (InteractionHand hand : InteractionHand.values()) {
+                ItemStack stack = victim.getItemInHand(hand);
+
+                if (stack.is(Items.TOTEM_OF_UNDYING) && CommonHooks.onLivingUseTotem(victim, source, stack, hand)) {
+                    stack.shrink(1);
+                    break;
+                }
             }
             event.setCanceled(true);
         }
