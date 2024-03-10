@@ -36,10 +36,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRightClickInputListener {
-    private static final double EXPLOSION_FALL_DISTANCE = 10.0D;
-    private static final int EXPLOSION_DURATION = 20;
-    private static final float EXPLOSION_POWER = 10.0F;
-
     private static final EntityDataAccessor<Boolean> DATA_SHOOTING = SynchedEntityData.defineId(DinoCurseEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
