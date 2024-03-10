@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -77,9 +78,11 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 }
             }
 
-            this.addPower(SorcererUtil.getPower(curseData.getExperience()) * 0.5F);
+            this.setPower(Math.min(ownerSorcererData.getAbilityPower() * 2, this.getPower() + SorcererUtil.getPower(curseData.getExperience())));
 
             entity.discard();
+
+            if (this.getPower() == ownerSorcererData.getAbilityPower() * 2) break;
         }
     }
 
