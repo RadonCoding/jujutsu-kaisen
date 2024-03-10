@@ -187,13 +187,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         Block block;
 
-        if (pos.getY() < center.getY()) {
-            block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
-        } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
-            block = decoration.get(this.random.nextInt(decoration.size()));
+        if (distance >= radius - 1) {
+            block = JJKBlocks.DOMAIN.get();
         } else {
-            if (distance >= radius - 1) {
-                block = JJKBlocks.DOMAIN.get();
+            if (pos.getY() < center.getY()) {
+                block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
+            } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
+                block = decoration.get(this.random.nextInt(decoration.size()));
             } else if (distance >= radius - 2) {
                 block = blocks.get(this.random.nextInt(blocks.size()));
             } else {
