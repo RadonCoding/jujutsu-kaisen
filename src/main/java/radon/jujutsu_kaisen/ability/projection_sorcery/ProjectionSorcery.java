@@ -123,7 +123,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             next = end;
         } else {
             BlockPos pos = BlockPos.containing(result.getLocation().subtract(look));
-            next = pos.getCenter();
+            next = pos.getCenter().subtract(0.0D, 0.5D, 0.0D);
         }
 
         int index = this.getCharge(owner);
