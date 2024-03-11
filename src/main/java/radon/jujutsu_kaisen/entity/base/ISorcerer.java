@@ -99,7 +99,7 @@ public interface ISorcerer {
 
         // Calculate skill points the NPC would get with their experience
         // Spread them evenly by giving each skill total_points / total_skill_count
-        int points = Math.round(sorcererData.getExperience() * 0.1F);
+        int points = Math.round(sorcererData.getExperience() * 0.05F);
         int distributed = points / Skill.values().length;
 
         for (Skill skill : Skill.values()) {
