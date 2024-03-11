@@ -39,16 +39,19 @@ public class IncreaseSkillC2SPacket implements CustomPacketPayload {
 
             ISorcererData sorcererData = cap.getSorcererData();
 
-            if (!sender.getAbilities().instabuild && !sorcererData.hasSkillPoints()) return;
-
             ISkillData skillData = cap.getSkillData();
 
             if (skillData.getSkill(this.skill) >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
 
+            int amount = sender.isShiftKeyDown() ? Math.min(sorcererData.getSkillPoints(),
+                    ConfigHolder.SERVER.maximumSkillLevel.get() - skillData.getSkill(this.skill)) : 1;
+
+            if (!sender.getAbilities().instabuild && sorcererData.getSkillPoints() < amount) return;
+
             if (!sender.getAbilities().instabuild) {
                 sorcererData.useSkillPoints(1);
             }
-            skillData.increaseSkill(this.skill);
+            skillData.increaseSkill(this.skill, 1);
         });
     }
 
