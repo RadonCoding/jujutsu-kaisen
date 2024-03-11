@@ -32,6 +32,11 @@ public class SkillData implements ISkillData {
     }
 
     @Override
+    public void resetSkills() {
+        this.skills.clear();
+    }
+
+    @Override
     public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
 

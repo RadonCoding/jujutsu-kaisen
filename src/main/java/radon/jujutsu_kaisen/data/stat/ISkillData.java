@@ -7,6 +7,10 @@ import java.util.Map;
 
 public interface ISkillData extends INBTSerializable<CompoundTag> {
     int getSkill(Skill skill);
+
     void setSkill(Skill skill, int level);
+
     void increaseSkill(Skill skill, int amount);
+
+    void resetSkills();
 }

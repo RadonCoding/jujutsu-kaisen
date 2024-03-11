@@ -25,5 +25,6 @@ public class JJKCommands {
         AddAbilityPointsCommand.register(event.getDispatcher());
         AddSkillPointsCommand.register(event.getDispatcher());
         RefillCommand.register(event.getDispatcher());
+        ResetSkillsCommand.register(event.getDispatcher());
     }
 }
