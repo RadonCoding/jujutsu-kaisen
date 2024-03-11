@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,12 +11,13 @@ import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.SkillWidget;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class SkillsTab extends JJKTab {
@@ -125,13 +127,24 @@ public class SkillsTab extends JJKTab {
 
     @Override
     public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (this.minecraft.player == null) return;
+
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData sorcererData = cap.getSorcererData();
+
+        ISkillData skillData = cap.getSkillData();
+
         int i = Mth.floor(this.scrollX);
         int j = Mth.floor(this.scrollY);
 
         if (pMouseX > 0 && pMouseX < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY > 0 && pMouseY < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
             for (SkillWidget widget : this.children.values()) {
                 if (widget.isMouseOver(i, j, (int) pMouseX, (int) pMouseY)) {
-                    widget.unlock();
+                    widget.upgrade(pButton == InputConstants.MOUSE_BUTTON_RIGHT ? Math.min(sorcererData.getSkillPoints(),
+                            ConfigHolder.SERVER.maximumSkillLevel.get() - skillData.getSkill(widget.getSkill())) : 1);
                     break;
                 }
             }
