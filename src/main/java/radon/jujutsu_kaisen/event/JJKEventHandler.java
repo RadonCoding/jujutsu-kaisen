@@ -243,13 +243,6 @@ public class JJKEventHandler {
 
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
 
-            if (victim.isDeadOrDying()) {
-                for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-                    System.out.println(ste);
-                }
-                throw new RuntimeException();
-            }
-
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;
