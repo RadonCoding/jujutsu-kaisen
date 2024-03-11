@@ -84,7 +84,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             if (owner.isInFluidType()) {
                 owner.setDeltaMovement(movement.x, 0.1D, movement.z);
             } else if (movement.y < 0.0D) {
-                owner.setDeltaMovement(movement.x, 0.01D, movement.z);
+                owner.setDeltaMovement(movement.x, -movement.y, movement.z);
             }
             owner.setOnGround(true);
         }
