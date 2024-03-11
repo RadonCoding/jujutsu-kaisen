@@ -361,6 +361,13 @@ public class SorcererData implements ISorcererData {
         if (this.experience > this.current) {
             this.current = this.experience;
         }
+
+        int abilityPoints = Math.round(this.experience / ConfigHolder.SERVER.abilityPointInterval.get().floatValue());
+        int skillPoints = Math.round(this.experience / ConfigHolder.SERVER.skillPointInterval.get().floatValue());
+
+        this.abilityPoints = abilityPoints;
+        this.skillPoints = skillPoints;
+
         ServerVisualHandler.sync(this.owner);
     }
 
