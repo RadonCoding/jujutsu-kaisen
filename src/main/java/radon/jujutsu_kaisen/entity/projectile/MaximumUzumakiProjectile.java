@@ -32,7 +32,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
     private static final int DELAY = 20;
     private static final double RANGE = 10.0D;
     private static final float RADIUS = 5.0F;
-    private static final float MAX_EXPLOSION = 25.0F;
+    private static final float MAX_EXPLOSION = 15.0F;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
