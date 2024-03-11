@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class DismantleNet extends Ability {
     private static final int MIN_SIZE = 8;
-    private static final int MAX_SIZE = 16;
+    private static final int MAX_SIZE = 48;
     private static final int SIZE = 4;
 
     @Override
@@ -52,8 +52,8 @@ public class DismantleNet extends Ability {
 
                 Vec3 position = center.add(xAxis.scale(xOffset)).add(yAxis.scale(yOffset));
 
-                DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size);
-                DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size);
+                DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size, false);
+                DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size, false);
 
                 horizontal.setDeltaMovement(look.scale(Dismantle.SPEED));
                 vertical.setDeltaMovement(look.scale(Dismantle.SPEED));
@@ -70,7 +70,7 @@ public class DismantleNet extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 150.0F;
+        return 300.0F;
     }
 
     @Override
