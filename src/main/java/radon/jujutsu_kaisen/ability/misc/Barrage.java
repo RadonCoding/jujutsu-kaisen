@@ -83,7 +83,7 @@ public class Barrage extends Ability {
                 Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
 
                 for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
-                        entity -> entity != owner && owner.hasLineOfSight(entity))) {
+                        entity -> entity != owner && owner.hasLineOfSight(entity) && !entity.isDeadOrDying())) {
                     if (owner instanceof Player player) {
                         player.attack(entity);
                     } else {
