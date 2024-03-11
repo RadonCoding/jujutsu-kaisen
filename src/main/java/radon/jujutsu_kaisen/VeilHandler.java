@@ -81,7 +81,7 @@ public class VeilHandler {
         Set<DomainExpansionEntity> result = new HashSet<>();
 
         for (UUID identifier : current) {
-            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || (!bounds.intersects(domain.getBounds()))) continue;
+            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !bounds.intersects(domain.getBounds())) continue;
             result.add(domain);
         }
         return result;

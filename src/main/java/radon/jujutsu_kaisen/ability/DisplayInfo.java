@@ -2,14 +2,13 @@ package radon.jujutsu_kaisen.ability;
 
 
 import net.minecraft.resources.ResourceLocation;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 
-public class AbilityDisplayInfo {
+public class DisplayInfo {
     private final ResourceLocation icon;
     private final float x;
     private final float y;
 
-    public AbilityDisplayInfo(ResourceLocation icon, float x, float y) {
+    public DisplayInfo(ResourceLocation icon, float x, float y) {
         this.icon = icon;
         this.x = x;
         this.y = y;

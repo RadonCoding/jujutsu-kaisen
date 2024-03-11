@@ -23,7 +23,6 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -197,7 +196,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
             ISorcererData data = cap.getSorcererData();
 
-            target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * data.getAbilityPower());
+            target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * data.getAbilityOutput());
         });
         this.reset();
     }

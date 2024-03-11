@@ -62,10 +62,12 @@ public class ServerConfig {
     public final ModConfigSpec.IntValue heavenlyRestrictionRarity;
     public final ModConfigSpec.IntValue vesselRarity;
 
+    public final ModConfigSpec.IntValue maximumSkillLevel;
+
     public ServerConfig(ModConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
-        this.cursedEnergyAmount = builder.comment("Cursed energy amount (scales with experience)")
-                .defineInRange("cursedEnergyAmount", 300.0F, 0.0F, 100000.0F);
+        this.cursedEnergyAmount = builder.comment("Base cursed energy amount")
+                .defineInRange("cursedEnergyAmount", 150.0F, 0.0F, 100000.0F);
         this.cursedEnergyRegenerationAmount = builder.comment("Cursed energy regeneration amount (depends on food level)")
                 .defineInRange("cursedEnergyRegenerationAmount", 0.25F, 0.0F, 100000.0F);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
@@ -203,6 +205,11 @@ public class ServerConfig {
                 .defineInRange("heavenlyRestrictionRarity", 10, 1, 1000000);
         this.vesselRarity = builder.comment("Rarity of being a vessel (bigger value = rarer)")
                 .defineInRange("vesselRarity", 10, 1, 1000000);
+        builder.pop();
+
+        builder.comment("Skills").push("skills");
+        this.maximumSkillLevel = builder.comment("Maximum level you can upgrade a skill to")
+                .defineInRange("maximumSkillLevel", 100, 1, 1000000);
         builder.pop();
     }
 

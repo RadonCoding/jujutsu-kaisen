@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.block.domain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -60,7 +61,10 @@ public class DomainBlock extends Block implements EntityBlock {
 
     @Override
     public float getExplosionResistance(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, Explosion explosion) {
-        Entity exploder = explosion.getDirectSourceEntity();
+        Entity direct = explosion.getDirectSourceEntity();
+        LivingEntity indirect = explosion.getIndirectSourceEntity();
+
+        Entity exploder = indirect == null ? direct : indirect;
 
         if (exploder != null && level instanceof ServerLevel && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();

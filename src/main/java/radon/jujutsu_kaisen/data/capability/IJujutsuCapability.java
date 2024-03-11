@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 
 public interface IJujutsuCapability {
@@ -31,4 +32,6 @@ public interface IJujutsuCapability {
     IMimicryData getMimicryData();
 
     ICursedSpeechData getCursedSpeechData();
+
+    ISkillData getSkillData();
 }

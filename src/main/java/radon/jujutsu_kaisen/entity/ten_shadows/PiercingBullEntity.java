@@ -10,7 +10,6 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -23,8 +22,6 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-
-import javax.annotation.Nullable;
 
 public class PiercingBullEntity extends TenShadowsSummon {
     private static final float DAMAGE = 5.0F;
@@ -109,12 +106,12 @@ public class PiercingBullEntity extends TenShadowsSummon {
         ISorcererData data = cap.getSorcererData();
 
         for (Entity entity : this.level().getEntities(null, this.getBoundingBox().inflate(1.0D))) {
-            if ((this.isTame() && entity == this.getOwner()) || entity == this || !entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * data.getAbilityPower())) continue;
+            if ((this.isTame() && entity == this.getOwner()) || entity == this || !entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * data.getAbilityOutput())) continue;
 
-            entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(data.getAbilityPower()));
+            entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(data.getAbilityOutput()));
             entity.hurtMarked = true;
 
-            this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), data.getAbilityPower(), false, Level.ExplosionInteraction.NONE);
+            this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), data.getAbilityOutput(), false, Level.ExplosionInteraction.NONE);
 
             if (entity == target) {
                 this.setSprinting(false);

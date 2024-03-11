@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -81,9 +82,9 @@ public class YujiItadoriEntity extends SorcererEntity {
 
 
     @Override
-    public void init(ISorcererData data) {
-        super.init(data);
+    public void init(ISorcererData sorcererData, ISkillData skillData) {
+        super.init(sorcererData, skillData);
 
-        data.setFingers(15);
+        sorcererData.setFingers(15);
     }
 }

@@ -28,6 +28,7 @@ runs {
 
     client {
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArguments '--username', 'Dev####'
     }
 
     server {

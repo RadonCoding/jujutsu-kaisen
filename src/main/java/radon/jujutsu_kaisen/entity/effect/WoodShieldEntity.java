@@ -16,9 +16,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
 import javax.annotation.Nullable;
@@ -56,7 +53,7 @@ public class WoodShieldEntity extends Mob {
         AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
 
         if (attribute != null) {
-            attribute.setBaseValue(STRENGTH * data.getAbilityPower(JJKAbilities.WOOD_SHIELD.get()));
+            attribute.setBaseValue(STRENGTH * data.getAbilityOutput(JJKAbilities.WOOD_SHIELD.get()));
             this.setHealth(this.getMaxHealth());
         }
     }

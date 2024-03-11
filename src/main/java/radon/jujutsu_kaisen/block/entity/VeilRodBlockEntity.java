@@ -26,6 +26,8 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
@@ -172,16 +174,16 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                             if (veilCasterCap == null) continue;
 
-                            ISorcererData veilCasterData = veilCasterCap.getSorcererData();
+                            ISkillData veilCasterData = veilCasterCap.getSkillData();
 
                             IJujutsuCapability domainCasterCap = opponent.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
                             if (domainCasterCap == null) continue;
 
-                            ISorcererData domainCasterData = domainCasterCap.getSorcererData();
+                            ISkillData domainCasterData = domainCasterCap.getSkillData();
 
                             // Closed domain expansions create a separate space inside the barrier
-                            if (!(domain instanceof ClosedDomainExpansionEntity) && domainCasterData.getAbilityPower() <= veilCasterData.getAbilityPower()) continue;
+                            if (!(domain instanceof ClosedDomainExpansionEntity) && domainCasterData.getSkill(Skill.BARRIER) <= veilCasterData.getSkill(Skill.BARRIER)) continue;
 
                             if (domain.isInsideBarrier(pos)) {
                                 if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {

@@ -2,9 +2,7 @@ package radon.jujutsu_kaisen.data.sorcerer;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -12,7 +10,6 @@ import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public interface ISorcererData extends INBTSerializable<CompoundTag> {
     void tick();
@@ -27,13 +24,23 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void decreaseOutput();
 
-    int getPoints();
+    int getAbilityPoints();
 
-    void setPoints(int points);
+    void setAbilityPoints(int points);
 
-    void addPoints(int points);
+    void addAbilityPoints(int points);
 
-    void usePoints(int count);
+    void useAbilityPoints(int count);
+
+    int getSkillPoints();
+
+    void setSkillPoints(int points);
+
+    void addSkillPoints(int points);
+
+    void useSkillPoints(int count);
+
+    boolean hasSkillPoints();
 
     boolean isUnlocked(Ability ability);
 
@@ -45,17 +52,19 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     float getOutput();
 
-    float getAbilityPower(Ability ability);
+    float getAbilityOutput(Ability ability);
 
-    float getAbilityPower();
+    float getAbilityOutput();
 
-    float getRealPower();
+    float getBaseOutput();
 
     float getExperience();
 
     void setExperience(float experience);
 
     boolean addExperience(float amount);
+
+    float getHighestExperience();
 
     float getDomainSize();
 

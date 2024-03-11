@@ -1,10 +1,12 @@
 package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -30,6 +32,8 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 
 public class VeilBlock extends Block implements EntityBlock {
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
@@ -41,6 +45,35 @@ public class VeilBlock extends Block implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(COLOR, DyeColor.BLACK)
                 .setValue(TRANSPARENT, false));
+    }
+
+    @Override
+    public float getExplosionResistance(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull Explosion explosion) {
+        float resistance = super.getExplosionResistance(state, level, pos, explosion);
+
+        if (!(level instanceof ServerLevel serverLevel)) return resistance;
+
+        if (!(level.getBlockEntity(pos) instanceof VeilBlockEntity veil)) return resistance;
+
+        BlockPos parent = veil.getParent();
+
+        if (parent == null) return resistance;
+
+        if (!(level.getBlockEntity(parent) instanceof VeilRodBlockEntity rod)) return resistance;
+
+        if (rod.ownerUUID == null) return resistance;
+
+        Entity owner = serverLevel.getEntity(rod.ownerUUID);
+
+        if (owner == null) return resistance;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return resistance;
+
+        ISkillData data = cap.getSkillData();
+
+        return resistance + data.getSkill(Skill.BARRIER);
     }
 
     @Override

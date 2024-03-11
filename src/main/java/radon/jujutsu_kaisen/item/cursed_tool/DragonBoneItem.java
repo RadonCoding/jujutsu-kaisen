@@ -20,7 +20,6 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -93,7 +92,7 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
             }
             entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-            entity.hurt(JJKDamageSources.jujutsuAttack(pPlayer, null), this.getDamage() * data.getRealPower() * charge);
+            entity.hurt(JJKDamageSources.jujutsuAttack(pPlayer, null), this.getDamage() * data.getAbilityOutput() * charge);
 
             pPlayer.swing(InteractionHand.MAIN_HAND);
 

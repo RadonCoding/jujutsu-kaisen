@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 
@@ -62,8 +63,8 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
     }
 
     @Override
-    public void init(ISorcererData data) {
-
+    public void init(ISorcererData sorcererData, ISkillData skillData) {
+        // ignored
     }
 
     @Override

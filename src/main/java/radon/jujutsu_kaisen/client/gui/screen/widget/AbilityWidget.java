@@ -14,14 +14,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.checkerframework.checker.units.qual.A;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
+import radon.jujutsu_kaisen.ability.DisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.tab.AbilityTab;
@@ -37,7 +35,7 @@ public class AbilityWidget {
 
     private final AbilityTab tab;
     private final Ability ability;
-    private final AbilityDisplayInfo display;
+    private final DisplayInfo display;
     private final FormattedCharSequence title;
     private final int width;
     private final List<FormattedCharSequence> description;
@@ -55,7 +53,7 @@ public class AbilityWidget {
     public AbilityWidget(AbilityTab tab, Minecraft minecraft, Ability ability, float x, float y) {
         this.tab = tab;
         this.ability = ability;
-        this.display = new AbilityDisplayInfo(ability.getIcon(minecraft.player), x, y);
+        this.display = new DisplayInfo(ability.getIcon(minecraft.player), x, y);
         this.minecraft = minecraft;
         this.title = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(ability.getName(), 255));
         this.x = Mth.floor(this.display.getX() * 28.0F);
@@ -80,7 +78,6 @@ public class AbilityWidget {
 
         this.update();
     }
-
 
     public void update() {
         if (this.minecraft.player == null) return;
@@ -226,7 +223,7 @@ public class AbilityWidget {
         PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
 
         if (!this.minecraft.player.getAbilities().instabuild) {
-            data.usePoints(this.ability.getRealPointsCost(this.minecraft.player));
+            data.useAbilityPoints(this.ability.getRealPointsCost(this.minecraft.player));
         }
         data.unlock(this.ability);
 

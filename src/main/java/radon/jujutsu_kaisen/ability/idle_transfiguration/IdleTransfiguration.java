@@ -26,6 +26,8 @@ import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -59,19 +61,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     public static float calculateStrength(LivingEntity entity) {
         float strength = entity.getHealth();
 
-        if (entity.level().isClientSide) {
-            ClientVisualHandler.ClientData client = ClientVisualHandler.get(entity);
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (client != null) {
-                strength += client.experience * 0.1F;
-            }
-        } else {
-            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap != null) {
-                ISorcererData data = cap.getSorcererData();
-                strength += data.getExperience() * 0.1F;
-            }
+        if (cap != null) {
+            ISkillData data = cap.getSkillData();
+            strength += data.getSkill(Skill.SOUL);
         }
         return strength;
     }

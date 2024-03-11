@@ -37,9 +37,9 @@ public class JJKItems {
     public static DeferredHolder<Item, Item> KAMUTOKE_DAGGER = ITEMS.register("kamutoke_dagger",
             () -> new KamutokeDaggerItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
     public static DeferredHolder<Item, Item> HITEN_STAFF = ITEMS.register("hiten_staff",
-            () -> new HitenStaffItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
+            () -> new HitenStaffItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
     public static DeferredHolder<Item, Item> POLEARM_STAFF = ITEMS.register("polearm_staff",
-            () -> new PolearmStaffItem(JJKTiers.CURSED_TOOL, 4, -2.4F, new Item.Properties()));
+            () -> new PolearmStaffItem(JJKTiers.CURSED_TOOL, 6, -2.4F, new Item.Properties()));
     public static DeferredHolder<Item, Item> STEEL_GAUNTLET = ITEMS.register("steel_gauntlet",
             () -> new SteelGauntletItem(JJKTiers.CURSED_TOOL, 4, 0.0F, new Item.Properties()));
 

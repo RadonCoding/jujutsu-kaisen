@@ -208,7 +208,7 @@ public class JJKBlocks {
                     .noOcclusion()));
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
-                    .strength(100.0F, 14.0F)
+                    .strength(100.0F, 6.0F)
                     .isViewBlocking(JJKBlocks::never)
                     .isSuffocating(JJKBlocks::never)
                     .isValidSpawn(JJKBlocks::never)
