@@ -112,6 +112,9 @@ public abstract class JJKTab {
     public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
     }
 
+    public void mouseReleased(double pMouseX, double pMouseY, int pButton) {
+    }
+
     public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (!this.centered) {
             this.scrollX = 117 - (double) (this.maxX + this.minX) / 2;
