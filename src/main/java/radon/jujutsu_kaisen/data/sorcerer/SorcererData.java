@@ -112,17 +112,15 @@ public class SorcererData implements ISorcererData {
     private void updateSummons() {
         if (!this.owner.level().isLoaded(this.owner.blockPosition())) return;
 
-        if (this.owner.level() instanceof ServerLevel level) {
-            Iterator<Integer> iter = this.summons.iterator();
+        Iterator<Integer> iter = this.summons.iterator();
 
-            while (iter.hasNext()) {
-                Integer identifier = iter.next();
+        while (iter.hasNext()) {
+            Integer identifier = iter.next();
 
-                Entity entity = level.getEntity(identifier);
+            Entity entity = this.owner.level().getEntity(identifier);
 
-                if (entity == null || !entity.isAlive() || entity.isRemoved()) {
-                    iter.remove();
-                }
+            if (entity == null || !entity.isAlive() || entity.isRemoved()) {
+                iter.remove();
             }
         }
     }
