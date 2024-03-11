@@ -40,8 +40,6 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void useSkillPoints(int count);
 
-    boolean hasSkillPoints();
-
     boolean isUnlocked(Ability ability);
 
     Set<Ability> getUnlocked();
