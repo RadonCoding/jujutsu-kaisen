@@ -129,7 +129,7 @@ public class JJKEventHandler {
             }
 
             if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 3.0F : 2.0F);
+                float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.5F : 1.5F);
 
                 float toughness = shielded * 0.1F;
 
