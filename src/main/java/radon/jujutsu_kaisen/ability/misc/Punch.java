@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -112,7 +113,7 @@ public class Punch extends Ability {
         boolean hit = false;
 
         for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds,
-                entity -> entity != owner && owner.hasLineOfSight(entity))) {
+                EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner && owner.hasLineOfSight(entity)))) {
             if (Math.sqrt(entity.distanceToSqr(bounds.getCenter())) > RANGE) continue;
 
             hit = true;
