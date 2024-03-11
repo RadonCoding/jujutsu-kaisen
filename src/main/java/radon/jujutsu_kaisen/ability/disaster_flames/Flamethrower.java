@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -78,7 +79,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
             AABB bounds = AABB.ofSize(end, 1.0D, 1.0D, 1.0D).inflate(1.0D);
 
-            for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner)) {
+            for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner))) {
                 if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) continue;
 
                 entity.setSecondsOnFire(5);
