@@ -103,7 +103,7 @@ public interface ISorcerer {
         int distributed = points / Skill.values().length;
 
         for (Skill skill : Skill.values()) {
-            skillData.setSkill(skill, distributed);
+            skillData.setSkill(skill, Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed));
         }
         sorcererData.setEnergy(sorcererData.getMaxEnergy());
     }
