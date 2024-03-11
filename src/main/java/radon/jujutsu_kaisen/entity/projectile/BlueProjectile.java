@@ -74,6 +74,8 @@ public class BlueProjectile extends JujutsuProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         for (Entity entity : this.level().getEntities(owner, bounds)) {
+            if (!(entity instanceof LivingEntity) && !(entity instanceof FallingBlockEntity)) continue;
+
             Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).normalize();
             entity.setDeltaMovement(direction);
             entity.hurtMarked = true;
