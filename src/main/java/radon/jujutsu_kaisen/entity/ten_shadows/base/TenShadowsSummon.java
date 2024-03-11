@@ -121,7 +121,11 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public boolean canAttack(@NotNull LivingEntity pTarget) {
         if (!super.canAttack(pTarget)) return false;
 
-        if (!(pTarget instanceof TamableAnimal)) return false;
+        if (!this.isTame()) return true;
+
+        if (pTarget == this.getOwner()) return false;
+
+        if (!(pTarget instanceof TamableAnimal)) return true;
 
         while (pTarget instanceof TamableAnimal tamable1) {
             if (!(tamable1.getOwner() instanceof TamableAnimal tamable2)) break;
