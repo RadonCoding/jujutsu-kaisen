@@ -97,11 +97,13 @@ public interface ISorcerer {
             sorcererData.setCursedEnergyColor(this.getCursedEnergyColor());
         }
 
-        // Makes it so all skills are initialized based on the experience
-        // For example if the mob has 500 experience and the maximum is 1000 and the maximum skill level is 100 then the skill level will be 50
+        // Calculate skill points the NPC would get with their experience
+        // Spread them evenly by giving each skill total_points / total_skill_count
+        int points = Math.round(sorcererData.getExperience() * 0.1F);
+        int distributed = points / Skill.values().length;
+
         for (Skill skill : Skill.values()) {
-            skillData.setSkill(skill, Math.round(ConfigHolder.SERVER.maximumSkillLevel.get() *
-                    (sorcererData.getExperience() / ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
+            skillData.setSkill(skill, distributed);
         }
         sorcererData.setEnergy(sorcererData.getMaxEnergy());
     }
