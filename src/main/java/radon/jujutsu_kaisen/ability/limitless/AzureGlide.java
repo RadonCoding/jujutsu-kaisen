@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.ability.base.IFlight;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class AzureGlide extends Ability implements Ability.IChannelened, IFlight {
@@ -24,7 +25,18 @@ public class AzureGlide extends Ability implements Ability.IChannelened, IFlight
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        return owner.hasLineOfSight(target) && owner.distanceTo(target) >= 3.0D;
+        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) < 3.0D) return false;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        IAbilityData data = cap.getAbilityData();
+
+        if (data.isChanneling(this)) {
+            return HelperMethods.RANDOM.nextInt(5) != 0;
+        }
+        return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override
