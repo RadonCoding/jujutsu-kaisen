@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -83,7 +84,7 @@ public class Barrage extends Ability {
                 Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
 
                 for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
-                        entity -> entity != owner && owner.hasLineOfSight(entity) && !entity.isDeadOrDying())) {
+                        EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner && owner.hasLineOfSight(entity)))) {
                     if (owner instanceof Player player) {
                         player.attack(entity);
                     } else {
