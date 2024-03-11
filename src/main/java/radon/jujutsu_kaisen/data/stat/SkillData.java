@@ -27,8 +27,8 @@ public class SkillData implements ISkillData {
     }
 
     @Override
-    public void increaseSkill(Skill skill) {
-        this.skills.put(skill, this.skills.getOrDefault(skill, 0) + 1);
+    public void increaseSkill(Skill skill, int amount) {
+        this.skills.put(skill, this.skills.getOrDefault(skill, 0) + amount);
     }
 
     @Override
