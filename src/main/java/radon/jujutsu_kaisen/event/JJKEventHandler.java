@@ -123,7 +123,7 @@ public class JJKEventHandler {
             ISorcererData sorcererData = cap.getSorcererData();
             ISkillData skillData = cap.getSkillData();
 
-            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.25F;
+            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.3F;
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 2.0F;
@@ -219,6 +219,13 @@ public class JJKEventHandler {
             LivingEntity victim = event.getEntity();
 
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
+
+            if (victim.isDeadOrDying()) {
+                for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+                    System.out.println(ste);
+                }
+                throw new RuntimeException();
+            }
 
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

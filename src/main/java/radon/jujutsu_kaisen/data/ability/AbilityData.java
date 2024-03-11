@@ -175,12 +175,6 @@ public class AbilityData implements IAbilityData {
 
     @Override
     public void attack(DamageSource source, LivingEntity target) {
-        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
         if (this.channeled instanceof Ability.IAttack attack) {
             if (this.channeled.getStatus(this.owner) == Ability.Status.SUCCESS && attack.attack(source, this.owner, target)) {
                 this.channeled.charge(this.owner);
@@ -200,7 +194,6 @@ public class AbilityData implements IAbilityData {
         }
 
         if (this.owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
             PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(this.serializeNBT()), player);
         }
     }
