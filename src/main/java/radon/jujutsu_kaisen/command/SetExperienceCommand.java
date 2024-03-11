@@ -32,7 +32,7 @@ public class SetExperienceCommand {
 
         ISorcererData data = cap.getSorcererData();
 
-        data.setExperience(Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), experience));
+        data.setExperience(experience);
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
 
