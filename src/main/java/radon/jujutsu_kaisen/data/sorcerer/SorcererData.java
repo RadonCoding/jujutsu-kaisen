@@ -269,11 +269,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasSkillPoints() {
-        return this.skillPoints > 0;
-    }
-
-    @Override
     public boolean isUnlocked(Ability ability) {
         return this.unlocked.contains(ability);
     }
