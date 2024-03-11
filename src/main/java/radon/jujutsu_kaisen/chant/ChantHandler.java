@@ -39,7 +39,7 @@ public class ChantHandler {
 
         IChantData data = cap.getChantData();
 
-        Set<String> chants = data.getFirstChants(ability);
+        List<String> chants = new ArrayList<>(data.getFirstChants(ability));
 
         if (chants.isEmpty()) return 0.0F;
 
@@ -48,11 +48,13 @@ public class ChantHandler {
         int count = 0;
         int length = 0;
 
-        Iterator<String> iter = chants.iterator();
+        int index = 0;
 
         for (String chant : messages) {
-            if (!iter.hasNext()) break;
-            if (!chant.equals(iter.next())) continue;
+            if (index == chants.size()) break;
+            if (!chant.equals(chants.get(index))) continue;
+
+            index++;
 
             count++;
             length += chant.length();
