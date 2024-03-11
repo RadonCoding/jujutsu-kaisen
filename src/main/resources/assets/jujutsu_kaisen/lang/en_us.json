@@ -520,7 +520,10 @@
   "skill.jujutsu_kaisen.barrier.description": "Increases the strength of your domain and veils.",
 
   "skill.jujutsu_kaisen.output": "Output",
-  "skill.jujutsu_kaisen.output.description": "Increases your cursed energy output.",
+  "skill.jujutsu_kaisen.output.description": "Increases your output.",
+
+  "skill.jujutsu_kaisen.reinforcement": "Reinforcement",
+  "skill.jujutsu_kaisen.reinforcement.description": "Increases your reinforcement.",
 
   "skill.jujutsu_kaisen.energy": "Energy",
   "skill.jujutsu_kaisen.energy.description": "Increases your maximum cursed energy capacity.",

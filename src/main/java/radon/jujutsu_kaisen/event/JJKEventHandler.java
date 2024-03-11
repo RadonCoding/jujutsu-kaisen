@@ -47,6 +47,8 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
@@ -118,11 +120,12 @@ public class JJKEventHandler {
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
+            ISkillData skillData = cap.getSkillData();
 
-            float armor = data.getBaseOutput() * 5.0F;
+            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.5F;
 
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 2.0F;
             }
             float toughness = armor * 0.1F;
