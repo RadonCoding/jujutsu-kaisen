@@ -9,8 +9,12 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -30,6 +34,7 @@ import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -50,12 +55,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return ActivationType.TOGGLED;
-
-        ISorcererData data = cap.getSorcererData();
-        return data.hasSummonOfClass(DomainExpansionEntity.class) ? ActivationType.INSTANT : ActivationType.TOGGLED;
+        return ActivationType.TOGGLED;
     }
 
     public static float calculateStrength(LivingEntity entity) {
@@ -68,15 +68,6 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
             strength += data.getSkill(Skill.SOUL);
         }
         return strength;
-    }
-
-    public static @Nullable LivingEntity getTarget(LivingEntity owner) {
-        LivingEntity result = null;
-
-        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            result = target;
-        }
-        return result;
     }
 
     public static boolean checkSukuna(LivingEntity owner, LivingEntity target) {
@@ -116,56 +107,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), 60 * 20, amplifier, false, true, true);
         target.addEffect(instance);
-
-        PacketDistributor.TRACKING_ENTITY.with(target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
-
-        float attackerStrength = IdleTransfiguration.calculateStrength(owner);
-        float victimStrength = IdleTransfiguration.calculateStrength(target);
-
-        int required = Math.round((victimStrength / attackerStrength) * 2);
-
-        if (amplifier >= required) {
-            absorb(owner, target);
-        }
     }
 
     @Override
     public void run(LivingEntity owner) {
-        if (this.getActivationType(owner) == ActivationType.INSTANT) {
-            owner.swing(InteractionHand.MAIN_HAND);
 
-            if (owner.level().isClientSide) return;
-
-            LivingEntity target = getTarget(owner);
-
-            if (target == null) return;
-
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return;
-
-            ISorcererData data = cap.getSorcererData();
-
-            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
-
-            if (domain == null) return;
-
-            if (!domain.isInsideBarrier(target.blockPosition())) return;
-
-            this.run(owner, target);
-        }
-    }
-
-    @Override
-    public Status isTriggerable(LivingEntity owner) {
-        if (this.getActivationType(owner) == ActivationType.INSTANT) {
-            LivingEntity target = getTarget(owner);
-
-            if (target == null) {
-                return Status.FAILURE;
-            }
-        }
-        return super.isTriggerable(owner);
     }
 
     @Override
@@ -225,8 +171,42 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         return true;
     }
 
-    @Override
-    public MenuType getMenuType(LivingEntity owner) {
-        return this.getActivationType(owner) == ActivationType.INSTANT ? MenuType.MELEE : MenuType.RADIAL;
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onLivingAttack(LivingAttackEvent event) {
+            DamageSource source = event.getSource();
+
+            if (!DamageUtil.isMelee(source)) return;
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            IAbilityData data = cap.getAbilityData();
+
+            if (!data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) return;
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            MobEffectInstance existing = victim.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+
+            if (existing == null) return;
+
+            int amplifier = existing.getAmplifier();
+
+            float attackerStrength = IdleTransfiguration.calculateStrength(attacker);
+            float victimStrength = IdleTransfiguration.calculateStrength(victim);
+
+            int required = Math.round((victimStrength / attackerStrength) * 2);
+
+            if (victim instanceof TransfiguredSoulEntity || amplifier >= required) {
+                absorb(attacker, victim);
+            }
+        }
     }
 }
