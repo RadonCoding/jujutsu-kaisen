@@ -403,6 +403,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             if (entity == null) continue;
 
+            if (!this.isInsideBarrier(entity.blockPosition())) continue;
+
             Vec3 pos = entry.getValue();
 
             entity.teleportTo(pos.x, pos.y, pos.z);
