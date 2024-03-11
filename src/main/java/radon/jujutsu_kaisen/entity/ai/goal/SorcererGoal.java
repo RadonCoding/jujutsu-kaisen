@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
@@ -17,6 +18,8 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -48,6 +51,19 @@ public class SorcererGoal extends Goal {
         IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
         IMimicryData ownerMimicryData = ownerCap.getMimicryData();
+        ISkillData skillData = ownerCap.getSkillData();
+
+        int points = ownerSorcererData.getSkillPoints();
+
+        if (points > 0) {
+            int distributed = points / Skill.values().length;
+
+            for (Skill skill : Skill.values()) {
+                int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
+                skillData.setSkill(skill, amount);
+                ownerSorcererData.useSkillPoints(amount);
+            }
+        }
 
         if (ownerAbilityData.hasToggled(JJKAbilities.RIKA.get())) {
             if (ownerMimicryData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
