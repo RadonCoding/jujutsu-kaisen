@@ -67,7 +67,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
             private KamutokeDaggerRenderer renderer;
 
             @Override
-            public KamutokeDaggerRenderer getCustomRenderer() {
+            public @NotNull KamutokeDaggerRenderer getCustomRenderer() {
                 if (this.renderer == null) this.renderer = new KamutokeDaggerRenderer();
                 return this.renderer;
             }
@@ -129,14 +129,14 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     }
 
     @Override
-    public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+    public void onStopUsing(@NotNull ItemStack stack, @NotNull LivingEntity entity, int count) {
         super.onStopUsing(stack, entity, count);
 
         IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         BlockHitResult hit = this.getBlockHit(entity);
 
