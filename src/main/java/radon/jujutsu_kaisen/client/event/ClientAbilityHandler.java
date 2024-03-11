@@ -128,9 +128,7 @@ public class ClientAbilityHandler {
 
                     if (isHeld) {
                         if (!isChanneling) {
-                            if (ClientAbilityHandler.trigger(channeled) == Ability.Status.SUCCESS) {
-                                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
-                            }
+                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
                         }
                         isChanneling = true;
                     } else if (isChanneling) {
@@ -243,9 +241,7 @@ public class ClientAbilityHandler {
                             channeled = ability;
                             current = JJKKeys.ACTIVATE_ABILITY;
                         } else {
-                            if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
-                                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                            }
+                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                         }
                     }
                 }
@@ -268,9 +264,7 @@ public class ClientAbilityHandler {
                 }
 
                 if (JJKKeys.DASH.isDown()) {
-                    if (ClientAbilityHandler.trigger(JJKAbilities.DASH.get()) == Ability.Status.SUCCESS) {
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
-                    }
+                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                 }
             } else if (event.getAction() == InputConstants.RELEASE) {
                 if (current != null) {
@@ -296,34 +290,6 @@ public class ClientAbilityHandler {
         }
     }
 
-    public static boolean isSuccess(Ability ability, Ability.Status status) {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer owner = mc.player;
-
-        if (owner == null) return false;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        IAbilityData abilityData = cap.getAbilityData();
-        ICursedSpeechData cursedSpeechData = cap.getCursedSpeechData();
-
-        switch (status) {
-            case FAILURE ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
-            case ENERGY ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
-            case COOLDOWN ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
-                            Math.max(1, abilityData.getRemainingCooldown(ability) / 20)), false);
-            case THROAT ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.throat", JujutsuKaisen.MOD_ID),
-                            cursedSpeechData.getThroatDamage() / 20), false);
-        }
-        return status == Ability.Status.SUCCESS;
-    }
-
     public static Ability.Status trigger(Ability ability) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer owner = mc.player;
@@ -336,28 +302,23 @@ public class ClientAbilityHandler {
 
         IAbilityData data = cap.getAbilityData();
 
-        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
-            Ability.Status status;
+        Ability.Status status = ability.isTriggerable(owner);
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
+        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
+            if (status == Ability.Status.SUCCESS) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
-            return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            Ability.Status status;
-
-            if (isSuccess(ability, (status = ability.isTriggerable(owner))) | (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 data.toggle(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            Ability.Status status;
-
-            if (isSuccess(ability, (status = ability.isTriggerable(owner))) || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 data.channel(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
