@@ -180,13 +180,19 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         double depth = Math.max(1, Math.round(this.getDeltaMovement().length()));
 
+        List<Entity> entities = this.level().getEntities(this, AABB.ofSize(center, length, length, length));
+
         for (int z = 0; z < depth; z++) {
             for (int x = 0; x < length; x++) {
                 BlockPos current = BlockPos.containing(start.add(end.subtract(start).scale((1.0D / length) * x).add(forward.scale(z))));
 
                 AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
 
-                hits.addAll(this.level().getEntities(this, bounds));
+                for (Entity entity : entities) {
+                    if (entity.getBoundingBox().intersects(bounds)) {
+                        hits.add(entity);
+                    }
+                }
 
                 if (!this.destroy) continue;
 
