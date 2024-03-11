@@ -125,11 +125,11 @@ public class JJKEventHandler {
             float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.25F;
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                armor *= 2.0F;
+                armor *= 4.0F;
             }
 
             if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.5F);
+                float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 4.0F : 2.0F);
 
                 float toughness = shielded * 0.1F;
 
