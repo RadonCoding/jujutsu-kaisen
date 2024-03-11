@@ -7,30 +7,30 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
-public class AddPointsCommand {
+public class AddSkillPointsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("addpoints")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("addskillpoints")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("points", IntegerArgumentType.integer())
-                        .executes(ctx -> addPoints(EntityArgument.getPlayer(ctx, "player"), IntegerArgumentType.getInteger(ctx, "points"))))));
+                        .executes(ctx -> addSkillPoints(EntityArgument.getPlayer(ctx, "player"), IntegerArgumentType.getInteger(ctx, "points"))))));
 
-        dispatcher.register(Commands.literal("addpoints").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("addskillpoints").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    public static int addPoints(ServerPlayer player, int points) {
+    public static int addSkillPoints(ServerPlayer player, int points) {
         IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0;
 
         ISorcererData data = cap.getSorcererData();
 
-        data.addAbilityPoints(points);
+        data.addSkillPoints(points);
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
 

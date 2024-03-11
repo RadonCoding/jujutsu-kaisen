@@ -5,7 +5,6 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.command.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class JJKCommands {
@@ -23,7 +22,8 @@ public class JJKCommands {
         PactCreationDeclineCommand.register(event.getDispatcher());
         PactRemovalAcceptCommand.register(event.getDispatcher());
         PactRemovalDeclineCommand.register(event.getDispatcher());
-        AddPointsCommand.register(event.getDispatcher());
+        AddAbilityPointsCommand.register(event.getDispatcher());
+        AddSkillPointsCommand.register(event.getDispatcher());
         RefillCommand.register(event.getDispatcher());
     }
 }
