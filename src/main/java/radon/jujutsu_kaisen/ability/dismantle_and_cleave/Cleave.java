@@ -21,10 +21,6 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -34,7 +30,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IAttack, Ability.IToggled {
     public static final double RANGE = 30.0D;
-    private static final float MAX_DAMAGE = 35.0F;
+    private static final float DAMAGE = 30.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -142,7 +138,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             float power = domain == null ? Ability.getPower(JJKAbilities.CLEAVE.get(), owner) : Ability.getPower(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
 
             float damage = calculateDamage(source, target);
-            damage = Math.min(MAX_DAMAGE * power, damage);
+            damage = Math.min(DAMAGE * power, damage);
 
             boolean success = target.hurt(source, damage);
 
