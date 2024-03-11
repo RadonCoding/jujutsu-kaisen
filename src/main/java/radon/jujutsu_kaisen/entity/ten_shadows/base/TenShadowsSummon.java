@@ -132,7 +132,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
             pTarget = tamable2;
         }
-        return ((TamableAnimal) pTarget).getOwner() == this.getOwner() && ((TamableAnimal) pTarget).isTame() == this.isTame();
+        return ((TamableAnimal) pTarget).getOwner() != this.getOwner() || ((TamableAnimal) pTarget).isTame() != this.isTame();
     }
 
     public void setClone(boolean clone) {
