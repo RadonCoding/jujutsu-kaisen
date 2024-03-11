@@ -275,7 +275,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (victim.level().isClientSide) return;
 
         DamageSource source = event.getSource();
-        float amount = event.getAmount();
 
         if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
 
@@ -287,7 +286,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         ISorcererData sorcererData = cap.getSorcererData();
         IAbilityData abilityData = cap.getAbilityData();
-        ISkillData skillData = cap.getSkillData();
 
         if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
@@ -305,26 +303,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 }
             }
         }
-
-        float armor = (skillData.getSkill(Skill.REINFORCEMENT) * 0.3F) * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.0F);
-        float toughness = armor * 0.1F;
-
-        float f = 2.0F + toughness / 4.0F;
-        float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
-        float blocked = amount * (1.0F - f1 / 25.0F);
-
-        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-            float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-
-            if (sorcererData.getEnergy() < cost) return;
-
-            sorcererData.useEnergy(cost);
-
-            if (victim instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
-            }
-        }
-        event.setAmount(blocked);
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

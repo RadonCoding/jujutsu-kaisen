@@ -121,9 +121,14 @@ public class JJKEventHandler {
             if (cap == null) return;
 
             ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
             ISkillData skillData = cap.getSkillData();
 
             float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.25F;
+
+            if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                armor *= abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.5F;
+            }
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 2.0F;
