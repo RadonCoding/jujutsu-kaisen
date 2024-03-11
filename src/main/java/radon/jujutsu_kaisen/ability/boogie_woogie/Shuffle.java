@@ -39,9 +39,9 @@ public class Shuffle extends Ability implements Ability.IChannelened, Ability.ID
         IAbilityData data = cap.getAbilityData();
 
         if (data.isChanneling(this)) {
-            return HelperMethods.RANDOM.nextInt(3) != 0;
+            return HelperMethods.RANDOM.nextInt(10) != 0;
         }
-        return this.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(5) == 0;
+        return this.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Shuffle extends Ability implements Ability.IChannelened, Ability.ID
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        if (this.getCharge(owner) % 2 != 0) return;
+        if (this.getCharge(owner) % 4 != 0) return;
 
         if (owner.level().isClientSide) return;
 

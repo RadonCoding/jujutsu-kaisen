@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -38,9 +39,11 @@ public class IncreaseSkillC2SPacket implements CustomPacketPayload {
 
             ISorcererData sorcererData = cap.getSorcererData();
 
-            if (!sorcererData.hasSkillPoints()) return;
+            if (!sender.getAbilities().instabuild && !sorcererData.hasSkillPoints()) return;
 
             ISkillData skillData = cap.getSkillData();
+
+            if (skillData.getSkill(this.skill) >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
 
             if (!sender.getAbilities().instabuild) {
                 sorcererData.useSkillPoints(1);
