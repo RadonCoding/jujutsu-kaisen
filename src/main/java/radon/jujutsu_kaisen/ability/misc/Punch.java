@@ -129,15 +129,17 @@ public class Punch extends Ability {
             }
             entity.invulnerableTime = 0;
 
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner))) {
-                    entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
-                            .multiply(1.0D, 0.25D, 1.0D));
-                }
-            } else {
-                if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
-                    entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F))
-                            .multiply(1.0D, 0.25D, 1.0D));
+            if (!entity.isDeadOrDying()) {
+                if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                    if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner))) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
+                                .multiply(1.0D, 0.25D, 1.0D));
+                    }
+                } else {
+                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F))
+                                .multiply(1.0D, 0.25D, 1.0D));
+                    }
                 }
             }
         }
