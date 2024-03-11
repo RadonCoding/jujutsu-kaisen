@@ -26,6 +26,16 @@ public class AzureGlide extends Ability implements Ability.IChannelened, IFlight
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
         if (!owner.hasLineOfSight(target) || owner.distanceTo(target) < 3.0D) return false;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        IAbilityData data = cap.getAbilityData();
+
+        if (data.isChanneling(this)) {
+            return true;
+        }
         return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
