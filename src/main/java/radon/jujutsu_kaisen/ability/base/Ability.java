@@ -318,9 +318,11 @@ public abstract class Ability {
     public Status isTriggerable(LivingEntity owner) {
         if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSUABLE;
 
-        MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
+        if (this.getActivationType(owner) == ActivationType.INSTANT) {
+            MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
 
-        if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
+            if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
+        }
 
         Status status = this.getStatus(owner);
 
