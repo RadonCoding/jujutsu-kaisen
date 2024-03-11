@@ -135,7 +135,7 @@ public class ExplosionHandler {
 
                     if (explosion.calculator.shouldDamageEntity(current, entity)) {
                         float amount = explosion.calculator.getEntityDamageAmount(current, entity);
-                        entity.hurt(explosion.source, amount * 0.5F * explosion.damage);
+                        entity.hurt(explosion.source, amount * explosion.damage);
                     }
 
                     double d10;
