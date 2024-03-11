@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.disaster_plants;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
@@ -30,7 +31,7 @@ public class ForestRoots extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE), EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner)) {
+        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE), EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner))) {
             owner.level().addFreshEntity(new ForestRootsEntity(owner, this.getPower(owner), entity));
         }
     }
