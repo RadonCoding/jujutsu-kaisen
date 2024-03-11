@@ -57,12 +57,12 @@ public class MiniUzumakiProjectile extends BeamEntity {
 
             if (weakestCap == null) continue;
 
-            IJujutsuCapability currentcap = current.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability currentCap = current.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (currentcap == null) continue;
+            if (currentCap == null) continue;
 
             ISorcererData weakestData = weakestCap.getSorcererData();
-            ISorcererData currentData = currentcap.getSorcererData();
+            ISorcererData currentData = currentCap.getSorcererData();
 
             if (currentData.getExperience() < weakestData.getExperience()) weakest = current;
         }

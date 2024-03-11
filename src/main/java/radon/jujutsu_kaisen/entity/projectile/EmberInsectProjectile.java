@@ -116,7 +116,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 location = result.getLocation();
             ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()),
-                    20, this.getPower() * 0.25F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), true);
+                    20, this.getPower() * 0.1F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), true);
         }
         this.discard();
     }
