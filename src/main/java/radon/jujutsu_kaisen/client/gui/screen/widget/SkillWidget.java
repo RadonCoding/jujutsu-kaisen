@@ -128,14 +128,17 @@ public class SkillWidget {
 
         if (skillData.getSkill(this.skill) >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
 
+        int amount = this.minecraft.player.isShiftKeyDown() ? Math.min(sorcererData.getSkillPoints(),
+                ConfigHolder.SERVER.maximumSkillLevel.get() - skillData.getSkill(this.skill)) : 1;
+
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
         PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill));
 
         if (!this.minecraft.player.getAbilities().instabuild) {
-            sorcererData.useSkillPoints(1);
+            sorcererData.useSkillPoints(amount);
         }
-        skillData.increaseSkill(this.skill);
+        skillData.increaseSkill(this.skill, amount);
 
         this.update();
     }
