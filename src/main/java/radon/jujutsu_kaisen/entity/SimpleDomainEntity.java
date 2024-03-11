@@ -24,6 +24,8 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -61,10 +63,10 @@ public class SimpleDomainEntity extends Entity {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISkillData data = cap.getSkillData();
         
-        this.setRadius(Math.min(MAX_RADIUS, RADIUS * data.getAbilityOutput()));
-        this.setMaxHealth(STRENGTH * data.getAbilityOutput());
+        this.setRadius(Math.min(MAX_RADIUS, RADIUS * (1.0F + (data.getSkill(Skill.BARRIER) * 0.1F))));
+        this.setMaxHealth(STRENGTH * (1.0F + (data.getSkill(Skill.BARRIER) * 0.5F)));
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
     }
 
