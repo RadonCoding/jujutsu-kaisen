@@ -149,18 +149,6 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onLivingAttack2(LivingDeathEvent event) {
-            if (event.getEntity() instanceof Player) {
-                System.out.println();
-
-                for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-                    System.out.println(ste);
-                }
-                System.out.println(event.getSource());
-            }
-        }
-
-        @SubscribeEvent
         public static void onExplosion(ExplosionEvent.Detonate event) {
             Explosion explosion = event.getExplosion();
             LivingEntity instigator = explosion.getIndirectSourceEntity();
