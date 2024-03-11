@@ -48,8 +48,6 @@ public class SkillsTab extends JJKTab {
     public void tick() {
         super.tick();
 
-        if (this.minecraft.level == null || this.minecraft.level.getGameTime() % 4 != 0) return;
-
         if (this.pressed == null) return;
 
         this.pressed.upgrade();
