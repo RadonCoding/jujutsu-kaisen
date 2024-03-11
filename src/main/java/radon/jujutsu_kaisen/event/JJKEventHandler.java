@@ -111,7 +111,7 @@ public class JJKEventHandler {
 
             float amount = event.getAmount();
 
-            if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
+            if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -119,7 +119,7 @@ public class JJKEventHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            float armor = data.getExperience() * 0.002F;
+            float armor = data.getBaseOutput() * 2.0F;
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 2.0F;
