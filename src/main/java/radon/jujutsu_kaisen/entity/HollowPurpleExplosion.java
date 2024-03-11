@@ -14,7 +14,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 public class HollowPurpleExplosion extends JujutsuProjectile {
     public static final int DURATION = 3 * 20;
     private static final float EXPLOSIVE_POWER = 5.0F;
-    private static final float MAX_EXPLOSION = 15.0F;
+    private static final float MAX_EXPLOSION = 20.0F;
 
     public HollowPurpleExplosion(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
