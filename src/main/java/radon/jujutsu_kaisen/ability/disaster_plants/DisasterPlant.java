@@ -47,10 +47,12 @@ public class DisasterPlant extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
+        if (!owner.level().isClientSide) {
+            LivingEntity target = this.getTarget(owner);
 
-        if (target == null) {
-            return Status.FAILURE;
+            if (target == null) {
+                return Status.FAILURE;
+            }
         }
         return super.isTriggerable(owner);
     }

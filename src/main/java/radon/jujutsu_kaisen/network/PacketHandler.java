@@ -76,6 +76,9 @@ public class PacketHandler {
         registrar.play(RemoveChantS2CPacket.IDENTIFIER, RemoveChantS2CPacket::new, handler -> handler
                 .client(RemoveChantS2CPacket::handle)
                 .server(RemoveChantS2CPacket::handle));
+        registrar.play(TriggerAbilityS2CPacket.IDENTIFIER, TriggerAbilityS2CPacket::new, handler -> handler
+                .client(TriggerAbilityS2CPacket::handle)
+                .server(TriggerAbilityS2CPacket::handle));
 
         // Serverbound packets
         registrar.play(TriggerAbilityC2SPacket.IDENTIFIER, TriggerAbilityC2SPacket::new, handler -> handler

@@ -51,9 +51,7 @@ public class DomainScreen extends RadialScreen {
             AbilityHandler.untrigger(this.minecraft.player, ability);
             PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
         } else {
-            if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
-                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-            }
+            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
         }
     }
 

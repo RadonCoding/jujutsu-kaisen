@@ -103,10 +103,12 @@ public class ShadowTravel extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        HitResult target = this.getTarget(owner);
+        if (!owner.level().isClientSide) {
+            HitResult target = this.getTarget(owner);
 
-        if (target == null) {
-            return Status.FAILURE;
+            if (target == null) {
+                return Status.FAILURE;
+            }
         }
         return super.isTriggerable(owner);
     }
