@@ -33,10 +33,7 @@ public class AzureGlide extends Ability implements Ability.IChannelened, IFlight
 
         IAbilityData data = cap.getAbilityData();
 
-        if (data.isChanneling(this)) {
-            return true;
-        }
-        return HelperMethods.RANDOM.nextInt(20) == 0;
+        return data.isChanneling(this) || HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override
