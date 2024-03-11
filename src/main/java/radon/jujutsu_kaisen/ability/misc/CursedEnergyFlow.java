@@ -34,6 +34,8 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -285,6 +287,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         ISorcererData sorcererData = cap.getSorcererData();
         IAbilityData abilityData = cap.getAbilityData();
+        ISkillData skillData = cap.getSkillData();
 
         if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
@@ -303,7 +306,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
         }
 
-        float armor = sorcererData.getAbilityOutput() * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 5.0F : 2.5F);
+        float armor = (skillData.getSkill(Skill.REINFORCEMENT) * 0.5F) * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.0F);
         float toughness = armor * 0.1F;
 
         float f = 2.0F + toughness / 4.0F;

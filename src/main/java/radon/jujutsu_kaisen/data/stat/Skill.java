@@ -8,6 +8,7 @@ public enum Skill {
     SOUL,
     BARRIER,
     OUTPUT,
+    REINFORCEMENT,
     ENERGY;
 
     public Component getName() {
