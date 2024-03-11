@@ -156,7 +156,20 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
     @Override
     public boolean canAttack(@NotNull LivingEntity pTarget) {
-        return (!this.isTame() || pTarget != this.getOwner()) && super.canAttack(pTarget);
+        if (!super.canAttack(pTarget)) return false;
+
+        if (!this.isTame()) return true;
+
+        if (pTarget == this.getOwner()) return false;
+
+        if (!(pTarget instanceof TamableAnimal)) return true;
+
+        while (pTarget instanceof TamableAnimal tamable1) {
+            if (!(tamable1.getOwner() instanceof TamableAnimal tamable2)) break;
+
+            pTarget = tamable2;
+        }
+        return ((TamableAnimal) pTarget).getOwner() != this.getOwner() || ((TamableAnimal) pTarget).isTame() != this.isTame();
     }
 
     @Override
