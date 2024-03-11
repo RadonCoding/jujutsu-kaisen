@@ -88,6 +88,14 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean canAttack(@NotNull LivingEntity pTarget) {
+        if (this.getLeader() == pTarget || pTarget instanceof ToadEntity toad && toad.getLeader() == pTarget) {
+            return false;
+        }
+        return super.canAttack(pTarget);
+    }
+
+    @Override
     protected void customServerAiStep() {
         if (!this.canShoot()) {
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
