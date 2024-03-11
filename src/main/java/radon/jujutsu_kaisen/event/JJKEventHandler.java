@@ -100,6 +100,7 @@ public class JJKEventHandler {
             }
         }
 
+        // Base resistance as people with heavenly restriction or cursed energy are stronger than normal humans
         // Has to fire after CursedEnergyFlow::onLivingHurt
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void onLivingHurtLow(LivingHurtEvent event) {
@@ -119,7 +120,7 @@ public class JJKEventHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            float armor = data.getBaseOutput() * 2.0F;
+            float armor = data.getBaseOutput() * 5.0F;
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 2.0F;
