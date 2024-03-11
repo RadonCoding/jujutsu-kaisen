@@ -68,9 +68,8 @@ import java.util.List;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        // Has to fire before CursedEnergyFlow::onLivingHurt
-        @SubscribeEvent(priority = EventPriority.HIGH)
-        public static void onLivingHurtHigh(LivingHurtEvent event) {
+        @SubscribeEvent
+        public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
@@ -100,17 +99,6 @@ public class JJKEventHandler {
                     }
                 }
             }
-        }
-
-        @SubscribeEvent
-        public static void onLivingHurtLow(LivingHurtEvent event) {
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
-
-            DamageSource source = event.getSource();
-
-            float amount = event.getAmount();
 
             if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
 
@@ -158,6 +146,16 @@ public class JJKEventHandler {
             float blocked = amount * (1.0F - f1 / 25.0F);
 
             event.setAmount(blocked);
+        }
+
+        @SubscribeEvent
+        public static void onLivingAttack2(LivingAttackEvent event) {
+            if (event.getEntity().isDeadOrDying()) {
+                for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+                    System.out.println(ste);
+                }
+                throw new RuntimeException();
+            }
         }
 
         @SubscribeEvent
