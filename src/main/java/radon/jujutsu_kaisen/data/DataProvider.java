@@ -98,6 +98,7 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
     }
 
     @SubscribeEvent
@@ -118,6 +119,7 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
     }
 
     @SubscribeEvent
@@ -138,5 +140,6 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
     }
 }

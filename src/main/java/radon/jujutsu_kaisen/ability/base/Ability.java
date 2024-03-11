@@ -65,11 +65,11 @@ public abstract class Ability {
 
         if (ability.isScalable(owner)) {
             if (ability.isChantable()) {
-                return data.getAbilityPower(ability);
+                return data.getAbilityOutput(ability);
             }
-            return data.getAbilityPower();
+            return data.getAbilityOutput();
         }
-        return data.getRealPower();
+        return data.getBaseOutput();
     }
 
     public float getPower(LivingEntity owner) {
@@ -156,7 +156,7 @@ public abstract class Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        return data.getPoints() >= this.getRealPointsCost(owner);
+        return data.getAbilityPoints() >= this.getRealPointsCost(owner);
     }
 
     public boolean isUnlockable() {
@@ -432,7 +432,7 @@ public abstract class Ability {
             ISorcererData data = cap.getSorcererData();
 
             if (duration > 0) {
-                duration = (int) (duration * data.getRealPower());
+                duration = (int) (duration * data.getBaseOutput());
             }
             return duration;
         }

@@ -32,6 +32,9 @@ import radon.jujutsu_kaisen.data.projection_sorcery.ProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererDataSerializer;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.SkillData;
+import radon.jujutsu_kaisen.data.stat.SkillDataSerializer;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsDataSerializer;
@@ -61,4 +64,6 @@ public class JJKAttachmentTypes {
             AttachmentType.<IMimicryData>builder(holder -> new MimicryData((LivingEntity) holder)).serialize(new MimicryDataSerializer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<ICursedSpeechData>> CURSED_SPEECH = ATTACHMENT_TYPES.register("cursed_speech",
             AttachmentType.<ICursedSpeechData>builder(holder -> new CursedSpeechData()).serialize(new CursedSpeechDataSerializer()).copyOnDeath()::build);
+    public static final Supplier<AttachmentType<ISkillData>> SKILL = ATTACHMENT_TYPES.register("skill",
+            AttachmentType.<ISkillData>builder(holder -> new SkillData()).serialize(new SkillDataSerializer()).copyOnDeath()::build);
 }

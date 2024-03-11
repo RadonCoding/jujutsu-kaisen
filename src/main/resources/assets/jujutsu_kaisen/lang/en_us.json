@@ -55,7 +55,11 @@
   "gui.jujutsu_kaisen.ability": "Abilities",
   "gui.jujutsu_kaisen.ability.cost": "Cost: %1$d",
   "gui.jujutsu_kaisen.ability.locked": "Cannot be unlocked",
-  "gui.jujutsu_kaisen.ability.points": "Points: %1$d",
+  "gui.jujutsu_kaisen.ability.points": "Ability Points: %1$d",
+
+  "gui.jujutsu_kaisen.skills": "Skills",
+  "gui.jujutsu_kaisen.skills.points": "Skill Points: %1$d",
+  "gui.jujutsu_kaisen.skills.level": "Level: %1$d/%2$d",
 
   "gui.jujutsu_kaisen.cursed_energy_color": "Cursed Energy Color",
   "gui.jujutsu_kaisen.cursed_energy_color.red": "Red",
@@ -509,6 +513,18 @@
   "binding_vow.jujutsu_kaisen.recoil": "Recoil",
   "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
 
+  "skill.jujutsu_kaisen.soul": "Soul",
+  "skill.jujutsu_kaisen.soul.description": "Increases the strength of your soul.",
+
+  "skill.jujutsu_kaisen.barrier": "Barrier",
+  "skill.jujutsu_kaisen.barrier.description": "Increases the strength of your domain and veils.",
+
+  "skill.jujutsu_kaisen.output": "Output",
+  "skill.jujutsu_kaisen.output.description": "Increases your cursed energy output.",
+
+  "skill.jujutsu_kaisen.energy": "Energy",
+  "skill.jujutsu_kaisen.energy.description": "Increases your maximum cursed energy capacity.",
+
   "ten_shadows_mode.jujutsu_kaisen.summon": "Summon",
   "ten_shadows_mode.jujutsu_kaisen.ability": "Ability",
 
@@ -535,8 +551,8 @@
   "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
   "chat.jujutsu_kaisen.experience": "You've gained %1$f experience from your battle",
   "chat.jujutsu_kaisen.experience_penalty": "You lost %1$f experience by dying",
-  "chat.jujutsu_kaisen.points": "You've gained %1$d points from your battle",
-  "chat.jujutsu_kaisen.points_penalty": "You lost %1$d points by dying",
+  "chat.jujutsu_kaisen.ability_points": "You've gained %1$d ability points from your battle",
+  "chat.jujutsu_kaisen.skill_points": "You've gained %1$d skill points from your battle",
   "chat.jujutsu_kaisen.charge": "Charge: %1$d%%",
   "chat.jujutsu_kaisen.souls": "Souls: %1$d",
 

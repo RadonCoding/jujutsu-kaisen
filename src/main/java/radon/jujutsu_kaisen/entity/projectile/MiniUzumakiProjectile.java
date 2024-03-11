@@ -11,7 +11,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -76,7 +75,7 @@ public class MiniUzumakiProjectile extends BeamEntity {
 
         ISorcererData weakestData = weakestCap.getSorcererData();
 
-        this.setPower(Math.min(ownerSorcererData.getAbilityPower() * 1.5F, this.getPower() + SorcererUtil.getPower(weakestData.getExperience())));
+        this.setPower(Math.min(ownerSorcererData.getAbilityOutput() * 1.5F, this.getPower() + SorcererUtil.getPower(weakestData.getExperience())));
 
         if (SorcererUtil.getGrade(weakestData.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && weakestData.getTechnique() != null) {
             ownerCurseManipulationData.absorb(weakestData.getTechnique());

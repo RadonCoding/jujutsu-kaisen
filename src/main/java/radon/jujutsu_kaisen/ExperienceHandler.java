@@ -20,7 +20,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
@@ -103,18 +102,6 @@ public class ExperienceHandler {
         if (data != null && data.getExperience() > 0.0F) {
             float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
             data.setExperience(Math.max(0.0F, data.getExperience() - penalty));
-
-            int points = Math.round(penalty * 0.1F);
-
-            if (points > 0) {
-                data.setPoints(Math.max(0, data.getPoints() - points));
-
-                if (entity instanceof ServerPlayer player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.points_penalty", JujutsuKaisen.MOD_ID), points));
-
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-                }
-            }
 
             if (entity instanceof ServerPlayer player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience_penalty", JujutsuKaisen.MOD_ID), penalty));
@@ -243,19 +230,34 @@ public class ExperienceHandler {
 
             if (experience < 0.1F) return;
 
+            float highest = data.getHighestExperience();
+
             if (data.addExperience(experience)) {
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), experience));
                 }
             }
 
-            int points = Math.round(experience * 0.1F);
+            float current = data.getExperience();
 
-            if (points > 0) {
-                data.addPoints(points);
+            int abilityPoints = Math.round((current - highest) * 0.1F);
+
+            // We're using >= so that when the player reaches max experience they'll still gain at least one point
+            if (abilityPoints >= 0) {
+                data.addAbilityPoints(abilityPoints);
 
                 if (owner instanceof Player player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.points", JujutsuKaisen.MOD_ID), points));
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.ability_points", JujutsuKaisen.MOD_ID), abilityPoints));
+                }
+            }
+
+            int skillPoints = Math.round((current - highest) * 0.05F);
+
+            if (skillPoints >= 0) {
+                data.addSkillPoints(skillPoints);
+
+                if (owner instanceof Player player) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.skill_points", JujutsuKaisen.MOD_ID), skillPoints));
                 }
             }
 

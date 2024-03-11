@@ -33,6 +33,8 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -47,7 +49,9 @@ public class SorcererData implements ISorcererData {
 
     private int cursedEnergyColor;
 
-    private int points;
+    private int abilityPoints;
+    private int skillPoints;
+
     private final Set<Ability> unlocked;
 
     private float domainSize;
@@ -59,6 +63,7 @@ public class SorcererData implements ISorcererData {
     private CursedEnergyNature nature;
 
     private float experience;
+    private float highest;
     private float output;
 
     private float energy;
@@ -170,26 +175,26 @@ public class SorcererData implements ISorcererData {
         this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = Math.ceil(((this.getRealPower() - 1.0F) * 30.0D) / 20) * 20;
+            double health = Math.ceil(((this.getBaseOutput() - 1.0F) * 30.0D) / 20) * 20;
 
             if (EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
 
-            double damage = this.getRealPower() * 3.0D;
+            double damage = this.getBaseOutput() * 3.0D;
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            double speed = this.getRealPower();
+            double speed = this.getBaseOutput();
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
-            double movement = this.getRealPower() * 0.05D;
+            double movement = this.getBaseOutput() * 0.05D;
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(2.0F / 20);
             }
         } else {
-            double health = Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20;
+            double health = Math.ceil(((this.getBaseOutput() - 1.0F) * 20.0D) / 20) * 20;
 
             if (EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
@@ -210,7 +215,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaximumOutput() {
-        return Math.max(0.1F, (this.isInZone() ? 1.2F : 1.0F) * (1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE)));
+        return Math.max(0.1F, 1.0F - ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE));
     }
 
     @Override
@@ -224,23 +229,48 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public int getPoints() {
-        return this.points;
+    public int getAbilityPoints() {
+        return this.abilityPoints;
     }
 
     @Override
-    public void setPoints(int points) {
-        this.points = points;
+    public void setAbilityPoints(int points) {
+        this.abilityPoints = points;
     }
 
     @Override
-    public void addPoints(int points) {
-        this.points += points;
+    public void addAbilityPoints(int points) {
+        this.abilityPoints += points;
     }
 
     @Override
-    public void usePoints(int count) {
-        this.points -= count;
+    public void useAbilityPoints(int count) {
+        this.abilityPoints -= count;
+    }
+
+    @Override
+    public int getSkillPoints() {
+        return this.skillPoints;
+    }
+
+    @Override
+    public void setSkillPoints(int points) {
+        this.skillPoints = points;
+    }
+
+    @Override
+    public void addSkillPoints(int points) {
+        this.skillPoints += points;
+    }
+
+    @Override
+    public void useSkillPoints(int count) {
+        this.skillPoints -= count;
+    }
+
+    @Override
+    public boolean hasSkillPoints() {
+        return this.skillPoints > 0;
     }
 
     @Override
@@ -269,14 +299,37 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public float getAbilityPower(Ability ability) {
+    public float getAbilityOutput(Ability ability) {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0.0F;
 
         IAbilityData data = cap.getAbilityData();
 
-        float power = this.getRealPower() * ChantHandler.getOutput(this.owner, ability);
+        float power = this.getBaseOutput() * ChantHandler.getOutput(this.owner, ability);
+
+        if (this.technique != null) {
+            Ability domain = this.technique.getDomain();
+
+            if (domain != null && data.hasToggled(domain)) {
+                power *= 1.2F;
+            }
+        }
+
+        if (this.isInZone()) power *= 1.2F;
+
+        return power;
+    }
+
+    @Override
+    public float getAbilityOutput() {
+        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0.0F;
+
+        IAbilityData data = cap.getAbilityData();
+
+        float power = this.getBaseOutput() * this.getOutput();
 
         if (this.technique != null) {
             Ability domain = this.technique.getDomain();
@@ -289,28 +342,14 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public float getAbilityPower() {
+    public float getBaseOutput() {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0.0F;
 
-        IAbilityData data = cap.getAbilityData();
+        ISkillData data = cap.getSkillData();
 
-        float power = this.getRealPower() * this.getOutput();
-
-        if (this.technique != null) {
-            Ability domain = this.technique.getDomain();
-
-            if (domain != null && data.hasToggled(domain)) {
-                power *= 1.2F;
-            }
-        }
-        return power;
-    }
-
-    @Override
-    public float getRealPower() {
-        return SorcererUtil.getPower(this.experience);
+        return data.getSkill(Skill.OUTPUT) * 0.1F;
     }
 
     @Override
@@ -321,6 +360,10 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setExperience(float experience) {
         this.experience = experience;
+
+        if (this.experience > this.highest) {
+            this.highest = this.experience;
+        }
         ServerVisualHandler.sync(this.owner);
     }
 
@@ -332,7 +375,7 @@ public class SorcererData implements ISorcererData {
             return false;
         }
 
-        this.experience = Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), this.experience + amount);
+        this.setExperience(Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), this.experience + amount));
 
         SorcererGrade current = SorcererUtil.getGrade(this.experience);
 
@@ -341,8 +384,12 @@ public class SorcererData implements ISorcererData {
                 this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), current.getName()));
             }
         }
-        ServerVisualHandler.sync(this.owner);
         return true;
+    }
+
+    @Override
+    public float getHighestExperience() {
+        return this.highest;
     }
 
     @Override
@@ -572,13 +619,14 @@ public class SorcererData implements ISorcererData {
 
         if (cap == null) return 0.0F;
 
-        IContractData data = cap.getContractData();
+        IContractData contractData = cap.getContractData();
+        ISkillData skillData = cap.getSkillData();
 
-        float amount = (float) (ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() * Math.pow(this.getRealPower(), 2));
+        float amount = ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() * (1 + skillData.getSkill(Skill.ENERGY));
 
         amount += this.extraEnergy;
 
-        if (data.hasBindingVow(JJKBindingVows.OVERTIME.get())) {
+        if (contractData.hasBindingVow(JJKBindingVows.OVERTIME.get())) {
             long time = this.owner.level().getLevelData().getDayTime();
             boolean night = time >= 13000 && time < 24000;
             amount *= night ? 1.2F : 0.9F;
@@ -619,8 +667,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void onBlackFlash() {
         this.lastBlackFlashTime = this.owner.level().getGameTime();
-
-        this.output = this.getMaximumOutput();
 
         this.burnout = 0;
 
@@ -884,7 +930,8 @@ public class SorcererData implements ISorcererData {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("initialized", this.initialized);
         nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
-        nbt.putInt("points", this.points);
+        nbt.putInt("ability_points", this.abilityPoints);
+        nbt.putInt("skill_points", this.skillPoints);
         nbt.putFloat("domain_size", this.domainSize);
 
         if (this.technique != null) {
@@ -895,6 +942,7 @@ public class SorcererData implements ISorcererData {
         }
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
+        nbt.putFloat("highest", this.highest);
         nbt.putFloat("output", this.output);
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
@@ -935,7 +983,8 @@ public class SorcererData implements ISorcererData {
 
         this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
 
-        this.points = nbt.getInt("points");
+        this.abilityPoints = nbt.getInt("ability_points");
+        this.skillPoints = nbt.getInt("skill_points");
         this.domainSize = nbt.getFloat("domain_size");
 
         if (nbt.contains("technique")) {
@@ -946,6 +995,7 @@ public class SorcererData implements ISorcererData {
         }
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
+        this.highest = nbt.getFloat("highest");
         this.output = nbt.getFloat("output");
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");

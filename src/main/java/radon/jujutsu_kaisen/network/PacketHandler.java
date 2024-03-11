@@ -49,6 +49,9 @@ public class PacketHandler {
         registrar.play(SyncCursedSpeechDataS2CPacket.IDENTIFIER, SyncCursedSpeechDataS2CPacket::new, handler -> handler
                 .client(SyncCursedSpeechDataS2CPacket::handle)
                 .server(SyncCursedSpeechDataS2CPacket::handle));
+        registrar.play(SyncSkillDataSC2Packet.IDENTIFIER, SyncSkillDataSC2Packet::new, handler -> handler
+                .client(SyncSkillDataSC2Packet::handle)
+                .server(SyncSkillDataSC2Packet::handle));
         registrar.play(CameraShakeS2CPacket.IDENTIFIER, CameraShakeS2CPacket::new, handler -> handler
                 .client(CameraShakeS2CPacket::handle)
                 .server(CameraShakeS2CPacket::handle));
@@ -165,6 +168,9 @@ public class PacketHandler {
         registrar.play(TransformationRightClickC2SPacket.IDENTIFIER, TransformationRightClickC2SPacket::new, handler -> handler
                 .client(TransformationRightClickC2SPacket::handle)
                 .server(TransformationRightClickC2SPacket::handle));
+        registrar.play(IncreaseSkillC2SPacket.IDENTIFIER, IncreaseSkillC2SPacket::new, handler -> handler
+                .client(IncreaseSkillC2SPacket::handle)
+                .server(IncreaseSkillC2SPacket::handle));
     }
 
     public static <MSG extends CustomPacketPayload> void broadcast(MSG message) {

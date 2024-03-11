@@ -12,7 +12,6 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -114,7 +113,7 @@ public class JujutsuLightningEntity extends LightningBolt {
                     for (Entity entity : entities) {
                         if (entity == owner) continue;
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, null),
-                                this.damage * data.getAbilityPower());
+                                this.damage * data.getAbilityOutput());
                     }
                 }
             }

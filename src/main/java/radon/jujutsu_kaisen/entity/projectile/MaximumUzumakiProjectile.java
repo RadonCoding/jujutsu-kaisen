@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,12 +8,10 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -78,11 +74,11 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 }
             }
 
-            this.setPower(Math.min(ownerSorcererData.getAbilityPower() * 1.5F, this.getPower() + SorcererUtil.getPower(curseData.getExperience())));
+            this.setPower(Math.min(ownerSorcererData.getAbilityOutput() * 1.5F, this.getPower() + SorcererUtil.getPower(curseData.getExperience())));
 
             entity.discard();
 
-            if (this.getPower() == ownerSorcererData.getAbilityPower() * 1.5F) break;
+            if (this.getPower() == ownerSorcererData.getAbilityOutput() * 1.5F) break;
         }
     }
 

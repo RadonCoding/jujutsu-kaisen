@@ -12,6 +12,8 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
@@ -78,22 +80,29 @@ public interface ISorcerer {
 
     JujutsuType getJujutsuType();
 
-    default void init(ISorcererData data) {
-        data.setExperience(this.getExperience());
-        data.setTechnique(this.getTechnique());
-        data.setAdditional(this.getAdditional());
-        data.setNature(this.getNature());
-        data.addTraits(this.getTraits());
-        data.setType(this.getJujutsuType());
-        data.unlockAll(this.getUnlocked());
+    default void init(ISorcererData sorcererData, ISkillData skillData) {
+        sorcererData.setExperience(this.getExperience());
+        sorcererData.setTechnique(this.getTechnique());
+        sorcererData.setAdditional(this.getAdditional());
+        sorcererData.setNature(this.getNature());
+        sorcererData.addTraits(this.getTraits());
+        sorcererData.setType(this.getJujutsuType());
+        sorcererData.unlockAll(this.getUnlocked());
 
         if (this.getMaxEnergy() > 0.0F) {
-            data.setMaxEnergy(this.getMaxEnergy());
+            sorcererData.setMaxEnergy(this.getMaxEnergy());
         }
-        data.setEnergy(data.getMaxEnergy());
+        sorcererData.setEnergy(sorcererData.getMaxEnergy());
 
         if (this.getCursedEnergyColor() != -1) {
-            data.setCursedEnergyColor(this.getCursedEnergyColor());
+            sorcererData.setCursedEnergyColor(this.getCursedEnergyColor());
+        }
+
+        // Makes it so all skills are initialized based on the experience
+        // For example if the mob has 500 experience and the maximum is 1000 and the maximum skill level is 100 then the skill level will be 50
+        for (Skill skill : Skill.values()) {
+            skillData.setSkill(skill, Math.round(ConfigHolder.SERVER.maximumSkillLevel.get() *
+                    (sorcererData.getExperience() / ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
         }
     }
 }

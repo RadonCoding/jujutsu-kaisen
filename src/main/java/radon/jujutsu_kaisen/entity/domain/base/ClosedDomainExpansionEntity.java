@@ -136,7 +136,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid))
+        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() == this.uuid)
             return true;
 
         int radius = this.getRadius();
@@ -199,6 +199,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             } else {
                 block = JJKBlocks.DOMAIN_AIR.get();
             }
+        }
+
+        // We don't want to destroy the barrier of other domains :P
+        if (existing instanceof DomainBlockEntity) {
+            if (block == JJKBlocks.DOMAIN_AIR.get()) return;
         }
 
         owner.level().removeBlockEntity(pos);
@@ -364,7 +369,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                     if (distance < radius && distance >= radius - 1) {
                         BlockPos pos = center.offset(x, y, z);
 
-                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.getUUID())) count++;
+                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity) count++;
                     }
                 }
             }

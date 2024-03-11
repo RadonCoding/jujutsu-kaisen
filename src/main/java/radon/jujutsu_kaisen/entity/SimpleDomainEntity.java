@@ -21,9 +21,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -66,8 +63,8 @@ public class SimpleDomainEntity extends Entity {
 
         ISorcererData data = cap.getSorcererData();
         
-        this.setRadius(Math.min(MAX_RADIUS, RADIUS * data.getAbilityPower()));
-        this.setMaxHealth(STRENGTH * data.getAbilityPower());
+        this.setRadius(Math.min(MAX_RADIUS, RADIUS * data.getAbilityOutput()));
+        this.setMaxHealth(STRENGTH * data.getAbilityOutput());
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
     }
 
@@ -175,7 +172,7 @@ public class SimpleDomainEntity extends Entity {
 
                     ISorcererData targetData = targetCap.getSorcererData();
 
-                    this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), DAMAGE * (1.0F + Math.max(0.0F, targetData.getAbilityPower() - ownerData.getAbilityPower())));
+                    this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), DAMAGE * (1.0F + Math.max(0.0F, targetData.getAbilityOutput() - ownerData.getAbilityOutput())));
                 }
             }
 
