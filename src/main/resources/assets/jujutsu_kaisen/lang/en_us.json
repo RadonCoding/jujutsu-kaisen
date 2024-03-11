@@ -582,7 +582,7 @@
 
   "chat.jujutsu_kaisen.not_strong_enough": "Seems your body isn't strong enough to handle that yet",
 
-  "chat.jujutsu_kaisen.enhance_curse": "Experience: %1$f/%2$f",
+  "chat.jujutsu_kaisen.enhance_curse": "Experience: %1$f",
 
   "chat.jujutsu_kaisen.targeting_stick.add": "First target set, hit another entity to start the battle",
   "chat.jujutsu_kaisen.targeting_stick.reset": "Successfully reset targets",

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class ServerConfig {
     public final ModConfigSpec.DoubleValue cursedEnergyAmount;
     public final ModConfigSpec.DoubleValue cursedEnergyRegenerationAmount;
-    public final ModConfigSpec.DoubleValue maximumExperienceAmount;
     public final ModConfigSpec.DoubleValue cursedObjectEnergyForGrade;
     public final ModConfigSpec.IntValue reverseCursedTechniqueChance;
     public final ModConfigSpec.DoubleValue requiredExperienceForExperienced;
@@ -63,6 +62,8 @@ public class ServerConfig {
     public final ModConfigSpec.IntValue vesselRarity;
 
     public final ModConfigSpec.IntValue maximumSkillLevel;
+    public final ModConfigSpec.DoubleValue abilityPointInterval;
+    public final ModConfigSpec.DoubleValue skillPointInterval;
 
     public ServerConfig(ModConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
@@ -70,8 +71,6 @@ public class ServerConfig {
                 .defineInRange("cursedEnergyAmount", 150.0F, 0.0F, 100000.0F);
         this.cursedEnergyRegenerationAmount = builder.comment("Cursed energy regeneration amount (depends on food level)")
                 .defineInRange("cursedEnergyRegenerationAmount", 0.25F, 0.0F, 100000.0F);
-        this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
-                .defineInRange("maximumExperienceAmount", SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F, 1.0F, 1000000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
         this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)")
@@ -210,6 +209,10 @@ public class ServerConfig {
         builder.comment("Skills").push("skills");
         this.maximumSkillLevel = builder.comment("Maximum level you can upgrade a skill to")
                 .defineInRange("maximumSkillLevel", 1000, 1, 1000000);
+        this.abilityPointInterval = builder.comment("For every X experience you'll gain 1 ability points")
+                .defineInRange("abilityPointInterval", 10.0D, 1.0D, 1000000.0D);
+        this.skillPointInterval = builder.comment("For every X experience you'll gain 1 skill points")
+                .defineInRange("skillPointInterval", 20.0D, 1.0D, 1000000.0D);
         builder.pop();
     }
 

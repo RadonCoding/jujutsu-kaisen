@@ -62,8 +62,6 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     boolean addExperience(float amount);
 
-    float getHighestExperience();
-
     float getDomainSize();
 
     void setDomainSize(float domainSize);

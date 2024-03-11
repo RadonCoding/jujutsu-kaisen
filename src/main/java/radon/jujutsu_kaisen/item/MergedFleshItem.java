@@ -37,7 +37,7 @@ public class MergedFleshItem extends CursedEnergyFleshItem {
         }
 
         if (getGrade(pStack) == SorcererGrade.SPECIAL_GRADE && !data.hasTrait(Trait.PERFECT_BODY)) {
-            if (data.getExperience() >= ConfigHolder.SERVER.maximumExperienceAmount.get()) {
+            if (data.getExperience() >= SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) {
                 data.addTrait(Trait.PERFECT_BODY);
             } else {
                 pEntityLiving.sendSystemMessage(Component.translatable(String.format("chat.%s.not_strong_enough", JujutsuKaisen.MOD_ID)));

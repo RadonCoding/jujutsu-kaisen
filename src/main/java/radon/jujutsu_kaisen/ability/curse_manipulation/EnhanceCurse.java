@@ -67,7 +67,7 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
                 experience = curseData.getExperience();
             }
 
-            if (experience >= ownerData.getExperience() || experience == ConfigHolder.SERVER.maximumExperienceAmount.get()) return null;
+            if (experience >= ownerData.getExperience()) return null;
 
             return curse;
         }
@@ -120,7 +120,7 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.enhance_curse", JujutsuKaisen.MOD_ID),
-                    targetData.getExperience(), ConfigHolder.SERVER.maximumExperienceAmount.get()), false), player);
+                    targetData.getExperience()), false), player);
         }
     }
 

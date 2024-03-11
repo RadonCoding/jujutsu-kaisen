@@ -5,7 +5,6 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ClientInformation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.InteractionHand;
@@ -63,7 +62,7 @@ public class SorcererData implements ISorcererData {
     private CursedEnergyNature nature;
 
     private float experience;
-    private float highest;
+    private float current;
     private float output;
 
     private float energy;
@@ -338,8 +337,7 @@ public class SorcererData implements ISorcererData {
     public float getBaseOutput() {
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             // Just makes it so heavenly restricted people's output scales with experience
-            return 1.0F + ((ConfigHolder.SERVER.maximumSkillLevel.get() *
-                    (this.experience / ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())) * 0.1F);
+            return 1.0F + Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), this.experience / ConfigHolder.SERVER.skillPointInterval.get().floatValue());
         }
 
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -360,8 +358,8 @@ public class SorcererData implements ISorcererData {
     public void setExperience(float experience) {
         this.experience = experience;
 
-        if (this.experience > this.highest) {
-            this.highest = this.experience;
+        if (this.experience > this.current) {
+            this.current = this.experience;
         }
         ServerVisualHandler.sync(this.owner);
     }
@@ -370,11 +368,33 @@ public class SorcererData implements ISorcererData {
     public boolean addExperience(float amount) {
         SorcererGrade previous = SorcererUtil.getGrade(this.experience);
 
-        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()) {
-            return false;
+        this.setExperience(this.experience + amount);
+
+        this.current += amount;
+
+        int abilityPoints = Math.round(this.current / ConfigHolder.SERVER.abilityPointInterval.get().floatValue());
+
+        if (abilityPoints > 0) {
+            this.abilityPoints += abilityPoints;
+
+            if (this.owner instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.ability_points", JujutsuKaisen.MOD_ID), abilityPoints));
+            }
         }
 
-        this.setExperience(Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), this.experience + amount));
+        int skillPoints = Math.round(this.current / ConfigHolder.SERVER.skillPointInterval.get().floatValue());
+
+        if (skillPoints > 0) {
+            this.skillPoints += skillPoints;
+
+            if (this.owner instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.skill_points", JujutsuKaisen.MOD_ID), this.skillPoints));
+            }
+        }
+
+        if (this.current > Math.max(ConfigHolder.SERVER.abilityPointInterval.get().floatValue(), ConfigHolder.SERVER.skillPointInterval.get().floatValue())) {
+            this.current = 0.0F;
+        }
 
         SorcererGrade current = SorcererUtil.getGrade(this.experience);
 
@@ -384,11 +404,6 @@ public class SorcererData implements ISorcererData {
             }
         }
         return true;
-    }
-
-    @Override
-    public float getHighestExperience() {
-        return this.highest;
     }
 
     @Override
@@ -941,7 +956,7 @@ public class SorcererData implements ISorcererData {
         }
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
-        nbt.putFloat("highest", this.highest);
+        nbt.putFloat("current", this.current);
         nbt.putFloat("output", this.output);
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
@@ -994,7 +1009,7 @@ public class SorcererData implements ISorcererData {
         }
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
-        this.highest = nbt.getFloat("highest");
+        this.current = nbt.getFloat("current");
         this.output = nbt.getFloat("output");
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");

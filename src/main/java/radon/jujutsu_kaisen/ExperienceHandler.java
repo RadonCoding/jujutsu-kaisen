@@ -230,33 +230,9 @@ public class ExperienceHandler {
 
             if (experience < 0.1F) return;
 
-            float highest = data.getHighestExperience();
-
             if (data.addExperience(experience)) {
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), experience));
-                }
-            }
-
-            float current = data.getExperience();
-
-            int abilityPoints = current == highest ? Math.round(experience * 0.1F) : Math.round((current - highest) * 0.1F);
-
-            if (abilityPoints > 0) {
-                data.addAbilityPoints(abilityPoints);
-
-                if (owner instanceof Player player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.ability_points", JujutsuKaisen.MOD_ID), abilityPoints));
-                }
-            }
-
-            int skillPoints = current == highest ? Math.round(experience * 0.05F) : Math.round((current - highest) * 0.05F);
-
-            if (skillPoints > 0) {
-                data.addSkillPoints(skillPoints);
-
-                if (owner instanceof Player player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.skill_points", JujutsuKaisen.MOD_ID), skillPoints));
                 }
             }
 
