@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.SkillWidget;
@@ -30,6 +31,9 @@ public class SkillsTab extends JJKTab {
 
     private float y;
 
+    @Nullable
+    private SkillWidget pressed;
+
     public SkillsTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
         super(minecraft, screen, type, index, page, Items.IRON_PICKAXE.getDefaultInstance(), TITLE, BACKGROUND, true);
 
@@ -38,6 +42,15 @@ public class SkillsTab extends JJKTab {
 
             this.y += 2.0F;
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.pressed == null) return;
+
+        this.pressed.upgrade();
     }
 
     @Override
@@ -127,27 +140,21 @@ public class SkillsTab extends JJKTab {
 
     @Override
     public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (this.minecraft.player == null) return;
-
-        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData sorcererData = cap.getSorcererData();
-
-        ISkillData skillData = cap.getSkillData();
-
         int i = Mth.floor(this.scrollX);
         int j = Mth.floor(this.scrollY);
 
         if (pMouseX > 0 && pMouseX < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY > 0 && pMouseY < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
             for (SkillWidget widget : this.children.values()) {
                 if (widget.isMouseOver(i, j, (int) pMouseX, (int) pMouseY)) {
-                    widget.upgrade(pButton == InputConstants.MOUSE_BUTTON_RIGHT ? Math.min(sorcererData.getSkillPoints(),
-                            ConfigHolder.SERVER.maximumSkillLevel.get() - skillData.getSkill(widget.getSkill())) : 1);
+                    this.pressed = widget;
                     break;
                 }
             }
         }
+    }
+
+    @Override
+    public void mouseReleased(double pMouseX, double pMouseY, int pButton) {
+        this.pressed = null;
     }
 }
