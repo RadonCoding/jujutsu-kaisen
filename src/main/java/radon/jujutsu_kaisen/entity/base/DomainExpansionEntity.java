@@ -229,10 +229,10 @@ public abstract class DomainExpansionEntity extends Entity {
 
                     if (ownerCap == null) return false;
 
-                    ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+                    ISkillData data = ownerCap.getSkillData();
 
                     simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability),
-                            ownerSorcererData.getAbilityOutput(this.ability));
+                            data.getSkill(Skill.BARRIER) * 0.05F);
                 }
             }
         }
