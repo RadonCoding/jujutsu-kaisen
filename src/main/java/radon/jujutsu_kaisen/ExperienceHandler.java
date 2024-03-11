@@ -242,8 +242,7 @@ public class ExperienceHandler {
 
             int abilityPoints = Math.round((current - highest) * 0.1F);
 
-            // We're using >= so that when the player reaches max experience they'll still gain at least one point
-            if (abilityPoints >= 0) {
+            if (abilityPoints > 0) {
                 data.addAbilityPoints(abilityPoints);
 
                 if (owner instanceof Player player) {
@@ -253,7 +252,7 @@ public class ExperienceHandler {
 
             int skillPoints = Math.round((current - highest) * 0.05F);
 
-            if (skillPoints >= 0) {
+            if (skillPoints > 0) {
                 data.addSkillPoints(skillPoints);
 
                 if (owner instanceof Player player) {
