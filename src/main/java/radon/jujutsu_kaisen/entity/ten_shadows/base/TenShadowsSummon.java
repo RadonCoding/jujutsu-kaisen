@@ -119,8 +119,16 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     @Override
     public boolean canAttack(@NotNull LivingEntity pTarget) {
-        return super.canAttack(pTarget) && !(pTarget.getType() == this.getType() && ((TenShadowsSummon) pTarget).isClone()) &&
-                !(pTarget instanceof TamableAnimal tamable && tamable.getOwner() == this.getOwner() && tamable.isTame() == this.isTame());
+        if (!super.canAttack(pTarget)) return false;
+
+        if (!(pTarget instanceof TamableAnimal)) return false;
+
+        while (pTarget instanceof TamableAnimal tamable1) {
+            if (!(tamable1.getOwner() instanceof TamableAnimal tamable2)) break;
+
+            pTarget = tamable2;
+        }
+        return ((TamableAnimal) pTarget).getOwner() == this.getOwner() && ((TamableAnimal) pTarget).isTame() == this.isTame();
     }
 
     public void setClone(boolean clone) {
