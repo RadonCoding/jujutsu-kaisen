@@ -20,13 +20,15 @@ public class IncreaseSkillC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "increase_skill_serverbound");
 
     private final Skill skill;
+    private final int amount;
 
-    public IncreaseSkillC2SPacket(Skill key) {
+    public IncreaseSkillC2SPacket(Skill key, int amount) {
         this.skill = key;
+        this.amount = amount;
     }
 
     public IncreaseSkillC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readEnum(Skill.class));
+        this(buf.readEnum(Skill.class), buf.readInt());
     }
 
     public void handle(PlayPayloadContext ctx) {
@@ -43,18 +45,19 @@ public class IncreaseSkillC2SPacket implements CustomPacketPayload {
 
             if (skillData.getSkill(this.skill) >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
 
-            if (!sender.getAbilities().instabuild && sorcererData.getSkillPoints() < 1) return;
+            if (!sender.getAbilities().instabuild && sorcererData.getSkillPoints() < this.amount) return;
 
             if (!sender.getAbilities().instabuild) {
-                sorcererData.useSkillPoints(1);
+                sorcererData.useSkillPoints(this.amount);
             }
-            skillData.increaseSkill(this.skill, 1);
+            skillData.increaseSkill(this.skill, this.amount);
         });
     }
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {
         pBuffer.writeEnum(this.skill);
+        pBuffer.writeInt(this.amount);
     }
 
     @Override

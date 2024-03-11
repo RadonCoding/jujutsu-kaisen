@@ -116,7 +116,7 @@ public class SkillWidget {
         return this.width;
     }
 
-    public void upgrade() {
+    public void upgrade(int amount) {
         if (this.minecraft.player == null) return;
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -129,16 +129,16 @@ public class SkillWidget {
 
         if (skillData.getSkill(this.skill) >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
 
-        if (!this.minecraft.player.getAbilities().instabuild && sorcererData.getSkillPoints() < 1) return;
+        if (!this.minecraft.player.getAbilities().instabuild && sorcererData.getSkillPoints() < amount) return;
 
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
-        PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill));
+        PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill, amount));
 
         if (!this.minecraft.player.getAbilities().instabuild) {
-            sorcererData.useSkillPoints(1);
+            sorcererData.useSkillPoints(amount);
         }
-        skillData.increaseSkill(this.skill, 1);
+        skillData.increaseSkill(this.skill, amount);
 
         this.update();
     }

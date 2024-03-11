@@ -34,6 +34,8 @@ public class SkillsTab extends JJKTab {
     @Nullable
     private SkillWidget pressed;
 
+    private int duration;
+
     public SkillsTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
         super(minecraft, screen, type, index, page, Items.IRON_PICKAXE.getDefaultInstance(), TITLE, BACKGROUND, true);
 
@@ -48,9 +50,11 @@ public class SkillsTab extends JJKTab {
     public void tick() {
         super.tick();
 
+        if (this.minecraft.level == null || this.minecraft.level.getGameTime() % 2 != 0) return;
+
         if (this.pressed == null) return;
 
-        this.pressed.upgrade();
+        this.pressed.upgrade(++this.duration);
     }
 
     @Override
@@ -156,5 +160,6 @@ public class SkillsTab extends JJKTab {
     @Override
     public void mouseReleased(double pMouseX, double pMouseY, int pButton) {
         this.pressed = null;
+        this.duration = 0;
     }
 }
