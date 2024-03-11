@@ -102,9 +102,7 @@ public class JJKEventHandler {
             }
         }
 
-        // Base resistance as people with heavenly restriction or cursed energy are stronger than normal humans
-        // Has to fire after CursedEnergyFlow::onLivingHurt
-        @SubscribeEvent(priority = EventPriority.LOW)
+        @SubscribeEvent
         public static void onLivingHurtLow(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -124,15 +122,35 @@ public class JJKEventHandler {
             IAbilityData abilityData = cap.getAbilityData();
             ISkillData skillData = cap.getSkillData();
 
-            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.25F;
-
-            if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                armor *= abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.5F;
-            }
+            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.5F;
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 2.0F;
             }
+
+            if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.5F);
+
+                float toughness = shielded * 0.1F;
+
+                float f = 2.0F + toughness / 4.0F;
+                float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
+                float blocked = amount * (1.0F - f1 / 25.0F);
+
+                if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
+                    float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+
+                    if (sorcererData.getEnergy() >= cost) {
+                        sorcererData.useEnergy(cost);
+
+                        if (victim instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
+                        }
+                    }
+                }
+                armor = shielded;
+            }
+
             float toughness = armor * 0.1F;
 
             float f = 2.0F + toughness / 4.0F;
