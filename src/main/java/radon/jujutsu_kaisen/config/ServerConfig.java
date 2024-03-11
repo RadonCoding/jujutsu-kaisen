@@ -209,7 +209,7 @@ public class ServerConfig {
 
         builder.comment("Skills").push("skills");
         this.maximumSkillLevel = builder.comment("Maximum level you can upgrade a skill to")
-                .defineInRange("maximumSkillLevel", 100, 1, 1000000);
+                .defineInRange("maximumSkillLevel", 1000, 1, 1000000);
         builder.pop();
     }
 

@@ -240,7 +240,7 @@ public class ExperienceHandler {
 
             float current = data.getExperience();
 
-            int abilityPoints = Math.round((current - highest) * 0.1F);
+            int abilityPoints = current == highest ? Math.round(experience * 0.1F) : Math.round((current - highest) * 0.1F);
 
             if (abilityPoints > 0) {
                 data.addAbilityPoints(abilityPoints);
@@ -250,7 +250,7 @@ public class ExperienceHandler {
                 }
             }
 
-            int skillPoints = Math.round((current - highest) * 0.05F);
+            int skillPoints = current == highest ? Math.round(experience * 0.05F) : Math.round((current - highest) * 0.05F);
 
             if (skillPoints > 0) {
                 data.addSkillPoints(skillPoints);

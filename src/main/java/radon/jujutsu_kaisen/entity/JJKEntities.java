@@ -586,7 +586,7 @@ public class JJKEntities {
         event.put(DIVINE_DOG_BLACK.get(), DivineDogEntity.createAttributes().build());
         event.put(DIVINE_DOG_TOTALITY.get(), DivineDogTotalityEntity.createAttributes().build());
         event.put(TOAD.get(), ToadEntity.createAttributes().build());
-        event.put(TOAD_FUSION.get(), ToadEntity.createAttributes().build());
+        event.put(TOAD_FUSION.get(), ToadFusionEntity.createAttributes().build());
         event.put(RABBIT_ESCAPE.get(), RabbitEscapeEntity.createAttributes().build());
         event.put(NUE.get(), NueEntity.createAttributes().build());
         event.put(NUE_TOTALITY.get(), NueTotalityEntity.createAttributes().build());
