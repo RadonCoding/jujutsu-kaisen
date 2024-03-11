@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import org.checkerframework.checker.units.qual.C;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.DisplayInfo;
 import radon.jujutsu_kaisen.client.gui.screen.tab.SkillsTab;
@@ -77,6 +76,10 @@ public class SkillWidget {
         this.width = l + 3 + 5;
     }
 
+    public Skill getSkill() {
+        return this.skill;
+    }
+
     private static float getMaxWidth(StringSplitter pManager, List<FormattedText> pText) {
         return (float) pText.stream().mapToDouble(pManager::stringWidth).max().orElse(0.0D);
     }
@@ -113,7 +116,7 @@ public class SkillWidget {
         return this.width;
     }
 
-    public void unlock() {
+    public void upgrade(int amount) {
         if (this.minecraft.player == null) return;
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -126,14 +129,11 @@ public class SkillWidget {
 
         if (skillData.getSkill(this.skill) >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
 
-        int amount = this.minecraft.player.isShiftKeyDown() ? Math.min(sorcererData.getSkillPoints(),
-                ConfigHolder.SERVER.maximumSkillLevel.get() - skillData.getSkill(this.skill)) : 1;
-
         if (!this.minecraft.player.getAbilities().instabuild && sorcererData.getSkillPoints() < amount) return;
 
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
-        PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill));
+        PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill, amount));
 
         if (!this.minecraft.player.getAbilities().instabuild) {
             sorcererData.useSkillPoints(amount);
