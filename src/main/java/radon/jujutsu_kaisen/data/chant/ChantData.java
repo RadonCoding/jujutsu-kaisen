@@ -19,7 +19,7 @@ public class ChantData implements IChantData {
     private final Map<Ability, Set<String>> chants;
 
     public ChantData() {
-        this.chants = new HashMap<>();
+        this.chants = new LinkedHashMap<>();
     }
 
     @Override
