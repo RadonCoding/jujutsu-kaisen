@@ -74,7 +74,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 }
             }
 
-            this.setPower(Math.min(ownerSorcererData.getAbilityOutput() * 1.5F, this.getPower() + SorcererUtil.getPower(curseData.getExperience())));
+            this.setPower(Math.min(ownerSorcererData.getAbilityOutput() * 1.5F, this.getPower() + curseData.getBaseOutput()));
 
             entity.discard();
 

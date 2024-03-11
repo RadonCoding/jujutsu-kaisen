@@ -343,13 +343,17 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getBaseOutput() {
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+            return 1.0F + (this.experience / 1500.0F);
+        }
+
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0.0F;
 
         ISkillData data = cap.getSkillData();
 
-        return data.getSkill(Skill.OUTPUT) * 0.1F;
+        return 1.0F + (data.getSkill(Skill.OUTPUT) * 0.1F);
     }
 
     @Override

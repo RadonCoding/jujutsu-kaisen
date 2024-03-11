@@ -92,7 +92,6 @@ public interface ISorcerer {
         if (this.getMaxEnergy() > 0.0F) {
             sorcererData.setMaxEnergy(this.getMaxEnergy());
         }
-        sorcererData.setEnergy(sorcererData.getMaxEnergy());
 
         if (this.getCursedEnergyColor() != -1) {
             sorcererData.setCursedEnergyColor(this.getCursedEnergyColor());
@@ -104,5 +103,6 @@ public interface ISorcerer {
             skillData.setSkill(skill, Math.round(ConfigHolder.SERVER.maximumSkillLevel.get() *
                     (sorcererData.getExperience() / ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
         }
+        sorcererData.setEnergy(sorcererData.getMaxEnergy());
     }
 }
