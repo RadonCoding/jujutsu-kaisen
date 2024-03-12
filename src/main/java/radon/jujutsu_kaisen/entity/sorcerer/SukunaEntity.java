@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.cursed_object.SukunaFingerItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.*;
@@ -76,6 +79,17 @@ public class SukunaEntity extends SorcererEntity {
         if (owner instanceof Player player) {
             this.setPlayer(player.getGameProfile());
         }
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(@NotNull DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+
+        if (this.fingers < 20) return;
+
+        ItemStack stack = new ItemStack(JJKItems.SUKUNA_FINGER.get());
+        SukunaFingerItem.setFull(stack, true);
+        this.spawnAtLocation(stack);
     }
 
     @Override

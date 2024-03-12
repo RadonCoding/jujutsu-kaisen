@@ -1,14 +1,15 @@
 package radon.jujutsu_kaisen.item.cursed_object;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
@@ -23,9 +24,37 @@ public class SukunaFingerItem extends CursedObjectItem {
         super(pProperties);
     }
 
+    public static boolean isFull(ItemStack stack) {
+        CompoundTag nbt = stack.getTag();
+
+        if (nbt == null) return false;
+
+        return nbt.getBoolean("full");
+    }
+
+    public static void setFull(ItemStack stack, boolean full) {
+        CompoundTag nbt = stack.getOrCreateTag();
+        nbt.putBoolean("full", full);
+    }
+
+    @Override
+    public boolean isFoil(@NotNull ItemStack pStack) {
+        return super.isFoil(pStack) || isFull(pStack);
+    }
+
     @Override
     public SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
+    }
+
+    @Override
+    public boolean canBeHurtBy(@NotNull DamageSource pDamageSource) {
+        return false;
+    }
+
+    @Override
+    public int getEntityLifespan(@NotNull ItemStack itemStack, @NotNull Level level) {
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -55,17 +84,18 @@ public class SukunaFingerItem extends CursedObjectItem {
         if (cap != null) {
             ISorcererData data = cap.getSorcererData();
 
-            if (data.getType() == JujutsuType.CURSE) {
-                return super.finishUsingItem(pStack, pLevel, pEntityLiving);
-            }
-
-            if (data.hasTrait(Trait.VESSEL)) {
-                pStack.shrink(data.addFingers(pStack.getCount()));
-                return pStack;
+            if (isFull(pStack)) {
+                data.addTrait(Trait.PERFECT_BODY);
+            } else if (data.getType() == JujutsuType.SORCERER) {
+                if (data.hasTrait(Trait.VESSEL)) {
+                    pStack.shrink(data.addFingers(pStack.getCount()));
+                    return pStack;
+                } else {
+                    pStack.shrink(pStack.getCount());
+                    EntityUtil.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
+                }
             }
         }
-        pStack.shrink(pStack.getCount());
-        EntityUtil.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
         return ItemStack.EMPTY;
     }
 }
