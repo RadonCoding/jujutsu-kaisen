@@ -157,6 +157,9 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                     if (distance < pBlockEntity.size && distance >= pBlockEntity.size - 1) {
                         BlockPos pos = pPos.offset(x, y, z);
+
+                        if (!pLevel.isInWorldBounds(pos)) return;
+
                         BlockState state = pLevel.getBlockState(pos);
 
                         if (!state.is(BlockTags.DOORS) && !state.is(BlockTags.TRAPDOORS) && !state.getCollisionShape(pLevel, pos).isEmpty()) continue;

@@ -146,6 +146,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
+        if (!this.level().isInWorldBounds(pos)) return;
+
         if (this.isRemoved()) return;
 
         if (distance >= radius) return;
