@@ -72,14 +72,6 @@ public class JJKItems {
 
     public static DeferredHolder<Item, Item> SUKUNA_FINGER = ITEMS.register("sukuna_finger",
             () -> new SukunaFingerItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT).stacksTo(20)));
-    public static DeferredHolder<Item, Item> CURSED_TOTEM = ITEMS.register("cursed_totem",
-            () -> new CursedTotemItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
-    public static DeferredHolder<Item, Item> CURSED_COMPASS = ITEMS.register("cursed_compass",
-            () -> new CursedCompassItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
-    public static DeferredHolder<Item, Item> CURSED_MUSIC_DISC = ITEMS.register("cursed_music_disc",
-            () -> new CursedMusicDiscItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
-    public static DeferredHolder<Item, Item> CURSED_EYE_OF_ENDER = ITEMS.register("cursed_eye_of_ender",
-            () -> new CursedEyeOfEnderItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
 
     public static DeferredHolder<Item, Item> CURSED_SPIRIT_ORB = ITEMS.register("cursed_spirit_orb",
             () -> new CursedSpiritOrbItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
