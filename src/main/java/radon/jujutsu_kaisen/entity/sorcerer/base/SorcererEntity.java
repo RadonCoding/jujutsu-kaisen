@@ -57,6 +57,29 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         Arrays.fill(this.handDropChances, 1.0F);
     }
 
+    private boolean isInVillage() {
+        HolderSet.Named<Structure> structures = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
+
+        boolean success = false;
+
+        for (Holder<Structure> holder : structures) {
+            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.value()).isValid()) {
+                success = true;
+                break;
+            }
+        }
+        return success;
+    }
+
+    @Override
+    public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
+        if (!this.isInVillage()) return false;
+
+        if (!this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(128.0D, 128.0D, 128.0D)).isEmpty()) return false;
+
+        return super.checkSpawnRules(pLevel, pSpawnReason);
+    }
+
     @Override
     public boolean hasMeleeAttack() {
         return true;
@@ -120,29 +143,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker) && attacker != this) {
             this.setTarget(attacker);
         }
-    }
-
-    private boolean isInVillage() {
-        HolderSet.Named<Structure> structures = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
-
-        boolean success = false;
-
-        for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.value()).isValid()) {
-                success = true;
-                break;
-            }
-        }
-        return success;
-    }
-
-    @Override
-    public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
-        if (!this.isInVillage()) return false;
-
-        if (!this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(128.0D, 128.0D, 128.0D)).isEmpty()) return false;
-
-        return super.checkSpawnRules(pLevel, pSpawnReason);
     }
 
     @Override
