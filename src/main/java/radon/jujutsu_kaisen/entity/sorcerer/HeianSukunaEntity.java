@@ -4,6 +4,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.cursed_object.SukunaFingerItem;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -43,6 +45,17 @@ public class HeianSukunaEntity extends SukunaEntity {
         super(JJKEntities.HEIAN_SUKUNA.get(), pLevel);
 
         this.fingers = fingers;
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(@NotNull DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+
+        if (this.fingers < 20) return;
+
+        ItemStack stack = new ItemStack(JJKItems.SUKUNA_FINGER.get());
+        SukunaFingerItem.setFull(stack, true);
+        this.spawnAtLocation(stack);
     }
 
     public void setBarrage(int barrage) {
