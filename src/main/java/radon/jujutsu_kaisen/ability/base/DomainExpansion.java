@@ -145,13 +145,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         if (cap == null) return;
 
         ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
 
         DomainExpansionEntity domain = this.createBarrier(owner);
         sorcererData.addSummon(domain);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
         }
     }
