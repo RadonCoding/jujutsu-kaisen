@@ -92,7 +92,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
                             BlockPos pos = center.offset(x, -vertical, z);
 
-                            if (!this.level().isInWorldBounds(pos)) return;
+                            if (!this.level().isInWorldBounds(pos)) continue;
 
                             BlockState state = this.level().getBlockState(pos);
 

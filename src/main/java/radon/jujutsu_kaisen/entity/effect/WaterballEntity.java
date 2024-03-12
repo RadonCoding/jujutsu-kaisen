@@ -93,6 +93,8 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
                                 if (pos == center) continue;
 
+                                if (!this.level().isInWorldBounds(pos)) continue;
+
                                 BlockState state = owner.level().getBlockState(pos);
 
                                 if (!state.isAir() || state.canOcclude()) continue;
