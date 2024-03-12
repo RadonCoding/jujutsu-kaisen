@@ -386,8 +386,8 @@ public class SorcererData implements ISorcererData {
         if (abilityPoints > 0) {
             this.abilityPoints += abilityPoints;
 
-            if (this.owner instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.ability_points", JujutsuKaisen.MOD_ID), abilityPoints));
+            if (!this.owner.level().isClientSide && this.owner instanceof Player) {
+                this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.ability_points", JujutsuKaisen.MOD_ID), abilityPoints));
             }
         }
 
@@ -396,8 +396,8 @@ public class SorcererData implements ISorcererData {
         if (skillPoints > 0) {
             this.skillPoints += skillPoints;
 
-            if (this.owner instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.skill_points", JujutsuKaisen.MOD_ID), this.skillPoints));
+            if (!this.owner.level().isClientSide && this.owner instanceof Player) {
+                this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.skill_points", JujutsuKaisen.MOD_ID), this.skillPoints));
             }
         }
 
