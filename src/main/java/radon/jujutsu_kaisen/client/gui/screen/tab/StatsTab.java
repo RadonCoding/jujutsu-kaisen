@@ -27,12 +27,11 @@ import static radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen.WINDOW_INSIDE
 
 public class StatsTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.stats", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private static final int[] TEST_SPLIT_OFFSETS = new int[] { 0, 10, -10, 25, -25 };
 
     public StatsTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.BOOKSHELF.getDefaultInstance(), TITLE, BACKGROUND, true);
+        super(minecraft, screen, type, index, page, Items.BOOKSHELF.getDefaultInstance(), TITLE, true);
     }
 
     private static float getMaxWidth(StringSplitter pManager, List<FormattedText> pText) {

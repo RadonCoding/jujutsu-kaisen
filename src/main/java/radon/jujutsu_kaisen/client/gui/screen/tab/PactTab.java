@@ -30,7 +30,6 @@ import java.util.function.Function;
 
 public class PactTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.pact", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private Button create;
     private Button remove;
@@ -42,7 +41,7 @@ public class PactTab extends JJKTab {
     private PactListWidget.Entry pact;
 
     public PactTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.WRITABLE_BOOK.getDefaultInstance(), TITLE, BACKGROUND, false);
+        super(minecraft, screen, type, index, page, Items.WRITABLE_BOOK.getDefaultInstance(), TITLE, false);
     }
 
     public void setSelectedPlayer(PlayerListWidget.Entry entry) {

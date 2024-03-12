@@ -23,7 +23,6 @@ import java.util.*;
 
 public class SkillsTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.skills", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private final Map<Skill, SkillWidget> children = new HashMap<>();
 
@@ -37,7 +36,7 @@ public class SkillsTab extends JJKTab {
     private int duration;
 
     public SkillsTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.IRON_PICKAXE.getDefaultInstance(), TITLE, BACKGROUND, true);
+        super(minecraft, screen, type, index, page, Items.IRON_PICKAXE.getDefaultInstance(), TITLE, true);
 
         for (Skill skill : Skill.values()) {
             this.addSkill(skill, 0.0F, this.y);

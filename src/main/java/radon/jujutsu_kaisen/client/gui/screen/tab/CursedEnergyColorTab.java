@@ -20,7 +20,6 @@ import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
 
 public class CursedEnergyColorTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.cursed_energy_color", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private ExtendedSlider rSlider;
     private ExtendedSlider gSlider;
@@ -29,7 +28,7 @@ public class CursedEnergyColorTab extends JJKTab {
     private float oldR, oldG, oldB;
 
     public CursedEnergyColorTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.RED_DYE.getDefaultInstance(), TITLE, BACKGROUND, false);
+        super(minecraft, screen, type, index, page, Items.RED_DYE.getDefaultInstance(), TITLE, false);
     }
 
     @Override
