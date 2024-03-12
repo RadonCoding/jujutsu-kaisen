@@ -5,6 +5,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ClientInformation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.InteractionHand;
@@ -78,7 +79,7 @@ public class SorcererData implements ISorcererData {
     private long lastBlackFlashTime;
 
     private final Set<Trait> traits;
-    private final Set<Integer> summons;
+    private final Set<UUID> summons;
 
     private int fingers;
 
@@ -109,14 +110,15 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateSummons() {
+        if (!(this.owner.level() instanceof ServerLevel level)) return;
         if (!this.owner.level().isLoaded(this.owner.blockPosition())) return;
 
-        Iterator<Integer> iter = this.summons.iterator();
+        Iterator<UUID> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            Integer identifier = iter.next();
+            UUID identifier = iter.next();
 
-            Entity entity = this.owner.level().getEntity(identifier);
+            Entity entity = level.getEntity(identifier);
 
             if (entity == null || !entity.isAlive() || entity.isRemoved()) {
                 iter.remove();
@@ -713,20 +715,22 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void addSummon(Entity entity) {
-        this.summons.add(entity.getId());
+        this.summons.add(entity.getUUID());
     }
 
     @Override
     public void removeSummon(Entity entity) {
-        this.summons.remove(entity.getId());
+        this.summons.remove(entity.getUUID());
     }
 
     @Override
     public List<Entity> getSummons() {
+        if (!(this.owner.level() instanceof ServerLevel level)) return List.of();
+
         List<Entity> entities = new ArrayList<>();
 
-        for (Integer identifier : this.summons) {
-            Entity entity = this.owner.level().getEntity(identifier);
+        for (UUID identifier : this.summons) {
+            Entity entity = level.getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -737,10 +741,12 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> @Nullable T getSummonByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return null;
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (Integer identifier : this.summons) {
-            Entity entity = this.owner.level().getEntity(identifier);
+        for (UUID identifier : this.summons) {
+            Entity entity = level.getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -755,12 +761,14 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> List<T> getSummonsByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return List.of();
+
         List<T> entities = new ArrayList<>();
 
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (Integer identifier : this.summons) {
-            Entity entity = this.owner.level().getEntity(identifier);
+        for (UUID identifier : this.summons) {
+            Entity entity = level.getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -775,14 +783,16 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> void unsummonByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return;
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<Integer> iter = this.summons.iterator();
+        Iterator<UUID> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            Integer identifier = iter.next();
+            UUID identifier = iter.next();
 
-            Entity entity = this.owner.level().getEntity(identifier);
+            Entity entity = level.getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -797,14 +807,16 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> void removeSummonByClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return;
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<Integer> iter = this.summons.iterator();
+        Iterator<UUID> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            Integer identifier = iter.next();
+            UUID identifier = iter.next();
 
-            Entity entity = this.owner.level().getEntity(identifier);
+            Entity entity = level.getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -818,10 +830,12 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> boolean hasSummonOfClass(Class<T> clazz) {
+        if (!(this.owner.level() instanceof ServerLevel level)) return false;
+
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (Integer identifier : this.summons) {
-            Entity entity = this.owner.level().getEntity(identifier);
+        for (UUID identifier : this.summons) {
+            Entity entity = level.getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -988,13 +1002,6 @@ public class SorcererData implements ISorcererData {
 
         nbt.put("traits", new IntArrayTag(this.traits.stream().map(Enum::ordinal).toList()));
 
-        ListTag summonsTag = new ListTag();
-
-        for (Integer identifier : this.summons) {
-            summonsTag.add(IntTag.valueOf(identifier));
-        }
-        nbt.put("summons", summonsTag);
-
         return nbt;
     }
 
@@ -1038,14 +1045,6 @@ public class SorcererData implements ISorcererData {
 
         for (int index : nbt.getIntArray("traits")) {
             this.traits.add(Trait.values()[index]);
-        }
-
-        this.summons.clear();
-
-        ListTag summonsTag = nbt.getList("summons", Tag.TAG_INT);
-
-        for (int i = 0; i < summonsTag.size(); i++) {
-            this.summons.add(summonsTag.getInt(i));
         }
     }
 }
