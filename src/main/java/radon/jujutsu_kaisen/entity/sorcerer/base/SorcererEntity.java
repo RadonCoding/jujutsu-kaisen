@@ -48,8 +48,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.*;
 
 public abstract class SorcererEntity extends PathfinderMob implements GeoEntity, ISorcerer {
-    private static final int RARITY = 3;
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     protected SorcererEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
@@ -141,7 +139,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * (1.0F + (this.getExperience() * 0.01F)))) != 0) return false;
             if (!this.isInVillage()) return false;
         }
         return super.checkSpawnRules(pLevel, pSpawnReason);

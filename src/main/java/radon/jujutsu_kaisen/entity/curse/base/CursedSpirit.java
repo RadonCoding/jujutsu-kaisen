@@ -53,51 +53,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
-    private static final int RARITY = 10;
-
     protected CursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
 
         this.setTame(false);
-    }
-
-    private boolean isInVillage() {
-        HolderSet.Named<Structure> structures = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
-
-        boolean success = false;
-
-        for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.value()).isValid()) {
-                success = true;
-                break;
-            }
-        }
-        return success;
-    }
-
-    private boolean isInFortress() {
-        Structure structure = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).get(BuiltinStructures.FORTRESS);
-        if (structure == null) return false;
-        return ((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), structure).isValid();
-    }
-
-    @Override
-    public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
-        if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.isInVillage()) {
-                if (this.random.nextInt(Mth.floor(RARITY * (1.0F + (this.getExperience() * 0.01F)) * (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
-                if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return false;
-            } else if (!this.isInFortress()) {
-                return false;
-            }
-
-            if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
-                if (!this.isInVillage() && !this.isInFortress()) return false;
-            } else if (!this.isInFortress()) {
-                return false;
-            }
-        }
-        return super.checkSpawnRules(pLevel, pSpawnReason);
     }
 
     @Override
