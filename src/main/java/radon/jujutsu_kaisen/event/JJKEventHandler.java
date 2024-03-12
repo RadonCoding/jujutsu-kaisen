@@ -353,23 +353,6 @@ public class JJKEventHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            switch (data.getType()) {
-                case SORCERER -> {
-                    if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sorcererFleshRarity.get()) == 0) {
-                        ItemStack stack = new ItemStack(JJKItems.SORCERER_FLESH.get());
-                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(data.getExperience()));
-                        victim.spawnAtLocation(stack);
-                    }
-                }
-                case CURSE -> {
-                    if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseFleshRarity.get()) == 0) {
-                        ItemStack stack = new ItemStack(JJKItems.CURSE_FLESH.get());
-                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(data.getExperience()));
-                        victim.spawnAtLocation(stack);
-                    }
-                }
-            }
-
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
