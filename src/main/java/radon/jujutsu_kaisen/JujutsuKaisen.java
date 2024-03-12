@@ -24,7 +24,6 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.item.JJKCreativeTabs;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.JJKRecipeSerializers;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.pact.JJKPacts;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -63,7 +62,6 @@ public class JujutsuKaisen {
         JJKEffects.EFFECTS.register(bus);
 
         JJKItems.ITEMS.register(bus);
-        JJKRecipeSerializers.RECIPE_SERIALIZERS.register(bus);
 
         JJKSounds.SOUNDS.register(bus);
 
