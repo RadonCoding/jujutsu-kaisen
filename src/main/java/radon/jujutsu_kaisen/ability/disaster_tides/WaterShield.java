@@ -46,6 +46,9 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
                 double z = owner.getZ() + RADIUS * Math.sin(phi);
 
                 BlockPos pos = BlockPos.containing(x, y, z);
+
+                if (!owner.level().isInWorldBounds(pos)) continue;
+
                 BlockState state = owner.level().getBlockState(pos);
 
                 if (!state.isAir() || state.canOcclude()) continue;
