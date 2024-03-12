@@ -14,7 +14,6 @@
     "client.ILivingEntityRendererAccessor",
     "client.IPlayerModelAccessor",
     "client.IPostChainAccessor",
-    "client.ItemRendererMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
@@ -23,7 +22,6 @@
   "mixins": [
     "common.EnchantmentHelperMixin",
     "common.EntityMixin",
-    "common.ItemEntityMixin",
     "common.ItemMixin",
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
