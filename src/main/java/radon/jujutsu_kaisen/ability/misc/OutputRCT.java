@@ -58,7 +58,7 @@ public class OutputRCT extends Ability {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        return JJKAbilities.RCT3.get();
+        return JJKAbilities.RCT1.get();
     }
 
     @Override
