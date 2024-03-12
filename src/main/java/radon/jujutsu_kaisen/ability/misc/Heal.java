@@ -44,7 +44,7 @@ public class Heal extends Ability implements Ability.IChannelened {
 
         ISkillData data = cap.getSkillData();
 
-        owner.heal((float) (ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * (data.getSkill(Skill.REGENERATION) * 0.1F)));
+        owner.heal(ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * (data.getSkill(Skill.REGENERATION) * 0.01F));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Heal extends Ability implements Ability.IChannelened {
         ISkillData data = cap.getSkillData();
 
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return (float) (ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * (data.getSkill(Skill.REGENERATION) * 0.1F));
+            return ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * (data.getSkill(Skill.REGENERATION) * 0.01F);
         }
         return 0.0F;
     }
