@@ -11,8 +11,4 @@ public class JJKProcessors {
 
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<AncientShrineProcessor>> ANCIENT_SHRINE = PROCESSORS.register("ancient_shrine_processor",
             () -> () -> AncientShrineProcessor.CODEC);
-    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<TempleProcessor>> TEMPLE = PROCESSORS.register("temple_processor",
-            () -> () -> TempleProcessor.CODEC);
-    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<OutpostProcessor>> OUTPOST = PROCESSORS.register("outpost_processor",
-            () -> () -> OutpostProcessor.CODEC);
 }

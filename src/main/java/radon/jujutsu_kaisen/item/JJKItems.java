@@ -70,9 +70,6 @@ public class JJKItems {
     public static DeferredHolder<Item, Item> BLINDFOLD = ITEMS.register("blindfold",
             () -> new BlindfoldItem(JJKArmorMaterials.BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
 
-    public static DeferredHolder<Item, Item> DISPLAY_CASE = ITEMS.register("display_case",
-            () -> new DisplayCaseItem(JJKBlocks.DISPLAY_CASE.get(), new Item.Properties()));
-
     public static DeferredHolder<Item, Item> SUKUNA_FINGER = ITEMS.register("sukuna_finger",
             () -> new SukunaFingerItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT).stacksTo(20)));
     public static DeferredHolder<Item, Item> CURSED_TOTEM = ITEMS.register("cursed_totem",

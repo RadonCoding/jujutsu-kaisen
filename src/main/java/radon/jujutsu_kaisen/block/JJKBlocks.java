@@ -191,9 +191,6 @@ public class JJKBlocks {
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
 
-    public static DeferredHolder<Block, Block> DISPLAY_CASE = BLOCKS.register("display_case", () ->
-            new DisplayCaseBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
-
     public static DeferredHolder<Block, Block> ALTAR = BLOCKS.register("altar", () ->
             new AltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
                     .requiresCorrectToolForDrops()
