@@ -79,13 +79,6 @@ public class JJKItems {
     public static DeferredHolder<Item, Item> TRANSFIGURED_SOUL = ITEMS.register("transfigured_soul",
             () -> new TransfiguredSoulItem(new Item.Properties().food(JJKFoods.TRANSFIGURED_SOUL)));
 
-    public static DeferredHolder<Item, Item> SORCERER_FLESH = ITEMS.register("sorcerer_flesh",
-            () -> new SorcererFleshItem(new Item.Properties().food(JJKFoods.SORCERER_FLESH)));
-    public static DeferredHolder<Item, Item> CURSE_FLESH = ITEMS.register("curse_flesh",
-            () -> new CurseFleshItem(new Item.Properties().food(JJKFoods.CURSE_FLESH)));
-    public static DeferredHolder<Item, Item> MERGED_FLESH = ITEMS.register("merged_flesh",
-            () -> new MergedFleshItem(new Item.Properties().food(JJKFoods.MERGED_FLESH)));
-
     public static DeferredHolder<Item, Item> VEIL_ROD = ITEMS.register("veil_rod",
             () -> new VeilRodItem(JJKBlocks.VEIL_ROD.get(), new Item.Properties()));
     public static DeferredHolder<Item, Item> ALTAR = ITEMS.register("altar",
