@@ -72,15 +72,11 @@ public class StatsTab extends JJKTab {
 
         ResourceLocation texture = this.minecraft.player.getSkin().texture();
 
-        pGuiGraphics.fill(xOffset + 12 - 1, yOffset + 6 - 1, xOffset + 12 + 48 + 1, yOffset + 6 + 48 + 1, -16777216);
-
         pGuiGraphics.blit(texture, xOffset + 12, yOffset + 6, 48, 48, 8.0F, 8.0F, 8, 8, 64, 64);
 
         RenderSystem.enableBlend();
         pGuiGraphics.blit(texture, xOffset + 12, yOffset + 6, 48, 48, 40.0F, 8.0F, 8, 8, 64, 64);
         RenderSystem.disableBlend();
-
-        pGuiGraphics.fill(xOffset - 1, yOffset + 54 - 1, xOffset + 72 + 1, yOffset + 90 + 1, -16777216);
 
         pGuiGraphics.blit(texture, xOffset + 12, yOffset + 54, 48, 36, 20.0F, 20.0F, 8, 6, 64, 64);
         pGuiGraphics.blit(texture, xOffset, yOffset + 54, 12, 36, 44.0F, 20.0F, 2, 6, 64, 64);
