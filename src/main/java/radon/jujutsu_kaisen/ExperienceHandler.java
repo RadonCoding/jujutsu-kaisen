@@ -97,19 +97,6 @@ public class ExperienceHandler {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-
-        if (data.getExperience() > 0.0F) {
-            float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
-            data.setExperience(Math.max(0.0F, data.getExperience() - penalty));
-
-            if (entity instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience_penalty", JujutsuKaisen.MOD_ID), penalty));
-
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-            }
-        }
-
         Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> battleIter = battles.entrySet().iterator();
 
         while (battleIter.hasNext()) {

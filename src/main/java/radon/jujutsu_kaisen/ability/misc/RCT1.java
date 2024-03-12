@@ -15,6 +15,8 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 
 
 public class RCT1 extends Ability implements Ability.IChannelened {
@@ -40,13 +42,25 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.heal((float) (ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), 2)));
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISkillData data = cap.getSkillData();
+
+        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * data.getSkill(Skill.REGENERATION));
     }
 
     @Override
     public float getCost(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0.0F;
+
+        ISkillData data = cap.getSkillData();
+
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return (float) (ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * Math.pow(this.getPower(owner), 2) * this.getMultiplier());
+            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * data.getSkill(Skill.REGENERATION) * this.getMultiplier();
         }
         return 0;
     }
