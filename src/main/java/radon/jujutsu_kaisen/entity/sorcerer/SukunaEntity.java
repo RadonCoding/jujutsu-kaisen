@@ -82,17 +82,6 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    protected void dropCustomDeathLoot(@NotNull DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
-
-        if (this.fingers < 20) return;
-
-        ItemStack stack = new ItemStack(JJKItems.SUKUNA_FINGER.get());
-        SukunaFingerItem.setFull(stack, true);
-        this.spawnAtLocation(stack);
-    }
-
-    @Override
     protected boolean isCustom() {
         return false;
     }
