@@ -145,7 +145,7 @@ public class TranquilDeerEntity extends TenShadowsSummon {
 
     @Override
     public Set<Ability> getUnlocked() {
-        return Set.of(JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get());
+        return Set.of(JJKAbilities.RCT1.get(), JJKAbilities.OUTPUT_RCT.get());
     }
 
     @Override
