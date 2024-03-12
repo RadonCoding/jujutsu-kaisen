@@ -127,18 +127,22 @@ public class SkillWidget {
 
         ISkillData skillData = cap.getSkillData();
 
-        if (skillData.getSkill(this.skill) >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
+        int current = skillData.getSkill(this.skill);
 
-        if (!this.minecraft.player.getAbilities().instabuild && sorcererData.getSkillPoints() < amount) return;
+        if (current >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
+
+        int real = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), current + amount) - current;
+
+        if (!this.minecraft.player.getAbilities().instabuild && sorcererData.getSkillPoints() < real) return;
 
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
-        PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill, amount));
+        PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill, real));
 
         if (!this.minecraft.player.getAbilities().instabuild) {
-            sorcererData.useSkillPoints(amount);
+            sorcererData.useSkillPoints(real);
         }
-        skillData.increaseSkill(this.skill, amount);
+        skillData.increaseSkill(this.skill, real);
 
         this.update();
     }
