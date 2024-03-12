@@ -64,11 +64,6 @@ public class JJKBlockEntities {
                             JJKBlocks.AUTHENTIC_MUTUAL_LOVE.get())
                     .build(null));
 
-    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->
-            BlockEntityType.Builder.of(DisplayCaseBlockEntity::new,
-                            JJKBlocks.DISPLAY_CASE.get())
-                    .build(null));
-
     public static DeferredHolder<BlockEntityType<?>, BlockEntityType<VeilRodBlockEntity>> VEIL_ROD = BLOCK_ENTITIES.register("veil_rod", () ->
             BlockEntityType.Builder.of(VeilRodBlockEntity::new,
                             JJKBlocks.VEIL_ROD.get())
