@@ -18,7 +18,6 @@ public class ServerConfig {
     public final ModConfigSpec.IntValue sorcererFleshRarity;
     public final ModConfigSpec.IntValue curseFleshRarity;
     public final ModConfigSpec.DoubleValue experienceMultiplier;
-    public final ModConfigSpec.DoubleValue deathPenalty;
     public final ModConfigSpec.IntValue blackFlashChance;
     public final ModConfigSpec.BooleanValue realisticCurses;
     public final ModConfigSpec.IntValue requiredImbuementAmount;
@@ -83,8 +82,6 @@ public class ServerConfig {
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
-        this.deathPenalty = builder.comment("Percentage of experience lost on death")
-                .defineInRange("deathPenalty", 0.05F, 0.0F, 1.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
                 .defineInRange("blackFlashChance", 50, 1, 1000);
         this.realisticCurses = builder.comment("When enabled curses only take damage from cap attacks")
