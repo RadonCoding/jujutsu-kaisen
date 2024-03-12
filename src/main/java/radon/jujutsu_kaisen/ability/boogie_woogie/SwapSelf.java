@@ -57,7 +57,7 @@ public class SwapSelf extends Ability {
     }
 
     public static void swap(Entity first, Entity second) {
-        first.level().playSound(null, first.getX(), first.getY(), first.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
+        first.level().playSound(null, first.getX(), first.getY(), first.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
         first.level().playSound(null, second.getX(), second.getY(), second.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
         Vec3 pos = second.position();
