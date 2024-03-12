@@ -140,10 +140,15 @@
 					]
 				},
 				{
-					"name": "head",
+					"name": "head_wrapper",
 					"parent": "chest",
 					"pivot": [0, 37, 0],
-					"rotation": [-7.5, 0, 0],
+					"rotation": [-7.5, 0, 0]
+				},
+				{
+					"name": "head",
+					"parent": "head_wrapper",
+					"pivot": [0, 37, 0],
 					"cubes": [
 						{"origin": [-4, 38, -4], "size": [8, 8, 8], "uv": [24, 37]},
 						{"origin": [-4, 38, -4], "size": [8, 8, 8], "inflate": 0.5, "uv": [0, 29]}
