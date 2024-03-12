@@ -393,7 +393,7 @@ public class SorcererData implements ISorcererData {
             this.skillPoints += skillPoints;
 
             if (!this.owner.level().isClientSide && this.owner instanceof Player) {
-                this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.skill_points", JujutsuKaisen.MOD_ID), this.skillPoints));
+                this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.skill_points", JujutsuKaisen.MOD_ID), skillPoints));
             }
         }
 
