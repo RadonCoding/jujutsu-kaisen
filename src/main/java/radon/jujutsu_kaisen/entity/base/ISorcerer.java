@@ -102,10 +102,12 @@ public interface ISorcerer {
 
         int distributed = sorcererData.getSkillPoints() / Skill.values().length;
 
-        for (Skill skill : Skill.values()) {
-            int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
-            skillData.setSkill(skill, amount);
-            sorcererData.useSkillPoints(amount);
+        if (distributed > 0) {
+            for (Skill skill : Skill.values()) {
+                int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
+                skillData.increaseSkill(skill, amount);
+                sorcererData.useSkillPoints(amount);
+            }
         }
         sorcererData.setEnergy(sorcererData.getMaxEnergy());
     }
