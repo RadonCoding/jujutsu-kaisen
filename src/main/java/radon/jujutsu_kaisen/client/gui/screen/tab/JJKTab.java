@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.JJKSelectionList;
 
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class JJKTab {
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
+
     protected final Minecraft minecraft;
     protected final JujutsuScreen screen;
     private final JJKTabType type;
@@ -24,7 +27,6 @@ public abstract class JJKTab {
     private final ItemStack icon;
     private final Component title;
     private final int page;
-    private final ResourceLocation background;
     private final boolean scrollable;
 
     protected double scrollX;
@@ -39,7 +41,7 @@ public abstract class JJKTab {
 
     private final List<GuiEventListener> widgets = new ArrayList<>();
 
-    public JJKTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page, ItemStack icon, Component title, ResourceLocation background, boolean scrollable) {
+    public JJKTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page, ItemStack icon, Component title, boolean scrollable) {
         this.minecraft = minecraft;
         this.screen = screen;
         this.type = type;
@@ -47,7 +49,6 @@ public abstract class JJKTab {
         this.page = page;
         this.icon = icon;
         this.title = title;
-        this.background = background;
         this.scrollable = scrollable;
     }
 
@@ -132,7 +133,7 @@ public abstract class JJKTab {
 
         for (int i1 = -1; i1 <= 15; ++i1) {
             for (int j1 = -1; j1 <= 8; ++j1) {
-                pGuiGraphics.blit(this.background, k + JujutsuScreen.BACKGROUND_TILE_WIDTH * i1, l + JujutsuScreen.BACKGROUND_TILE_HEIGHT * j1, 0.0F, 0.0F,
+                pGuiGraphics.blit(BACKGROUND, k + JujutsuScreen.BACKGROUND_TILE_WIDTH * i1, l + JujutsuScreen.BACKGROUND_TILE_HEIGHT * j1, 0.0F, 0.0F,
                         JujutsuScreen.BACKGROUND_TILE_WIDTH, JujutsuScreen.BACKGROUND_TILE_HEIGHT, JujutsuScreen.BACKGROUND_TILE_WIDTH, JujutsuScreen.BACKGROUND_TILE_HEIGHT);
             }
         }

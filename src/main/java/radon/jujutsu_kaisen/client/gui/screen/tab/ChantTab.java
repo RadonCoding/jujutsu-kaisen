@@ -35,7 +35,6 @@ import java.util.function.Function;
 
 public class ChantTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.chant", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private ChantListWidget chants;
     private EditBox text;
@@ -49,7 +48,7 @@ public class ChantTab extends JJKTab {
     private ChantListWidget.Entry chant;
 
     public ChantTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.ENCHANTED_BOOK.getDefaultInstance(), TITLE, BACKGROUND, false);
+        super(minecraft, screen, type, index, page, Items.ENCHANTED_BOOK.getDefaultInstance(), TITLE, false);
     }
 
     public void setSelectedAbility(AbilityListWidget.Entry entry) {

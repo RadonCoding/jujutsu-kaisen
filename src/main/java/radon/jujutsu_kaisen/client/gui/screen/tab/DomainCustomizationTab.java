@@ -18,13 +18,12 @@ import radon.jujutsu_kaisen.network.packet.c2s.SetDomainSizeC2SPacket;
 
 public class DomainCustomizationTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.domain_customization", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private ExtendedSlider sizeSlider;
     private float oldSize;
 
     public DomainCustomizationTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.NETHER_STAR.getDefaultInstance(), TITLE, BACKGROUND, false);
+        super(minecraft, screen, type, index, page, Items.NETHER_STAR.getDefaultInstance(), TITLE, false);
     }
 
     @Override

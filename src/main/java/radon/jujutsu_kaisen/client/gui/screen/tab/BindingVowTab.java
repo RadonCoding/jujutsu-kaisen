@@ -28,7 +28,6 @@ import java.util.function.Function;
 
 public class BindingVowTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.binding_vow", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private Button add;
     private Button remove;
@@ -39,7 +38,7 @@ public class BindingVowTab extends JJKTab {
     private BindingVowListWidget.Entry vow;
 
     public BindingVowTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.ENCHANTED_GOLDEN_APPLE.getDefaultInstance(), TITLE, BACKGROUND, false);
+        super(minecraft, screen, type, index, page, Items.ENCHANTED_GOLDEN_APPLE.getDefaultInstance(), TITLE, false);
     }
 
     public void setSelectedBindingVow(BindingVowListWidget.Entry entry) {
