@@ -1,8 +1,12 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -47,7 +51,6 @@ public class MahoragaEntity extends TenShadowsSummon {
     private static final RawAnimation SLASH = RawAnimation.begin().thenPlay("attack.slash");
 
     private static final double SLASH_LAUNCH = 5.0D;
-    private static final float SLASH_EXPLOSION = 2.5F;
 
     private static final int SLASH_DURATION = 20;
     private static final int RITUAL_DURATION = 3 * 20;
@@ -210,13 +213,17 @@ public class MahoragaEntity extends TenShadowsSummon {
         } else {
             if (target != null) {
                 if (this.onGround() && this.distanceTo(target) < 3.0D) {
-                    this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
-                    target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
-                    target.hurtMarked = true;
+                    if (this.doHurtTarget(target)) {
+                        this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
-                    Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(RotationUtil.getTargetAdjustedLookAngle(this));
-                    this.level().explode(this, explosionPos.x, explosionPos.y, explosionPos.z, SLASH_EXPLOSION, false, Level.ExplosionInteraction.NONE);
+                        target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
+                        target.hurtMarked = true;
+
+                        Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                        ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                        this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+                    }
                 }
             }
         }
