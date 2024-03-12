@@ -45,7 +45,7 @@ public class StatsTab extends JJKTab {
 
         for (int i : TEST_SPLIT_OFFSETS) {
             List<FormattedText> list1 = stringsplitter.splitLines(pComponent, pMaxWidth - i, Style.EMPTY);
-            float f1 = Math.abs(getMaxWidth(stringsplitter, list1) - (float)pMaxWidth);
+            float f1 = Math.abs(getMaxWidth(stringsplitter, list1) - (float) pMaxWidth);
 
             if (f1 <= 10.0F) {
                 return list1;
