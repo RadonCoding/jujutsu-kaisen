@@ -68,7 +68,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
         Vec3 pos = owner.position()
                 .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
-                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                        .multiply(this.getBbWidth() / 2.0F, 0.0D, this.getBbWidth() / 2.0F));
         this.moveTo(pos.x, pos.y, pos.z);
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
