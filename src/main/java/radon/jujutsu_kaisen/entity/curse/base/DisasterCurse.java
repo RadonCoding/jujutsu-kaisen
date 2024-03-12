@@ -44,11 +44,6 @@ public abstract class DisasterCurse extends CursedSpirit {
             if (this.random.nextInt(Mth.floor(RARITY * (1.0F + (this.getExperience() * 0.01F)) *
                     (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
         }
-
-        if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-            if (!pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 64.0D, 32.0D, 64.0D)).isEmpty())
-                return false;
-        }
         return this.getWalkTargetValue(this.blockPosition(), pLevel) >= 0.0F;
     }
 }
