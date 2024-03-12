@@ -167,6 +167,7 @@ public class AbilityWidget {
                 pGuiGraphics.vLine(j, i1, k, j1);
             }
         }
+
         for (AbilityWidget widget : this.children) {
             widget.drawConnectivity(pGuiGraphics, pX, pY, pDropShadow);
         }
