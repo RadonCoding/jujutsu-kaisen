@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -148,7 +149,8 @@ public class Punch extends Ability {
             BlockPos.betweenClosedStream(bounds).forEach(pos -> {
                 if (pos.getCenter().distanceTo(bounds.getCenter()) > RANGE) return;
                 if (!HelperMethods.isDestroyable(level, owner, pos)) return;
-
+                if (owner.level().clip(new ClipContext(owner.getEyePosition(), pos.getCenter(), ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE, owner)).getType() == HitResult.Type.BLOCK) return;
                 owner.level().destroyBlock(pos, true, owner);
             });
         }
