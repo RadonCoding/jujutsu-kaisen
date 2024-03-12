@@ -48,7 +48,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
         ISkillData data = cap.getSkillData();
 
-        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * data.getSkill(Skill.REGENERATION));
+        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * (data.getSkill(Skill.REGENERATION) * 0.1F));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         ISkillData data = cap.getSkillData();
 
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * data.getSkill(Skill.REGENERATION) * this.getMultiplier();
+            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * (data.getSkill(Skill.REGENERATION) * 0.1F) * this.getMultiplier();
         }
         return 0;
     }
