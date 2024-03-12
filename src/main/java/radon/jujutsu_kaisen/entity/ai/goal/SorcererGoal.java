@@ -58,10 +58,12 @@ public class SorcererGoal extends Goal {
         if (points > 0) {
             int distributed = points / Skill.values().length;
 
-            for (Skill skill : Skill.values()) {
-                int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
-                skillData.setSkill(skill, amount);
-                ownerSorcererData.useSkillPoints(amount);
+            if (distributed > 0) {
+                for (Skill skill : Skill.values()) {
+                    int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
+                    skillData.increaseSkill(skill, amount);
+                    ownerSorcererData.useSkillPoints(amount);
+                }
             }
         }
 
