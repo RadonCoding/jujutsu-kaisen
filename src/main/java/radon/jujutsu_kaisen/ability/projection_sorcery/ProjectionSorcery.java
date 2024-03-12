@@ -242,7 +242,6 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 movements.add(RelativeMovement.Y_ROT);
 
                 owner.teleportTo((ServerLevel) owner.level(), frame.x, frame.y, frame.z, movements, yaw, owner.getXRot());
-                owner.setDeltaMovement(owner.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D));
                 owner.setOnGround(true);
 
                 previous.set(frame);
