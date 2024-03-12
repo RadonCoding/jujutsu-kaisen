@@ -238,7 +238,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.SHOOT_PURE_LOVE.get());
+        return List.of(JJKAbilities.RCT1.get(), JJKAbilities.SHOOT_PURE_LOVE.get());
     }
 
     @Override
