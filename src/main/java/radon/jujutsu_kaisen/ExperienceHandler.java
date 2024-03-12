@@ -99,7 +99,7 @@ public class ExperienceHandler {
 
         ISorcererData data = cap.getSorcererData();
 
-        if (data != null && data.getExperience() > 0.0F) {
+        if (data.getExperience() > 0.0F) {
             float penalty = (data.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
             data.setExperience(Math.max(0.0F, data.getExperience() - penalty));
 
@@ -221,12 +221,11 @@ public class ExperienceHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            float targetStrength = calculateStrength(target) * 1.5F;
-            float ownerStrength = calculateStrength(owner);
+            float targetStrength = calculateStrength(target);
 
-            float experience = Math.min(targetStrength, (targetStrength - ownerStrength) * 5.0F
+            float experience = targetStrength
                     * (this.totalDamageDealt / this.damageDealtByOwner)
-                    * ConfigHolder.SERVER.experienceMultiplier.get().floatValue());
+                    * ConfigHolder.SERVER.experienceMultiplier.get().floatValue();
 
             if (experience < 0.1F) return;
 
