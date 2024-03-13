@@ -89,7 +89,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
             this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
             this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
         } else {
-            this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+            this.targetSelector.addGoal(target++, new HurtByTargetGoal(this, CursedSpirit.class));
             this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
             this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
 

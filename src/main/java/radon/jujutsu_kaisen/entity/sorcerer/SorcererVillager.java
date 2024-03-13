@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 
 import java.util.HashSet;
 import java.util.List;
@@ -109,7 +110,7 @@ public class SorcererVillager extends Villager implements ISorcerer {
         this.goalSelector.addGoal(goal++, new ChantGoal<>(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this, SorcererEntity.class, SorcererVillager.class));
         this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
     }
 
