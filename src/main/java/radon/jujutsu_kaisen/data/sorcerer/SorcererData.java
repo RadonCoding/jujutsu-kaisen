@@ -630,7 +630,7 @@ public class SorcererData implements ISorcererData {
         IContractData contractData = cap.getContractData();
         ISkillData skillData = cap.getSkillData();
 
-        float amount = ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() * ((1.0F + (skillData.getSkill(Skill.ENERGY)) * 0.1F));
+        float amount = ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() * ((1.0F + (skillData.getSkill(Skill.ENERGY)) * 0.5F));
 
         amount += this.extraEnergy;
 
