@@ -35,6 +35,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.CursedEnergyFlow;
 import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
+import radon.jujutsu_kaisen.damage.JJKDamageTypeTags;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -75,6 +76,9 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
 
             DamageSource source = event.getSource();
+
+            // We don't want to increase/decrease soul damage
+            if (source.is(JJKDamageTypeTags.SOUL)) return;
 
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
