@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -20,38 +21,38 @@ import radon.jujutsu_kaisen.item.veil.VeilRodItem;
 public class JJKItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, JujutsuKaisen.MOD_ID);
 
-    public static DeferredHolder<Item, Item> INVERTED_SPEAR_OF_HEAVEN = ITEMS.register("inverted_spear_of_heaven", () ->
+    public static DeferredHolder<Item, SwordItem> INVERTED_SPEAR_OF_HEAVEN = ITEMS.register("inverted_spear_of_heaven", () ->
             new InvertedSpearOfHeavenItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> PLAYFUL_CLOUD = ITEMS.register("playful_cloud",
+    public static DeferredHolder<Item, SwordItem> PLAYFUL_CLOUD = ITEMS.register("playful_cloud",
             () -> new PlayfulCloudItem(JJKTiers.CURSED_TOOL, 9, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> SPLIT_SOUL_KATANA = ITEMS.register("split_soul_katana",
+    public static DeferredHolder<Item, SwordItem> SPLIT_SOUL_KATANA = ITEMS.register("split_soul_katana",
             () -> new SplitSoulKatanaItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> DRAGON_BONE = ITEMS.register("dragon_bone",
+    public static DeferredHolder<Item, SwordItem> DRAGON_BONE = ITEMS.register("dragon_bone",
             () -> new DragonBoneItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> CHAIN_OF_A_THOUSAND_MILES = ITEMS.register("chain_of_a_thousand_miles",
+    public static DeferredHolder<Item, SwordItem> CHAIN_OF_A_THOUSAND_MILES = ITEMS.register("chain_of_a_thousand_miles",
             () -> new ChainOfAThousandMilesItem(JJKTiers.CURSED_TOOL, 0, 0.0F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> NYOI_STAFF = ITEMS.register("nyoi_staff",
+    public static DeferredHolder<Item, SwordItem> NYOI_STAFF = ITEMS.register("nyoi_staff",
             () -> new NyoiStaffItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> SLAUGHTER_DEMON = ITEMS.register("slaughter_demon",
+    public static DeferredHolder<Item, SwordItem> SLAUGHTER_DEMON = ITEMS.register("slaughter_demon",
             () -> new SlaughterDemonItem(JJKTiers.CURSED_TOOL, 4, -2.0F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> KAMUTOKE_DAGGER = ITEMS.register("kamutoke_dagger",
+    public static DeferredHolder<Item, SwordItem> KAMUTOKE_DAGGER = ITEMS.register("kamutoke_dagger",
             () -> new KamutokeDaggerItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> HITEN_STAFF = ITEMS.register("hiten_staff",
+    public static DeferredHolder<Item, SwordItem> HITEN_STAFF = ITEMS.register("hiten_staff",
             () -> new HitenStaffItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> POLEARM_STAFF = ITEMS.register("polearm_staff",
+    public static DeferredHolder<Item, SwordItem> POLEARM_STAFF = ITEMS.register("polearm_staff",
             () -> new PolearmStaffItem(JJKTiers.CURSED_TOOL, 6, -2.4F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> STEEL_GAUNTLET = ITEMS.register("steel_gauntlet",
+    public static DeferredHolder<Item, SwordItem> STEEL_GAUNTLET = ITEMS.register("steel_gauntlet",
             () -> new SteelGauntletItem(JJKTiers.CURSED_TOOL, 4, 0.0F, new Item.Properties()));
 
-    public static DeferredHolder<Item, Item> GREEN_HANDLE_KATANA = ITEMS.register("green_handle_katana",
+    public static DeferredHolder<Item, SwordItem> GREEN_HANDLE_KATANA = ITEMS.register("green_handle_katana",
             () -> new KatanaItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> RED_HANDLE_KATANA = ITEMS.register("red_handle_katana",
+    public static DeferredHolder<Item, SwordItem> RED_HANDLE_KATANA = ITEMS.register("red_handle_katana",
             () -> new KatanaItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> MIMICRY_KATANA_BLACK = ITEMS.register("mimicry_katana_black",
+    public static DeferredHolder<Item, SwordItem> MIMICRY_KATANA_BLACK = ITEMS.register("mimicry_katana_black",
             () -> new MimicryKatanaItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> MIMICRY_KATANA_WHITE = ITEMS.register("mimicry_katana_white",
+    public static DeferredHolder<Item, SwordItem> MIMICRY_KATANA_WHITE = ITEMS.register("mimicry_katana_white",
             () -> new MimicryKatanaItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static DeferredHolder<Item, Item> JET_BLACK_SHADOW_SWORD = ITEMS.register("jet_black_shadow_sword",
+    public static DeferredHolder<Item, SwordItem> JET_BLACK_SHADOW_SWORD = ITEMS.register("jet_black_shadow_sword",
             () -> new JetBlackShadowSwordItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
 
     public static DeferredHolder<Item, ArmorItem> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ITEMS.register("instant_body_of_distorted_killing",

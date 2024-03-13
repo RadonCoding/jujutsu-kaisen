@@ -75,7 +75,6 @@ public class WeaponEventHandler {
 
             if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
-
             if (!source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                 IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -83,7 +82,7 @@ public class WeaponEventHandler {
                     ISorcererData attackerData = attackerCap.getSorcererData();
 
                     if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) || attackerData.hasTrait(Trait.SIX_EYES)) {
-                        float amount = event.getAmount();
+                        float amount = JJKItems.SPLIT_SOUL_KATANA.get().getDamage();
 
                         IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
