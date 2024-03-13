@@ -98,6 +98,8 @@ public class JJKEventHandler {
                 }
             }
 
+            if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
+
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;
@@ -112,29 +114,27 @@ public class JJKEventHandler {
                 armor *= 15.0F;
             }
 
-            if (!source.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
-                if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                    float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 10.0F : 5.0F);
+            if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 10.0F : 5.0F);
 
-                    float toughness = shielded * 0.1F;
+                float toughness = shielded * 0.1F;
 
-                    float f = 2.0F + toughness / 4.0F;
-                    float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
-                    float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
+                float f = 2.0F + toughness / 4.0F;
+                float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
+                float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
 
-                    if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
-                        float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
+                    float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
-                        if (sorcererData.getEnergy() >= cost) {
-                            sorcererData.useEnergy(cost);
+                    if (sorcererData.getEnergy() >= cost) {
+                        sorcererData.useEnergy(cost);
 
-                            if (victim instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
-                            }
+                        if (victim instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
                         }
                     }
-                    armor = shielded;
                 }
+                armor = shielded;
             }
 
             float toughness = armor * 0.1F;

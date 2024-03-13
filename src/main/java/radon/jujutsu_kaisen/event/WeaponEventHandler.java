@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -30,6 +31,8 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -72,13 +75,31 @@ public class WeaponEventHandler {
 
             if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
-            IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (attackerCap != null) {
-                ISorcererData attackerData = attackerCap.getSorcererData();
+            if (!source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                    event.setCanceled(victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount()));
+                if (attackerCap != null) {
+                    ISorcererData attackerData = attackerCap.getSorcererData();
+
+                    if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) || attackerData.hasTrait(Trait.SIX_EYES)) {
+                        float amount = event.getAmount();
+
+                        IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                        if (victimCap != null) {
+                            ISkillData victimData = victimCap.getSkillData();
+
+                            float armor = victimData.getSkill(Skill.SOUL) * 0.5F;
+
+                            float toughness = armor * 0.1F;
+
+                            float f = 2.0F + toughness / 4.0F;
+                            float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
+                            amount *= 1.0F - f1 / 25.0F;
+                        }
+                        event.setCanceled(victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), amount));
+                    }
                 }
             }
         }
