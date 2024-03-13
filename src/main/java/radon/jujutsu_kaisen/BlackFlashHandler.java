@@ -13,6 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.damage.JJKDamageTypeTags;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -75,6 +76,9 @@ public class BlackFlashHandler {
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            // We don't want to increase soul damage
+            if (source.is(JJKDamageTypeTags.SOUL)) return;
 
             LivingEntity victim = event.getEntity();
 
