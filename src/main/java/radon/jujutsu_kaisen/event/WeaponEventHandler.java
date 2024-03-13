@@ -81,7 +81,7 @@ public class WeaponEventHandler {
                 if (attackerCap != null) {
                     ISorcererData attackerData = attackerCap.getSorcererData();
 
-                    if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                    if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) || attackerData.getFingers() > 0) {
                         float amount = JJKItems.SPLIT_SOUL_KATANA.get().getDamage();
 
                         IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
