@@ -205,6 +205,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         DamageSource source = event.getSource();
 
+        if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
+
         float amount = event.getAmount();
 
         if (!DamageUtil.isMelee(source)) return;
