@@ -76,12 +76,10 @@ public class JJKEventHandler {
 
             DamageSource source = event.getSource();
 
-            float amount = event.getAmount();
-
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
                 if (source.getEntity() == victim) {
-                    event.setAmount(amount * 0.01F);
+                    event.setAmount(event.getAmount() * 0.01F);
                 }
             }
 
@@ -95,7 +93,7 @@ public class JJKEventHandler {
 
                 if (data != null && data.hasTrait(Trait.PERFECT_BODY)) {
                     if (DamageUtil.isMelee(source)) {
-                        event.setAmount(amount * 2.0F);
+                        event.setAmount(event.getAmount() * 2.0F);
                     }
                 }
             }
@@ -110,7 +108,7 @@ public class JJKEventHandler {
             IAbilityData abilityData = cap.getAbilityData();
             ISkillData skillData = cap.getSkillData();
 
-            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.2F;
+            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.5F;
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 15.0F;
@@ -122,8 +120,8 @@ public class JJKEventHandler {
                 float toughness = shielded * 0.1F;
 
                 float f = 2.0F + toughness / 4.0F;
-                float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
-                float blocked = amount * (1.0F - f1 / 25.0F);
+                float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
+                float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
 
                 if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
                     float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
@@ -142,8 +140,8 @@ public class JJKEventHandler {
             float toughness = armor * 0.1F;
 
             float f = 2.0F + toughness / 4.0F;
-            float f1 = Mth.clamp(armor - amount / f, armor * 0.2F, 23.75F);
-            float blocked = amount * (1.0F - f1 / 25.0F);
+            float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
+            float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
 
             event.setAmount(blocked);
         }
@@ -181,6 +179,16 @@ public class JJKEventHandler {
             Vec3 center = event.getPos().getCenter();
 
             if (!VeilHandler.canDestroy(entity, entity.level(), center.x, center.y, center.z)) {
+                event.setCanceled(true);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onBlockBreak(BlockEvent.BreakEvent event) {
+            Player player = event.getPlayer();
+            Vec3 center = event.getPos().getCenter();
+
+            if (!VeilHandler.canDestroy(player, player.level(), center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
@@ -310,7 +318,7 @@ public class JJKEventHandler {
                 if (victimCap != null) {
                     ISorcererData victimData = victimCap.getSorcererData();
 
-                    if (victimData.getType() == JujutsuType.CURSE) {
+                    if (victimData.getType() == JujutsuType.CURSE || victimData.getType() == JujutsuType.SHIKIGAMI) {
                         ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
 
                         List<Item> stacks = new ArrayList<>();

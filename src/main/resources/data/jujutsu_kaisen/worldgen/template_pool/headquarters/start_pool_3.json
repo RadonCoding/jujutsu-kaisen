@@ -1,0 +1,15 @@
+{
+  "name": "jujutsu_kaisen:headquarters/start_pool_3",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "jujutsu_kaisen:headquarters_3",
+        "processors": "jujutsu_kaisen:headquarters_processors",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

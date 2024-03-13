@@ -44,7 +44,7 @@ public class SwapOthers extends Ability {
     private @Nullable Entity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
-            return SwapSelf.canSwap(target) ? target : null;
+            return SwapSelf.canSwap(owner, target) ? target : null;
         }
         return null;
     }

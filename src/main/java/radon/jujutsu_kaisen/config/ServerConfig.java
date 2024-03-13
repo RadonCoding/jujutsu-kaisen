@@ -84,7 +84,7 @@ public class ServerConfig {
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
                 .defineInRange("blackFlashChance", 50, 1, 1000);
-        this.realisticCurses = builder.comment("When enabled curses only take damage from cap attacks")
+        this.realisticCurses = builder.comment("When enabled curses and shikigami only take damage from cursed energy attacks")
                 .define("realisticCurses", true);
         this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into a weapon")
                         .defineInRange("requiredImbuementAmount", 1000, 1, 100000);

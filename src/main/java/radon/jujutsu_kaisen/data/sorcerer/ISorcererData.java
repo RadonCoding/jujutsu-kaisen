@@ -86,8 +86,6 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void setNature(CursedEnergyNature nature);
 
-    void setGrade(SorcererGrade grade);
-
     boolean hasTrait(Trait trait);
 
     void addTrait(Trait trait);

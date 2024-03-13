@@ -84,7 +84,6 @@ public class SorcererData implements ISorcererData {
 
     private int fingers;
 
-    private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
@@ -181,12 +180,6 @@ public class SorcererData implements ISorcererData {
         ISkillData data = cap.getSkillData();
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = Math.ceil(((((data.getSkill(Skill.REINFORCEMENT) - 1) * 0.1D) - 1.0F) * 30.0D) / 20) * 20;
-
-            if (EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
-                this.owner.setHealth(this.owner.getMaxHealth());
-            }
-
             double damage = this.getBaseOutput() * 3.0D;
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
@@ -198,12 +191,6 @@ public class SorcererData implements ISorcererData {
 
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(2.0F / 20);
-            }
-        } else {
-            double health = Math.ceil((((data.getSkill(Skill.REINFORCEMENT) - 1) * 0.1D) * 20.0D) / 20) * 20;
-
-            if (EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
-                this.owner.setHealth(this.owner.getMaxHealth());
             }
         }
     }
@@ -538,11 +525,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setGrade(SorcererGrade grade) {
-        this.experience = grade.getRequiredExperience();
-    }
-
-    @Override
     public boolean hasTrait(Trait trait) {
         return this.traits.contains(trait);
     }
@@ -648,7 +630,7 @@ public class SorcererData implements ISorcererData {
         IContractData contractData = cap.getContractData();
         ISkillData skillData = cap.getSkillData();
 
-        float amount = ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() * (1 + skillData.getSkill(Skill.ENERGY));
+        float amount = ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() * ((1.0F + (skillData.getSkill(Skill.ENERGY)) * 0.1F));
 
         amount += this.extraEnergy;
 

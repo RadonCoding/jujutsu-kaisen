@@ -50,7 +50,7 @@ public class Shuffle extends Ability implements Ability.IChannelened, Ability.ID
     }
 
     private List<Entity> getTargets(LivingEntity owner) {
-        return owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE), SwapSelf::canSwap);
+        return owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE), entity -> SwapSelf.canSwap(owner, entity));
     }
 
     @Override

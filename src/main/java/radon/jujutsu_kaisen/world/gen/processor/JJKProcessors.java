@@ -9,6 +9,10 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 public class JJKProcessors {
     public static final DeferredRegister<StructureProcessorType<?>> PROCESSORS = DeferredRegister.create(BuiltInRegistries.STRUCTURE_PROCESSOR, JujutsuKaisen.MOD_ID);
 
-    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<AncientShrineProcessor>> ANCIENT_SHRINE = PROCESSORS.register("ancient_shrine_processor",
-            () -> () -> AncientShrineProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<CursedToolItemFrameProcessor>> CURSED_TOOL_ITEM_FRAME_PROCESSOR = PROCESSORS.register("cursed_tool_item_frame_processor",
+            () -> () -> CursedToolItemFrameProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<WaterloggingFixProcessor>> WATERLOGGING_FIX_PROCESSOR = PROCESSORS.register("waterlogging_fix_processor",
+            () -> () -> WaterloggingFixProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<HeadquartersProcessor>> HEADQUARTERS_PROCESSOR = PROCESSORS.register("headquarters_processor",
+            () -> () -> HeadquartersProcessor.CODEC);
 }

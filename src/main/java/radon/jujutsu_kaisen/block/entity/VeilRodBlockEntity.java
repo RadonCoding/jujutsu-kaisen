@@ -46,7 +46,7 @@ import java.util.UUID;
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
     public static final int INTERVAL = 10;
-    private static final float COST = 0.1F;
+    private static final float COST = 0.01F;
 
     @Nullable
     public UUID ownerUUID;
@@ -117,9 +117,12 @@ public class VeilRodBlockEntity extends BlockEntity {
             ISorcererData data = cap.getSorcererData();
 
             for (Modifier modifier : this.modifiers) {
-                if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
-                    return data.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
-                            data.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
+                if (modifier.getAction() == Modifier.Action.ALLOW) {
+                    if (modifier.getType() == Modifier.Type.CURSE && data.getType() == JujutsuType.CURSE) return true;
+                    if (modifier.getType() == Modifier.Type.SORCERER && data.getType() == JujutsuType.SORCERER) return true;
+                } else if (modifier.getAction() == Modifier.Action.DENY) {
+                    if (modifier.getType() == Modifier.Type.CURSE && data.getType() == JujutsuType.CURSE) return false;
+                    if (modifier.getType() == Modifier.Type.SORCERER && data.getType() == JujutsuType.SORCERER) return false;
                 }
             }
         }
@@ -127,13 +130,13 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
+        if (!pBlockEntity.isValid()) return;
+
         VeilHandler.veil(pLevel.dimension(), pPos);
 
         if (++pBlockEntity.counter != INTERVAL) return;
 
         pBlockEntity.counter = 0;
-
-        if (!pBlockEntity.isValid()) return;
 
         if (pBlockEntity.ownerUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner))
             return;
@@ -158,7 +161,7 @@ public class VeilRodBlockEntity extends BlockEntity {
                     if (distance < pBlockEntity.size && distance >= pBlockEntity.size - 1) {
                         BlockPos pos = pPos.offset(x, y, z);
 
-                        if (!pLevel.isInWorldBounds(pos)) return;
+                        if (!pLevel.isInWorldBounds(pos)) continue;
 
                         BlockState state = pLevel.getBlockState(pos);
 
@@ -265,6 +268,24 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
+    private void markUpdated() {
+        this.setChanged();
+
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        }
+    }
+
+    @Override
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
@@ -295,6 +316,10 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         if (pTag.contains("modifiers")) {
             this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
+        }
+
+        if (this.level != null) {
+            this.markUpdated();
         }
     }
 }

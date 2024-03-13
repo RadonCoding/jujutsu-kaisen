@@ -41,7 +41,9 @@ public class SwapSelf extends Ability {
         return ActivationType.INSTANT;
     }
 
-    public static boolean canSwap(Entity target) {
+    public static boolean canSwap(LivingEntity owner, Entity target) {
+        if (!owner.hasLineOfSight(target)) return false;
+
         if (target.isPickable() || target instanceof ItemEntity item && item.getItem().getItem() instanceof CursedToolItem
                 || target instanceof CursedEnergyImbuedItemProjectile || target instanceof JujutsuProjectile) {
             return true;
@@ -78,7 +80,7 @@ public class SwapSelf extends Ability {
     private @Nullable Entity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
-            return canSwap(target) ? target : null;
+            return canSwap(owner, target) ? target : null;
         }
         return null;
     }

@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,8 +34,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererVillager;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
-import radon.jujutsu_kaisen.network.PacketHandler;
 
 import javax.annotation.Nullable;
 
@@ -43,13 +46,15 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
     private static final MapCodec<VeilRodBlock> CODEC = simpleCodec(VeilRodBlock::new);
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty SPAWN_VEIL_MASTER = BooleanProperty.create("spawn_veil_master");
 
     public VeilRodBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
 
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.UP)
-                .setValue(WATERLOGGED, Boolean.FALSE));
+                .setValue(WATERLOGGED, false)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -101,11 +106,37 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
     @Override
     public void tick(@NotNull BlockState pState, @NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
         this.updateNeighbours(pState, pLevel, pPos);
+
+        if (pState.getValue(SPAWN_VEIL_MASTER)) {
+            if (!(pLevel.getBlockEntity(pPos) instanceof VeilRodBlockEntity be)) return;
+
+            SorcererVillager villager = JJKEntities.SORCERER_VILLAGER.get().create(pLevel);
+
+            if (villager == null) return;
+
+            villager.moveTo(
+                    (double) pPos.getX() + 0.5D,
+                    pPos.getY(),
+                    (double) pPos.getZ() + 0.5D,
+                    Mth.wrapDegrees(pLevel.random.nextFloat() * 360.0F),
+                    0.0F
+            );
+
+            villager.setGrade(SorcererGrade.GRADE_1);
+            villager.addMajors(Skill.ENERGY, Skill.BARRIER);
+
+            pLevel.addFreshEntity(villager);
+
+            be.setOwner(villager.getUUID());
+            be.setActive(true);
+
+            pState.setValue(SPAWN_VEIL_MASTER, false);
+        }
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING, WATERLOGGED);
+        pBuilder.add(FACING, WATERLOGGED, SPAWN_VEIL_MASTER);
     }
 
     @Nullable
