@@ -100,19 +100,10 @@ public class VeilBlockEntity extends BlockEntity {
         this.size = size;
         this.original = original;
         this.saved = saved;
-        this.sendUpdates();
+        this.setChanged();
     }
 
-    public void sendUpdates() {
-        if (this.level != null) {
-            this.level.setBlocksDirty(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition));
-            this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
-            this.level.updateNeighborsAt(this.worldPosition, this.level.getBlockState(this.worldPosition).getBlock());
-            this.setChanged();
-        }
-    }
-
-    @Nullable
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
@@ -120,6 +111,14 @@ public class VeilBlockEntity extends BlockEntity {
     @Override
     public @NotNull CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
+    }
+
+    private void markUpdated() {
+        this.setChanged();
+
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        }
     }
 
     @Override
@@ -164,6 +163,10 @@ public class VeilBlockEntity extends BlockEntity {
 
         if (pTag.contains("saved")) {
             this.saved = pTag.getCompound("saved");
+        }
+
+        if (this.level != null) {
+            this.markUpdated();
         }
     }
 }

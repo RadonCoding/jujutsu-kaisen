@@ -1,26 +1,22 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.*;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// Interface to make creating sorcerer NPCs easier
 public interface ISorcerer {
     boolean hasMeleeAttack();
 
@@ -80,6 +76,10 @@ public interface ISorcerer {
 
     JujutsuType getJujutsuType();
 
+    default Set<Skill> getMajors() {
+        return Set.of();
+    }
+
     default void init(ISorcererData sorcererData, ISkillData skillData) {
         sorcererData.setExperience(this.getExperience());
         sorcererData.setTechnique(this.getTechnique());
@@ -97,16 +97,32 @@ public interface ISorcerer {
             sorcererData.setCursedEnergyColor(this.getCursedEnergyColor());
         }
 
+        Set<Skill> majors = this.getMajors();
+
+        int points = sorcererData.getSkillPoints();
+
         // Calculate skill points the NPC would get with their experience
         // Spread them evenly by giving each skill total_points / total_skill_count
 
-        int distributed = sorcererData.getSkillPoints() / Skill.values().length;
+        if (majors.isEmpty()) {
+            int distributed = points / Skill.values().length;
 
-        if (distributed > 0) {
-            for (Skill skill : Skill.values()) {
-                int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
-                skillData.increaseSkill(skill, amount);
-                sorcererData.useSkillPoints(amount);
+            if (distributed > 0) {
+                for (Skill skill : Skill.values()) {
+                    int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
+                    skillData.increaseSkill(skill, amount);
+                    sorcererData.useSkillPoints(amount);
+                }
+            }
+        } else {
+            int distributed = points / majors.size();
+
+            if (distributed > 0) {
+                for (Skill major : majors) {
+                    int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
+                    skillData.increaseSkill(major, amount);
+                    sorcererData.useSkillPoints(amount);
+                }
             }
         }
         sorcererData.setEnergy(sorcererData.getMaxEnergy());

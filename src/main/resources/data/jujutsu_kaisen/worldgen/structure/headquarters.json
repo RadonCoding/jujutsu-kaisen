@@ -1,10 +1,10 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": "#jujutsu_kaisen:has_structure/ancient_shrine",
+  "biomes": "#jujutsu_kaisen:has_structure/headquarters",
   "step": "surface_structures",
   "spawn_overrides": {},
-  "start_pool": "jujutsu_kaisen:ancient_shrine/start_pool",
-  "size": 1,
+  "start_pool": "jujutsu_kaisen:headquarters/start_pool_1",
+  "size": 9,
   "terrain_adaptation": "none",
   "start_height": {
     "absolute": -6

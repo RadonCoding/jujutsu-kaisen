@@ -25,7 +25,9 @@
     "common.ItemMixin",
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
-    "common.MobMixin"
+    "common.MobMixin",
+    "common.StructureProcessorAccessor",
+    "common.StructureTemplateMixin"
   ],
   "minVersion": "0.8"
 }

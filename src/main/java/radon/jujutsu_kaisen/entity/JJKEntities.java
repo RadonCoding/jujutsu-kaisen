@@ -201,6 +201,12 @@ public class JJKEntities {
             EntityType.Builder.<AoiTodoEntity>of(AoiTodoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "aoi_todo")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<SorcererVillager>> SORCERER_VILLAGER = ENTITIES.register("sorcerer_villager", () ->
+            EntityType.Builder.<SorcererVillager>of(SorcererVillager::new, MobCategory.AMBIENT)
+                    .sized(0.6F, 1.95F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sorcerer_villager")
+                            .toString()));
+
 
     public static DeferredHolder<EntityType<?>, EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
@@ -578,6 +584,7 @@ public class JJKEntities {
         event.put(HAJIME_KASHIMO.get(), SorcererEntity.createAttributes().build());
         event.put(MAKI_ZENIN.get(), SorcererEntity.createAttributes().build());
         event.put(AOI_TODO.get(), SorcererEntity.createAttributes().build());
+        event.put(SORCERER_VILLAGER.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 

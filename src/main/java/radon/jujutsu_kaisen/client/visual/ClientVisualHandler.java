@@ -171,10 +171,8 @@ public class ClientVisualHandler {
 
             this.traits = new HashSet<>();
 
-            for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
-                if (!(key instanceof IntTag tag)) continue;
-
-                this.traits.add(Trait.values()[tag.getAsInt()]);
+            for (Tag tag : nbt.getList("traits", Tag.TAG_INT)) {
+                this.traits.add(Trait.values()[((IntTag) tag).getAsInt()]);
             }
 
             this.techniques = new HashSet<>();

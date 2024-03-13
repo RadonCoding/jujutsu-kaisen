@@ -121,12 +121,12 @@ public class VeilHandler {
                 if (level.dimension() != dimension || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
                     continue;
 
+                if (entity != null && entity.getUUID() == be.ownerUUID) continue;
+
                 int radius = be.getSize();
                 BlockPos relative = target.subtract(pos);
 
                 if (relative.distSqr(Vec3i.ZERO) >= radius * radius) continue;
-
-                if (entity != null && be.isAllowed(entity)) continue;
 
                 for (Modifier modifier : be.modifiers) {
                     if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.GRIEFING) {

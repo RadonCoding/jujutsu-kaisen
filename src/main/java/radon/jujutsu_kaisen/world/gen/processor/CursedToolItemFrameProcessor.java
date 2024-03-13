@@ -1,5 +1,6 @@
-package radon.jujutsu_kaisen.world.gen.processor.base;
+package radon.jujutsu_kaisen.world.gen.processor;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -22,7 +24,14 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.*;
 
 
-public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
+public class CursedToolItemFrameProcessor extends StructureProcessor {
+    public static final Codec<CursedToolItemFrameProcessor> CODEC = Codec.unit(CursedToolItemFrameProcessor::new);
+
+    @Override
+    protected @NotNull StructureProcessorType<?> getType() {
+        return JJKProcessors.CURSED_TOOL_ITEM_FRAME_PROCESSOR.get();
+    }
+
     private static ItemStack getRandomCursedTool() {
         Map<ItemStack, Double> pool = new HashMap<>();
 

@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "jujutsu_kaisen:headquarters",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1557823654,
+    "spacing": 45,
+    "separation": 35,
+    "type": "minecraft:random_spread"
+  }
+}

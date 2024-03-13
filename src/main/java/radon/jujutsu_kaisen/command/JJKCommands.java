@@ -26,5 +26,6 @@ public class JJKCommands {
         AddSkillPointsCommand.register(event.getDispatcher());
         RefillCommand.register(event.getDispatcher());
         ResetSkillsCommand.register(event.getDispatcher());
+        SetVeilOwnerCommand.register(event.getDispatcher());
     }
 }

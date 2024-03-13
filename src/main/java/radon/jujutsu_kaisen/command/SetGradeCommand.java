@@ -32,7 +32,7 @@ public class SetGradeCommand {
 
         ISorcererData data = cap.getSorcererData();
 
-        data.setGrade(grade);
+        data.setExperience(grade.getRequiredExperience());
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
 

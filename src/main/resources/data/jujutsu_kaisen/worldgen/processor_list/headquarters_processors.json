@@ -1,7 +1,7 @@
 {
   "processors": [
     {
-      "processor_type": "jujutsu_kaisen:cursed_tool_item_frame_processor"
+      "processor_type": "jujutsu_kaisen:headquarters_processor"
     },
     {
       "processor_type": "jujutsu_kaisen:waterlogging_fix_processor"
