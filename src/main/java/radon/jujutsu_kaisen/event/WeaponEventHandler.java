@@ -23,6 +23,7 @@ import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -81,7 +82,7 @@ public class WeaponEventHandler {
                 if (attackerCap != null) {
                     ISorcererData attackerData = attackerCap.getSorcererData();
 
-                    if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) || attackerData.getFingers() > 0) {
+                    if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) || attackerData.getFingers() > 0 || attackerData.hasTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
                         float amount = JJKItems.SPLIT_SOUL_KATANA.get().getDamage();
 
                         IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
