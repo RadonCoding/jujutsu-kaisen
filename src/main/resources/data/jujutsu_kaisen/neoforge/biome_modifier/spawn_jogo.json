@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#jujutsu_kaisen:has_mob/jogo",
+  "features": "jujutsu_kaisen:spawn_jogo",
+  "step": "surface_structures"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#jujutsu_kaisen:has_mob/hanami",
+  "features": "jujutsu_kaisen:spawn_hanami",
+  "step": "surface_structures"
+}

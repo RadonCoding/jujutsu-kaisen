@@ -27,7 +27,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.pact.JJKPacts;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.world.gen.biome.modifier.JJKBiomeModifiers;
+import radon.jujutsu_kaisen.world.gen.feature.JJKFeatures;
 import radon.jujutsu_kaisen.world.gen.loot.JJKLootModifiers;
 import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
@@ -66,8 +66,8 @@ public class JujutsuKaisen {
         JJKSounds.SOUNDS.register(bus);
 
         JJKProcessors.PROCESSORS.register(bus);
-        JJKBiomeModifiers.BIOME_MODIFIERS.register(bus);
         JJKLootModifiers.LOOT_MODIFIERS.register(bus);
+        JJKFeatures.FEATURES.register(bus);
 
         JJKCreativeTabs.CREATIVE_MODE_TABS.register(bus);
 
