@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.damage.JJKDamageTypeTags;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -205,7 +206,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         DamageSource source = event.getSource();
 
-        if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
+        if (source.is(JJKDamageTypeTags.SOUL)) return;
 
         float amount = event.getAmount();
 
