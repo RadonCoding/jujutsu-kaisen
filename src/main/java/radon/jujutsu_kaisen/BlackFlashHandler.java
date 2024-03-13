@@ -77,9 +77,6 @@ public class BlackFlashHandler {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            // We don't want to increase soul damage
-            if (source.is(JJKDamageTypeTags.SOUL)) return;
-
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
