@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#jujutsu_kaisen:has_mob/dagon",
+  "features": "jujutsu_kaisen:spawn_dagon",
+  "step": "surface_structures"
+}

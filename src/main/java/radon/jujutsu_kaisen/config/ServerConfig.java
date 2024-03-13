@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.config;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
@@ -64,6 +63,9 @@ public class ServerConfig {
     public final ModConfigSpec.DoubleValue abilityPointInterval;
     public final ModConfigSpec.DoubleValue skillPointInterval;
 
+    public final ModConfigSpec.IntValue minimumSpawnDangerDistance;
+    public final ModConfigSpec.IntValue disasterCurseRarity;
+
     public ServerConfig(ModConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
         this.cursedEnergyAmount = builder.comment("Base cursed energy amount")
@@ -72,7 +74,7 @@ public class ServerConfig {
                 .defineInRange("cursedEnergyRegenerationAmount", 0.25F, 0.0F, 100000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
-        this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)")
+        this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (bigger number = rarer and when holding an totem it's 50% more likely)")
                 .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
         this.requiredExperienceForExperienced = builder.comment("The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion)")
                 .defineInRange("requiredExperienceForExperienced", 3000.0F, 1.0F, 100000.0F);
@@ -88,6 +90,13 @@ public class ServerConfig {
                 .define("realisticCurses", true);
         this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into a weapon")
                         .defineInRange("requiredImbuementAmount", 1000, 1, 100000);
+        builder.pop();
+
+        builder.comment("Difficulty").push("difficulty");
+        this.minimumSpawnDangerDistance = builder.comment("The minimum distance from spawn of dangerous things such as disaster curses")
+                .defineInRange("minimumDangerDistance", 1000, 0, 100000);
+        this.disasterCurseRarity = builder.comment("How rare it is for disaster curses to spawn (bigger number = rarer)")
+                .defineInRange("disasterCurseRarity", 900, 1, 100000);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
