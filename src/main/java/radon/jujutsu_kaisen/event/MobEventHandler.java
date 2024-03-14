@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
+import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -44,8 +45,16 @@ public class MobEventHandler {
         public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
             if (event.getSpawnType() == MobSpawnType.SPAWN_EGG) return;
 
-            if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
-                    event.setSpawnCancelled(true);
+            Mob mob = event.getEntity();
+
+            if (!VeilHandler.canSpawn(mob, event.getX(), event.getY(), event.getZ())) {
+                event.setSpawnCancelled(true);
+            } else {
+                if (mob.getType().is(JJKEntityTypeTags.UNIQUE)) {
+                    if (!mob.level().getEntitiesOfClass(mob.getClass(), mob.getBoundingBox().inflate(256.0D, 256.0D, 256.0D)).isEmpty()) {
+                        event.setCanceled(true);
+                    }
+                }
             }
         }
 
