@@ -552,6 +552,7 @@
 
   "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
   "chat.jujutsu_kaisen.experience": "You've gained %1$f experience from your battle",
+  "chat.jujutsu_kaisen.experience_penalty": "You lost %1$f experience by dying",
   "chat.jujutsu_kaisen.ability_points": "You've gained %1$d ability points from your battle",
   "chat.jujutsu_kaisen.skill_points": "You've gained %1$d skill points from your battle",
   "chat.jujutsu_kaisen.charge": "Charge: %1$d%%",
