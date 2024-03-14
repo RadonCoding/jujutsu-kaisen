@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.event;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,6 +25,8 @@ public class VeilEventHandler {
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onExplosion(ExplosionEvent.Detonate event) {
+            if (!(event.getLevel() instanceof ServerLevel level)) return;
+
             Explosion explosion = event.getExplosion();
             LivingEntity instigator = explosion.getIndirectSourceEntity();
 
@@ -33,7 +36,7 @@ public class VeilEventHandler {
                 BlockPos pos = iter.next();
                 Vec3 center = pos.getCenter();
 
-                if (!VeilHandler.canDestroy(instigator, event.getLevel(), center.x, center.y, center.z)) {
+                if (!VeilHandler.canDestroy(instigator, level, center.x, center.y, center.z)) {
                     iter.remove();
                 }
             }
@@ -41,10 +44,12 @@ public class VeilEventHandler {
 
         @SubscribeEvent
         public static void onEntityPlaceBlock(BlockEvent.EntityPlaceEvent event) {
+            if (!(event.getLevel() instanceof ServerLevel level)) return;
+
             Entity entity = event.getEntity();
             Vec3 center = event.getPos().getCenter();
 
-            if (!VeilHandler.canDestroy(entity, (Level) event.getLevel(), center.x, center.y, center.z)) {
+            if (!VeilHandler.canDestroy(entity, level, center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
@@ -52,9 +57,12 @@ public class VeilEventHandler {
         @SubscribeEvent
         public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
             LivingEntity entity = event.getEntity();
+
+            if (!(entity.level() instanceof ServerLevel level)) return;
+
             Vec3 center = event.getPos().getCenter();
 
-            if (!VeilHandler.canDestroy(entity, entity.level(), center.x, center.y, center.z)) {
+            if (!VeilHandler.canDestroy(entity, level, center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
@@ -62,9 +70,12 @@ public class VeilEventHandler {
         @SubscribeEvent
         public static void onBlockBreak(BlockEvent.BreakEvent event) {
             Player player = event.getPlayer();
+
+            if (!(player.level() instanceof ServerLevel level)) return;
+
             Vec3 center = event.getPos().getCenter();
 
-            if (!VeilHandler.canDestroy(player, player.level(), center.x, center.y, center.z)) {
+            if (!VeilHandler.canDestroy(player, level, center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
@@ -81,7 +92,7 @@ public class VeilEventHandler {
 
             Vec3 center = victim.position();
 
-            if (!VeilHandler.canDamage(attacker, victim.level(), center.x, center.y, center.z)) {
+            if (!VeilHandler.canDamage(attacker, ((ServerLevel) victim.level()), center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
