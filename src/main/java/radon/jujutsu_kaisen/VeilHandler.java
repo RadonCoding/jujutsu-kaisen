@@ -15,6 +15,7 @@ import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -168,6 +169,16 @@ public class VeilHandler {
         return true;
     }
 
+    private static int getBarrierSkill(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0;
+
+        ISkillData data = cap.getSkillData();
+
+        return data.getSkill(Skill.BARRIER);
+    }
+
     public static boolean isProtectedBy(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
         if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity be))
             return false;
@@ -194,26 +205,11 @@ public class VeilHandler {
                     break;
                 }
 
-                IJujutsuCapability veilOwnerCap = veilOwner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                if (veilOwnerCap == null) {
-                    valid = false;
-                    break;
-                }
-
-                ISkillData veilOwnerData = veilOwnerCap.getSkillData();
-
                 LivingEntity domainOwner = domain.getOwner();
 
                 if (domainOwner == null) continue;
 
-                IJujutsuCapability domainOwnerCap = domainOwner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                if (domainOwnerCap == null) continue;
-
-                ISkillData domainOwnerData = domainOwnerCap.getSkillData();
-
-                if (Math.round(veilOwnerData.getSkill(Skill.BARRIER) * (1.0F / ConfigHolder.SERVER.domainStrength.get())) < domainOwnerData.getSkill(Skill.BARRIER)) {
+                if (Math.round(getBarrierSkill(veilOwner) * (1.0F / ConfigHolder.SERVER.domainStrength.get())) < getBarrierSkill(domainOwner)) {
                     valid = false;
                     break;
                 }
@@ -223,11 +219,49 @@ public class VeilHandler {
     }
 
     public static boolean isProtected(ServerLevel level, BlockPos target) {
+        BlockPos protector = null;
+
         for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
             ResourceKey<Level> dimension = entry.getKey();
 
             for (BlockPos pos : entry.getValue()) {
-                if (isProtectedBy(level, dimension, pos, target)) return true;
+                if (isProtectedBy(level, dimension, pos, target)) {
+                    if (protector == null) {
+                        protector = pos;
+                    } else {
+                        if (!(level.getBlockEntity(protector) instanceof VeilRodBlockEntity firstVeil)) {
+                            protector = pos;
+                            continue;
+                        }
+
+                        if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity secondVeil)) {
+                            continue;
+                        }
+
+                        if (firstVeil.ownerUUID == null || !(level.getEntity(firstVeil.ownerUUID) instanceof LivingEntity firstOwner)) {
+                            protector = pos;
+                            continue;
+                        }
+
+                        if (secondVeil.ownerUUID == null || !(level.getEntity(secondVeil.ownerUUID) instanceof LivingEntity secondOwner)) {
+                            continue;
+                        }
+
+                        int first = getBarrierSkill(firstOwner);
+                        int second = getBarrierSkill(secondOwner);
+
+                        // Check if the current one is stronger than the current strongest
+                        if (second > first) {
+                            protector = pos;
+                            continue;
+                        }
+
+                        // If they're equal neither wins
+                        if (first == second) {
+                            protector = null;
+                        }
+                    }
+                }
             }
         }
         return false;
