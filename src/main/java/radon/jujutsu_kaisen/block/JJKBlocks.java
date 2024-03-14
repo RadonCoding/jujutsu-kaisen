@@ -193,25 +193,31 @@ public class JJKBlocks {
 
 
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->
-            new VeilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new VeilBlock(BlockBehaviour.Properties.of()
+                    .mapColor(state -> state.getValue(VeilBlock.COLOR).getMapColor())
                     .strength(100.0F, 6.0F)
                     .isViewBlocking(JJKBlocks::never)
                     .isSuffocating(JJKBlocks::never)
                     .isValidSpawn(JJKBlocks::never)
                     .noOcclusion()));
     public static DeferredHolder<Block, Block> VEIL_ROD = BLOCKS.register("veil_rod", () ->
-            new VeilRodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
+            new VeilRodBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_ORANGE)
                     .requiresCorrectToolForDrops()
                     .strength(3.0F, 6.0F)
                     .sound(SoundType.COPPER)
                     .noOcclusion()));
     public static DeferredHolder<Block, Block> ALTAR = BLOCKS.register("altar", () ->
-            new AltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+            new AltarBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.METAL)
                     .requiresCorrectToolForDrops()
                     .strength(5.0F, 1200.0F)
                     .sound(SoundType.ANVIL)));
     public static DeferredHolder<Block, Block> MISSION = BLOCKS.register("mission", () ->
-            new AltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+            new AltarBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_BLACK)
+                    .lightLevel(state -> 3)
+                    .emissiveRendering(JJKBlocks::always)
                     .strength(50.0F, 1200.0F)));
 
     public static DeferredHolder<Block, FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
