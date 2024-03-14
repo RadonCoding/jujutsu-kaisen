@@ -169,37 +169,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                         if (pos.getY() < pLevel.getMinBuildHeight()) continue;
 
-                        boolean blocked = false;
-
-                        for (DomainExpansionEntity domain : domains) {
-                            LivingEntity opponent = domain.getOwner();
-
-                            if (opponent == null) continue;
-
-                            IJujutsuCapability veilCasterCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                            if (veilCasterCap == null) continue;
-
-                            ISkillData veilCasterData = veilCasterCap.getSkillData();
-
-                            IJujutsuCapability domainCasterCap = opponent.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                            if (domainCasterCap == null) continue;
-
-                            ISkillData domainCasterData = domainCasterCap.getSkillData();
-
-                            // Closed domain expansions create a separate space inside the barrier
-                            if (!(domain instanceof ClosedDomainExpansionEntity) && domainCasterData.getSkill(Skill.BARRIER) <= veilCasterData.getSkill(Skill.BARRIER)) continue;
-
-                            if (domain.isInsideBarrier(pos)) {
-                                if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                                    be.destroy();
-                                }
-                                blocked = true;
-                            }
-                        }
-
-                        if (blocked) continue;
+                        if (!VeilHandler.isProtectedBy(((ServerLevel) pLevel), pLevel.dimension(), pPos, pos)) continue;
 
                         BlockEntity existing = pLevel.getBlockEntity(pos);
 
