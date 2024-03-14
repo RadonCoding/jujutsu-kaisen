@@ -32,6 +32,10 @@ public class AbilityHandler {
     }
 
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
+        return trigger(owner, ability, false);
+    }
+
+    public static Ability.Status trigger(LivingEntity owner, Ability ability, boolean force) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return Ability.Status.FAILURE;
@@ -41,20 +45,20 @@ public class AbilityHandler {
         Ability.Status status = ability.isTriggerable(owner);
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
-            if (status == Ability.Status.SUCCESS) {
+            if (force || status == Ability.Status.SUCCESS) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 data.toggle(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 data.channel(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));

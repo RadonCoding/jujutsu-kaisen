@@ -61,9 +61,6 @@ public abstract class CursedObjectItem extends Item {
             if (data.getType() == JujutsuType.CURSE) {
                 data.addExtraEnergy(this.getEnergy());
             }
-        } else {
-            pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length)),
-                    Mth.floor(AMPLIFIER * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length))));
         }
         return stack;
     }

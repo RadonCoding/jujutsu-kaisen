@@ -9,12 +9,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.curse.FingerBearerEntity;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -87,13 +92,29 @@ public class SukunaFingerItem extends CursedObjectItem {
             if (isFull(pStack)) {
                 data.addTrait(Trait.PERFECT_BODY);
             } else if (data.getType() == JujutsuType.SORCERER) {
+                int count = pStack.getCount();
+
+                int eaten = Math.min(20 - data.getFingers(), count);
+
                 if (data.hasTrait(Trait.VESSEL)) {
-                    pStack.shrink(data.addFingers(pStack.getCount()));
+                    data.addFingers(eaten);
+                    pStack.shrink(eaten);
+
+                    if (eaten >= 10) {
+                        AbilityHandler.trigger(pEntityLiving, JJKAbilities.SWITCH.get(), true);
+                    }
                     return pStack;
                 } else {
-                    pStack.shrink(pStack.getCount());
-                    EntityUtil.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
+                    pStack.shrink(count);
+                    EntityUtil.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, count, false), true, false);
                 }
+            } else if (data.getType() == JujutsuType.CURSE) {
+                if (pEntityLiving instanceof CursedSpirit curse && !curse.isTame() && curse.getGrade().ordinal() < SorcererGrade.GRADE_1.ordinal()) {
+                    pStack.shrink(1);
+                    EntityUtil.convertTo(pEntityLiving, JJKEntities.FINGER_BEARER.get().create(pLevel), true, false);
+                    return pStack;
+                }
+                return super.finishUsingItem(pStack, pLevel, pEntityLiving);
             }
         }
         return ItemStack.EMPTY;
