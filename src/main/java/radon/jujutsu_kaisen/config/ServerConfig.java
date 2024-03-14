@@ -219,9 +219,9 @@ public class ServerConfig {
         this.maximumSkillLevel = builder.comment("Maximum level you can upgrade a skill to")
                 .defineInRange("maximumSkillLevel", 10000, 1, 1000000);
         this.abilityPointInterval = builder.comment("For every X experience you'll gain 1 ability points")
-                .defineInRange("abilityPointInterval", 10.0D, 1.0D, 1000000.0D);
+                .defineInRange("abilityPointInterval", 20.0D, 1.0D, 1000000.0D);
         this.skillPointInterval = builder.comment("For every X experience you'll gain 1 skill points")
-                .defineInRange("skillPointInterval", 20.0D, 1.0D, 1000000.0D);
+                .defineInRange("skillPointInterval", 40.0D, 1.0D, 1000000.0D);
         builder.pop();
     }
 
