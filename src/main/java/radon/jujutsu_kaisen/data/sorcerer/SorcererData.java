@@ -928,10 +928,8 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public int addFingers(int count) {
-        int real = Math.min(count, 20 - this.fingers);
-        this.fingers += real;
-        return real;
+    public void addFingers(int count) {
+        this.fingers += count;
     }
 
     @Override

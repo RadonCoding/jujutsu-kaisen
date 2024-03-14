@@ -164,5 +164,5 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void setFingers(int count);
 
-    int addFingers(int count);
+    void addFingers(int count);
 }

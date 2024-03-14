@@ -3,9 +3,11 @@ package radon.jujutsu_kaisen.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,12 +24,14 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
@@ -60,6 +64,7 @@ import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.pact.JJKPacts;
+import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.*;
 
 import java.util.ArrayList;
@@ -69,6 +74,23 @@ import java.util.List;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onPlayerInteractEntity(PlayerInteractEvent.EntityInteract event) {
+            ItemStack stack = event.getEntity().getItemInHand(event.getHand());
+
+            if (!stack.is(JJKItemTags.CURSED_OBJECT) || !stack.getItem().isEdible()) return;
+
+            if (!(event.getTarget() instanceof LivingEntity target)) return;
+
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            if (target.getHealth() / target.getMaxHealth() <= ConfigHolder.SERVER.forceFeedHealthRequirement.get()) {
+                stack.getItem().finishUsingItem(stack, target.level(), target);
+            }
+        }
+
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();

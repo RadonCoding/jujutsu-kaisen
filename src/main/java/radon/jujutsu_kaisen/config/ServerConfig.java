@@ -27,6 +27,7 @@ public class ServerConfig {
     public final ModConfigSpec.BooleanValue uniqueTraits;
     public final ModConfigSpec.BooleanValue destruction;
     public final ModConfigSpec.ConfigValue<List<? extends String>> chants;
+    public final ModConfigSpec.DoubleValue forceFeedHealthRequirement;
 
     public final ModConfigSpec.IntValue minimumVeilSize;
     public final ModConfigSpec.IntValue maximumVeilSize;
@@ -125,6 +126,8 @@ public class ServerConfig {
                         ),
                         ignored -> true
                 );
+        this.forceFeedHealthRequirement = builder.comment("The percentage of health someone has to be at to be able to force feed them cursed objects")
+                .defineInRange("forceFeedHealthRequirement", 0.25F, 0.0F, 1.0F);
         builder.pop();
 
         builder.comment("Veils").push("veils");
