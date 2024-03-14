@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -88,6 +89,8 @@ public class AltarMenu extends ItemCombinerMenu {
             return new SorcererModifier(action);
         } else if (stack.is(Items.TNT)) {
             return new GriefingModifier(action);
+        } else if (stack.is(ItemTags.SWORDS)) {
+            return new ViolenceModifier(action);
         }
         throw new NotImplementedException();
     }

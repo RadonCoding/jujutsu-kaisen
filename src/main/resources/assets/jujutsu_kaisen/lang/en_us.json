@@ -215,6 +215,8 @@
   "item.jujutsu_kaisen.veil_rod.sorcerer.deny": "Deny sorcerers",
   "item.jujutsu_kaisen.veil_rod.griefing.allow": "Allow griefing",
   "item.jujutsu_kaisen.veil_rod.griefing.deny": "Deny griefing",
+  "item.jujutsu_kaisen.veil_rod.violence.allow": "Allow violence",
+  "item.jujutsu_kaisen.veil_rod.violence.deny": "Deny violence",
 
   "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",

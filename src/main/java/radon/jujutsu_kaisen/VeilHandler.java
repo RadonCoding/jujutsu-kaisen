@@ -108,6 +108,36 @@ public class VeilHandler {
         return true;
     }
 
+    public static boolean canDamage(@Nullable Entity entity, Level level, double x, double y, double z) {
+        BlockPos target = BlockPos.containing(x, y, z);
+
+        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
+            ResourceKey<Level> dimension = entry.getKey();
+
+            for (BlockPos pos : entry.getValue()) {
+                // So that veil rods can still be broken
+                if (target.equals(pos)) continue;
+
+                if (level.dimension() != dimension || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
+                    continue;
+
+                if (entity != null && entity.getUUID() == be.ownerUUID) continue;
+
+                int radius = be.getSize();
+                BlockPos relative = target.subtract(pos);
+
+                if (relative.distSqr(Vec3i.ZERO) >= radius * radius) continue;
+
+                for (Modifier modifier : be.modifiers) {
+                    if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.VIOLENCE) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public static boolean canDestroy(@Nullable Entity entity, Level level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
@@ -137,6 +167,7 @@ public class VeilHandler {
         }
         return true;
     }
+
 
     public static boolean isProtected(Level accessor, BlockPos target) {
         for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {

@@ -180,53 +180,6 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onExplosion(ExplosionEvent.Detonate event) {
-            Explosion explosion = event.getExplosion();
-            LivingEntity instigator = explosion.getIndirectSourceEntity();
-
-            Iterator<BlockPos> iter = explosion.getToBlow().iterator();
-
-            while (iter.hasNext()) {
-                BlockPos pos = iter.next();
-                Vec3 center = pos.getCenter();
-
-                if (!VeilHandler.canDestroy(instigator, event.getLevel(), center.x, center.y, center.z)) {
-                    iter.remove();
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void onEntityPlaceBlock(BlockEvent.EntityPlaceEvent event) {
-            Entity entity = event.getEntity();
-            Vec3 center = event.getPos().getCenter();
-
-            if (!VeilHandler.canDestroy(entity, (Level) event.getLevel(), center.x, center.y, center.z)) {
-                event.setCanceled(true);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
-            LivingEntity entity = event.getEntity();
-            Vec3 center = event.getPos().getCenter();
-
-            if (!VeilHandler.canDestroy(entity, entity.level(), center.x, center.y, center.z)) {
-                event.setCanceled(true);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onBlockBreak(BlockEvent.BreakEvent event) {
-            Player player = event.getPlayer();
-            Vec3 center = event.getPos().getCenter();
-
-            if (!VeilHandler.canDestroy(player, player.level(), center.x, center.y, center.z)) {
-                event.setCanceled(true);
-            }
-        }
-
-        @SubscribeEvent
         public static void onSleepFinished(SleepFinishedTimeEvent event) {
             if (!(event.getLevel() instanceof ServerLevel level)) return;
 
@@ -337,13 +290,13 @@ public class JJKEventHandler {
 
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
-            DamageSource source = event.getSource();
-
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
+
+            DamageSource source = event.getSource();
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
             if (ConfigHolder.SERVER.realisticCurses.get()) {
                 IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
