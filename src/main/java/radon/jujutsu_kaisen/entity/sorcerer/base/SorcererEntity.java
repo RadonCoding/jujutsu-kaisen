@@ -57,17 +57,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
-    public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
-        if (this.getType().is(JJKEntityTypeTags.UNIQUE)) {
-            if (pSpawnReason == MobSpawnType.CHUNK_GENERATION || pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.STRUCTURE) {
-                if (!this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(256.0D, 256.0D, 256.0D)).isEmpty())
-                    return false;
-            }
-        }
-        return super.checkSpawnRules(pLevel, pSpawnReason);
-    }
-
-    @Override
     public boolean hasMeleeAttack() {
         return true;
     }
