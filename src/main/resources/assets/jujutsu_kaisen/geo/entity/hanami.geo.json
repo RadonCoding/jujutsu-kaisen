@@ -98,10 +98,15 @@
 					]
 				},
 				{
-					"name": "head",
+					"name": "head_wrapper",
 					"parent": "chest",
 					"pivot": [0, 39, 0],
-					"rotation": [-7.5, 0, 0],
+					"rotation": [-7.5, 0, 0]
+				},
+				{
+					"name": "head",
+					"parent": "head_wrapper",
+					"pivot": [0, 39, 0],
 					"cubes": [
 						{"origin": [-4, 39, -4], "size": [8, 9, 8], "uv": [0, 67]}
 					]
