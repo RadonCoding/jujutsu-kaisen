@@ -89,7 +89,12 @@ public class JJKEventHandler {
             if (cap == null) return;
 
             if (target.getHealth() / target.getMaxHealth() <= ConfigHolder.SERVER.forceFeedHealthRequirement.get()) {
+                ItemStack copy = stack.copy();
                 stack.getItem().finishUsingItem(stack, target.level(), target);
+
+                if (stack != copy) {
+                    event.setCancellationResult(InteractionResult.SUCCESS);
+                }
             }
         }
 
