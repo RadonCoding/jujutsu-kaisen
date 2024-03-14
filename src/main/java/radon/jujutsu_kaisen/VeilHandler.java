@@ -101,7 +101,9 @@ public class VeilHandler {
                 BlockPos relative = target.subtract(pos);
 
                 if (relative.distSqr(Vec3i.ZERO) < radius * radius) {
-                    return false; //VeilBlockEntity.isAllowed(pos, mob);
+                    if (!be.isAllowed(mob)) {
+                        return false;
+                    }
                 }
             }
         }
