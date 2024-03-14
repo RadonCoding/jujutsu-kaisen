@@ -5,8 +5,8 @@
     {
       "type": "jujutsu_kaisen:sorcerer_villager",
       "weight": 100,
-      "minCount": 1,
-      "maxCount": 1
+      "minCount": 2,
+      "maxCount": 6
     }
   ]
 }
