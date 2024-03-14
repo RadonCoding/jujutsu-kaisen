@@ -44,11 +44,12 @@ public class MobEventHandler {
 
         @SubscribeEvent
         public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
+            if (!(event.getLevel() instanceof ServerLevel level)) return;
             if (event.getSpawnType() == MobSpawnType.SPAWN_EGG) return;
 
             Mob mob = event.getEntity();
 
-            if (!VeilHandler.canSpawn(mob, event.getX(), event.getY(), event.getZ())) {
+            if (!VeilHandler.canSpawn(level, mob, event.getX(), event.getY(), event.getZ())) {
                 event.setSpawnCancelled(true);
             } else {
                 if (mob.getType().is(JJKEntityTypeTags.UNIQUE)) {
