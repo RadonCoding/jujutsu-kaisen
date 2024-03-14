@@ -128,7 +128,7 @@ public class VeilHandler {
                 if (level.dimension() != dimension1 || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
                     continue;
 
-                if (entity != null && entity.getUUID() == be.ownerUUID) continue;
+                if (entity != null && entity.getUUID().equals(be.ownerUUID)) continue;
 
                 if (!isProtected(level, target)) continue;
 
@@ -155,7 +155,7 @@ public class VeilHandler {
                 if (level.dimension() != dimension1 || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
                     continue;
 
-                if (entity != null && entity.getUUID() == be.ownerUUID) continue;
+                if (entity != null && entity.getUUID().equals(be.ownerUUID)) continue;
 
                 if (!isProtected(level, target)) continue;
 
