@@ -67,7 +67,7 @@ public class MobEventHandler {
                 AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
             }
 
-            int chance = 5 - victim.level().getDifficulty().getId();
+            int chance = 4 - victim.level().getDifficulty().getId();
 
             if (!data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
                 if (HelperMethods.RANDOM.nextInt(chance) == 0) {
