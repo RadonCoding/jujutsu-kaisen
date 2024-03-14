@@ -1,0 +1,20 @@
+{
+  "biomes": "#minecraft:is_overworld",
+  "entity_types": [
+    "jujutsu_kaisen:rugby_field_curse",
+    "jujutsu_kaisen:fish_curse",
+    "jujutsu_kaisen:cyclops_curse",
+    "jujutsu_kaisen:zomba_curse",
+    "jujutsu_kaisen:worm_curse",
+    "jujutsu_kaisen:feline_curse",
+    "jujutsu_kaisen:fugly_curse",
+    "jujutsu_kaisen:bird_curse",
+    "jujutsu_kaisen:rainbow_dragon",
+    "jujutsu_kaisen:dino_curse",
+    "jujutsu_kaisen:ko_guy"
+  ],
+  "spawn_cost": {
+    "charge": 1.28,
+    "energy_budget": 0.01
+  }
+}

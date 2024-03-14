@@ -1,0 +1,17 @@
+{
+  "biomes": "#jujutsu_kaisen:has_structure/headquarters",
+  "entity_types": [
+    "jujutsu_kaisen:satoru_gojo",
+    "jujutsu_kaisen:yuta_okkotsu",
+    "jujutsu_kaisen:megumi_fushiguro",
+    "jujutsu_kaisen:yuji_itadori",
+    "jujutsu_kaisen:toge_inumaki",
+    "jujutsu_kaisen:suguru_geto",
+    "jujutsu_kaisen:naoya_zenin",
+    "jujutsu_kaisen:aoi_todo"
+  ],
+  "spawn_cost": {
+    "charge": 0.128,
+    "energy_budget": 0.01
+  }
+}

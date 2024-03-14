@@ -1,0 +1,12 @@
+{
+  "biomes": "#minecraft:is_overworld",
+  "entity_types": [
+    "jujutsu_kaisen:jogo",
+    "jujutsu_kaisen:dagon",
+    "jujutsu_kaisen:hanami"
+  ],
+  "spawn_cost": {
+    "charge": 1.28,
+    "energy_budget": 0.01
+  }
+}

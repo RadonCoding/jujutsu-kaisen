@@ -1,44 +1,6 @@
 {
   "type": "neoforge:add_spawns",
   "structures": "#jujutsu_kaisen:has_sorcerers",
-  "spawn_costs": {
-    "jujutsu_kaisen:satoru_gojo": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:yuta_okkotsu": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:megumi_fushiguro": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:yuji_itadori": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:toge_inumaki": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:suguru_geto": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:naoya_zenin": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:aoi_todo": {
-      "charge": 1.28,
-      "energy_budget": 0.01
-    },
-    "jujutsu_kaisen:sorcerer_villager": {
-      "charge": 0.32,
-      "energy_budget": 0.01
-    }
-  },
   "spawners": [
     {
       "type": "jujutsu_kaisen:satoru_gojo",
