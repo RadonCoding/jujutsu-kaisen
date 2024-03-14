@@ -129,7 +129,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             data.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
-                            domain == null ? 1.0F : 0.05F, 1.0F);
+                            domain == null ? 1.0F : 0.05F / 10, 1.0F);
                 }
             }, i * 2);
         }
