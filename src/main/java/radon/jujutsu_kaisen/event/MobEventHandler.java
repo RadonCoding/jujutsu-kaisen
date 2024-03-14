@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -51,7 +52,7 @@ public class MobEventHandler {
                 event.setSpawnCancelled(true);
             } else {
                 if (mob.getType().is(JJKEntityTypeTags.UNIQUE)) {
-                    if (!mob.level().getEntitiesOfClass(mob.getClass(), mob.getBoundingBox().inflate(256.0D, 256.0D, 256.0D)).isEmpty()) {
+                    if (!mob.level().getEntitiesOfClass(mob.getClass(), AABB.ofSize(mob.position(), 256.0D, 256.0D, 256.0D)).isEmpty()) {
                         event.setCanceled(true);
                     }
                 }
