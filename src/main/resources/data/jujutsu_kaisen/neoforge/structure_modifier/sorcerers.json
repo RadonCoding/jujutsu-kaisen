@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_spawns",
+  "structures": "#jujutsu_kaisen:is_haunted",
+  "spawners": [
+    {
+      "type": "jujutsu_kaisen:sorcerer_villager",
+      "weight": 100,
+      "minCount": 2,
+      "maxCount": 6
+    }
+  ]
+}
