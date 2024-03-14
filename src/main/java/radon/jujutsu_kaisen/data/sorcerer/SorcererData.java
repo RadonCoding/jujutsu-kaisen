@@ -20,6 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -912,10 +914,14 @@ public class SorcererData implements ISorcererData {
         }
         this.energy = this.getMaxEnergy();
 
-        BlockPos pos = ((ServerLevel) owner.level()).findNearestMapStructure(JJKStructureTags.HAS_SORCERERS, owner.blockPosition(), 100, true);
+        ServerLevel level = ((ServerLevel) owner.level());
+        BlockPos pos = level.findNearestMapStructure(JJKStructureTags.HAS_SORCERERS, owner.blockPosition(), 100, true);
 
         if (pos != null) {
-            owner.addItem(MapItem.create(owner.level(), pos.getX(), pos.getZ(), (byte) 2, true, true));
+            ItemStack stack = MapItem.create(owner.level(), pos.getX(), pos.getZ(), (byte) 2, true, true);
+            MapItem.renderBiomePreviewMap(level, stack);
+            MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.PLAINS_VILLAGE);
+            owner.addItem(stack);
         }
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), owner);
     }
