@@ -14,7 +14,8 @@ import java.util.List;
 public class Red extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(20) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null || target.isDeadOrDying()) return false;
+        return HelperMethods.RANDOM.nextInt(20) == 0 && owner.hasLineOfSight(target);
     }
 
     @Override
