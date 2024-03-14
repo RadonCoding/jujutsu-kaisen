@@ -43,7 +43,8 @@ public class Modifier {
         TRANSPARENT,
         CURSE,
         SORCERER,
-        GRIEFING
+        GRIEFING,
+        VIOLENCE
     }
 
     public enum Action {
