@@ -63,31 +63,13 @@ public class SukunaFingerItem extends CursedObjectItem {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        IJujutsuCapability cap = pPlayer.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap != null) {
-            ISorcererData data = cap.getSorcererData();
-
-            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                return InteractionResultHolder.fail(stack);
-            }
-
-            if (data.hasTrait(Trait.VESSEL) && data.getFingers() == 20) {
-                return InteractionResultHolder.fail(stack);
-            }
-        }
-        return super.use(pLevel, pPlayer, pUsedHand);
-    }
-
-    @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         IJujutsuCapability cap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap != null) {
             ISorcererData data = cap.getSorcererData();
+
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return pStack;
 
             if (isFull(pStack)) {
                 data.addTrait(Trait.PERFECT_BODY);
@@ -97,16 +79,19 @@ public class SukunaFingerItem extends CursedObjectItem {
                 int eaten = Math.min(20 - data.getFingers(), count);
 
                 if (data.hasTrait(Trait.VESSEL)) {
-                    data.addFingers(eaten);
-                    pStack.shrink(eaten);
+                    if (eaten > 0) {
+                        data.addFingers(eaten);
+                        pStack.shrink(eaten);
 
-                    if (eaten >= 10) {
-                        AbilityHandler.trigger(pEntityLiving, JJKAbilities.SWITCH.get(), true);
+                        if (eaten >= 10) {
+                            AbilityHandler.trigger(pEntityLiving, JJKAbilities.SWITCH.get(), true);
+                        }
                     }
                     return pStack;
                 } else {
                     pStack.shrink(count);
                     EntityUtil.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, count, false), true, false);
+                    return pStack;
                 }
             } else if (data.getType() == JujutsuType.CURSE) {
                 if (pEntityLiving instanceof CursedSpirit curse && !curse.isTame() && curse.getGrade().ordinal() < SorcererGrade.GRADE_1.ordinal()) {
@@ -117,6 +102,6 @@ public class SukunaFingerItem extends CursedObjectItem {
                 return super.finishUsingItem(pStack, pLevel, pEntityLiving);
             }
         }
-        return ItemStack.EMPTY;
+        return pStack;
     }
 }
