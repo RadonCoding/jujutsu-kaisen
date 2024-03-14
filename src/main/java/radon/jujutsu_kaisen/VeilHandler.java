@@ -211,7 +211,7 @@ public class VeilHandler {
 
                 boolean outside = veilOwner.distanceToSqr(veil.getCenter()) >= be.getSize() * be.getSize();
 
-                if (Math.round(getBarrierSkill(veilOwner) * (1.0F / ConfigHolder.SERVER.domainStrength.get()) * (outside ? 2.0F : 1.0F)) < getBarrierSkill(domainOwner)) {
+                if (Math.round(getBarrierSkill(veilOwner) * (1.0F / ConfigHolder.SERVER.domainStrength.get()) * (outside ? 1.5F : 1.0F)) < getBarrierSkill(domainOwner)) {
                     valid = false;
                     break;
                 }
@@ -250,9 +250,9 @@ public class VeilHandler {
                         }
 
                         int first = Math.round(getBarrierSkill(firstOwner) * (firstOwner.distanceToSqr(protector.getCenter()) >=
-                                firstVeil.getSize() * firstVeil.getSize() ? 2.0F : 1.0F));
+                                firstVeil.getSize() * firstVeil.getSize() ? 1.5F : 1.0F));
                         int second = Math.round(getBarrierSkill(secondOwner) * (secondOwner.distanceToSqr(pos.getCenter()) >=
-                                secondVeil.getSize() * secondVeil.getSize() ? 2.0F : 1.0F));
+                                secondVeil.getSize() * secondVeil.getSize() ? 1.5F : 1.0F));
 
                         // Check if the current one is stronger than the current strongest
                         if (second > first) {
