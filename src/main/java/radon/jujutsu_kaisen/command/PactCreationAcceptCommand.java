@@ -19,7 +19,7 @@ import radon.jujutsu_kaisen.pact.Pact;
 public class PactCreationAcceptCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactcreationaccept")
-                .then(Commands.argument("player", EntityArgument.entity())
+                .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("pact", PactArgument.pact())
                                 .executes(ctx -> accept(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), PactArgument.getPact(ctx, "pact"))))));
 
