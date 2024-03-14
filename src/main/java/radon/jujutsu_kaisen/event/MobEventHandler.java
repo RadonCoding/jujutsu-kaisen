@@ -51,12 +51,6 @@ public class MobEventHandler {
 
             if (!VeilHandler.canSpawn(level, mob, event.getX(), event.getY(), event.getZ())) {
                 event.setSpawnCancelled(true);
-            } else {
-                if (mob.getType().is(JJKEntityTypeTags.UNIQUE)) {
-                    if (!mob.level().getEntitiesOfClass(mob.getClass(), AABB.ofSize(mob.position(), 256.0D, 256.0D, 256.0D)).isEmpty()) {
-                        event.setCanceled(true);
-                    }
-                }
             }
         }
 

@@ -1,6 +1,52 @@
 {
   "type": "neoforge:add_spawns",
   "structures": "#jujutsu_kaisen:is_haunted",
+  "spawn_costs": {
+    "jujutsu_kaisen:rugby_field_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:fish_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:cyclops_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:zomba_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:worm_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:feline_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:fugly_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:bird_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:rainbow_dragon": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:dino_curse": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    },
+    "jujutsu_kaisen:ko_guy": {
+      "charge": 0.64,
+      "energy_budget": 0.01
+    }
+  },
   "spawners": [
     {
       "type": "jujutsu_kaisen:rugby_field_curse",
