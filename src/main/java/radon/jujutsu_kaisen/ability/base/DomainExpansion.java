@@ -116,6 +116,19 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
+    public Status isTriggerable(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return Status.FAILURE;
+
+        ISorcererData data = cap.getSorcererData();
+
+        if (data.hasSummonOfClass(DomainExpansionEntity.class)) return Status.FAILURE;
+
+        return super.isTriggerable(owner);
+    }
+
+    @Override
     public Status isStillUsable(LivingEntity owner) {
         if (!owner.level().isClientSide) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
