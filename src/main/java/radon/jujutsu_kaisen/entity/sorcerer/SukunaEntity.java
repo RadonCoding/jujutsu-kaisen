@@ -23,6 +23,8 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -269,25 +271,36 @@ public class SukunaEntity extends SorcererEntity {
 
         if (owner == null) return;
 
-        IJujutsuCapability jujutsuSrc = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability src = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuSrc == null) return;
+        if (src == null) return;
 
-        ISorcererData sorcererSrc = jujutsuSrc.getSorcererData();
-        ITenShadowsData tenShadowsSrc = jujutsuSrc.getTenShadowsData();
+        ISorcererData sorcererSrc = src.getSorcererData();
+        ITenShadowsData tenShadowsSrc = src.getTenShadowsData();
+        IMimicryData mimicrySrc = src.getMimicryData();
+        ICurseManipulationData curseManipulationSrc = src.getCurseManipulationData();
 
-        IJujutsuCapability jujutsuDst = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability dst = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuDst == null) return;
+        if (dst == null) return;
 
-        ISorcererData sorcererDst = jujutsuDst.getSorcererData();
-        ITenShadowsData tenShadowsDst = jujutsuDst.getTenShadowsData();
+        ISorcererData sorcererDst = dst.getSorcererData();
+        ITenShadowsData tenShadowsDst = dst.getTenShadowsData();
+        IMimicryData mimicryDst = dst.getMimicryData();
+        ICurseManipulationData curseManipulationDst = dst.getCurseManipulationData();
 
         sorcererDst.unlockAll(sorcererSrc.getUnlocked());
         sorcererDst.setTraits(sorcererSrc.getTraits());
-        sorcererDst.addAdditional(sorcererSrc.getTechnique());
+
+        ICursedTechnique technique = sorcererSrc.getTechnique();
+
+        if (technique != null) {
+            sorcererDst.addAdditional(sorcererSrc.getTechnique());
+        }
         tenShadowsDst.setTamed(tenShadowsSrc.getTamed());
         tenShadowsDst.setDead(tenShadowsSrc.getDead());
+        mimicryDst.copy(mimicrySrc.getCopied());
+        curseManipulationDst.absorb(curseManipulationSrc.getAbsorbed());
     }
 
     @Override
