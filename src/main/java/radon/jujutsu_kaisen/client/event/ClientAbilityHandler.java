@@ -259,8 +259,8 @@ public class ClientAbilityHandler {
                 }
 
                 if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
-                        channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
-                        current = JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD;
+                    channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
+                    current = JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD;
                 }
 
                 if (JJKKeys.DASH.isDown()) {
@@ -302,28 +302,18 @@ public class ClientAbilityHandler {
 
         IAbilityData data = cap.getAbilityData();
 
-        Ability.Status status = ability.isTriggerable(owner);
-
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
-            if (status == Ability.Status.SUCCESS) {
-                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                ability.run(owner);
-                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-            }
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            ability.run(owner);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
-                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                data.toggle(ability);
-                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-            }
-            return status;
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            data.toggle(ability);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
-                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                data.channel(ability);
-                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-            }
-            return status;
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            data.channel(ability);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
         }
         return Ability.Status.SUCCESS;
     }
