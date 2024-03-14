@@ -45,7 +45,9 @@ public class IncreaseSkillC2SPacket implements CustomPacketPayload {
 
             int current = skillData.getSkill(this.skill);
 
-            if (current >= ConfigHolder.SERVER.maximumSkillLevel.get()) return;
+            int maxLevelForExperience = Math.round(sorcererData.getExperience() * 0.01F) + 1;
+
+            if (current >= ConfigHolder.SERVER.maximumSkillLevel.get() || current >= maxLevelForExperience) return;
 
             int real = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), current + this.amount) - current;
 
