@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class VeilBlockEntity extends BlockEntity {
+    private int counter;
+
     private boolean initialized;
 
     @Nullable
@@ -36,6 +38,10 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
+        if (++pBlockEntity.counter != VeilRodBlockEntity.INTERVAL * 2) return;
+
+        pBlockEntity.counter = 0;
+
         if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || !be.isActive() || be.getSize() != pBlockEntity.size) {
             --pBlockEntity.death;
         }
