@@ -34,6 +34,8 @@ public class ServerConfig {
     public final ModConfigSpec.DoubleValue minimumDomainSize;
     public final ModConfigSpec.DoubleValue maximumDomainSize;
 
+    public final ModConfigSpec.DoubleValue domainStrength;
+
     public final ModConfigSpec.IntValue maximumChantCount;
     public final ModConfigSpec.IntValue maximumChantLength;
     public final ModConfigSpec.DoubleValue chantSimilarityThreshold;
@@ -142,6 +144,11 @@ public class ServerConfig {
                 .defineInRange("minimumDomainSize", 0.2F, 0.2F, 1.0F);
         this.maximumDomainSize = builder.comment("Maximum size for a domain")
                 .defineInRange("maximumDomainSize", 1.5F, 1.0F, 10.0F);
+        builder.pop();
+
+        builder.comment("Barriers").push("barriers");
+        this.domainStrength = builder.comment("The percentage of how much domain barriers are stronger than veil barriers (defaults to 200%)")
+                        .defineInRange("domainStrength", 2.0F, 1.0F, 100000.0F);
         builder.pop();
 
         builder.comment("Chants").push("chants");
