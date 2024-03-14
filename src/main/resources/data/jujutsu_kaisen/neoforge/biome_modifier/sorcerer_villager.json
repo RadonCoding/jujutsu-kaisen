@@ -1,4 +1,5 @@
 {
+  "type": "neoforge:add_spawn_costs",
   "biomes": "#minecraft:is_overworld",
   "entity_types": [
     "jujutsu_kaisen:sorcerer_villager"
