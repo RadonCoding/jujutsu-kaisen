@@ -191,18 +191,7 @@ public class JJKBlocks {
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
 
-    public static DeferredHolder<Block, Block> ALTAR = BLOCKS.register("altar", () ->
-            new AltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
-                    .requiresCorrectToolForDrops()
-                    .strength(5.0F, 1200.0F)
-                    .sound(SoundType.ANVIL)));
 
-    public static DeferredHolder<Block, Block> VEIL_ROD = BLOCKS.register("veil_rod", () ->
-            new VeilRodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
-                    .requiresCorrectToolForDrops()
-                    .strength(3.0F, 6.0F)
-                    .sound(SoundType.COPPER)
-                    .noOcclusion()));
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(100.0F, 6.0F)
@@ -210,6 +199,20 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .isValidSpawn(JJKBlocks::never)
                     .noOcclusion()));
+    public static DeferredHolder<Block, Block> VEIL_ROD = BLOCKS.register("veil_rod", () ->
+            new VeilRodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
+                    .requiresCorrectToolForDrops()
+                    .strength(3.0F, 6.0F)
+                    .sound(SoundType.COPPER)
+                    .noOcclusion()));
+    public static DeferredHolder<Block, Block> ALTAR = BLOCKS.register("altar", () ->
+            new AltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .requiresCorrectToolForDrops()
+                    .strength(5.0F, 1200.0F)
+                    .sound(SoundType.ANVIL)));
+    public static DeferredHolder<Block, Block> MISSION = BLOCKS.register("mission", () ->
+            new AltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(50.0F, 1200.0F)));
 
     public static DeferredHolder<Block, FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
             new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
