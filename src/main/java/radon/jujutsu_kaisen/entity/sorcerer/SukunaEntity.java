@@ -42,6 +42,8 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 import java.util.*;
 
 public class SukunaEntity extends SorcererEntity {
+    private static final int TAMING_CHANCE = 10 * 20;
+
     private static final EntityDataAccessor<String> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
 
@@ -104,17 +106,19 @@ public class SukunaEntity extends SorcererEntity {
             if (entity instanceof TenShadowsSummon) return;
         }
 
-        Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
+        if (this.random.nextInt(TAMING_CHANCE) == 0) {
+            Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
 
-        if (!mahoraga.isTamed(this)) {
-            AbilityHandler.trigger(this, mahoraga);
-            return;
-        }
+            if (!mahoraga.isTamed(this)) {
+                AbilityHandler.trigger(this, mahoraga);
+                return;
+            }
 
-        for (Ability ability : JJKCursedTechniques.TEN_SHADOWS.get().getAbilities()) {
-            if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
+            for (Ability ability : JJKCursedTechniques.TEN_SHADOWS.get().getAbilities()) {
+                if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
 
-            AbilityHandler.trigger(this, ability);
+                AbilityHandler.trigger(this, ability);
+            }
         }
     }
 
