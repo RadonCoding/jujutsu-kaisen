@@ -56,6 +56,8 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     private int counter;
 
+    private boolean first;
+
     public List<Modifier> modifiers;
 
     public VeilRodBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -134,9 +136,13 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         VeilHandler.veil(pLevel.dimension(), pPos);
 
-        if (++pBlockEntity.counter != INTERVAL) return;
+        pBlockEntity.counter++;
 
-        pBlockEntity.counter = 0;
+        if (!pBlockEntity.first) {
+            if (pBlockEntity.counter != INTERVAL) return;
+
+            pBlockEntity.counter = 0;
+        }
 
         if (pBlockEntity.ownerUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner))
             return;
@@ -151,10 +157,12 @@ public class VeilRodBlockEntity extends BlockEntity {
             }
         }
 
-        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) pLevel);
+        for (int y = pBlockEntity.size; y >= -pBlockEntity.size; y--) {
+            int delay = Math.abs(y - pBlockEntity.size);
 
-        for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
-            for (int y = -pBlockEntity.size; y <= pBlockEntity.size; y++) {
+            if (pBlockEntity.counter < delay) break;
+
+            for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
                 for (int z = -pBlockEntity.size; z <= pBlockEntity.size; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
@@ -220,6 +228,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+        this.first = true;
         this.setChanged();
     }
 
@@ -259,6 +268,8 @@ public class VeilRodBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
+        pTag.putBoolean("first", this.first);
+
         if (this.ownerUUID != null) {
             pTag.putUUID("owner", this.ownerUUID);
         }
@@ -275,6 +286,8 @@ public class VeilRodBlockEntity extends BlockEntity {
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
+
+        this.first = pTag.getBoolean("first");
 
         if (pTag.contains("owner")) {
             this.ownerUUID = pTag.getUUID("owner");
