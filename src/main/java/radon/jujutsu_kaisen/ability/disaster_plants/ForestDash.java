@@ -7,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -17,7 +20,15 @@ public class ForestDash extends Ability implements Ability.IChannelened {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        return owner.hasLineOfSight(target) && owner.distanceTo(target) >= 3.0D;
+        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) < 3.0D) return false;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        IAbilityData data = cap.getAbilityData();
+
+        return data.isChanneling(this) || HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
     @Override
