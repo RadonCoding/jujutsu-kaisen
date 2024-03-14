@@ -6,6 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -23,14 +24,18 @@ public class ResetSummonsCommand {
         dispatcher.register(Commands.literal("resetsummons").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    public static int reset(ServerPlayer player) {
-        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+    public static int reset(Entity entity) {
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0;
 
         ITenShadowsData data = cap.getTenShadowsData();
+
         data.revive(true);
-        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
+
+        if (entity instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
+        }
         return 1;
     }
 }
