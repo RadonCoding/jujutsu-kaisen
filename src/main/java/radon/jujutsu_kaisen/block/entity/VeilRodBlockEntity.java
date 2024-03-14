@@ -214,7 +214,7 @@ public class VeilRodBlockEntity extends BlockEntity {
                         }
 
                         if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                            be.create(pPos, pBlockEntity.size, state, saved);
+                            be.create(pPos, delay, pBlockEntity.size, state, saved);
                         }
                     }
                 }

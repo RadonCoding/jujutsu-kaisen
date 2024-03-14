@@ -4,32 +4,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
-import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 
 import javax.annotation.Nullable;
 
 public class VeilBlockEntity extends BlockEntity {
-    private int counter;
-
     private boolean initialized;
 
     @Nullable
     private BlockPos parent;
+
+    private int death;
 
     @Nullable
     private BlockState original;
@@ -46,11 +36,11 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
-        if (++pBlockEntity.counter != VeilRodBlockEntity.INTERVAL * 2) return;
-
-        pBlockEntity.counter = 0;
-
         if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || !be.isActive() || be.getSize() != pBlockEntity.size) {
+            --pBlockEntity.death;
+        }
+
+        if (pBlockEntity.death <= 0) {
             pBlockEntity.destroy();
         }
     }
@@ -94,9 +84,10 @@ public class VeilBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(BlockPos parent, int size, BlockState original, CompoundTag saved) {
+    public void create(BlockPos parent, int delay, int size, BlockState original, CompoundTag saved) {
         this.initialized = true;
         this.parent = parent;
+        this.death = delay;
         this.size = size;
         this.original = original;
         this.saved = saved;
