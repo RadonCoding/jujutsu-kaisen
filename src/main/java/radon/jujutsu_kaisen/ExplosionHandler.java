@@ -177,7 +177,7 @@ public class ExplosionHandler {
                                 BlockPos pos = new BlockPos(x, y, z);
                                 Vec3 center = pos.getCenter();
 
-                                if (!VeilHandler.canDestroy(explosion.instigator, event.level, center.x, center.y, center.z)) {
+                                if (!VeilHandler.canDestroy(explosion.instigator, (ServerLevel) event.level, center.x, center.y, center.z)) {
                                     continue;
                                 }
 
