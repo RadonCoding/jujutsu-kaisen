@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SorcererGoal extends Goal {
-    private static final int CHANGE_COPIED_TECHNIQUE_INTERVAL = 10 * 20;
+    private static final int CHANGE_TECHNIQUE_INTERVAL = 10 * 20;
 
     private final PathfinderMob mob;
     //private long lastCanUseCheck;
@@ -67,8 +67,16 @@ public class SorcererGoal extends Goal {
             }
         }
 
+        if (ownerSorcererData.getCurrentAdditional() == null || this.mob.tickCount % CHANGE_TECHNIQUE_INTERVAL == 0) {
+            List<ICursedTechnique> additional = new ArrayList<>(ownerSorcererData.getAdditional());
+
+            if (!additional.isEmpty()) {
+                ownerSorcererData.setCurrentAdditional(additional.get(HelperMethods.RANDOM.nextInt(additional.size())));
+            }
+        }
+
         if (ownerAbilityData.hasToggled(JJKAbilities.RIKA.get())) {
-            if (ownerMimicryData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
+            if (ownerMimicryData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_TECHNIQUE_INTERVAL == 0) {
                 List<ICursedTechnique> copied = new ArrayList<>(ownerMimicryData.getCopied());
 
                 if (!copied.isEmpty()) {

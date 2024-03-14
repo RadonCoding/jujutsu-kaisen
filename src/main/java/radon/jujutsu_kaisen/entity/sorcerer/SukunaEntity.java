@@ -295,7 +295,7 @@ public class SukunaEntity extends SorcererEntity {
         ICursedTechnique technique = sorcererSrc.getTechnique();
 
         if (technique != null) {
-            sorcererDst.addAdditional(sorcererSrc.getTechnique());
+            sorcererDst.addAdditional(technique);
         }
         tenShadowsDst.setTamed(tenShadowsSrc.getTamed());
         tenShadowsDst.setDead(tenShadowsSrc.getDead());
