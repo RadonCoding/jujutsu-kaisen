@@ -199,6 +199,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public boolean isInitialized() {
+        return this.initialized;
+    }
+
+    @Override
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    @Override
     public int getCursedEnergyColor() {
         return this.cursedEnergyColor == 0 ? HelperMethods.getRGB24(ParticleColors.getCursedEnergyColor(this.type)) : this.cursedEnergyColor;
     }

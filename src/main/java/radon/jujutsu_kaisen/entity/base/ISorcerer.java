@@ -76,7 +76,16 @@ public interface ISorcerer {
         return Set.of();
     }
 
-    default void init(ISorcererData sorcererData, ISkillData skillData) {
+    default void init() {
+        IJujutsuCapability cap = ((Entity) this).getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData sorcererData = cap.getSorcererData();
+        ISkillData skillData = cap.getSkillData();
+
+        if (sorcererData.isInitialized()) return;
+
         sorcererData.setExperience(this.getExperience());
         sorcererData.setTechnique(this.getTechnique());
         sorcererData.setNature(this.getNature());
@@ -121,5 +130,7 @@ public interface ISorcerer {
             }
         }
         sorcererData.setEnergy(sorcererData.getMaxEnergy());
+
+        sorcererData.setInitialized(true);
     }
 }

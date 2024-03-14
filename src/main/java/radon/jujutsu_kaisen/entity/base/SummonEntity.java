@@ -136,14 +136,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         super.onAddedToWorld();
 
         if (this instanceof ISorcerer sorcerer) {
-            IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return;
-
-            ISorcererData sorcererData = cap.getSorcererData();
-            ISkillData skillData = cap.getSkillData();
-
-            sorcerer.init(sorcererData, skillData);
+            sorcerer.init();
         }
 
         if (this instanceof ICommandable commandable && commandable.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {

@@ -63,8 +63,8 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
     }
 
     @Override
-    public void init(ISorcererData sorcererData, ISkillData skillData) {
-        // ignored
+    public void init() {
+
     }
 
     @Override

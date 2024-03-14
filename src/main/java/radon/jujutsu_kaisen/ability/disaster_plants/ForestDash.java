@@ -34,7 +34,7 @@ public class ForestDash extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
-        Vec3 start = owner.position().subtract(owner.getUpVector(1.0F).scale(ForestDashEntity.SIZE));
+        Vec3 start = owner.position().subtract(owner.getUpVector(1.0F).scale(ForestDashEntity.SIZE * 1.25D));
 
         for (double i = 0.0D; i <= SPEED * 2; i += ForestDashEntity.SIZE) {
             Vec3 offset = start.add(look.scale(i));
@@ -43,7 +43,6 @@ public class ForestDash extends Ability implements Ability.IChannelened {
             forest.moveTo(offset.x(), offset.y(), offset.z(), 180.0F - RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
             owner.level().addFreshEntity(forest);
         }
-        owner.teleportRelative(0.0D, 0.1D, 0.0D);
         owner.setDeltaMovement(look.scale(SPEED));
     }
 
