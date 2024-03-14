@@ -1,7 +1,7 @@
 {
   "creative_mode_tab.jujutsu_kaisen.main": "Jujutsu Kaisen",
 
-  "gui.jujutsu_kaisen.ability.right_click": "Right-click to remove copied techniques",
+  "gui.jujutsu_kaisen.ability.right_click": "Right-click to remove techniques",
 
   "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$d%%",
   "gui.jujutsu_kaisen.cursed_energy_overlay.experience": "Experience: %1$d",

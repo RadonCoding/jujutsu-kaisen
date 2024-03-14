@@ -83,7 +83,7 @@ public interface ISorcerer {
     default void init(ISorcererData sorcererData, ISkillData skillData) {
         sorcererData.setExperience(this.getExperience());
         sorcererData.setTechnique(this.getTechnique());
-        sorcererData.setAdditional(this.getAdditional());
+        sorcererData.addAdditional(this.getAdditional());
         sorcererData.setNature(this.getNature());
         sorcererData.addTraits(this.getTraits());
         sorcererData.setType(this.getJujutsuType());

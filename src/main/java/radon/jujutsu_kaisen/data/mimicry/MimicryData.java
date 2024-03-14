@@ -33,7 +33,7 @@ public class MimicryData implements IMimicryData {
     }
 
     @Override
-    public void copy(@Nullable ICursedTechnique technique) {
+    public void copy(ICursedTechnique technique) {
         this.copied.add(technique);
     }
 
@@ -41,6 +41,7 @@ public class MimicryData implements IMimicryData {
     public void uncopy(ICursedTechnique technique) {
         if (this.currentCopied == technique) {
             this.currentCopied = null;
+            ServerVisualHandler.sync(this.owner);
         }
         this.copied.remove(technique);
     }
@@ -56,14 +57,14 @@ public class MimicryData implements IMimicryData {
     }
 
     @Override
-    public void setCurrentCopied(@Nullable ICursedTechnique technique) {
-        this.currentCopied = this.currentCopied == technique ? null : technique;
-        ServerVisualHandler.sync(this.owner);
+    public @Nullable ICursedTechnique getCurrentCopied() {
+        return this.currentCopied;
     }
 
     @Override
-    public @Nullable ICursedTechnique getCurrentCopied() {
-        return this.currentCopied;
+    public void setCurrentCopied(@Nullable ICursedTechnique technique) {
+        this.currentCopied = this.currentCopied == technique ? null : technique;
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override

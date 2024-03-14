@@ -59,7 +59,8 @@ public class SorcererData implements ISorcererData {
 
     private @Nullable ICursedTechnique technique;
 
-    private @Nullable ICursedTechnique additional;
+    private final Set<ICursedTechnique> additional;
+    private @Nullable ICursedTechnique currentAdditional;
 
     private CursedEnergyNature nature;
 
@@ -96,6 +97,8 @@ public class SorcererData implements ISorcererData {
         this.domainSize = 1.0F;
 
         this.unlocked = new HashSet<>();
+
+        this.additional = new HashSet<>();
 
         this.nature = CursedEnergyNature.BASIC;
 
@@ -456,8 +459,8 @@ public class SorcererData implements ISorcererData {
             techniques.add(this.technique);
         }
 
-        if (this.additional != null) {
-            techniques.add(this.additional);
+        if (this.currentAdditional != null) {
+            techniques.add(this.currentAdditional);
         }
 
         if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
@@ -493,10 +496,7 @@ public class SorcererData implements ISorcererData {
             techniques.add(this.technique);
         }
 
-        if (this.additional != null) {
-            techniques.add(this.additional);
-        }
-
+        techniques.addAll(this.additional);
         techniques.addAll(mimicryData.getCopied());
         techniques.addAll(curseManipulationData.getAbsorbed());
         techniques.addAll(this.getMimicryTechniques());
@@ -933,14 +933,38 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public @Nullable ICursedTechnique getAdditional() {
-        return this.additional;
+    public void addAdditional(ICursedTechnique technique) {
+        this.additional.add(technique);
     }
 
     @Override
-    public void setAdditional(@Nullable ICursedTechnique technique) {
-        this.additional = technique;
+    public void removeAdditional(ICursedTechnique technique) {
+        if (this.currentAdditional == technique) {
+            this.currentAdditional = null;
+            ServerVisualHandler.sync(this.owner);
+        }
+        this.additional.remove(technique);
+    }
+
+    @Override
+    public boolean hasAdditional(ICursedTechnique technique) {
+        return this.additional.contains(technique);
+    }
+
+    @Override
+    public @Nullable ICursedTechnique getCurrentAdditional() {
+        return this.currentAdditional;
+    }
+
+    @Override
+    public void setCurrentAdditional(@Nullable ICursedTechnique technique) {
+        this.currentAdditional = technique;
         ServerVisualHandler.sync(this.owner);
+    }
+
+    @Override
+    public Set<ICursedTechnique> getAdditional() {
+        return this.additional;
     }
 
     @Override
@@ -955,8 +979,16 @@ public class SorcererData implements ISorcererData {
         if (this.technique != null) {
             nbt.putString("technique", JJKCursedTechniques.getKey(this.technique).toString());
         }
-        if (this.additional != null) {
-            nbt.putString("additional", JJKCursedTechniques.getKey(this.additional).toString());
+
+        ListTag additionalTag = new ListTag();
+
+        for (ICursedTechnique technique : this.additional) {
+            additionalTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
+        }
+        nbt.put("additional", additionalTag);
+
+        if (this.currentAdditional != null) {
+            nbt.putString("current_additional", JJKCursedTechniques.getKey(this.currentAdditional).toString());
         }
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
@@ -1001,8 +1033,13 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("technique")) {
             this.technique = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique")));
         }
-        if (nbt.contains("additional")) {
-            this.additional = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("additional")));
+
+        for (Tag tag : nbt.getList("additional", Tag.TAG_STRING)) {
+            this.additional.add(JJKCursedTechniques.getValue(new ResourceLocation(tag.getAsString())));
+        }
+
+        if (nbt.contains("current_additional")) {
+            this.currentAdditional = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("current_additional")));
         }
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");

@@ -10,7 +10,7 @@ import java.util.Set;
 public interface IMimicryData extends INBTSerializable<CompoundTag> {
     void tick();
 
-    void copy(@Nullable ICursedTechnique technique);
+    void copy(ICursedTechnique technique);
 
     void uncopy(ICursedTechnique technique);
 
@@ -18,7 +18,7 @@ public interface IMimicryData extends INBTSerializable<CompoundTag> {
 
     Set<ICursedTechnique> getCopied();
 
-    void setCurrentCopied(@Nullable ICursedTechnique technique);
-
     @Nullable ICursedTechnique getCurrentCopied();
+
+    void setCurrentCopied(@Nullable ICursedTechnique technique);
 }

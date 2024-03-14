@@ -13,6 +13,7 @@ public class DisplayItem {
     public AbstractMap.SimpleEntry<AbsorbedCurse, Integer> curse;
     public ICursedTechnique copied;
     public ICursedTechnique absorbed;
+    public ICursedTechnique additional;
     public ItemStack item;
 
     public DisplayItem(Type type) {
@@ -40,10 +41,10 @@ public class DisplayItem {
     public DisplayItem(Type type, ICursedTechnique technique) {
         this(type);
 
-        if (this.type == Type.COPIED) {
-            this.copied = technique;
-        } else {
-            this.absorbed = technique;
+        switch (this.type) {
+            case COPIED -> this.copied = technique;
+            case ABSORBED -> this.absorbed = technique;
+            case ADDITIONAL -> this.additional = technique;
         }
     }
 
@@ -52,6 +53,7 @@ public class DisplayItem {
         CURSE,
         COPIED,
         ABSORBED,
+        ADDITIONAL,
         ITEM
     }
 }

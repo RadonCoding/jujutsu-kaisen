@@ -66,9 +66,17 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void setDomainSize(float domainSize);
 
-    @Nullable ICursedTechnique getAdditional();
+    void addAdditional(ICursedTechnique technique);
 
-    void setAdditional(ICursedTechnique technique);
+    void removeAdditional(ICursedTechnique technique);
+
+    boolean hasAdditional(ICursedTechnique technique);
+
+    Set<ICursedTechnique> getAdditional();
+
+    @Nullable ICursedTechnique getCurrentAdditional();
+
+    void setCurrentAdditional(@Nullable ICursedTechnique technique);
 
     @Nullable ICursedTechnique getTechnique();
 
