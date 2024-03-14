@@ -1,4 +1,5 @@
 {
+  "type": "neoforge:add_spawn_costs",
   "biomes": "#jujutsu_kaisen:has_structure/headquarters",
   "entity_types": [
     "jujutsu_kaisen:satoru_gojo",
