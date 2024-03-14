@@ -13,6 +13,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -30,6 +31,8 @@ import java.util.List;
 import java.util.Set;
 
 public class SorcererVillager extends Villager implements ISorcerer {
+    private static final int TECHNIQUE_CHANCE = 10;
+
     private final Set<Skill> majors;
 
     private SorcererGrade grade;
@@ -64,14 +67,7 @@ public class SorcererVillager extends Villager implements ISorcerer {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData sorcererData = cap.getSorcererData();
-        ISkillData skillData = cap.getSkillData();
-
-        this.init(sorcererData, skillData);
+        this.init();
     }
 
     @Override
@@ -141,6 +137,10 @@ public class SorcererVillager extends Villager implements ISorcerer {
 
     @Override
     public @Nullable ICursedTechnique getTechnique() {
+        if (this.random.nextInt(TECHNIQUE_CHANCE) == 0) {
+            List<ICursedTechnique> techniques = ConfigHolder.SERVER.getUnlockableTechniques();
+            return techniques.get(this.random.nextInt(techniques.size()));
+        }
         return null;
     }
 

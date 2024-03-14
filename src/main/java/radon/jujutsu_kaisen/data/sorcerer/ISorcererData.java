@@ -14,6 +14,10 @@ import java.util.Set;
 public interface ISorcererData extends INBTSerializable<CompoundTag> {
     void tick();
 
+    boolean isInitialized();
+
+    void setInitialized(boolean initialized);
+
     int getCursedEnergyColor();
 
     void setCursedEnergyColor(int color);

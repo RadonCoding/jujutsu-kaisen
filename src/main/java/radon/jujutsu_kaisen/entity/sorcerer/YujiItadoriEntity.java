@@ -52,11 +52,16 @@ public class YujiItadoriEntity extends SorcererEntity {
         return List.of(Trait.VESSEL);
     }
 
-
     @Override
-    public void init(ISorcererData sorcererData, ISkillData skillData) {
-        super.init(sorcererData, skillData);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
 
-        sorcererData.setFingers(15);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
+        data.setFingers(15);
     }
 }

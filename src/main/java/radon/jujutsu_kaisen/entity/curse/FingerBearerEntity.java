@@ -4,6 +4,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -72,10 +74,16 @@ public class FingerBearerEntity extends CursedSpirit {
     }
 
     @Override
-    public void init(ISorcererData sorcererData, ISkillData skillData) {
-        super.init(sorcererData, skillData);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
 
-        sorcererData.addExtraEnergy(((CursedObjectItem) JJKItems.SUKUNA_FINGER.get().getDefaultInstance().getItem()).getEnergy());
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
+        data.addExtraEnergy(((CursedObjectItem) JJKItems.SUKUNA_FINGER.get().getDefaultInstance().getItem()).getEnergy());
     }
 
     private PlayState walkRunPredicate(AnimationState<FingerBearerEntity> animationState) {
