@@ -15,6 +15,7 @@ import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
@@ -217,7 +218,7 @@ public class VeilHandler {
 
                         ISkillData domainOwnerData = domainOwnerCap.getSkillData();
 
-                        if (veilOwnerData.getSkill(Skill.BARRIER) / 2 < domainOwnerData.getSkill(Skill.BARRIER)) {
+                        if (Math.round(veilOwnerData.getSkill(Skill.BARRIER) * (1.0F / ConfigHolder.SERVER.domainStrength.get())) < domainOwnerData.getSkill(Skill.BARRIER)) {
                             valid = false;
                             break;
                         }
