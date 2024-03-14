@@ -179,69 +179,11 @@ public class VeilHandler {
         return data.getSkill(Skill.BARRIER);
     }
 
-    public static boolean isProtectedBy(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
-        if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity be))
-            return false;
-
-        int radius = be.getSize();
-        BlockPos relative = target.subtract(veil);
-
-        if (relative.distSqr(Vec3i.ZERO) >= radius * radius) return false;
-
-        BlockPos protector = null;
-
-        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
-            for (BlockPos pos : entry.getValue()) {
-                if (isProtectedBy(level, entry.getKey(), pos, target)) {
-                    if (protector == null) {
-                        protector = pos;
-                    } else {
-                        if (!(level.getBlockEntity(protector) instanceof VeilRodBlockEntity firstVeil)) {
-                            protector = pos;
-                            continue;
-                        }
-
-                        if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity secondVeil)) {
-                            continue;
-                        }
-
-                        if (firstVeil.ownerUUID == null || !(level.getEntity(firstVeil.ownerUUID) instanceof LivingEntity firstOwner)) {
-                            protector = pos;
-                            continue;
-                        }
-
-                        if (secondVeil.ownerUUID == null || !(level.getEntity(secondVeil.ownerUUID) instanceof LivingEntity secondOwner)) {
-                            continue;
-                        }
-
-                        int first = Math.round(getBarrierSkill(firstOwner) * (firstOwner.distanceToSqr(protector.getCenter()) >=
-                                firstVeil.getSize() * firstVeil.getSize() ? 1.5F : 1.0F));
-                        int second = Math.round(getBarrierSkill(secondOwner) * (secondOwner.distanceToSqr(pos.getCenter()) >=
-                                secondVeil.getSize() * secondVeil.getSize() ? 1.5F : 1.0F));
-
-                        // Check if the current one is stronger than the current strongest
-                        if (second > first) {
-                            protector = pos;
-                            continue;
-                        }
-
-                        // If they're equal neither wins
-                        if (first == second) {
-                            protector = null;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (protector == null || !protector.equals(veil)) return false;
-
-        boolean valid = true;
+    public static boolean isOverriddenByDomain(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
+        if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity be)) return false;
 
         // If there's a domain that is at least 50% the strength of the veil's then it will win
         for (Map.Entry<ResourceKey<Level>, Set<UUID>> domainEntry : domains.entrySet()) {
-            if (!valid) break;
-
             if (domainEntry.getKey() != dimension) continue;
 
             for (UUID identifier : domainEntry.getValue()) {
@@ -249,8 +191,7 @@ public class VeilHandler {
                 if (!domain.isInsideBarrier(target)) continue;
 
                 if (be.ownerUUID == null || !(level.getEntity(be.ownerUUID) instanceof LivingEntity veilOwner)) {
-                    valid = false;
-                    break;
+                    return true;
                 }
 
                 LivingEntity domainOwner = domain.getOwner();
@@ -260,12 +201,62 @@ public class VeilHandler {
                 boolean outside = veilOwner.distanceToSqr(veil.getCenter()) >= be.getSize() * be.getSize();
 
                 if (Math.round(getBarrierSkill(veilOwner) * (1.0F / ConfigHolder.SERVER.domainStrength.get()) * (outside ? 1.5F : 1.0F)) < getBarrierSkill(domainOwner)) {
-                    valid = false;
-                    break;
+                    return true;
                 }
             }
         }
-        return valid;
+        return false;
+    }
+
+    public static boolean isProtectedBy(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
+        if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity firstVeil))
+            return false;
+
+        if (target.subtract(veil).distSqr(Vec3i.ZERO) >= firstVeil.getSize() * firstVeil.getSize()) return false;
+
+        if (isOverriddenByDomain(level, dimension, veil, target)) return false;
+
+        BlockPos protector = null;
+
+        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
+            for (BlockPos pos : entry.getValue()) {
+                if (pos == veil) continue;
+
+                if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity secondVeil)) {
+                    continue;
+                }
+
+                if (target.subtract(pos).distSqr(Vec3i.ZERO) >= secondVeil.getSize() * secondVeil.getSize()) continue;
+
+                if (isOverriddenByDomain(level, dimension, veil, target)) continue;
+
+                if (firstVeil.ownerUUID == null || !(level.getEntity(firstVeil.ownerUUID) instanceof LivingEntity firstOwner)) {
+                    protector = pos;
+                    continue;
+                }
+
+                if (secondVeil.ownerUUID == null || !(level.getEntity(secondVeil.ownerUUID) instanceof LivingEntity secondOwner)) {
+                    continue;
+                }
+
+                int first = Math.round(getBarrierSkill(firstOwner) * (firstOwner.distanceToSqr(protector.getCenter()) >=
+                        firstVeil.getSize() * firstVeil.getSize() ? 1.5F : 1.0F));
+                int second = Math.round(getBarrierSkill(secondOwner) * (secondOwner.distanceToSqr(pos.getCenter()) >=
+                        secondVeil.getSize() * secondVeil.getSize() ? 1.5F : 1.0F));
+
+                // Check if the current one is stronger than the current strongest
+                if (second > first) {
+                    protector = pos;
+                    continue;
+                }
+
+                // If they're equal neither wins
+                if (first == second) {
+                    protector = null;
+                }
+            }
+        }
+        return protector == null;
     }
 
     public static boolean isProtected(ServerLevel level, BlockPos target) {
