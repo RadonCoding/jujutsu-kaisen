@@ -54,10 +54,6 @@ public interface ISorcerer {
 
     @Nullable ICursedTechnique getTechnique();
 
-    default @Nullable ICursedTechnique getAdditional() {
-        return null;
-    }
-
     default @NotNull List<Trait> getTraits() {
         return List.of();
     }
@@ -83,7 +79,6 @@ public interface ISorcerer {
     default void init(ISorcererData sorcererData, ISkillData skillData) {
         sorcererData.setExperience(this.getExperience());
         sorcererData.setTechnique(this.getTechnique());
-        sorcererData.addAdditional(this.getAdditional());
         sorcererData.setNature(this.getNature());
         sorcererData.addTraits(this.getTraits());
         sorcererData.setType(this.getJujutsuType());
