@@ -128,7 +128,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
             Optional<UUID> identifier = this.entityData.get(DATA_TARGET);
 
             if (identifier.isPresent()) {
-                if (source.getUUID() == identifier.get()) {
+                if (source.getUUID().equals(identifier.get())) {
                     return false;
                 }
             }
