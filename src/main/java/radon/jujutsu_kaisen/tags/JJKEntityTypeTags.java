@@ -8,5 +8,5 @@ import net.minecraft.world.entity.EntityType;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKEntityTypeTags {
-    public static final TagKey<EntityType<?>> SPAWNABLE_CURSE = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "spawnable_curse"));
+    public static final TagKey<EntityType<?>> UNIQUE = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "unique"));
 }

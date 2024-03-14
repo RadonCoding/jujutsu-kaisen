@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererVillager;
+import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -57,8 +58,11 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
-        if (pSpawnReason == MobSpawnType.CHUNK_GENERATION || pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.STRUCTURE) {
-            if (!this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(256.0D, 256.0D, 256.0D)).isEmpty()) return false;
+        if (this.getType().is(JJKEntityTypeTags.UNIQUE)) {
+            if (pSpawnReason == MobSpawnType.CHUNK_GENERATION || pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.STRUCTURE) {
+                if (!this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(256.0D, 256.0D, 256.0D)).isEmpty())
+                    return false;
+            }
         }
         return super.checkSpawnRules(pLevel, pSpawnReason);
     }
