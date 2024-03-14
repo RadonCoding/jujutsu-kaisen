@@ -51,10 +51,6 @@ public class SorcererVillager extends Villager implements ISorcerer {
         this.grade = grade;
     }
 
-    public void addMajor(Skill skill) {
-        this.majors.add(skill);
-    }
-
     public void addMajors(Skill... skills) {
         this.majors.addAll(List.of(skills));
     }
