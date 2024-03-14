@@ -82,6 +82,8 @@ public class JJKEventHandler {
 
             if (!(event.getTarget() instanceof LivingEntity target)) return;
 
+            if (target.isDeadOrDying()) return;
+
             IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;
