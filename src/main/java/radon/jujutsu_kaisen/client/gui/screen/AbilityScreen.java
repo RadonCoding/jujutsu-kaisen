@@ -107,7 +107,7 @@ public class AbilityScreen extends RadialScreen {
                 PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
             }
             case ADDITIONAL -> {
-                sorcererData.addAdditional(item.additional);
+                sorcererData.setCurrentAdditional(item.additional);
                 PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.additional));
             }
         }
