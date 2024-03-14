@@ -17,12 +17,12 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class AddAdditionalCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("addadditional")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkaddadditional")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("entity", EntityArgument.entity()).then(Commands.argument("technique", CursedTechniqueArgument.cursedTechnique())
                         .executes(ctx -> addAdditional(EntityArgument.getEntity(ctx, "entity"), CursedTechniqueArgument.getTechnique(ctx, "technique"))))));
 
-        dispatcher.register(Commands.literal("addadditional").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjkaddadditional").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int addAdditional(Entity entity, ICursedTechnique technique) {

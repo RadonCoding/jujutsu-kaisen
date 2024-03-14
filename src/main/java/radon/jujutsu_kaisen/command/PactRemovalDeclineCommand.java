@@ -17,12 +17,12 @@ import radon.jujutsu_kaisen.pact.Pact;
 
 public class PactRemovalDeclineCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactremovaldecline")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkpactremovaldecline")
                 .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("pact", PactArgument.pact())
                                 .executes(ctx -> decline(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), PactArgument.getPact(ctx, "pact"))))));
 
-        dispatcher.register(Commands.literal("pactremovaldecline").redirect(node));
+        dispatcher.register(Commands.literal("jjkpactremovaldecline").redirect(node));
     }
 
     public static int decline(CommandSourceStack stack, ServerPlayer dst, Pact pact) {
