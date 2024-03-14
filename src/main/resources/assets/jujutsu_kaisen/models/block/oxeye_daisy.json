@@ -2,6 +2,6 @@
   "parent": "minecraft:block/cross",
   "render_type": "cutout",
   "textures": {
-    "cross": "minecraft:block/oxye_daisy"
+    "cross": "minecraft:block/oxeye_daisy"
   }
 }
