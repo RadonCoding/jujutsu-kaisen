@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -25,6 +26,7 @@ import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashSet;
 import java.util.List;
@@ -142,6 +144,14 @@ public class SorcererVillager extends Villager implements ISorcerer {
             return techniques.get(this.random.nextInt(techniques.size()));
         }
         return null;
+    }
+
+    @Override
+    public @Nullable CursedEnergyNature getNature() {
+        if (this.random.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
+            return HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));
+        }
+        return ISorcerer.super.getNature();
     }
 
     @Override
