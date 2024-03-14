@@ -1,12 +1,6 @@
 {
   "type": "neoforge:add_spawns",
   "structures": "#jujutsu_kaisen:is_haunted",
-  "spawn_costs": {
-    "jujutsu_kaisen:sorcerer_villager": {
-      "charge": 0.16,
-      "energy_budget": 0.01
-    }
-  },
   "spawners": [
     {
       "type": "jujutsu_kaisen:sorcerer_villager",

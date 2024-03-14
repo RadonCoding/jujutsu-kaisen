@@ -43,6 +43,7 @@ public class ForestDash extends Ability implements Ability.IChannelened {
             forest.moveTo(offset.x(), offset.y(), offset.z(), 180.0F - RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
             owner.level().addFreshEntity(forest);
         }
+        owner.teleportRelative(0.0D, 0.1D, 0.0D);
         owner.setDeltaMovement(look.scale(SPEED));
     }
 
