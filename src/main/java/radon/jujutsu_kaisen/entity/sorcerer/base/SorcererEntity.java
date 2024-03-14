@@ -58,6 +58,8 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         Arrays.fill(this.handDropChances, 1.0F);
     }
 
+
+
     @Override
     public boolean hasMeleeAttack() {
         return true;
