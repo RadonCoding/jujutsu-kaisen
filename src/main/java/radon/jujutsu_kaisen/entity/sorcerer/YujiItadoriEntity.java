@@ -33,34 +33,6 @@ public class YujiItadoriEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
-        ItemStack stack = pPlayer.getItemInHand(pHand);
-
-        if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return super.mobInteract(pPlayer, pHand);
-
-            ISorcererData data = cap.getSorcererData();
-
-            if (data == null) return super.mobInteract(pPlayer, pHand);
-
-            int count = stack.getCount();
-            int eaten = data.addFingers(count);
-
-            if (eaten > 0) {
-                this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-
-                stack.shrink(eaten);
-
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
-            }
-            return InteractionResult.FAIL;
-        }
-        return super.mobInteract(pPlayer, pHand);
-    }
-
-    @Override
     public float getExperience() {
         return SorcererGrade.GRADE_1.getRequiredExperience();
     }

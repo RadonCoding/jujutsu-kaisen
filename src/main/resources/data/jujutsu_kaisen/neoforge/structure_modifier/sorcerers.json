@@ -1,12 +1,54 @@
 {
   "type": "neoforge:add_spawns",
-  "structures": "#jujutsu_kaisen:is_haunted",
+  "structures": "#jujutsu_kaisen:has_sorcerers",
   "spawners": [
     {
-      "type": "jujutsu_kaisen:sorcerer_villager",
+      "type": "jujutsu_kaisen:satoru_gojo",
       "weight": 100,
-      "minCount": 2,
-      "maxCount": 6
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "jujutsu_kaisen:yuta_okkotsu",
+      "weight": 100,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "jujutsu_kaisen:megumi_fushiguro",
+      "weight": 100,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "jujutsu_kaisen:yuji_itadori",
+      "weight": 100,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "jujutsu_kaisen:toge_inumaki",
+      "weight": 100,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "jujutsu_kaisen:suguru_geto",
+      "weight": 100,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "jujutsu_kaisen:naoya_zenin",
+      "weight": 100,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "jujutsu_kaisen:aoi_todo",
+      "weight": 100,
+      "minCount": 1,
+      "maxCount": 1
     }
   ]
 }

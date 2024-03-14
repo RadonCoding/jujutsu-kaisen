@@ -38,23 +38,6 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
-        ItemStack stack = pPlayer.getItemInHand(pHand);
-
-        if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-
-            int count = stack.getCount();
-
-            stack.shrink(count);
-            EntityUtil.convertTo(this, new SukunaEntity(this, count, false), true, false);
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
-        } else {
-            return super.mobInteract(pPlayer, pHand);
-        }
-    }
-
-    @Override
     public float getExperience() {
         return SorcererGrade.GRADE_1.getRequiredExperience();
     }
