@@ -7,6 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -19,14 +20,14 @@ public class SetExperienceCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("setexperience")
                 .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("experience", FloatArgumentType.floatArg())
-                        .executes(ctx -> setExperience(EntityArgument.getPlayer(ctx, "player"), FloatArgumentType.getFloat(ctx, "experience"))))));
+                .then(Commands.argument("entity", EntityArgument.entity()).then(Commands.argument("experience", FloatArgumentType.floatArg())
+                        .executes(ctx -> setExperience(EntityArgument.getEntity(ctx, "entity"), FloatArgumentType.getFloat(ctx, "experience"))))));
 
         dispatcher.register(Commands.literal("setexperience").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    public static int setExperience(ServerPlayer player, float experience) {
-        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+    public static int setExperience(Entity entity, float experience) {
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0;
 
@@ -34,8 +35,9 @@ public class SetExperienceCommand {
 
         data.setExperience(experience);
 
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-
+        if (entity instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+        }
         return 1;
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.world.entity.Entity;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -19,14 +20,14 @@ public class ResetSkillsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("resetskills")
                 .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
-                        resetSkills(EntityArgument.getPlayer(ctx, "player")))));
+                .then(Commands.argument("entity", EntityArgument.entity()).executes((ctx) ->
+                        resetSkills(EntityArgument.getEntity(ctx, "entity")))));
 
         dispatcher.register(Commands.literal("resetskills").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    public static int resetSkills(ServerPlayer player) {
-        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+    public static int resetSkills(Entity entity) {
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0;
 
@@ -34,8 +35,9 @@ public class ResetSkillsCommand {
 
         data.resetSkills();
 
-        PacketHandler.sendToClient(new SyncSkillDataSC2Packet(data.serializeNBT()), player);
-
+        if (entity instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSkillDataSC2Packet(data.serializeNBT()), player);
+        }
         return 1;
     }
 }

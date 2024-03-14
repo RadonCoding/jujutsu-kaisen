@@ -16,7 +16,7 @@ public class RerollCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("reroll")
                 .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
+                .then(Commands.argument("player", EntityArgument.player()).executes((ctx) ->
                         reroll(EntityArgument.getPlayer(ctx, "player")))));
 
         dispatcher.register(Commands.literal("reroll").requires((player) -> player.hasPermission(2)).redirect(node));

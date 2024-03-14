@@ -17,8 +17,8 @@ public class ResetSummonsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("resetsummons")
                 .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
-                        reset(EntityArgument.getPlayer(ctx, "player")))));
+                .then(Commands.argument("entity", EntityArgument.entity()).executes((ctx) ->
+                        reset(EntityArgument.getEntity(ctx, "entity")))));
 
         dispatcher.register(Commands.literal("resetsummons").requires((player) -> player.hasPermission(2)).redirect(node));
     }

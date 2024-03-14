@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.pact.Pact;
 public class PactCreationDeclineCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactcreationdecline")
-                .then(Commands.argument("player", EntityArgument.entity())
+                .then(Commands.argument("entity", EntityArgument.player())
                         .then(Commands.argument("pact", PactArgument.pact())
                                 .executes(ctx -> decline(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), PactArgument.getPact(ctx, "pact"))))));
 

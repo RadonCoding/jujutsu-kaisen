@@ -7,6 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -17,14 +18,14 @@ public class AddSkillPointsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("addskillpoints")
                 .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("points", IntegerArgumentType.integer())
-                        .executes(ctx -> addSkillPoints(EntityArgument.getPlayer(ctx, "player"), IntegerArgumentType.getInteger(ctx, "points"))))));
+                .then(Commands.argument("entity", EntityArgument.entity()).then(Commands.argument("points", IntegerArgumentType.integer())
+                        .executes(ctx -> addSkillPoints(EntityArgument.getEntity(ctx, "entity"), IntegerArgumentType.getInteger(ctx, "points"))))));
 
         dispatcher.register(Commands.literal("addskillpoints").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    public static int addSkillPoints(ServerPlayer player, int points) {
-        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+    public static int addSkillPoints(Entity entity, int points) {
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0;
 
@@ -32,8 +33,9 @@ public class AddSkillPointsCommand {
 
         data.addSkillPoints(points);
 
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-
+        if (entity instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+        }
         return 1;
     }
 }
