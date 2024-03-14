@@ -20,13 +20,13 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetVeilOwnerCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("setveilowner")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjksetveilowner")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("pos", BlockPosArgument.blockPos())
                         .then(Commands.argument("owner", EntityArgument.entity())
                         .executes((ctx) -> setVeilOwner(BlockPosArgument.getBlockPos(ctx, "pos"), EntityArgument.getEntity(ctx, "owner"))))));
 
-        dispatcher.register(Commands.literal("setveilowner").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjksetveilowner").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int setVeilOwner(BlockPos pos, Entity entity) {

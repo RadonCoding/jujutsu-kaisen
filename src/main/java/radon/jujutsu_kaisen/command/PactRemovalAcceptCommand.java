@@ -19,12 +19,12 @@ import radon.jujutsu_kaisen.pact.Pact;
 
 public class PactRemovalAcceptCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactremovalaccept")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkpactremovalaccept")
                 .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("pact", PactArgument.pact())
                                 .executes(ctx -> accept(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), PactArgument.getPact(ctx, "pact"))))));
 
-        dispatcher.register(Commands.literal("pactremovalaccept").redirect(node));
+        dispatcher.register(Commands.literal("jjkpactremovalaccept").redirect(node));
     }
 
     public static int accept(CommandSourceStack stack, ServerPlayer dst, Pact pact) {

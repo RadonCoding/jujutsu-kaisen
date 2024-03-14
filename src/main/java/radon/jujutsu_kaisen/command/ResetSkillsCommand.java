@@ -18,12 +18,12 @@ import radon.jujutsu_kaisen.util.PlayerUtil;
 
 public class ResetSkillsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("resetskills")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjkresetskills")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("entity", EntityArgument.entity()).executes((ctx) ->
                         resetSkills(EntityArgument.getEntity(ctx, "entity")))));
 
-        dispatcher.register(Commands.literal("resetskills").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjkresetskills").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int resetSkills(Entity entity) {

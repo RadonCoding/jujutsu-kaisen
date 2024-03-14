@@ -18,12 +18,12 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetNatureCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("setnature")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("jjksetnature")
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("entity", EntityArgument.entity()).then(Commands.argument("nature", EnumArgument.enumArgument(CursedEnergyNature.class)).executes((ctx) ->
                         setType(EntityArgument.getEntity(ctx, "entity"), ctx.getArgument("nature", CursedEnergyNature.class))))));
 
-        dispatcher.register(Commands.literal("setnature").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("jjksetnature").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int setType(Entity entity, CursedEnergyNature nature) {
