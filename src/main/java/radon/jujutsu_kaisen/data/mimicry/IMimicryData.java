@@ -12,6 +12,8 @@ public interface IMimicryData extends INBTSerializable<CompoundTag> {
 
     void copy(ICursedTechnique technique);
 
+    void copy(Set<ICursedTechnique> techniques);
+
     void uncopy(ICursedTechnique technique);
 
     boolean hasCopied(ICursedTechnique technique);

@@ -41,6 +41,11 @@ public class CurseManipulationData implements ICurseManipulationData {
     }
 
     @Override
+    public void absorb(Set<ICursedTechnique> techniques) {
+        this.absorbed.addAll(techniques);
+    }
+
+    @Override
     public void unabsorb(ICursedTechnique technique) {
         this.absorbed.remove(technique);
         this.currentAbsorbed = null;

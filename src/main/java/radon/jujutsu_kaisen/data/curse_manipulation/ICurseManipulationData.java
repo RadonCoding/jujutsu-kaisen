@@ -12,7 +12,9 @@ import java.util.Set;
 public interface ICurseManipulationData extends INBTSerializable<CompoundTag> {
     void tick();
 
-    void absorb(@Nullable ICursedTechnique technique);
+    void absorb(ICursedTechnique technique);
+
+    void absorb(Set<ICursedTechnique> techniques);
 
     void unabsorb(ICursedTechnique technique);
 

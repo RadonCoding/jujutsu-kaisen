@@ -38,6 +38,11 @@ public class MimicryData implements IMimicryData {
     }
 
     @Override
+    public void copy(Set<ICursedTechnique> techniques) {
+        this.copied.addAll(techniques);
+    }
+
+    @Override
     public void uncopy(ICursedTechnique technique) {
         if (this.currentCopied == technique) {
             this.currentCopied = null;
