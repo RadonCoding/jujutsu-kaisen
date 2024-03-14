@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.StructureUtils;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -39,6 +42,7 @@ import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.*;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
@@ -908,6 +912,11 @@ public class SorcererData implements ISorcererData {
         }
         this.energy = this.getMaxEnergy();
 
+        BlockPos pos = ((ServerLevel) owner.level()).findNearestMapStructure(JJKStructureTags.HAS_SORCERERS, owner.blockPosition(), 100, true);
+
+        if (pos != null) {
+            owner.addItem(MapItem.create(owner.level(), pos.getX(), pos.getZ(), (byte) 2, true, true));
+        }
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), owner);
     }
 
