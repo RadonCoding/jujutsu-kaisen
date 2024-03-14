@@ -76,8 +76,6 @@ public class SorcererVillager extends Villager implements ISorcerer {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("grade", this.grade.ordinal());
-
         ListTag majorsTag = new ListTag();
 
         for (Skill major : this.majors) {
@@ -89,8 +87,6 @@ public class SorcererVillager extends Villager implements ISorcerer {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-
-        this.grade = SorcererGrade.values()[pCompound.getInt("grade")];
 
         for (Tag tag : pCompound.getList("majors", Tag.TAG_INT)) {
             this.majors.add(Skill.values()[((IntTag) tag).getAsInt()]);
