@@ -15,7 +15,7 @@
     "jujutsu_kaisen:ko_guy"
   ],
   "spawn_cost": {
-    "charge": 1.28,
+    "charge": 0.32,
     "energy_budget": 0.01
   }
 }
