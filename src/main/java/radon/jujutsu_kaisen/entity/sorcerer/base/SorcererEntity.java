@@ -9,10 +9,7 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -58,7 +55,13 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         Arrays.fill(this.handDropChances, 1.0F);
     }
 
-
+    @Override
+    public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
+        if (pSpawnReason == MobSpawnType.CHUNK_GENERATION || pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.STRUCTURE) {
+            if (!this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(256.0D, 256.0D, 256.0D)).isEmpty()) return false;
+        }
+        return super.checkSpawnRules(pLevel, pSpawnReason);
+    }
 
     @Override
     public boolean hasMeleeAttack() {
