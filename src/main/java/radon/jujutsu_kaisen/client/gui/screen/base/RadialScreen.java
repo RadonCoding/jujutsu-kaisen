@@ -148,7 +148,8 @@ public abstract class RadialScreen extends Screen {
 
         if (cap == null) return false;
 
-        IMimicryData data = cap.getMimicryData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IMimicryData mimicryData = cap.getMimicryData();
 
         if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
             DisplayItem item = this.getCurrent().get(this.hovered);
@@ -156,12 +157,12 @@ public abstract class RadialScreen extends Screen {
             if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (item.type == DisplayItem.Type.COPIED) {
                     PacketHandler.sendToServer(new UncopyC2SPacket(item.copied));
-                    data.uncopy(item.copied);
+                    mimicryData.uncopy(item.copied);
 
                     this.init();
                 } else if (item.type == DisplayItem.Type.ADDITIONAL) {
-                    PacketHandler.sendToServer(new RemoveAdditionalC2SPacket(item.copied));
-                    data.uncopy(item.copied);
+                    PacketHandler.sendToServer(new RemoveAdditionalC2SPacket(item.additional));
+                    sorcererData.removeAdditional(item.additional);
 
                     this.init();
                 }
