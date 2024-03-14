@@ -920,7 +920,10 @@ public class SorcererData implements ISorcererData {
         if (pos != null) {
             ItemStack stack = MapItem.create(owner.level(), pos.getX(), pos.getZ(), (byte) 2, true, true);
             MapItem.renderBiomePreviewMap(level, stack);
-            MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.PLAINS_VILLAGE);
+            MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.RED_MARKER);
+
+            stack.setHoverName(Component.translatable(String.format("item.%s.headquarters_map", JujutsuKaisen.MOD_ID)));
+
             owner.addItem(stack);
         }
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), owner);
