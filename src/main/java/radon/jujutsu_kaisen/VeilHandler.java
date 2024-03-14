@@ -268,7 +268,7 @@ public class VeilHandler {
                 }
             }
         }
-        return false;
+        return protector == null || isProtectedBy(level, level.dimension(), protector, target);
     }
 
     @SubscribeEvent
