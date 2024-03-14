@@ -157,6 +157,7 @@ public class JJKEntities {
                     .sized(1.0F, 2.9F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "heian_sukuna")
                             .toString()));
+
     public static DeferredHolder<EntityType<?>, EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
             EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_fushiguro")
