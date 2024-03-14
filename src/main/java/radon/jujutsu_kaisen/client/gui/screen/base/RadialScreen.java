@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.datafixers.types.templates.Sum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -17,24 +16,19 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.base.ICursedSpeech;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
@@ -161,7 +155,12 @@ public abstract class RadialScreen extends Screen {
 
             if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (item.type == DisplayItem.Type.COPIED) {
-                    PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
+                    PacketHandler.sendToServer(new UncopyC2SPacket(item.copied));
+                    data.uncopy(item.copied);
+
+                    this.init();
+                } else if (item.type == DisplayItem.Type.ADDITIONAL) {
+                    PacketHandler.sendToServer(new RemoveAdditionalC2SPacket(item.copied));
                     data.uncopy(item.copied);
 
                     this.init();
@@ -224,13 +223,15 @@ public abstract class RadialScreen extends Screen {
 
         if (cap == null) return false;
 
+        ISorcererData sorcererData = cap.getSorcererData();
         IAbilityData abilityData = cap.getAbilityData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
         IMimicryData mimicryData = cap.getMimicryData();
 
         return item.type == DisplayItem.Type.ABILITY && abilityData.hasToggled(item.ability) ||
                 item.type == DisplayItem.Type.COPIED && mimicryData.getCurrentCopied() == item.copied ||
-                item.type == DisplayItem.Type.ABSORBED && curseManipulationData.getCurrentAbsorbed() == item.absorbed;
+                item.type == DisplayItem.Type.ABSORBED && curseManipulationData.getCurrentAbsorbed() == item.absorbed ||
+                item.type == DisplayItem.Type.ABSORBED && sorcererData.getCurrentAdditional() == item.additional;
     }
 
     @Override
@@ -415,14 +416,23 @@ public abstract class RadialScreen extends Screen {
                 pGuiGraphics.pose().translate(posX, y, 0.0F);
                 pGuiGraphics.drawCenteredString(this.font, item.ability.getName(), posX, y, 0xFFFFFF);
                 pGuiGraphics.pose().popPose();
-            } else if (item.type == DisplayItem.Type.COPIED || item.type == DisplayItem.Type.ABSORBED) {
-                int y = posY - this.font.lineHeight / 2;
+            } else if (item.type == DisplayItem.Type.COPIED || item.type == DisplayItem.Type.ABSORBED || item.type == DisplayItem.Type.ADDITIONAL) {
+                ICursedTechnique technique = switch (item.type) {
+                    case COPIED -> item.copied;
+                    case ABSORBED -> item.absorbed;
+                    case ADDITIONAL -> item.additional;
+                    default -> null;
+                };
 
-                pGuiGraphics.pose().pushPose();
-                pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
-                pGuiGraphics.pose().translate(posX, y, 0.0F);
-                pGuiGraphics.drawCenteredString(this.font, item.type == DisplayItem.Type.COPIED ? item.copied.getName() : item.absorbed.getName(), posX, y, 0xAA00AA);
-                pGuiGraphics.pose().popPose();
+                if (technique != null) {
+                    int y = posY - this.font.lineHeight / 2;
+
+                    pGuiGraphics.pose().pushPose();
+                    pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
+                    pGuiGraphics.pose().translate(posX, y, 0.0F);
+                    pGuiGraphics.drawCenteredString(this.font, technique.getName(), posX, y, 0xAA00AA);
+                    pGuiGraphics.pose().popPose();
+                }
             } else if (item.type == DisplayItem.Type.ITEM) {
                 ItemStack stack = item.item;
 

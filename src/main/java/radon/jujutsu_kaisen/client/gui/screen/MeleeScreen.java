@@ -54,29 +54,6 @@ public class MeleeScreen extends RadialScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
-
-        if (this.minecraft == null || this.minecraft.player == null) return;
-
-        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
-        if (!data.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get())) return;
-
-        int centerX = this.width / 2;
-        int centerY = this.height / 2;
-
-        int x = centerX;
-        int y = centerY - RADIUS_OUT - this.font.lineHeight * 2;
-
-        pGuiGraphics.drawCenteredString(this.font, Component.translatable(String.format("gui.%s.ability.right_click", JujutsuKaisen.MOD_ID)), x, y, 16777215);
-    }
-
-    @Override
     public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
         if (pKeyCode == JJKKeys.ACTIVATE_MELEE_MENU.getKey().getValue()) {
             this.onClose();

@@ -123,6 +123,9 @@ public class PacketHandler {
         registrar.play(SetAbsorbedC2SPacket.IDENTIFIER, SetAbsorbedC2SPacket::new, handler -> handler
                 .client(SetAbsorbedC2SPacket::handle)
                 .server(SetAbsorbedC2SPacket::handle));
+        registrar.play(SetAdditionalC2SPacket.IDENTIFIER, SetAdditionalC2SPacket::new, handler -> handler
+                .client(SetAdditionalC2SPacket::handle)
+                .server(SetAdditionalC2SPacket::handle));
         registrar.play(RequestVisualDataC2SPacket.IDENTIFIER, RequestVisualDataC2SPacket::new, handler -> handler
                 .client(RequestVisualDataC2SPacket::handle)
                 .server(RequestVisualDataC2SPacket::handle));
@@ -150,9 +153,12 @@ public class PacketHandler {
         registrar.play(ChangeOutputC2SPacket.IDENTIFIER, ChangeOutputC2SPacket::new, handler -> handler
                 .client(ChangeOutputC2SPacket::handle)
                 .server(ChangeOutputC2SPacket::handle));
-        registrar.play(UncopyAbilityC2SPacket.IDENTIFIER, UncopyAbilityC2SPacket::new, handler -> handler
-                .client(UncopyAbilityC2SPacket::handle)
-                .server(UncopyAbilityC2SPacket::handle));
+        registrar.play(UncopyC2SPacket.IDENTIFIER, UncopyC2SPacket::new, handler -> handler
+                .client(UncopyC2SPacket::handle)
+                .server(UncopyC2SPacket::handle));
+        registrar.play(RemoveAdditionalC2SPacket.IDENTIFIER, RemoveAdditionalC2SPacket::new, handler -> handler
+                .client(RemoveAdditionalC2SPacket::handle)
+                .server(RemoveAdditionalC2SPacket::handle));
         registrar.play(QuestionRemovePactC2SPacket.IDENTIFIER, QuestionRemovePactC2SPacket::new, handler -> handler
                 .client(QuestionRemovePactC2SPacket::handle)
                 .server(QuestionRemovePactC2SPacket::handle));

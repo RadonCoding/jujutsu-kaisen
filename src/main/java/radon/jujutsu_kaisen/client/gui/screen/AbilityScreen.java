@@ -46,6 +46,9 @@ public class AbilityScreen extends RadialScreen {
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
         if (!this.minecraft.player.isSpectator()) {
+            Set<ICursedTechnique> additional = sorcererData.getAdditional();
+            items.addAll(additional.stream().map(technique -> new DisplayItem(DisplayItem.Type.ADDITIONAL, technique)).toList());
+
             if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
                 List<AbsorbedCurse> curses = curseManipulationData.getCurses();
                 items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
@@ -76,6 +79,7 @@ public class AbilityScreen extends RadialScreen {
 
         if (cap == null) return;
 
+        ISorcererData sorcererData = cap.getSorcererData();
         IAbilityData abilityData = cap.getAbilityData();
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
         IMimicryData mimicryData = cap.getMimicryData();
@@ -102,6 +106,10 @@ public class AbilityScreen extends RadialScreen {
                 curseManipulationData.setCurrentAbsorbed(item.absorbed);
                 PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
             }
+            case ADDITIONAL -> {
+                sorcererData.addAdditional(item.additional);
+                PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.additional));
+            }
         }
     }
 
@@ -117,7 +125,7 @@ public class AbilityScreen extends RadialScreen {
 
         ISorcererData data = cap.getSorcererData();
 
-        if (!data.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get())) return;
+        if (!data.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get()) && data.getAdditional().isEmpty()) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

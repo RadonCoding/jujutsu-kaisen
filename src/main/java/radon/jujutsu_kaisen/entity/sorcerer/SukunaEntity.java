@@ -15,7 +15,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -31,15 +30,11 @@ import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
-import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
-import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.cursed_object.SukunaFingerItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.*;
@@ -290,7 +285,7 @@ public class SukunaEntity extends SorcererEntity {
 
         sorcererDst.unlockAll(sorcererSrc.getUnlocked());
         sorcererDst.setTraits(sorcererSrc.getTraits());
-        sorcererDst.setAdditional(sorcererSrc.getTechnique());
+        sorcererDst.addAdditional(sorcererSrc.getTechnique());
         tenShadowsDst.setTamed(tenShadowsSrc.getTamed());
         tenShadowsDst.setDead(tenShadowsSrc.getDead());
     }
