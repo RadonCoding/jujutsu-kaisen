@@ -84,6 +84,8 @@ public class JJKItems {
             () -> new VeilRodItem(JJKBlocks.VEIL_ROD.get(), new Item.Properties()));
     public static DeferredHolder<Item, Item> ALTAR = ITEMS.register("altar",
             () -> new BlockItem(JJKBlocks.ALTAR.get(), new Item.Properties()));
+    public static DeferredHolder<Item, Item> MISSION = ITEMS.register("mission",
+            () -> new BlockItem(JJKBlocks.MISSION.get(), new Item.Properties()));
 
     public static DeferredHolder<Item, Item> TARGETING_STICK = ITEMS.register("targeting_stick",
             () -> new TargetingStickItem(new Item.Properties()));
