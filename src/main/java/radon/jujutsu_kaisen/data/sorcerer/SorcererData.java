@@ -176,12 +176,6 @@ public class SorcererData implements ISorcererData {
 
         this.energy = Math.min(this.getMaxEnergy(), this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)));
 
-        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISkillData data = cap.getSkillData();
-
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double damage = this.getBaseOutput() * 3.0D;
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
