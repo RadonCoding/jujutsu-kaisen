@@ -157,16 +157,18 @@ public class VeilRodBlockEntity extends BlockEntity {
             }
         }
 
-        for (int y = pBlockEntity.size; y >= -pBlockEntity.size; y--) {
-            int delay = Math.abs(y - pBlockEntity.size);
+        int radius = pBlockEntity.size;
+
+        for (int y = radius; y >= -radius; y--) {
+            int delay = Math.abs(y - radius);
 
             if (pBlockEntity.counter < delay) break;
 
-            for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
-                for (int z = -pBlockEntity.size; z <= pBlockEntity.size; z++) {
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < pBlockEntity.size && distance >= pBlockEntity.size - 1) {
+                    if (distance < radius && distance >= radius - 1) {
                         BlockPos pos = pPos.offset(x, y, z);
 
                         if (!pLevel.isInWorldBounds(pos)) continue;
@@ -214,7 +216,7 @@ public class VeilRodBlockEntity extends BlockEntity {
                         }
 
                         if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                            be.create(pPos, delay, pBlockEntity.size, state, saved);
+                            be.create(pPos, radius - delay, radius, state, saved);
                         }
                     }
                 }
