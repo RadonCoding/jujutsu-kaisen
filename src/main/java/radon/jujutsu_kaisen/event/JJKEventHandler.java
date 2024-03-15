@@ -64,6 +64,7 @@ import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.pact.JJKPacts;
+import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.*;
 
@@ -83,6 +84,8 @@ public class JJKEventHandler {
             if (!(event.getTarget() instanceof LivingEntity target)) return;
 
             if (target.isDeadOrDying()) return;
+
+            if (!target.getType().is(JJKEntityTypeTags.FORCE_FEEDABLE)) return;
 
             IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
