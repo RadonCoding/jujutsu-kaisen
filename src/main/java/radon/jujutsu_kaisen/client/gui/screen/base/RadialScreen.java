@@ -245,7 +245,8 @@ public abstract class RadialScreen extends Screen {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;
@@ -323,7 +324,8 @@ public abstract class RadialScreen extends Screen {
                         lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost));
                     }
 
-                    int cooldown = item.ability.getRealCooldown(this.minecraft.player);
+                    int remaining = abilityData.getRemainingCooldown(item.ability);
+                    int cooldown = remaining > 0 ? remaining : item.ability.getRealCooldown(this.minecraft.player);
 
                     if (cooldown > 0) {
                         lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cooldown", JujutsuKaisen.MOD_ID), Math.round((float) cooldown / 20)));
@@ -382,7 +384,7 @@ public abstract class RadialScreen extends Screen {
                     if (summon.getActivationType(this.minecraft.player) == Ability.ActivationType.TOGGLED) {
                         int y = Math.round((posY + (height * scale / 2.0F) + (this.font.lineHeight / 2.0F)) * (1.0F / HEALTH_BAR_SCALE));
 
-                        for (Entity entity : data.getSummonsByClass(summon.getClazz())) {
+                        for (Entity entity : sorcererData.getSummonsByClass(summon.getClazz())) {
                             if (!(entity instanceof LivingEntity living)) continue;
 
                             pGuiGraphics.pose().pushPose();
