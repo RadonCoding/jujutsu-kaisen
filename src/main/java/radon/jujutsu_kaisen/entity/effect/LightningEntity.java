@@ -121,7 +121,7 @@ public class LightningEntity extends JujutsuProjectile {
                                 double distance = Math.sqrt(x * x + y * y + z * z);
 
                                 if (distance <= radius) {
-                                    if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
+                                    if (HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) {
                                         this.level().destroyBlock(pos, false);
                                     }
                                 }

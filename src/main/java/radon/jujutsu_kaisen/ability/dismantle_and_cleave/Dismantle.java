@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -66,10 +67,23 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
     public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos) {
         float power = this.getPower(owner) * DomainExpansion.getStrength(owner, false);
 
+        int length = HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, (DismantleProjectile.MAX_LENGTH + 1) * 2);
+
+        AABB bounds = AABB.ofSize(pos.getCenter(), length, length, length);
+
+        boolean destroy = false;
+
+        for (BlockPos target : BlockPos.betweenClosed((int) bounds.minX, (int)  bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
+            if (!(owner.level().getBlockEntity(target) instanceof DomainBlockEntity)) continue;
+
+            destroy = true;
+            break;
+        }
         DismantleProjectile dismantle = new DismantleProjectile(owner, power,
                 (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(),
-                HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, (DismantleProjectile.MAX_LENGTH + 1) * 2),
-                owner.level().getBlockEntity(pos) instanceof DomainBlockEntity, true);
+                length,
+                destroy,
+                true);
         dismantle.setDomain(true);
         owner.level().addFreshEntity(dismantle);
 

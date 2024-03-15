@@ -301,7 +301,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
                     if (distance > radius) continue;
 
-                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
+                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
 
                     if (!state.getFluidState().isEmpty()) {
                         this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
@@ -331,7 +331,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
                     if (distance > radius) continue;
 
-                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
+                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
 
                     if (state.getFluidState().isEmpty()) {
                         this.level().destroyBlock(pos, false);

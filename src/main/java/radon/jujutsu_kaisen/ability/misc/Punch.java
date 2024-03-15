@@ -153,7 +153,7 @@ public class Punch extends Ability {
                         ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
 
                 if (blockHit.getType() == HitResult.Type.BLOCK && !blockHit.getBlockPos().equals(pos)) return;
-                if (!HelperMethods.isDestroyable(level, owner, pos)) return;
+                if (!HelperMethods.isDestroyable(level, owner, owner, pos)) return;
 
                 owner.level().destroyBlock(pos, true, owner);
             });

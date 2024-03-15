@@ -89,7 +89,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
                         if (distance > radius) continue;
 
-                        if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
+                        if (HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) {
                             if (state.getFluidState().isEmpty()) {
                                 this.level().destroyBlock(pos, false);
                             } else {
