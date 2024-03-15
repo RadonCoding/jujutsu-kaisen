@@ -222,7 +222,7 @@ public class ExperienceHandler {
             ISorcererData data = cap.getSorcererData();
 
             float experience = calculateStrength(target)
-                    * (this.totalDamageDealt / this.damageDealtByOwner)
+                    * (this.damageDealtByOwner / this.totalDamageDealt)
                     * ConfigHolder.SERVER.experienceMultiplier.get().floatValue();
 
             if (experience < 0.1F) return;
