@@ -96,7 +96,7 @@ public class SukunaRenderer extends LivingEntityRenderer<SukunaEntity, EntityMod
             EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
             EntityRenderer<? super Entity> renderer = manager.getRenderer(entity);
 
-            if (renderer instanceof LivingEntityRenderer living && living.getModel() instanceof HumanoidModel<?>) {
+            if (renderer instanceof LivingEntityRenderer living && living.getModel() instanceof PlayerModel<?>) {
                 living.addLayer(new SukunaMarkingsLayer<>(living));
                 living.addLayer(new JJKOverlayLayer<>(living));
             }
