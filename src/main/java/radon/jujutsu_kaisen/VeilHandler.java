@@ -212,7 +212,7 @@ public class VeilHandler {
         if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity firstVeil))
             return false;
 
-        if (target.subtract(veil).distSqr(Vec3i.ZERO) >= firstVeil.getSize() * firstVeil.getSize()) return false;
+        if (target.subtract(veil).distSqr(Vec3i.ZERO) >= (firstVeil.getSize() - 1) * (firstVeil.getSize() - 1)) return false;
 
         if (isOverriddenByDomain(level, dimension, veil, target)) return false;
 
@@ -226,7 +226,7 @@ public class VeilHandler {
                     continue;
                 }
 
-                if (target.subtract(pos).distSqr(Vec3i.ZERO) >= secondVeil.getSize() * secondVeil.getSize()) continue;
+                if (target.subtract(pos).distSqr(Vec3i.ZERO) >= (secondVeil.getSize() - 1) * (secondVeil.getSize() - 1)) continue;
 
                 if (isOverriddenByDomain(level, dimension, veil, target)) continue;
 
