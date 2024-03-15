@@ -258,7 +258,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     public boolean canChant() {
-        return true;
+        return false;
     }
 
     @Override
