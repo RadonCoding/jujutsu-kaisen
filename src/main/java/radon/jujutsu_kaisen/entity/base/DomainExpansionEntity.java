@@ -48,6 +48,8 @@ public abstract class DomainExpansionEntity extends Entity {
     protected DomainExpansion ability;
     protected boolean first = true;
 
+    private float size;
+
     protected DomainExpansionEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -58,6 +60,18 @@ public abstract class DomainExpansionEntity extends Entity {
         this.setOwner(owner);
 
         this.ability = ability;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
+        this.size = data.getDomainSize();
+    }
+
+    public float getSize() {
+        return this.size;
     }
 
     @Override
@@ -95,6 +109,7 @@ public abstract class DomainExpansionEntity extends Entity {
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("first", this.first);
         pCompound.putInt("time", this.getTime());
+        pCompound.putFloat("scale", this.size);
     }
 
     @Override
@@ -105,6 +120,7 @@ public abstract class DomainExpansionEntity extends Entity {
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.first = pCompound.getBoolean("first");
         this.setTime(pCompound.getInt("time"));
+        this.size = pCompound.getFloat("scale");
     }
 
     @Override
@@ -258,7 +274,7 @@ public abstract class DomainExpansionEntity extends Entity {
 
         ISkillData data = cap.getSkillData();
 
-        return (data.getSkill(Skill.BARRIER) * 0.01F) * (owner.getHealth() / owner.getMaxHealth());
+        return (data.getSkill(Skill.BARRIER) * 0.01F) * (owner.getHealth() / owner.getMaxHealth()) * DomainExpansion.getStrength(false, this.size);
     }
 
     @Override
