@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +16,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.Iterator;
@@ -60,6 +62,8 @@ public class Shuffle extends Ability implements Ability.IChannelened, Ability.ID
         if (this.getCharge(owner) % 4 != 0) return;
 
         if (owner.level().isClientSide) return;
+
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
         List<Entity> targets = this.getTargets(owner);
 
