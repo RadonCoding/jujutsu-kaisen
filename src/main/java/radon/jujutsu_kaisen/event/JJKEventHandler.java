@@ -77,7 +77,9 @@ public class JJKEventHandler {
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onPlayerInteractEntity(PlayerInteractEvent.EntityInteract event) {
-            ItemStack stack = event.getEntity().getItemInHand(event.getHand());
+            LivingEntity attacker = event.getEntity();
+
+            ItemStack stack = attacker.getItemInHand(event.getHand());
 
             if (!stack.is(JJKItemTags.CURSED_OBJECT) || !stack.getItem().isEdible()) return;
 
@@ -91,7 +93,22 @@ public class JJKEventHandler {
 
             if (cap == null) return;
 
-            if (target.getHealth() / target.getMaxHealth() <= ConfigHolder.SERVER.forceFeedHealthRequirement.get()) {
+            boolean feedable = target.getHealth() / target.getMaxHealth() <= ConfigHolder.SERVER.forceFeedHealthRequirement.get();
+
+            if (!feedable) {
+                if (target instanceof TamableAnimal tamable1) {
+                    LivingEntity owner = tamable1.getOwner();
+
+                    while (owner instanceof TamableAnimal tamable2 && tamable2.isTame()) {
+                        owner = tamable2.getOwner();
+
+                        if (owner == null) break;
+                    }
+                    feedable = owner == attacker;
+                }
+            }
+
+            if (feedable) {
                 ItemStack copy = stack.copy();
                 stack.getItem().finishUsingItem(stack, target.level(), target);
 
