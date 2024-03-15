@@ -350,9 +350,11 @@ public class SkyHandler {
 
         if (mc.level == null || mc.player == null) return;
 
-        FogRenderer.levelFogColor();
         RenderSystem.clear(16640, Minecraft.ON_OSX);
+
+        FogRenderer.levelFogColor();
         RenderSystem.depthMask(false);
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         RenderSystem.setShaderTexture(0, UNLIMITED_VOID);
@@ -383,7 +385,6 @@ public class SkyHandler {
         }
 
         RenderSystem.depthMask(true);
-        RenderSystem.disableBlend();
         FogRenderer.setupNoFog();
     }
 }
