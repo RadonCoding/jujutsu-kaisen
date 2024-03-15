@@ -102,7 +102,12 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         if (cap == null) return 0.0F;
 
         ISorcererData data = cap.getSorcererData();
-        return ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - data.getDomainSize()) * (instant ? 0.5F : 1.0F);
+
+        return getStrength(instant, data.getDomainSize());
+    }
+
+    public static float getStrength(boolean instant, float size) {
+        return ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - size) * (instant ? 0.5F : 1.0F);
     }
 
     @Override

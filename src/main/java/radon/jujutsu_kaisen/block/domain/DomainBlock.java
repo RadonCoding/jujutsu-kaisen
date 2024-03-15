@@ -19,13 +19,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
-import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -99,7 +97,7 @@ public class DomainBlock extends Block implements EntityBlock {
 
         ISkillData data = cap.getSkillData();
 
-        return resistance * data.getSkill(Skill.BARRIER);
+        return resistance * data.getSkill(Skill.BARRIER) * DomainExpansion.getStrength(false, domain.getSize());
     }
 
     @Override
