@@ -141,7 +141,7 @@ public class JJKEventHandler {
             IAbilityData abilityData = cap.getAbilityData();
             ISkillData skillData = cap.getSkillData();
 
-            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.5F;
+            float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.25F;
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 armor *= 15.0F;
