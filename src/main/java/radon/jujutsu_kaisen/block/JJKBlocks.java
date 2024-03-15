@@ -55,7 +55,7 @@ public class JJKBlocks {
 
     public static DeferredHolder<Block, DomainBlock> DOMAIN = BLOCKS.register("domain", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
+                    .strength(-1.0F, 12.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel(pState -> 14)
                     .noLootTable()));
