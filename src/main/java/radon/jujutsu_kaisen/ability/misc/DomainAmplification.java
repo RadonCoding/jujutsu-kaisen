@@ -65,7 +65,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         IAbilityData data = cap.getAbilityData();
 
-        if (data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D) return true;
+        if ((data.hasToggled(JJKAbilities.INFINITY.get()) || data.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) && owner.distanceTo(target) <= 3.0D) return true;
 
         return owner.getHealth() / owner.getMaxHealth() < 0.5F;
     }

@@ -84,16 +84,11 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
         SelfEmbodimentOfPerfectionEntity entity = new SelfEmbodimentOfPerfectionEntity(domain);
 
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-
         Vec3 pos = owner.position()
-                .add(owner.getUpVector(1.0F).scale(entity.getBbHeight()))
-                .subtract(look.multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
-        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
-
-        double d0 = look.horizontalDistance();
-        entity.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / Mth.PI)));
-        entity.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / Mth.PI)));
+                .add(owner.getUpVector(1.0F).scale(entity.getBbHeight() / 2.0F))
+                .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
+                        .multiply(entity.getBbWidth() / 2.0F, 0.0D, entity.getBbWidth() / 2.0F));
+        entity.moveTo(pos.x, pos.y, pos.z, 180.0F - RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
 
         owner.level().addFreshEntity(entity);
 

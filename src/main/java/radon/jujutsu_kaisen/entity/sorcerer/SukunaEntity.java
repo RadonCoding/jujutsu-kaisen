@@ -81,6 +81,12 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        EntityType<?> type = this.getEntity();
+        return type.getDimensions();
+    }
+
+    @Override
     protected boolean isCustom() {
         return false;
     }

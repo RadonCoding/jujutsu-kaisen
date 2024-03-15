@@ -43,9 +43,9 @@ public class CurseManipulationUtil {
             absorbed.setPlayer(profile);
         }
 
-        Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
         Vec3 pos = owner.position()
-                .subtract(direction.multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
+                .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
+                        .multiply(entity.getBbWidth() / 2.0F, 0.0D, entity.getBbWidth() / 2.0F));
         entity.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         return entity;
