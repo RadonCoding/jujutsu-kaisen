@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -68,7 +69,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
         DismantleProjectile dismantle = new DismantleProjectile(owner, power,
                 (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(),
                 HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, (DismantleProjectile.MAX_LENGTH + 1) * 2),
-                false, true);
+                owner.level().getBlockEntity(pos) instanceof DomainBlockEntity, true);
         dismantle.setDomain(true);
         owner.level().addFreshEntity(dismantle);
 

@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 
 import java.util.UUID;
 
@@ -60,18 +61,18 @@ public class DomainBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public float getExplosionResistance(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, Explosion explosion) {
-        Entity direct = explosion.getDirectSourceEntity();
+    public float getExplosionResistance(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, Explosion explosion) {Entity direct = explosion.getDirectSourceEntity();
         LivingEntity indirect = explosion.getIndirectSourceEntity();
 
-        Entity exploder = indirect == null ? direct : indirect;
+        Entity exploder = direct instanceof JujutsuProjectile projectile && projectile.isDomain() ? direct : indirect == null ? direct : indirect;
 
-        if (exploder != null && level instanceof ServerLevel && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-            UUID identifier = be.getIdentifier();
+        if (exploder == null || !(level.getBlockEntity(pos) instanceof DomainBlockEntity be)) return super.getExplosionResistance(state, level, pos, explosion);
 
-            if (identifier != null && ((ServerLevel) level).getEntity(identifier) instanceof DomainExpansionEntity domain
-                    && domain.isInsideBarrier(exploder.blockPosition())) return 3600000.8F;
-        }
+        UUID identifier = be.getIdentifier();
+
+        if (identifier != null && ((ServerLevel) level).getEntity(identifier) instanceof DomainExpansionEntity domain
+                && domain.isInsideBarrier(exploder.blockPosition())) return 3600000.8F;
+
         return super.getExplosionResistance(state, level, pos, explosion);
     }
 

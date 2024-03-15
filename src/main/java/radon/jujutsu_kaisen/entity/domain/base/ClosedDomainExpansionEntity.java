@@ -467,7 +467,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (this.getTime() - 1 == 0) {
             this.createBarrier(false);
         } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
-            this.discard();
+            //this.discard();
         }
     }
 }
