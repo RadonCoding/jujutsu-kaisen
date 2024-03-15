@@ -233,6 +233,11 @@ public class VeilHandler {
                     continue;
                 }
 
+                if (protector == null) {
+                    protector = pos;
+                    continue;
+                }
+
                 if (secondVeil.ownerUUID == null || !(level.getEntity(secondVeil.ownerUUID) instanceof LivingEntity secondOwner)) {
                     continue;
                 }
