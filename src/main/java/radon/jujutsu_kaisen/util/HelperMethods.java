@@ -10,10 +10,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -52,10 +49,21 @@ public class HelperMethods {
         BlockState state = level.getBlockState(pos);
         boolean destroyable = !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
 
+        if (direct instanceof JujutsuProjectile jujutsu) {
+            float power = jujutsu.getPower() * 20.0F;
+
+            float resistance = state.getExplosionResistance(level, pos, new Explosion(level, source == null ? direct : source,
+                    center.x, center.y, center.z, power, false, Explosion.BlockInteraction.DESTROY));
+
+            if (resistance > power) return false;
+        }
+
+        Entity real = direct instanceof JujutsuProjectile jujutsu && jujutsu.isDomain() ? direct : source;
+
         if (!destroyable && source != null && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();
             destroyable = identifier == null || !(level.getEntity(identifier) instanceof DomainExpansionEntity domain) ||
-                    !domain.isInsideBarrier(direct instanceof JujutsuProjectile jujutsu && jujutsu.isDomain() ? direct.blockPosition() : source.blockPosition());
+                    !domain.isInsideBarrier(real.blockPosition());
         }
         return destroyable;
     }

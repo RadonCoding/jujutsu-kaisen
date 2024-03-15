@@ -15,6 +15,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
@@ -144,7 +145,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
                 Entity projectile = level.getEntity(nbt.getTarget());
 
-                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner)) {
+                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner) || owner.isRemoved() || owner.isDeadOrDying()) {
                     if (projectile != null) {
                         projectile.setDeltaMovement(nbt.getMovement());
                         projectile.setNoGravity(nbt.isNoGravity());
@@ -164,7 +165,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
                     iter.remove();
                     this.setDirty();
                 } else {
-                    if ((data.hasToggled(JJKAbilities.INFINITY.get())) && owner.distanceTo(projectile) < 2.5F) {
+                    if (data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(projectile) < 2.5F) {
                         Vec3 original = nbt.getMovement();
                         projectile.setDeltaMovement(original.scale(Double.MIN_VALUE));
                         projectile.setNoGravity(true);
@@ -225,6 +226,14 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onEntityLeave(EntityLeaveLevelEvent event) {
+            if (event.getLevel() instanceof ServerLevel level) {
+                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
+                data.remove(level, event.getEntity());
+            }
+        }
+
         @SubscribeEvent
         public static void onLevelTick(TickEvent.LevelTickEvent event) {
             if (event.phase == TickEvent.Phase.START) return;
