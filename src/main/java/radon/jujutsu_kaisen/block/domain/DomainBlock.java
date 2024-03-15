@@ -99,7 +99,7 @@ public class DomainBlock extends Block implements EntityBlock {
 
         ISkillData data = cap.getSkillData();
 
-        return resistance + data.getSkill(Skill.BARRIER);
+        return resistance * data.getSkill(Skill.BARRIER);
     }
 
     @Override
