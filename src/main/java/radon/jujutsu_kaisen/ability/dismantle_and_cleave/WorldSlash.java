@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.projectile.BigDismantleProjectile;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
@@ -42,7 +43,13 @@ public class WorldSlash extends Ability {
 
         if (owner instanceof MahoragaEntity) return HelperMethods.RANDOM.nextInt(20) == 0;
 
-        return HelperMethods.RANDOM.nextInt(40) == 0;
+        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ISorcererData data = cap.getSorcererData();
+
+        return data.getExperience() >= SorcererGrade.SPECIAL_GRADE.getRequiredExperience() && HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
