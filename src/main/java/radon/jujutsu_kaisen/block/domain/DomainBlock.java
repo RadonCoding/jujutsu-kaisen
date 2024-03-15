@@ -22,11 +22,15 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
@@ -72,7 +76,30 @@ public class DomainBlock extends Block implements EntityBlock {
             if (identifier != null && ((ServerLevel) level).getEntity(identifier) instanceof DomainExpansionEntity domain
                     && domain.isInsideBarrier(exploder.blockPosition())) return 3600000.8F;
         }
-        return super.getExplosionResistance(state, level, pos, explosion);
+
+        float resistance = super.getExplosionResistance(state, level, pos, explosion);
+
+        if (!(level instanceof ServerLevel serverLevel)) return resistance;
+
+        if (!(level.getBlockEntity(pos) instanceof DomainBlockEntity be)) return resistance;
+
+        UUID identifier = be.getIdentifier();
+
+        if (identifier == null) return resistance;
+
+        if (!(serverLevel.getEntity(identifier) instanceof DomainExpansionEntity domain)) return resistance;
+
+        LivingEntity owner = domain.getOwner();
+
+        if (owner == null) return resistance;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return resistance;
+
+        ISkillData data = cap.getSkillData();
+
+        return resistance + data.getSkill(Skill.BARRIER);
     }
 
     @Override
