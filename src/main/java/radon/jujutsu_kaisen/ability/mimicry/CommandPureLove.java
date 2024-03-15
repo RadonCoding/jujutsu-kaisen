@@ -66,6 +66,24 @@ public class CommandPureLove extends Ability {
     }
 
     @Override
+    public Status isTriggerable(LivingEntity owner) {
+        if (!owner.level().isClientSide) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return Status.FAILURE;
+
+            ISorcererData ownerData = cap.getSorcererData();
+
+            RikaEntity rika = ownerData.getSummonByClass(RikaEntity.class);
+
+            if (rika == null) return Status.FAILURE;
+
+            if (rika.isOpen()) return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
+    }
+
+    @Override
     public boolean isValid(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
