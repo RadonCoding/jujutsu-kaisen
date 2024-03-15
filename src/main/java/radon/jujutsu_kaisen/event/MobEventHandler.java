@@ -55,7 +55,7 @@ public class MobEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            if (!(victim instanceof ISorcerer sorcerer) || !sorcerer.canChant()) return;
+            if (!(victim instanceof ISorcerer)) return;
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -127,7 +127,7 @@ public class MobEventHandler {
                 if (owner instanceof Mob) {
                     List<String> chants = new ArrayList<>(chantData.getFirstChants(ability));
 
-                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * sorcererData.getMaximumOutput()))) == 0) {
+                    if (!chants.isEmpty() && (ability == JJKAbilities.WORLD_SLASH.get() || HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * sorcererData.getMaximumOutput()))) == 0)) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ServerChantHandler.onChant(owner, chants.get(i));
 
