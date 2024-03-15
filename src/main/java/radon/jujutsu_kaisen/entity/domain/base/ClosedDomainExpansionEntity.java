@@ -142,7 +142,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius, 0);
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
+        return relative.distSqr(Vec3i.ZERO) < (radius - 2) * (radius - 2);
     }
 
     protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
@@ -467,7 +467,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (this.getTime() - 1 == 0) {
             this.createBarrier(false);
         } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
-            //this.discard();
+            this.discard();
         }
     }
 }

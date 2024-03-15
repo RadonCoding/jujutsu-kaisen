@@ -8,14 +8,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -105,7 +103,7 @@ public class VeilHandler {
                 if (mob.level().dimension() != dimension || !(mob.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be))
                     continue;
 
-                if (!isProtected(level, target)) continue;
+                if (!isProtectedByVeil(level, target)) continue;
 
                 if (!be.isAllowed(mob)) {
                     return false;
@@ -130,7 +128,7 @@ public class VeilHandler {
 
                 if (entity != null && entity.getUUID().equals(be.ownerUUID)) continue;
 
-                if (!isProtected(level, target)) continue;
+                if (!isProtectedByVeil(level, target)) continue;
 
                 for (Modifier modifier : be.modifiers) {
                     if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.VIOLENCE) {
@@ -157,7 +155,7 @@ public class VeilHandler {
 
                 if (entity != null && entity.getUUID().equals(be.ownerUUID)) continue;
 
-                if (!isProtected(level, target)) continue;
+                if (!isProtectedByVeil(level, target)) continue;
 
                 for (Modifier modifier : be.modifiers) {
                     if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.GRIEFING) {
@@ -179,7 +177,7 @@ public class VeilHandler {
         return data.getSkill(Skill.BARRIER);
     }
 
-    public static boolean isOverriddenByDomain(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
+    public static boolean isProtectedByDomain(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
         if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity be)) return false;
 
         // If there's a domain that is at least 50% the strength of the veil's then it will win
@@ -212,9 +210,9 @@ public class VeilHandler {
         if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity firstVeil))
             return false;
 
-        if (target.subtract(veil).distSqr(Vec3i.ZERO) >= (firstVeil.getSize() - 1) * (firstVeil.getSize() - 1)) return false;
+        if (target.subtract(veil).distSqr(Vec3i.ZERO) >= firstVeil.getSize() * firstVeil.getSize()) return false;
 
-        if (isOverriddenByDomain(level, dimension, veil, target)) return false;
+        if (isProtectedByDomain(level, dimension, veil, target)) return false;
 
         BlockPos protector = null;
 
@@ -226,9 +224,9 @@ public class VeilHandler {
                     continue;
                 }
 
-                if (target.subtract(pos).distSqr(Vec3i.ZERO) >= (secondVeil.getSize() - 1) * (secondVeil.getSize() - 1)) continue;
+                if (target.subtract(pos).distSqr(Vec3i.ZERO) >= secondVeil.getSize() * secondVeil.getSize()) continue;
 
-                if (isOverriddenByDomain(level, dimension, veil, target)) continue;
+                if (isProtectedByDomain(level, dimension, veil, target)) continue;
 
                 if (firstVeil.ownerUUID == null || !(level.getEntity(firstVeil.ownerUUID) instanceof LivingEntity firstOwner)) {
                     protector = pos;
@@ -259,7 +257,7 @@ public class VeilHandler {
         return protector == null;
     }
 
-    public static boolean isProtected(ServerLevel level, BlockPos target) {
+    public static boolean isProtectedByVeil(ServerLevel level, BlockPos target) {
         for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
             ResourceKey<Level> dimension = entry.getKey();
 

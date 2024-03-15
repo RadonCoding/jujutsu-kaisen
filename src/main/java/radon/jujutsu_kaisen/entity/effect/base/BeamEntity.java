@@ -184,7 +184,7 @@ public abstract class BeamEntity extends JujutsuProjectile {
                                 if (distance > radius) continue;
 
                                 if (this.breaksBlocks()) {
-                                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) continue;
+                                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
 
                                     this.level().destroyBlock(pos, false);
                                 }

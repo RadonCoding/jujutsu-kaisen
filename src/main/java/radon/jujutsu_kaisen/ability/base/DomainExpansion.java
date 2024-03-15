@@ -123,7 +123,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
         ISorcererData data = cap.getSorcererData();
 
-        //if (data.hasSummonOfClass(DomainExpansionEntity.class)) return Status.FAILURE;
+        if (data.hasSummonOfClass(DomainExpansionEntity.class)) return Status.FAILURE;
 
         return super.isTriggerable(owner);
     }

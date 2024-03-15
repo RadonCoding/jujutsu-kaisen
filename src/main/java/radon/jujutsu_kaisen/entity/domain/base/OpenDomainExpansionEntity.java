@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -58,7 +57,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean isAffected(BlockPos pos) {
         if (!(this.level() instanceof ServerLevel level)) return false;
-        if (VeilHandler.isProtected(level, pos)) return false;
+        if (VeilHandler.isProtectedByVeil(level, pos)) return false;
 
         Set<DomainExpansionEntity> domains = VeilHandler.getDomains(level, pos);
 
@@ -120,14 +119,14 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        /*for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds())) {
+        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds())) {
             if (domain == this || domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition())) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();
             }
             return false;
-        }*/
+        }
         return true;
     }
 

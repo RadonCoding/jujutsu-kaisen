@@ -123,7 +123,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                                 if (!this.isAffected(pos)) continue;
 
-                                if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, pos)) {
+                                if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, owner, pos)) {
                                     owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
                                             Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 

@@ -67,7 +67,7 @@ public class GetCrushed extends CursedSpeech {
                         if (distance <= radius * radius) {
                             BlockPos pos = new BlockPos(x, y, z);
 
-                            if (HelperMethods.isDestroyable((ServerLevel) owner.level(), owner, pos)) {
+                            if (HelperMethods.isDestroyable((ServerLevel) owner.level(), owner, owner, pos)) {
                                 owner.level().destroyBlock(pos, false);
                             }
                         }
