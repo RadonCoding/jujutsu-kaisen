@@ -42,14 +42,7 @@ public class WorldSlash extends Ability {
 
         if (owner instanceof MahoragaEntity) return HelperMethods.RANDOM.nextInt(20) == 0;
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData data = cap.getSorcererData();
-
-        return data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
-                owner.getHealth() / owner.getMaxHealth() < 0.8F || target.getHealth() > owner.getHealth() * 2;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
