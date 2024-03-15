@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_spawn_costs",
+  "biomes": "#minecraft:is_overworld",
+  "entity_types": [
+    "jujutsu_kaisen:toji_fushiguro",
+    "jujutsu_kaisen:maki_zenin"
+  ],
+  "spawn_cost": {
+    "charge": 1.28,
+    "energy_budget": 0.01
+  }
+}
