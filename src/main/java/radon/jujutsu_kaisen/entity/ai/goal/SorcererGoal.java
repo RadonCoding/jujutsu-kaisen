@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SorcererGoal extends Goal {
+    private static final int TAMING_CHANCE = 10 * 20;
     private static final int CHANGE_TECHNIQUE_INTERVAL = 10 * 20;
 
     private final PathfinderMob mob;

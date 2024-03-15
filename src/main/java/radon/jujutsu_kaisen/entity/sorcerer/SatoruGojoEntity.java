@@ -22,12 +22,15 @@ import java.util.List;
 import java.util.Set;
 
 public class SatoruGojoEntity extends SorcererEntity {
-    private final ItemStack blindfold;
-
     public SatoruGojoEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
+    }
 
-        this.blindfold = new ItemStack(JJKItems.BLINDFOLD.get());
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.BLINDFOLD.get()));
     }
 
     @Override
@@ -59,23 +62,5 @@ public class SatoruGojoEntity extends SorcererEntity {
     @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        LivingEntity target = this.getTarget();
-
-        boolean wear = false;
-
-        if (target == null) {
-            wear = true;
-        } else {
-            if (target.getMaxHealth() / this.getMaxHealth() >= 2) {
-                wear = true;
-            }
-        }
-        this.setItemSlot(EquipmentSlot.HEAD, wear ? this.blindfold : ItemStack.EMPTY);
     }
 }
