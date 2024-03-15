@@ -84,6 +84,9 @@ public class SukunaRenderer extends LivingEntityRenderer<SukunaEntity, EntityMod
             entity.swinging = pEntity.swinging;
             entity.swingTime = pEntity.swingTime;
 
+            entity.hurtTime = pEntity.hurtTime;
+            entity.deathTime = pEntity.deathTime;
+
             entity.setYRot(pEntity.getYRot());
             entity.yRotO = pEntity.yRotO;
 
