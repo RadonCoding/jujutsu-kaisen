@@ -55,12 +55,12 @@ public class QuestionCreatePactC2SPacket implements CustomPacketPayload {
             if (player != null) {
                 Component accept = Component.translatable(String.format("chat.%s.pact_question_accept", JujutsuKaisen.MOD_ID))
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/pactcreationaccept %s %s",
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/jjkpactcreationaccept %s %s",
                                         sender.getName().getString(), JJKPacts.getKey(this.pact).toString())))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(String.format("chat.%s.pact_question_accept", JujutsuKaisen.MOD_ID)))));
                 Component decline = Component.translatable(String.format("chat.%s.pact_question_decline", JujutsuKaisen.MOD_ID))
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.RED)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/pactcreationdecline %s %s",
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/jjkpactcreationdecline %s %s",
                                         sender.getName().getString(), JJKPacts.getKey(this.pact).toString())))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(String.format("chat.%s.pact_question_decline", JujutsuKaisen.MOD_ID)))));
 
