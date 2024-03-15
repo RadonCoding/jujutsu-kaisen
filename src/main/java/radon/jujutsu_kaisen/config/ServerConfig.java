@@ -109,7 +109,7 @@ public class ServerConfig {
         this.sorcererHealingAmount = builder.comment("The base amount of health sorcerers heal per tick")
                 .defineInRange("sorcererHealingAmount", 2.0F, 0.0F, 100.0F);
         this.curseHealingAmount = builder.comment("The base amount of health curses heal per tick")
-                .defineInRange("curseHealingAmount", 4.0F, 0.0F, 100.0F);
+                .defineInRange("curseHealingAmount", 3.0F, 0.0F, 100.0F);
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);
         this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
