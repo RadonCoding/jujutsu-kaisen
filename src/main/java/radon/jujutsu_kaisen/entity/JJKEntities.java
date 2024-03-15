@@ -511,7 +511,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<SelfEmbodimentOfPerfectionEntity>> SELF_EMBODIMENT_OF_PERFECTION = ENTITIES.register("self_embodiment_of_perfection", () ->
             EntityType.Builder.<SelfEmbodimentOfPerfectionEntity>of(SelfEmbodimentOfPerfectionEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 2.4F)
+                    .sized(3.0F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "self_embodiment_of_perfection")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<DisasterPlantEntity>> DISASTER_PLANT = ENTITIES.register("disaster_plant", () ->

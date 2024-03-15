@@ -69,54 +69,49 @@ public class SkyHandler {
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
-        int latitudeDivisions = 64;
-        int longitudeDivisions = 64;
+        int radius = 50;
+        int rings = 20;
+        int segments = 20;
 
-        for (int lat = 0; lat < latitudeDivisions; lat++) {
-            double theta = lat * Math.PI / latitudeDivisions;
-            double sinTheta = Math.sin(theta);
-            double cosTheta = Math.cos(theta);
 
-            double theta2 = (lat + 1) * Math.PI / latitudeDivisions;
-            double sinTheta2 = Math.sin(theta2);
-            double cosTheta2 = Math.cos(theta2);
+        float ringFactor = (float)(1.0 / rings);
+        float segmentFactor = (float)(1.0 / segments);
+        int x, y, z;
+        float u, v;
 
-            for (int lon = 0; lon < longitudeDivisions; lon++) {
-                double phi = lon * 2 * Math.PI / longitudeDivisions;
-                double sinPhi = Math.sin(phi);
-                double cosPhi = Math.cos(phi);
+        for (int ring = 0; ring < rings; ring++) {
+            for (int segment = 0; segment < segments; segment++) {
+                u = segment * segmentFactor;
+                v = ring * ringFactor;
 
-                double phi2 = (lon + 1) * 2 * Math.PI / longitudeDivisions;
-                double sinPhi2 = Math.sin(phi2);
-                double cosPhi2 = Math.cos(phi2);
+                float theta1 = (float) (ring * Math.PI * ringFactor - Math.PI / 2);
+                float theta2 = (float) ((ring + 1) * Math.PI * ringFactor - Math.PI / 2);
+                float phi1 = (float) (segment * 2 * Math.PI * segmentFactor);
+                float phi2 = (float) ((segment + 1) * 2 * Math.PI * segmentFactor);
 
-                double x1 = cosPhi * sinTheta;
-                double y1 = cosTheta;
-                double z1 = sinPhi * sinTheta;
+                float x1 = (float) (Math.cos(theta1) * Math.cos(phi1));
+                float y1 = (float) (Math.sin(theta1));
+                float z1 = (float) (Math.cos(theta1) * Math.sin(phi1));
 
-                double x2 = cosPhi * sinTheta2;
-                double y2 = cosTheta2;
-                double z2 = sinPhi * sinTheta2;
+                float x2 = (float) (Math.cos(theta2) * Math.cos(phi1));
+                float y2 = (float) (Math.sin(theta2));
+                float z2 = (float) (Math.cos(theta2) * Math.sin(phi1));
 
-                double x3 = cosPhi2 * sinTheta2;
-                double y3 = cosTheta2;
-                double z3 = sinPhi2 * sinTheta2;
+                float x3 = (float) (Math.cos(theta2) * Math.cos(phi2));
+                float y3 = (float) (Math.sin(theta2));
+                float z3 = (float) (Math.cos(theta2) * Math.sin(phi2));
 
-                double x4 = cosPhi2 * sinTheta;
-                double y4 = cosTheta;
-                double z4 = sinPhi2 * sinTheta;
+                float x4 = (float) (Math.cos(theta1) * Math.cos(phi2));
+                float y4 = (float) (Math.sin(theta1));
+                float z4 = (float) (Math.cos(theta1) * Math.sin(phi2));
 
-                double u1 = lon / (double) longitudeDivisions;
-                double v1 = lat / (double) latitudeDivisions;
-                double u2 = (lon + 1) / (double) longitudeDivisions;
-                double v2 = (lat + 1) / (double) latitudeDivisions;
-
-                builder.vertex(x1 * 100, y1 * 100.0F, z1 * 100.0F).uv((float) u1, (float) v1).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-                builder.vertex(x2 * 100.0F, y2 * 100.0F, z2 * 100.0F).uv((float) u1, (float) v2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-                builder.vertex(x3 * 100.0F, y3 * 100.0F, z3 * 100.0F).uv((float) u2, (float) v2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-                builder.vertex(x4 * 100.0F, y4 * 100.0F, z4 * 100.0F).uv((float) u2, (float) v1).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+                builder.vertex(x1 * radius, y1 * radius, z1 * radius).uv(u, 1 - v).color(255, 255, 255, 255).endVertex();
+                builder.vertex(x2 * radius, y2 * radius, z2 * radius).uv(u, 1 - (v + ringFactor)).color(255, 255, 255, 255).endVertex();
+                builder.vertex(x3 * radius, y3 * radius, z3 * radius).uv(u + segmentFactor, 1 - (v + ringFactor)).color(255, 255, 255, 255).endVertex();
+                builder.vertex(x4 * radius, y4 * radius, z4 * radius).uv(u + segmentFactor, 1 - v).color(255, 255, 255, 255).endVertex();
             }
         }
+
         return builder.end();
     }
 
@@ -191,7 +186,7 @@ public class SkyHandler {
 
     private static VertexBuffer getSelfEmbodimentOfPerfectionBuffer() {
         if (selfEmbodimentOfPerfectionBuffer == null) {
-            BufferBuilder.RenderedBuffer buffer = createBoxBuffer();
+            BufferBuilder.RenderedBuffer buffer = createSphericalBuffer();
             selfEmbodimentOfPerfectionBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             selfEmbodimentOfPerfectionBuffer.bind();
             selfEmbodimentOfPerfectionBuffer.upload(buffer);
