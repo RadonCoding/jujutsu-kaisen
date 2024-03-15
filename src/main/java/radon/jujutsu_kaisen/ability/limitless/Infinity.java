@@ -227,14 +227,6 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onEntityLeave(EntityLeaveLevelEvent event) {
-            if (event.getLevel() instanceof ServerLevel level) {
-                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
-                data.remove(level, event.getEntity());
-            }
-        }
-
-        @SubscribeEvent
         public static void onLevelTick(TickEvent.LevelTickEvent event) {
             if (event.phase == TickEvent.Phase.START) return;
 
