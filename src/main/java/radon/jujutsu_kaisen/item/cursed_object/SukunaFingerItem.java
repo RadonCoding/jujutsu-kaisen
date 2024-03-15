@@ -73,6 +73,7 @@ public class SukunaFingerItem extends CursedObjectItem {
 
             if (isFull(pStack)) {
                 data.addTrait(Trait.PERFECT_BODY);
+                return super.finishUsingItem(pStack, pLevel, pEntityLiving);
             } else if (data.getType() == JujutsuType.SORCERER) {
                 int count = pStack.getCount();
 
