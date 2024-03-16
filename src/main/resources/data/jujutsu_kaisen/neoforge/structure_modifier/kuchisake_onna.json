@@ -4,7 +4,7 @@
   "spawners": [
     {
       "type": "jujutsu_kaisen:kuchisake_onna",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     }

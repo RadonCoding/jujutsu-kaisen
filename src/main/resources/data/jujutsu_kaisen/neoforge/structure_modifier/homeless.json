@@ -4,13 +4,13 @@
   "spawners": [
     {
       "type": "jujutsu_kaisen:toji_zenin",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:maki_zenin",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     }

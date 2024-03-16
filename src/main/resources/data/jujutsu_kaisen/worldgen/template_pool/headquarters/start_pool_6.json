@@ -3,7 +3,7 @@
   "fallback": "minecraft:empty",
   "elements": [
     {
-      "weight": 1,
+      "weight": 50,
       "element": {
         "location": "jujutsu_kaisen:headquarters_6",
         "processors": "jujutsu_kaisen:headquarters_processors",
