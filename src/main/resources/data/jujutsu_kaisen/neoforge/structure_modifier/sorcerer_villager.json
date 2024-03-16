@@ -4,7 +4,7 @@
   "spawners": [
     {
       "type": "jujutsu_kaisen:sorcerer_villager",
-      "weight": 100,
+      "weight": 300,
       "minCount": 2,
       "maxCount": 6
     }
