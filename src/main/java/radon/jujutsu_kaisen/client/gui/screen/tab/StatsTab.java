@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 import static radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen.WINDOW_INSIDE_WIDTH;
 
 public class StatsTab extends JJKTab {
-    private static final ResourceLocation PLAYER = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/player.png");
-
     private static final Component TITLE = Component.translatable(String.format("gui.%s.stats", JujutsuKaisen.MOD_ID));
 
     private static final int[] TEST_SPLIT_OFFSETS = new int[] { 0, 10, -10, 25, -25 };
@@ -83,8 +81,6 @@ public class StatsTab extends JJKTab {
         pGuiGraphics.blit(texture, xOffset + 12, yOffset + 54, 48, 36, 20.0F, 20.0F, 8, 6, 64, 64);
         pGuiGraphics.blit(texture, xOffset, yOffset + 54, 12, 36, 44.0F, 20.0F, 2, 6, 64, 64);
         pGuiGraphics.blit(texture, xOffset + 60, yOffset + 54, 12, 36, 36.0F, 52.0F, 2, 6, 64, 64);
-
-        pGuiGraphics.blit(PLAYER, xOffset, yOffset + 6, 72, 83, 0.0F, 0.0F, 72, 83, 72, 83);
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
