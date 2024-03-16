@@ -3,7 +3,7 @@
   "fallback": "minecraft:empty",
   "elements": [
     {
-      "weight": 1,
+      "weight": 50,
       "element": {
         "location": "jujutsu_kaisen:ancient_shrine",
         "processors": "jujutsu_kaisen:ancient_shrine_processors",

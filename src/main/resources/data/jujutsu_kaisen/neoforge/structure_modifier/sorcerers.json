@@ -4,49 +4,49 @@
   "spawners": [
     {
       "type": "jujutsu_kaisen:satoru_gojo",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:yuta_okkotsu",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:megumi_fushiguro",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:yuji_itadori",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:toge_inumaki",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:suguru_geto",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:naoya_zenin",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:aoi_todo",
-      "weight": 1,
+      "weight": 50,
       "minCount": 1,
       "maxCount": 1
     },
