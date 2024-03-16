@@ -28,24 +28,6 @@ import java.util.List;
 
 public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
-    public void onEnabled(LivingEntity owner) {
-        super.onEnabled(owner);
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        IAbilityData data = cap.getAbilityData();
-
-        if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
-            data.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());
-        }
-        if (data.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
-            data.toggle(JJKAbilities.SOUL_DECIMATION.get());
-        }
-    }
-
-    @Override
     public @Nullable ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.WHITE_ASH;
     }
@@ -64,10 +46,6 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
         MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(10 * 20 * getStrength(owner, instant)),
                 required, false, true, true);
         entity.addEffect(instance);
-
-        if (!owner.level().isClientSide) {
-            PacketDistributor.TRACKING_ENTITY.with(entity).send(new ClientboundUpdateMobEffectPacket(entity.getId(), instance));
-        }
     }
 
     @Override

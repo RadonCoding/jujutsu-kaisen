@@ -151,6 +151,8 @@ public class JJKEventHandler {
                 }
             }
 
+            if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
+
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;

@@ -69,8 +69,8 @@ public class SkyHandler {
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
-        int latitudeDivisions = 64;
-        int longitudeDivisions = 64;
+        int latitudeDivisions = 16;
+        int longitudeDivisions = 16;
 
         for (int lat = 0; lat < latitudeDivisions; lat++) {
             double theta = lat * Math.PI / latitudeDivisions;
@@ -350,11 +350,9 @@ public class SkyHandler {
 
         if (mc.level == null || mc.player == null) return;
 
-        RenderSystem.clear(16640, Minecraft.ON_OSX);
-
         FogRenderer.levelFogColor();
+        RenderSystem.clear(16640, Minecraft.ON_OSX);
         RenderSystem.depthMask(false);
-
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         RenderSystem.setShaderTexture(0, UNLIMITED_VOID);
@@ -385,6 +383,7 @@ public class SkyHandler {
         }
 
         RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
         FogRenderer.setupNoFog();
     }
 }
