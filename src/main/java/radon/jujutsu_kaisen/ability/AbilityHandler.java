@@ -46,12 +46,16 @@ public class AbilityHandler {
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             if (force || status == Ability.Status.SUCCESS) {
+                ability.charge(owner);
+
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+                ability.charge(owner);
+
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 data.toggle(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
@@ -59,6 +63,8 @@ public class AbilityHandler {
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+                ability.charge(owner);
+
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 data.channel(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
