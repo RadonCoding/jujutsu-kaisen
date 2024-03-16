@@ -304,18 +304,19 @@ public class ClientAbilityHandler {
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             ability.charge(owner);
+            ability.addDuration(owner);
 
             NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
             ability.run(owner);
             NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            ability.charge(owner);
+            ability.addDuration(owner);
 
             NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
             data.toggle(ability);
             NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            ability.charge(owner);
+            ability.addDuration(owner);
 
             NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
             data.channel(ability);

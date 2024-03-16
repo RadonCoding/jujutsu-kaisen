@@ -253,7 +253,7 @@ public abstract class Ability {
         return true;
     }
 
-    private void addDuration(LivingEntity owner) {
+    public void addDuration(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
@@ -279,7 +279,6 @@ public abstract class Ability {
         if (this instanceof IAttack || this.getActivationType(owner) == ActivationType.INSTANT) {
             this.cooldown(owner);
         }
-        this.addDuration(owner);
     }
 
     public void cooldown(LivingEntity owner) {
