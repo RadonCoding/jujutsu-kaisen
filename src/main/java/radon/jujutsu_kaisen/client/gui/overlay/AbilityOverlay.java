@@ -14,6 +14,10 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,15 +137,23 @@ public class AbilityOverlay {
 
         if (mc.player == null) return;
 
+        IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        IAbilityData data = cap.getAbilityData();
+
         Component nameText = Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID), ability.getName());
         lines.add(nameText);
 
         float cost = ability.getRealCost(mc.player);
+
         if (cost > 0.0F) {
             lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost));
         }
 
-        int cooldown = ability.getRealCooldown(mc.player);
+        int remaining = data.getRemainingCooldown(ability);
+        int cooldown = remaining > 0 ? remaining : ability.getRealCooldown(mc.player);
 
         if (cooldown > 0) {
             lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cooldown", JujutsuKaisen.MOD_ID), Math.round((float) cooldown / 20)));
