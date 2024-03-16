@@ -279,6 +279,7 @@ public abstract class Ability {
         if (this instanceof IAttack || this.getActivationType(owner) == ActivationType.INSTANT) {
             this.cooldown(owner);
         }
+        this.addDuration(owner);
     }
 
     public void cooldown(LivingEntity owner) {
@@ -322,14 +323,7 @@ public abstract class Ability {
 
             if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
         }
-
-        Status status = this.getStatus(owner);
-
-        if (status == Status.SUCCESS && this.getActivationType(owner) == ActivationType.INSTANT) {
-            this.charge(owner);
-        }
-        this.addDuration(owner);
-        return status;
+        return this.getStatus(owner);
     }
 
     public Status isStillUsable(LivingEntity owner) {

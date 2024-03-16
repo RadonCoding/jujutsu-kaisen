@@ -382,6 +382,20 @@ public class AbilityData implements IAbilityData {
         }
         nbt.put("disrupted", disruptedTag);
 
+        ListTag durationsTag = new ListTag();
+
+        for (Map.Entry<Ability, Integer> entry : this.durations.entrySet()) {
+            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
+
+            if (key == null) continue;
+
+            CompoundTag data = new CompoundTag();
+            data.putString("identifier", key.toString());
+            data.putInt("duration", entry.getValue());
+            durationsTag.add(data);
+        }
+        nbt.put("durations", durationsTag);
+
         return nbt;
     }
 
@@ -408,6 +422,14 @@ public class AbilityData implements IAbilityData {
         for (Tag key : nbt.getList("disrupted", Tag.TAG_COMPOUND)) {
             CompoundTag data = (CompoundTag) key;
             this.disrupted.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
+                    data.getInt("duration"));
+        }
+
+        this.durations.clear();
+
+        for (Tag key : nbt.getList("durations", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+            this.durations.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
                     data.getInt("duration"));
         }
     }
