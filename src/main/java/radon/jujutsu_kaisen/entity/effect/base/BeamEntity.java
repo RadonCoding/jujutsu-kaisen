@@ -179,13 +179,13 @@ public abstract class BeamEntity extends JujutsuProjectile {
                             for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                                 BlockPos pos = new BlockPos(x, y, z);
 
+                                if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
+
                                 double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                                 if (distance > radius) continue;
 
                                 if (this.breaksBlocks()) {
-                                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
-
                                     this.level().destroyBlock(pos, false);
                                 }
 
