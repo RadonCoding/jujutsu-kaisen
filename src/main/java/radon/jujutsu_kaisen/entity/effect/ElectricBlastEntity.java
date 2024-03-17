@@ -2,12 +2,12 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
@@ -25,6 +25,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
     public static final int DURATION = 2 * 20;
     private static final float RADIUS = 4.0F;
     private static final float MAX_RADIUS = 32.0F;
+    private static final float DAMAGE = 15.0F;
 
     public ElectricBlastEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -100,7 +101,13 @@ public class ElectricBlastEntity extends JujutsuProjectile {
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.getCursedEnergyColorBright(owner),
                             radius * 0.1F, 1.0F, true, 5), true,
-                   center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
+                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
+        }
+
+        AABB bounds = this.getBoundingBox();
+
+        for (Entity entity : this.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner)) {
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()), DAMAGE * this.getPower());
         }
     }
 }

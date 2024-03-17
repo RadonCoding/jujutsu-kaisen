@@ -29,7 +29,7 @@ public class ForestRoots extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE), EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner))) {
+        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE), entity -> entity != owner)) {
             owner.level().addFreshEntity(new ForestRootsEntity(owner, this.getOutput(owner), entity));
         }
     }

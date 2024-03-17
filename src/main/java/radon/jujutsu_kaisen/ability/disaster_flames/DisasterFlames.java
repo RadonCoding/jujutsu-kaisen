@@ -37,7 +37,8 @@ public class DisasterFlames extends Ability implements IImbuement {
     }
 
     private List<LivingEntity> getTargets(LivingEntity owner) {
-        return owner.level().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(AOE_RANGE), EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner));
+        return owner.level().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(AOE_RANGE),
+                entity -> entity != owner);
     }
 
     @Override
