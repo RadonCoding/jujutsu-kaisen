@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class SorcererGoal extends Goal {
         IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
         IMimicryData ownerMimicryData = ownerCap.getMimicryData();
-        ISkillData skillData = ownerCap.getSkillData();
+        ISkillData ownerSkillData = ownerCap.getSkillData();
 
         int points = ownerSorcererData.getSkillPoints();
 
@@ -61,9 +62,16 @@ public class SorcererGoal extends Goal {
 
             if (distributed > 0) {
                 for (Skill skill : Skill.values()) {
-                    int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
-                    skillData.increaseSkill(skill, amount);
-                    ownerSorcererData.useSkillPoints(amount);
+                    int current = ownerSkillData.getSkill(skill);
+
+                    int max = SorcererUtil.getMaximumSkillLevel(ownerSorcererData.getExperience(), current, distributed);
+
+                    int real = max - current;
+
+                    if (real == 0) continue;
+
+                    ownerSkillData.increaseSkill(skill, real);
+                    ownerSorcererData.useSkillPoints(real);
                 }
             }
         }

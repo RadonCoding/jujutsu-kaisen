@@ -27,6 +27,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "malevolent_shrine")));
     public static DeferredHolder<SoundEvent, SoundEvent> ELECTRICITY = SOUNDS.register("electricity", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "electricity")));
+    public static DeferredHolder<SoundEvent, SoundEvent> ELECTRIC_BLAST = SOUNDS.register("electric_blast", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "electric_blast")));
     public static DeferredHolder<SoundEvent, SoundEvent> CLEAVE = SOUNDS.register("cleave", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "cleave")));
     public static DeferredHolder<SoundEvent, SoundEvent> SWALLOW = SOUNDS.register("swallow", () ->

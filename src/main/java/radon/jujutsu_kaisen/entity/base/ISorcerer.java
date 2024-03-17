@@ -113,9 +113,16 @@ public interface ISorcerer {
 
             if (distributed > 0) {
                 for (Skill skill : Skill.values()) {
-                    int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
-                    skillData.increaseSkill(skill, amount);
-                    sorcererData.useSkillPoints(amount);
+                    int current = skillData.getSkill(skill);
+
+                    int max = SorcererUtil.getMaximumSkillLevel(sorcererData.getExperience(), current, distributed);
+
+                    int real = max - current;
+
+                    if (real == 0) continue;
+
+                    skillData.increaseSkill(skill, real);
+                    sorcererData.useSkillPoints(real);
                 }
             }
         } else {
@@ -123,9 +130,16 @@ public interface ISorcerer {
 
             if (distributed > 0) {
                 for (Skill major : majors) {
-                    int amount = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), distributed);
-                    skillData.increaseSkill(major, amount);
-                    sorcererData.useSkillPoints(amount);
+                    int current = skillData.getSkill(major);
+
+                    int max = SorcererUtil.getMaximumSkillLevel(sorcererData.getExperience(), current, distributed);
+
+                    int real = max - current;
+
+                    if (real == 0) continue;
+
+                    skillData.increaseSkill(major, real);
+                    sorcererData.useSkillPoints(real);
                 }
             }
         }

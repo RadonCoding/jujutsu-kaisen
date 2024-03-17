@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.IncreaseSkillC2SPacket;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.List;
 
@@ -129,11 +130,11 @@ public class SkillWidget {
 
         int current = skillData.getSkill(this.skill);
 
-        int maxLevelForExperience = Math.round(sorcererData.getExperience() * 0.01F);
+        int max = SorcererUtil.getMaximumSkillLevel(sorcererData.getExperience(), current, amount);
 
-        if (current >= ConfigHolder.SERVER.maximumSkillLevel.get() || current >= maxLevelForExperience) return;
+        int real = max - current;
 
-        int real = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), current + amount) - current;
+        if (real == 0) return;
 
         if (!this.minecraft.player.getAbilities().instabuild && sorcererData.getSkillPoints() < real) return;
 

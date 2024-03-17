@@ -572,6 +572,10 @@ public class JJKEntities {
                     .sized(0.25F, 0.25F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<ElectricBlastEntity>> ELECTRIC_BLAST = ENTITIES.register("electric_blast", () ->
+            EntityType.Builder.<ElectricBlastEntity>of(ElectricBlastEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "electric_blast")
+                            .toString()));
 
     @SubscribeEvent
     public static void onSpawnPlacementsRegister(SpawnPlacementRegisterEvent event) {

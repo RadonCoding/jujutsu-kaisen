@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public class IncreaseSkillC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "increase_skill_serverbound");
@@ -45,11 +46,11 @@ public class IncreaseSkillC2SPacket implements CustomPacketPayload {
 
             int current = skillData.getSkill(this.skill);
 
-            int maxLevelForExperience = Math.round(sorcererData.getExperience() * 0.01F);
+            int max = SorcererUtil.getMaximumSkillLevel(sorcererData.getExperience(), current, amount);
 
-            if (current >= ConfigHolder.SERVER.maximumSkillLevel.get() || current >= maxLevelForExperience) return;
+            int real = max - current;
 
-            int real = Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), current + this.amount) - current;
+            if (real == 0) return;
 
             if (!sender.getAbilities().instabuild && sorcererData.getSkillPoints() < real) return;
 
