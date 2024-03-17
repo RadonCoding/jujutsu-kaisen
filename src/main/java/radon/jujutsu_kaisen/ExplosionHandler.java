@@ -34,25 +34,16 @@ import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
-import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import static net.minecraft.world.entity.projectile.WindCharge.EXPLOSION_DAMAGE_CALCULATOR;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExplosionHandler {
@@ -135,7 +126,7 @@ public class ExplosionHandler {
 
                     if (explosion.calculator.shouldDamageEntity(current, entity)) {
                         float amount = explosion.calculator.getEntityDamageAmount(current, entity);
-                        entity.hurt(explosion.source, amount * explosion.damage);
+                        entity.hurt(explosion.source, amount * explosion.output);
                     }
 
                     double d10;
@@ -184,7 +175,7 @@ public class ExplosionHandler {
                                 BlockState block = event.level.getBlockState(pos);
                                 FluidState fluid = event.level.getFluidState(pos);
 
-                                float f = explosion.radius * 2.0F * (0.7F + HelperMethods.RANDOM.nextFloat() * 0.6F);
+                                float f = explosion.radius * 2.0F * (0.7F + HelperMethods.RANDOM.nextFloat() * 0.6F) * explosion.output;
 
                                 Optional<Float> optional = explosion.calculator.getBlockExplosionResistance(current, event.level, pos, block, fluid);
 
@@ -241,8 +232,8 @@ public class ExplosionHandler {
         explosions.removeAll(remove);
     }
 
-    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire));
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float output, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, output, instigator, source, causesFire));
     }
 
     private static class ExplosionData {
@@ -251,19 +242,19 @@ public class ExplosionHandler {
         private final Vec3 position;
         private final float radius;
         private final int duration;
-        private final float damage;
+        private final float output;
         private int age;
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
         private final boolean fire;
 
-        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float output, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
             this.calculator = instigator == null ? new ExplosionDamageCalculator() : new EntityBasedExplosionDamageCalculator(instigator);
             this.dimension = dimension;
             this.position = position;
             this.radius = radius;
             this.duration = duration;
-            this.damage = damage;
+            this.output = output;
             this.instigator = instigator;
             this.source = source;
             this.fire = fire;
