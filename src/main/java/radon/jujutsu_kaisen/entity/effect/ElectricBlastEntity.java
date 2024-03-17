@@ -69,11 +69,17 @@ public class ElectricBlastEntity extends JujutsuProjectile {
             return;
         }
 
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
         if (this.getTime() - 1 == 0) {
             this.playSound(JJKSounds.ELECTRIC_BLAST.get(), 3.0F, 1.0F);
-        }
 
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+            AABB bounds = this.getBoundingBox();
+
+            for (Entity entity : this.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner)) {
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()), DAMAGE * this.getPower());
+            }
+        }
 
         float radius = this.getRadius();
 
@@ -102,12 +108,6 @@ public class ElectricBlastEntity extends JujutsuProjectile {
             this.level().addParticle(new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.getCursedEnergyColorBright(owner),
                             radius * 0.1F, 1.0F, true, 5), true,
                     center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
-        }
-
-        AABB bounds = this.getBoundingBox();
-
-        for (Entity entity : this.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner)) {
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()), DAMAGE * this.getPower());
         }
     }
 }
