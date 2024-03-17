@@ -39,6 +39,7 @@ import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
+import radon.jujutsu_kaisen.entity.effect.ElectricBlastEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -55,8 +56,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     private static final double SPEED = 0.02D;
     private static final double MAX_SPEED = 0.5D;
-
-    private static final float LIGHTNING_DAMAGE = 5.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -122,19 +121,15 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
             }
 
-            if (owner.isInWater()) {
-                for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
-                    if (!entity.isInWater()) continue;
+            if (sorcererData.getEnergy() >= sorcererData.getMaxEnergy() / 2.0F) {
+                if (owner.isInWater()) {
+                    owner.level().addFreshEntity(new ElectricBlastEntity(owner, sorcererData.getEnergy() * 0.01F,
+                            owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
 
-                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * this.getPower(owner))) {
-                        for (int i = 0; i < 16; i++) {
-                            double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                            double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * (entity.getBbHeight() * 1.25F);
-                            double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                            level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
-                                    x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-                        }
-                        owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
+                    sorcererData.setEnergy(0.0F);
+
+                    if (owner instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
                     }
                 }
             }

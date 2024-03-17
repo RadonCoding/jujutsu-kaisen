@@ -39,6 +39,11 @@
       "jujutsu_kaisen:electricity"
     ]
   },
+  "electric_blast": {
+    "sounds": [
+      "jujutsu_kaisen:electric_blast"
+    ]
+  },
   "cleave": {
     "sounds": [
       "jujutsu_kaisen:cleave"
