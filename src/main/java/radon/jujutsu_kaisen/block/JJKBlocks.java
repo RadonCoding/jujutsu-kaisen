@@ -194,7 +194,7 @@ public class JJKBlocks {
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of()
                     .mapColor(state -> state.getValue(VeilBlock.COLOR).getMapColor())
-                    .strength(100.0F, 6.0F)
+                    .strength(100.0F, 4.0F)
                     .isViewBlocking(JJKBlocks::never)
                     .isSuffocating(JJKBlocks::never)
                     .isValidSpawn(JJKBlocks::never)
@@ -203,7 +203,7 @@ public class JJKBlocks {
             new VeilRodBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_ORANGE)
                     .requiresCorrectToolForDrops()
-                    .strength(3.0F, 6.0F)
+                    .strength(3.0F, 4.0F)
                     .sound(SoundType.COPPER)
                     .noOcclusion()));
     public static DeferredHolder<Block, Block> ALTAR = BLOCKS.register("altar", () ->

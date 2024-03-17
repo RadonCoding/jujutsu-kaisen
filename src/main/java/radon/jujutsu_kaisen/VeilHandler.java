@@ -14,6 +14,8 @@ import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -104,19 +106,24 @@ public class VeilHandler {
             ResourceKey<Level> dimension1 = entry.getKey();
 
             for (BlockPos pos : entry.getValue()) {
-                // So that veil rods can still be broken
+                // So that veil rods can still rod broken
                 if (target.equals(pos)) continue;
 
-                if (level.dimension() != dimension1 || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
-                    continue;
+                if (level.dimension() != dimension1) continue;
 
-                if (entity.getUUID().equals(be.ownerUUID)) continue;
+                if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity rod)) continue;
+
+                if (level.getBlockEntity(target) instanceof VeilBlockEntity veil) {
+                    if (veil.getParent() == pos) continue;
+                }
+
+                if (entity.getUUID().equals(rod.ownerUUID)) continue;
 
                 if (!isProtectedByVeil(level, target)) continue;
 
-                if (!be.isAllowed(entity)) continue;
+                if (!rod.isAllowed(entity)) continue;
 
-                for (Modifier modifier : be.modifiers) {
+                for (Modifier modifier : rod.modifiers) {
                     if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.VIOLENCE) {
                         return false;
                     }
