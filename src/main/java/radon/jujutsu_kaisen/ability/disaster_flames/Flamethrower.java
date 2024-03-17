@@ -75,7 +75,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
             AABB bounds = AABB.ofSize(end, 1.0D, 1.0D, 1.0D).inflate(1.0D);
 
-            for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, EntitySelector.ENTITY_STILL_ALIVE.and(entity -> entity != owner))) {
+            for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner)) {
                 if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) continue;
 
                 entity.setSecondsOnFire(5);
