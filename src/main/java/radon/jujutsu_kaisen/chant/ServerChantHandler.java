@@ -9,14 +9,12 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import radon.jujutsu_kaisen.IChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -125,7 +123,7 @@ public class ServerChantHandler {
                     iter.remove();
 
                     if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new ClearChantsC2SPacket(), player);
+                        PacketHandler.sendToClient(new ClearChantsS2CPacket(), player);
                     }
                 }
             }
@@ -140,7 +138,7 @@ public class ServerChantHandler {
                 MESSAGES.remove(owner.getUUID());
 
                 if (event.getEntity() instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new ClearChantsC2SPacket(), player);
+                    PacketHandler.sendToClient(new ClearChantsS2CPacket(), player);
                 }
             }
         }

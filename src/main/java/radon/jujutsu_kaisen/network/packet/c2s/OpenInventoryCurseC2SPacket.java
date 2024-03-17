@@ -20,10 +20,6 @@ public class OpenInventoryCurseC2SPacket implements CustomPacketPayload {
     public OpenInventoryCurseC2SPacket(FriendlyByteBuf ignored) {
     }
 
-    public void encode(FriendlyByteBuf ignored) {
-
-    }
-
     public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
@@ -37,7 +33,7 @@ public class OpenInventoryCurseC2SPacket implements CustomPacketPayload {
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
+    public void write(@NotNull FriendlyByteBuf pBuffer) {
 
     }
 

@@ -45,22 +45,6 @@ public class VeilHandler {
         domains.get(dimension).add(identifier);
     }
 
-    public static Set<DomainExpansionEntity> getDomains(ServerLevel level) {
-        if (!domains.containsKey(level.dimension())) return Set.of();
-
-        Set<UUID> current = domains.get(level.dimension());
-
-        if (current.isEmpty()) return Set.of();
-
-        Set<DomainExpansionEntity> result = new HashSet<>();
-
-        for (UUID identifier : current) {
-            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain)) continue;
-            result.add(domain);
-        }
-        return result;
-    }
-
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level, BlockPos pos) {
         if (!domains.containsKey(level.dimension())) return Set.of();
 
@@ -113,7 +97,7 @@ public class VeilHandler {
         return true;
     }
 
-    public static boolean canDamage(@Nullable Entity entity, ServerLevel level, double x, double y, double z) {
+    public static boolean canDamage(Entity entity, ServerLevel level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
         for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
@@ -126,9 +110,11 @@ public class VeilHandler {
                 if (level.dimension() != dimension1 || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
                     continue;
 
-                if (entity != null && entity.getUUID().equals(be.ownerUUID)) continue;
+                if (entity.getUUID().equals(be.ownerUUID)) continue;
 
                 if (!isProtectedByVeil(level, target)) continue;
+
+                if (!be.isAllowed(entity)) continue;
 
                 for (Modifier modifier : be.modifiers) {
                     if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.VIOLENCE) {

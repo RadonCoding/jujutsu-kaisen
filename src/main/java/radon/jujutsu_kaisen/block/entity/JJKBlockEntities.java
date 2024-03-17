@@ -79,4 +79,8 @@ public class JJKBlockEntities {
                             JJKBlocks.FAKE_WATER_DURATION.get(),
                             JJKBlocks.FAKE_WOOD.get())
                     .build(null));
+    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<MissionBlockEntity>> MISSION = BLOCK_ENTITIES.register("mission", () ->
+            BlockEntityType.Builder.of(MissionBlockEntity::new,
+                            JJKBlocks.MISSION.get())
+                    .build(null));
 }
