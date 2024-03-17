@@ -115,19 +115,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
                         x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
             }
-
-            if (sorcererData.getEnergy() >= sorcererData.getMaxEnergy() / 2.0F) {
-                if (owner.isInWater()) {
-                    owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getOutput(owner), sorcererData.getEnergy() * 0.01F),
-                            owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
-
-                    sorcererData.setEnergy(0.0F);
-
-                    if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
-                    }
-                }
-            }
         }
     }
 
