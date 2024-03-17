@@ -6,11 +6,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -35,15 +33,12 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
-import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.entity.effect.ElectricBlastEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -123,7 +118,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
             if (sorcererData.getEnergy() >= sorcererData.getMaxEnergy() / 2.0F) {
                 if (owner.isInWater()) {
-                    owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getPower(owner), sorcererData.getEnergy() * 0.01F),
+                    owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getOutput(owner), sorcererData.getEnergy() * 0.01F),
                             owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
 
                     sorcererData.setEnergy(0.0F);
@@ -139,7 +134,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Override
     public void applyModifiers(LivingEntity owner) {
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                Math.min(MAX_SPEED, SPEED * this.getPower(owner)), AttributeModifier.Operation.ADDITION);
+                Math.min(MAX_SPEED, SPEED * this.getOutput(owner)), AttributeModifier.Operation.ADDITION);
     }
 
     @Override

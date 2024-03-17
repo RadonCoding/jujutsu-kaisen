@@ -1,20 +1,16 @@
 package radon.jujutsu_kaisen.ability.sky_strike;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
 import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -52,7 +48,7 @@ public class SkyStrike extends Ability {
 
         if (hit == null) return;
 
-        SkyStrikeEntity strike = new SkyStrikeEntity(owner, this.getPower(owner), hit.getLocation());
+        SkyStrikeEntity strike = new SkyStrikeEntity(owner, this.getOutput(owner), hit.getLocation());
         owner.level().addFreshEntity(strike);
     }
 

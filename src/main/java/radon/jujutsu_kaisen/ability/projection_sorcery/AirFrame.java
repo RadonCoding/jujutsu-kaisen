@@ -10,8 +10,6 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.effect.AirFrameEntity;
@@ -50,7 +48,7 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
         int speed = 3;
 
-        AirFrameEntity frame = new AirFrameEntity(owner, this.getPower(owner));
+        AirFrameEntity frame = new AirFrameEntity(owner, this.getOutput(owner));
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (frame.getBbHeight() / 2.0F), owner.getZ())
                 .add(look.scale(charge * speed));

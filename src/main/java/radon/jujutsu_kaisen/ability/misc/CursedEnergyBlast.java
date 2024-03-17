@@ -8,9 +8,6 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -49,7 +46,7 @@ public class CursedEnergyBlast extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        CursedEnergyBlastEntity blast = new CursedEnergyBlastEntity(owner, this.getPower(owner));
+        CursedEnergyBlastEntity blast = new CursedEnergyBlastEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(blast);
     }
 

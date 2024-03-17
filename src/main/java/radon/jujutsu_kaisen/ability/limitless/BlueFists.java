@@ -5,21 +5,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.DamageUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class BlueFists extends Ability implements Ability.IToggled, Ability.IAttack {
     private static final float DAMAGE = 5.0F;
@@ -76,6 +68,6 @@ public class BlueFists extends Ability implements Ability.IToggled, Ability.IAtt
 
         ((ServerLevel) owner.level()).getChunkSource().broadcastAndSend(owner, new ClientboundAnimatePacket(target, ClientboundAnimatePacket.CRITICAL_HIT));
 
-        return target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BLUE_FISTS.get()), DAMAGE * this.getPower(owner));
+        return target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.BLUE_FISTS.get()), DAMAGE * this.getOutput(owner));
     }
 }

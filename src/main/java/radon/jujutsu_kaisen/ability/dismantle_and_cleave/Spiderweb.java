@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,12 +14,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
-import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -72,7 +66,7 @@ public class Spiderweb extends Ability {
 
             IAbilityData data = cap.getAbilityData();
 
-            float radius = Math.max(MIN_EXPLOSIVE_POWER, Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner)));
+            float radius = Math.max(MIN_EXPLOSIVE_POWER, Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getOutput(owner)));
             float real = (radius % 2 == 0) ? radius + 1 : radius;
 
             Vec3 center = hit.getBlockPos().getCenter().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(real * 0.5F));
@@ -84,7 +78,7 @@ public class Spiderweb extends Ability {
 
                 if (HelperMethods.RANDOM.nextInt(Math.round(radius)) == 0) {
                     data.delayTickEvent(() -> {
-                        owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner), (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F,
+                        owner.level().addFreshEntity(new DismantleProjectile(owner, this.getOutput(owner), (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F,
                                 current, HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1),
                                 true, true));
                     }, (int) Math.round(Math.sqrt(owner.distanceToSqr(current))));

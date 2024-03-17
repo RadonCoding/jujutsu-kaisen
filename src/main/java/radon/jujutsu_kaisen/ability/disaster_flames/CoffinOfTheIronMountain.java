@@ -34,12 +34,12 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
         super.onHitEntity(domain, owner, entity, instant);
 
         if (instant || owner.level().getGameTime() % 20 == 0) {
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getPower(owner) * getStrength(owner, false))) {
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getOutput(owner) * getStrength(owner, false))) {
                 entity.setSecondsOnFire(15);
             }
 
             if (owner.hasLineOfSight(entity)) {
-                LavaRockProjectile rock = new LavaRockProjectile(owner, this.getPower(owner) * getStrength(owner, false), entity);
+                LavaRockProjectile rock = new LavaRockProjectile(owner, this.getOutput(owner) * getStrength(owner, false), entity);
                 rock.setDomain(true);
                 owner.level().addFreshEntity(rock);
             }

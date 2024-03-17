@@ -21,9 +21,6 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -134,7 +131,7 @@ public class Dash extends Ability {
         HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
         float power = Math.min(MAX_DASH * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F),
-                DASH * (1.0F + this.getPower(owner) * 0.1F) * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
+                DASH * (1.0F + this.getOutput(owner) * 0.1F) * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
 
         if (hit.getType() == HitResult.Type.MISS) {
             float f = owner.getYRot();

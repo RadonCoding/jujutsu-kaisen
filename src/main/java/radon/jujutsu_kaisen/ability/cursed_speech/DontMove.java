@@ -36,7 +36,7 @@ public class DontMove extends CursedSpeech {
         CursedSpeechUtil.attack(owner, entity -> {
             if (!(entity instanceof LivingEntity living)) return;
 
-            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(DURATION * this.getPower(owner)), 1, false, false, false));
+            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(DURATION * this.getOutput(owner)), 1, false, false, false));
 
             if (living instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));

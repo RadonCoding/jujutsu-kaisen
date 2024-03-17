@@ -57,7 +57,7 @@ public class Volcano extends Ability {
 
         if (hit != null) {
             Direction dir = hit.getDirection();
-            VolcanoEntity volcano = new VolcanoEntity(owner, this.getPower(owner), hit.getBlockPos(), dir);
+            VolcanoEntity volcano = new VolcanoEntity(owner, this.getOutput(owner), hit.getBlockPos(), dir);
             owner.level().addFreshEntity(volcano);
         }
     }

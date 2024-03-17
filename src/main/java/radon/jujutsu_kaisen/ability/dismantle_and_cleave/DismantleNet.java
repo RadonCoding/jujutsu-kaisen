@@ -33,14 +33,14 @@ public class DismantleNet extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        int size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, (int) (SIZE * this.getPower(owner))));
+        int size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, (int) (SIZE * this.getOutput(owner))));
         int count = size / 4;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         Vec3 center = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
-        float power = this.getPower(owner);
+        float power = this.getOutput(owner);
 
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {

@@ -8,12 +8,9 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.PiercingWaterEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -50,7 +47,7 @@ public class PiercingWater extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        PiercingWaterEntity piercing = new PiercingWaterEntity(owner, this.getPower(owner));
+        PiercingWaterEntity piercing = new PiercingWaterEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(piercing);
     }
 

@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,12 +21,10 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.entity.projectile.BigDismantleProjectile;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -114,7 +110,7 @@ public class WorldSlash extends Ability {
 
         if (owner.level().isClientSide) return;
 
-        WorldSlashProjectile slash = new WorldSlashProjectile(owner, this.getPower(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
+        WorldSlashProjectile slash = new WorldSlashProjectile(owner, this.getOutput(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
         slash.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
         owner.level().addFreshEntity(slash);
     }

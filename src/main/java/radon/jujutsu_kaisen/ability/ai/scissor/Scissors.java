@@ -8,9 +8,6 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -57,7 +54,7 @@ public class Scissors extends Ability {
             ISorcererData data = cap.getSorcererData();
 
             for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
-                ScissorEntity scissor = new ScissorEntity(owner, this.getPower(owner), target);
+                ScissorEntity scissor = new ScissorEntity(owner, this.getOutput(owner), target);
                 owner.level().addFreshEntity(scissor);
                 data.addSummon(scissor);
             }

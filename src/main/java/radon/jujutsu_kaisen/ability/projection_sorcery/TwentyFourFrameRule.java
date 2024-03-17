@@ -22,7 +22,6 @@ import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ability.IAttack {
     private static final float DAMAGE = 15.0F;
@@ -77,7 +76,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
             if (frame.getVictim() == target) return false;
         }
 
-        owner.level().addFreshEntity(new ProjectionFrameEntity(owner, target, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
+        owner.level().addFreshEntity(new ProjectionFrameEntity(owner, target, Ability.getOutput(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
 
         if (target instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);

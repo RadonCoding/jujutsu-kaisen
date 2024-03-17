@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -41,7 +40,7 @@ public class GetCrushed extends CursedSpeech {
         if (owner.level().isClientSide) return;
 
         CursedSpeechUtil.attack(owner, entity -> {
-            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) return;
+            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) return;
 
             Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
             ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
@@ -74,7 +73,7 @@ public class GetCrushed extends CursedSpeech {
                     }
                 }
             }
-            entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getPower(owner) * -1.0D, 0.0D);
+            entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getOutput(owner) * -1.0D, 0.0D);
             entity.hurtMarked = true;
 
             if (entity instanceof Player player) {

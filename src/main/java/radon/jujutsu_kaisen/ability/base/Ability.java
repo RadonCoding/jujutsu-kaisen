@@ -22,7 +22,6 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -57,7 +56,7 @@ public abstract class Ability {
         PROJECTION
     }
 
-    public static float getPower(Ability ability, LivingEntity owner) {
+    public static float getOutput(Ability ability, LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0.0F;
@@ -73,8 +72,8 @@ public abstract class Ability {
         return data.getBaseOutput();
     }
 
-    public float getPower(LivingEntity owner) {
-        return getPower(this, owner);
+    public float getOutput(LivingEntity owner) {
+        return getOutput(this, owner);
     }
 
     // Whether or not the ability scales off of the output of the caster

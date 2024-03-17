@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.ability.projection_sorcery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -12,7 +11,6 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -30,7 +28,7 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
         super.onHitEntity(domain, owner, entity, instant);
 
         if (instant || owner.level().getGameTime() % 40 == 0) {
-            owner.level().addFreshEntity(new FilmGaugeProjectile(owner, this.getPower(owner), entity));
+            owner.level().addFreshEntity(new FilmGaugeProjectile(owner, this.getOutput(owner), entity));
         }
     }
 

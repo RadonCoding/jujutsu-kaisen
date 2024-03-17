@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -35,8 +34,8 @@ public class Explode extends CursedSpeech {
         if (owner.level().isClientSide) return;
 
         CursedSpeechUtil.attack(owner, entity -> {
-            ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner)),
-                    20, this.getPower(owner) * 0.25F, owner, JJKDamageSources.jujutsuAttack(owner, this), false);
+            ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getOutput(owner)),
+                    20, this.getOutput(owner) * 0.25F, owner, JJKDamageSources.jujutsuAttack(owner, this), false);
 
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
