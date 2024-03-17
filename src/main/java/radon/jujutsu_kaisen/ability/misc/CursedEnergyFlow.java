@@ -123,7 +123,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
             if (sorcererData.getEnergy() >= sorcererData.getMaxEnergy() / 2.0F) {
                 if (owner.isInWater()) {
-                    owner.level().addFreshEntity(new ElectricBlastEntity(owner, sorcererData.getEnergy() * 0.01F,
+                    owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getPower(owner), sorcererData.getEnergy() * 0.01F),
                             owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
 
                     sorcererData.setEnergy(0.0F);
