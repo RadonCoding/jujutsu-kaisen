@@ -79,6 +79,9 @@ public class PacketHandler {
         registrar.play(TriggerAbilityS2CPacket.IDENTIFIER, TriggerAbilityS2CPacket::new, handler -> handler
                 .client(TriggerAbilityS2CPacket::handle)
                 .server(TriggerAbilityS2CPacket::handle));
+        registrar.play(OpenMissionScreenS2CPacket.IDENTIFIER, OpenMissionScreenS2CPacket::new, handler -> handler
+                .client(OpenMissionScreenS2CPacket::handle)
+                .server(OpenMissionScreenS2CPacket::handle));
 
         // Serverbound packets
         registrar.play(TriggerAbilityC2SPacket.IDENTIFIER, TriggerAbilityC2SPacket::new, handler -> handler
@@ -171,9 +174,9 @@ public class PacketHandler {
         registrar.play(UntriggerAbilityC2SPacket.IDENTIFIER, UntriggerAbilityC2SPacket::new, handler -> handler
                 .client(UntriggerAbilityC2SPacket::handle)
                 .server(UntriggerAbilityC2SPacket::handle));
-        registrar.play(ClearChantsC2SPacket.IDENTIFIER, ClearChantsC2SPacket::new, handler -> handler
-                .client(ClearChantsC2SPacket::handle)
-                .server(ClearChantsC2SPacket::handle));
+        registrar.play(ClearChantsS2CPacket.IDENTIFIER, ClearChantsS2CPacket::new, handler -> handler
+                .client(ClearChantsS2CPacket::handle)
+                .server(ClearChantsS2CPacket::handle));
         registrar.play(TransformationRightClickC2SPacket.IDENTIFIER, TransformationRightClickC2SPacket::new, handler -> handler
                 .client(TransformationRightClickC2SPacket::handle)
                 .server(TransformationRightClickC2SPacket::handle));

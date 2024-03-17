@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.client.gui.screen.MissionsScreen;
 import radon.jujutsu_kaisen.client.gui.screen.ShadowInventoryScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 
@@ -23,5 +24,9 @@ public class ClientWrapper {
 
     public static void openShadowInventory() {
         Minecraft.getInstance().setScreen(new ShadowInventoryScreen());
+    }
+
+    public static void openMissions() {
+        Minecraft.getInstance().setScreen(new MissionsScreen());
     }
 }

@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.tab.*;
 
 import javax.annotation.Nullable;
@@ -19,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JujutsuScreen extends Screen {
-    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
+    private static final ResourceLocation WINDOW = new ResourceLocation("textures/gui/advancements/window.png");
+
     public static final int WINDOW_WIDTH = 252;
     public static final int WINDOW_HEIGHT = 140;
     private static final int WINDOW_INSIDE_X = 9;
@@ -158,50 +158,49 @@ public class JujutsuScreen extends Screen {
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         int i = (this.width - WINDOW_WIDTH) / 2;
         int j = (this.height - WINDOW_HEIGHT) / 2;
-        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
         if (maxPages != 0) {
             net.minecraft.network.chat.Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));
             int width = this.font.width(page);
             pGuiGraphics.drawString(this.font, page.getVisualOrderText(), i + (WINDOW_WIDTH / 2) - (width / 2), j - 44, -1);
         }
-        this.renderInside(pGuiGraphics, pMouseX, pMouseY, i, j);
+        this.renderInside(pGuiGraphics, i, j);
         this.renderWindow(pGuiGraphics, i, j);
         this.renderTooltips(pGuiGraphics, pMouseX, pMouseY, i, j);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
-    private void renderInside(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
+    private void renderInside(GuiGraphics graphics, int offsetX, int offsetY) {
         if (this.selectedTab != null) {
-            this.selectedTab.drawContents(pGuiGraphics, pOffsetX + WINDOW_INSIDE_X, pOffsetY + WINDOW_INSIDE_Y);
+            this.selectedTab.drawContents(graphics, offsetX + WINDOW_INSIDE_X, offsetY + WINDOW_INSIDE_Y);
         }
     }
 
-    public void renderWindow(GuiGraphics pGuiGraphics, int pOffsetX, int pOffsetY) {
+    public void renderWindow(GuiGraphics graphics, int offsetX, int offsetY) {
         RenderSystem.enableBlend();
-        pGuiGraphics.blit(WINDOW_LOCATION, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        graphics.blit(WINDOW, offsetX, offsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         for (JJKTab tab : this.tabs) {
             if (tab.getPage() == tabPage) {
-                tab.drawTab(pGuiGraphics, pOffsetX, pOffsetY, tab == this.selectedTab);
+                tab.drawTab(graphics, offsetX, offsetY, tab == this.selectedTab);
             }
         }
 
         for (JJKTab tab : this.tabs) {
             if (tab.getPage() == tabPage) {
-                tab.drawIcon(pGuiGraphics, pOffsetX, pOffsetY);
+                tab.drawIcon(graphics, offsetX, offsetY);
             }
         }
     }
 
-    private void renderTooltips(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
+    private void renderTooltips(GuiGraphics graphics, int mouseX, int mouseY, int offsetX, int offsetY) {
         if (this.selectedTab != null) {
-            this.selectedTab.drawTooltips(pGuiGraphics, pMouseX, pMouseY, pOffsetX, pOffsetY);
+            this.selectedTab.drawTooltips(graphics, mouseX, mouseY, offsetX, offsetY);
         }
 
         for (JJKTab JJKTab : this.tabs) {
-            if (JJKTab.getPage() == tabPage && JJKTab.isMouseOver(pOffsetX, pOffsetY, pMouseX, pMouseY)) {
-                pGuiGraphics.renderTooltip(this.font, JJKTab.getTitle(), pMouseX, pMouseY);
+            if (JJKTab.getPage() == tabPage && JJKTab.isMouseOver(offsetX, offsetY, mouseX, mouseY)) {
+                graphics.renderTooltip(this.font, JJKTab.getTitle(), mouseX, mouseY);
             }
         }
     }

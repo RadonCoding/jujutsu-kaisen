@@ -213,7 +213,7 @@ public class JJKBlocks {
                     .strength(5.0F, 1200.0F)
                     .sound(SoundType.ANVIL)));
     public static DeferredHolder<Block, Block> MISSION = BLOCKS.register("mission", () ->
-            new AltarBlock(BlockBehaviour.Properties.of()
+            new MissionBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK)
                     .lightLevel(state -> 3)
                     .emissiveRendering(JJKBlocks::always)
