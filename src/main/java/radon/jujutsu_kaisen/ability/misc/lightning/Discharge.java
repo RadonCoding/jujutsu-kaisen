@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc.lightning;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +21,9 @@ import radon.jujutsu_kaisen.client.particle.EmittingLightningParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.effect.ElectricBlastEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -83,6 +87,25 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
                         x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
             }
             owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
+        }
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
+        if (data.getEnergy() >= data.getMaxEnergy() / 2.0F) {
+            if (owner.isInWater()) {
+                owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getOutput(owner), data.getEnergy() * 0.01F),
+                        owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
+
+                data.setEnergy(0.0F);
+
+                if (owner instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                }
+            }
         }
     }
 
