@@ -13,12 +13,8 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.entity.effect.LightningEntity;
-import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Lightning extends Ability {
@@ -43,7 +39,7 @@ public class Lightning extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        LightningEntity lightning = new LightningEntity(owner, this.getPower(owner));
+        LightningEntity lightning = new LightningEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(lightning);
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 1.0F, 1.0F);

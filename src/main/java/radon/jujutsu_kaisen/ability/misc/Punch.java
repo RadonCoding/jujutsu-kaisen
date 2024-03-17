@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -132,13 +131,13 @@ public class Punch extends Ability {
 
             if (!entity.isDeadOrDying()) {
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                    if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner))) {
-                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * 2.0F)
+                    if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getOutput(owner))) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getOutput(owner) * 0.1F) * 2.0F)
                                 .multiply(1.0D, 0.25D, 1.0D));
                     }
                 } else {
-                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
-                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F))
+                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getOutput(owner) * 0.1F))
                                 .multiply(1.0D, 0.25D, 1.0D));
                     }
                 }

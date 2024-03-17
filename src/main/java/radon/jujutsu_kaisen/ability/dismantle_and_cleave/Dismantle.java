@@ -14,10 +14,6 @@ import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -55,7 +51,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
             if (owner.level().isClientSide) return;
 
-            DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
+            DismantleProjectile dismantle = new DismantleProjectile(owner, this.getOutput(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
             dismantle.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
             owner.level().addFreshEntity(dismantle);
 
@@ -65,7 +61,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos) {
-        float power = this.getPower(owner) * DomainExpansion.getStrength(owner, false);
+        float power = this.getOutput(owner) * DomainExpansion.getStrength(owner, false);
 
         int length = HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, (DismantleProjectile.MAX_LENGTH + 1) * 2);
 

@@ -4,7 +4,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -25,7 +24,7 @@ public class FireBeam extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        FireBeamEntity beam = new FireBeamEntity(owner, this.getPower(owner));
+        FireBeamEntity beam = new FireBeamEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(beam);
     }
 

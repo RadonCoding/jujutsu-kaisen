@@ -16,10 +16,6 @@ import radon.jujutsu_kaisen.ability.base.IImbuement;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -91,7 +87,7 @@ public class DisasterFlames extends Ability implements IImbuement {
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
         if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()),
-                DAMAGE * this.getPower(owner) * Math.max(0.1F, (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE))))) {
+                DAMAGE * this.getOutput(owner) * Math.max(0.1F, (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE))))) {
             target.setSecondsOnFire(5);
         }
 

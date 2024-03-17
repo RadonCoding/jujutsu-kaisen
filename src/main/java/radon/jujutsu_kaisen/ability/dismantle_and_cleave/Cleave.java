@@ -135,7 +135,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         }
 
         data.delayTickEvent(() -> {
-            float power = domain == null ? Ability.getPower(JJKAbilities.CLEAVE.get(), owner) : Ability.getPower(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
+            float power = domain == null ? Ability.getOutput(JJKAbilities.CLEAVE.get(), owner) : Ability.getOutput(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
 
             float damage = calculateDamage(source, target);
             damage = Math.min(DAMAGE * power, damage);

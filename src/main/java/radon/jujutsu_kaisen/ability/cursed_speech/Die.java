@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -77,7 +76,7 @@ public class Die extends CursedSpeech {
                 DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
                 living.hurt(source, calculateDamage(source, living));
             } else {
-                living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
+                living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner));
             }
 
             if (living instanceof Player player) {

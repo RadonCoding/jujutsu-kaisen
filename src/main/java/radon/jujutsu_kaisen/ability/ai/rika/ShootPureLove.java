@@ -5,12 +5,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.entity.effect.LightningEntity;
 import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ShootPureLove extends Ability {
     @Override
@@ -45,7 +43,7 @@ public class ShootPureLove extends Ability {
     public void run(LivingEntity owner) {
         ((RikaEntity) owner).setShooting(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION + PureLoveBeamEntity.FRAMES);
 
-        PureLoveBeamEntity beam = new PureLoveBeamEntity(owner, this.getPower(owner));
+        PureLoveBeamEntity beam = new PureLoveBeamEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(beam);
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.PURE_LOVE.get(), SoundSource.MASTER, 1.0F, 1.0F);

@@ -10,10 +10,6 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -55,7 +51,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
 
         for (int i = charge < SPEED ? 0 : -SPEED; i <= SPEED; i++) {
-            ForestWaveEntity forest = new ForestWaveEntity(owner, this.getPower(owner));
+            ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(-forest.getBbWidth() * 1.5F))
@@ -71,7 +67,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         }
 
         for (int i = charge < SPEED ? 0 : -SPEED; i <= SPEED; i++) {
-            ForestWaveEntity forest = new ForestWaveEntity(owner, this.getPower(owner));
+            ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(forest.getBbWidth() * 1.5F))

@@ -14,9 +14,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.particle.EmittingLightningParticle;
@@ -59,7 +56,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
     }
 
     private float getRadius(LivingEntity owner) {
-        return Math.min(MAX_RADIUS, this.getPower(owner) * 2.0F);
+        return Math.min(MAX_RADIUS, this.getOutput(owner) * 2.0F);
     }
 
     @Override
@@ -76,7 +73,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
         }
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), radius, radius, radius))) {
-            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) continue;
+            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) continue;
 
             for (int i = 0; i < 4; i++) {
                 double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);

@@ -15,9 +15,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -63,10 +60,10 @@ public class MaximumMeteor extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (canSpawn(owner, this.getPower(owner))) {
+        if (canSpawn(owner, this.getOutput(owner))) {
             owner.swing(InteractionHand.MAIN_HAND);
 
-            MeteorEntity meteor = new MeteorEntity(owner, this.getPower(owner));
+            MeteorEntity meteor = new MeteorEntity(owner, this.getOutput(owner));
             owner.level().addFreshEntity(meteor);
         }
     }
@@ -83,7 +80,7 @@ public class MaximumMeteor extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get()) || !canSpawn(owner, this.getPower(owner))) {
+        if (owner.hasEffect(JJKEffects.STUN.get()) || !canSpawn(owner, this.getOutput(owner))) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);

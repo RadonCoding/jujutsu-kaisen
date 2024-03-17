@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.ability.disaster_tides;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -48,9 +47,9 @@ public class FishShikigami extends Ability {
         float yOffset = owner.getBbHeight() + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F);
 
         FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
-                new EelShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
-                new SharkShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
-                new PiranhaShikigamiProjectile(owner, getPower(owner), target, xOffset, yOffset)
+                new EelShikigamiProjectile(owner, this.getOutput(owner), target, xOffset, yOffset),
+                new SharkShikigamiProjectile(owner, this.getOutput(owner), target, xOffset, yOffset),
+                new PiranhaShikigamiProjectile(owner, getOutput(owner), target, xOffset, yOffset)
         };
         owner.level().addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
     }

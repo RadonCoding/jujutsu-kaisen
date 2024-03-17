@@ -7,9 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.WaterTorrentEntity;
-import radon.jujutsu_kaisen.entity.projectile.EelGrappleProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 
 public class WaterTorrent extends Ability {
@@ -27,7 +25,7 @@ public class WaterTorrent extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        WaterTorrentEntity torrent = new WaterTorrentEntity(owner, this.getPower(owner));
+        WaterTorrentEntity torrent = new WaterTorrentEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(torrent);
     }
 
