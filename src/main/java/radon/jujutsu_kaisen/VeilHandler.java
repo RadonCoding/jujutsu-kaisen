@@ -106,16 +106,9 @@ public class VeilHandler {
             ResourceKey<Level> dimension1 = entry.getKey();
 
             for (BlockPos pos : entry.getValue()) {
-                // So that veil rods can still rod broken
-                if (target.equals(pos)) continue;
-
                 if (level.dimension() != dimension1) continue;
 
                 if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity rod)) continue;
-
-                if (level.getBlockEntity(target) instanceof VeilBlockEntity veil) {
-                    if (veil.getParent() == pos) continue;
-                }
 
                 if (entity.getUUID().equals(rod.ownerUUID)) continue;
 
@@ -142,6 +135,11 @@ public class VeilHandler {
             for (BlockPos pos : veilEntry.getValue()) {
                 // So that veil rods can still be broken
                 if (target.equals(pos)) continue;
+
+                // So that veils can still be destroyed
+                if (level.getBlockEntity(target) instanceof VeilBlockEntity veil) {
+                    if (veil.getParent() == pos) continue;
+                }
 
                 if (level.dimension() != dimension1 || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
                     continue;
