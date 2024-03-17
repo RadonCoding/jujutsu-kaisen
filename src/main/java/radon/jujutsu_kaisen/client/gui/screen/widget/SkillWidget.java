@@ -129,7 +129,7 @@ public class SkillWidget {
 
         int current = skillData.getSkill(this.skill);
 
-        int maxLevelForExperience = Math.round(sorcererData.getExperience() * 0.01F) + 1;
+        int maxLevelForExperience = Math.round(sorcererData.getExperience() * 0.01F);
 
         if (current >= ConfigHolder.SERVER.maximumSkillLevel.get() || current >= maxLevelForExperience) return;
 
