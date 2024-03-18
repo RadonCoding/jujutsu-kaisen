@@ -27,17 +27,6 @@ public class SetGradeCommand {
     }
 
     public static int setGrade(Entity entity, SorcererGrade grade) {
-        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return 0;
-
-        ISorcererData data = cap.getSorcererData();
-
-        data.setExperience(grade.getRequiredExperience());
-
-        if (entity instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-        }
-        return 1;
+        return SetExperienceCommand.setExperience(entity, grade.getRequiredExperience());
     }
 }

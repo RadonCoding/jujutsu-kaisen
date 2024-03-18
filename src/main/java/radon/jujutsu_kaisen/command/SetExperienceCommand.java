@@ -35,6 +35,12 @@ public class SetExperienceCommand {
 
         data.setExperience(experience);
 
+        int abilityPoints = Math.round(data.getExperience() / ConfigHolder.SERVER.abilityPointInterval.get().floatValue());
+        int skillPoints = Math.round(data.getExperience() / ConfigHolder.SERVER.skillPointInterval.get().floatValue());
+
+        data.setAbilityPoints(abilityPoints);
+        data.setSkillPoints(skillPoints);
+
         if (entity instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
         }
