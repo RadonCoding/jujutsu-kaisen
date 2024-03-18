@@ -86,11 +86,11 @@ public abstract class Ability {
         return this.isTechnique();
     }
 
-    protected boolean isNotDisabledFromDA() {
+    protected boolean isNotDisabledFromDA(LivingEntity owner) {
         return false;
     }
 
-    protected boolean isNotDisabledFromUV() {
+    protected boolean isNotDisabledFromUV(LivingEntity owner) {
         return false;
     }
 
@@ -236,7 +236,7 @@ public abstract class Ability {
 
         if (this.isTechnique()) {
             if (abilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                if (!this.isNotDisabledFromDA() || !abilityData.hasToggled(this)) {
+                if (!this.isNotDisabledFromDA(owner) || !abilityData.hasToggled(this)) {
                     return false;
                 }
             }
@@ -293,7 +293,7 @@ public abstract class Ability {
     }
 
     public Status getStatus(LivingEntity owner) {
-        if (!this.isNotDisabledFromUV() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
+        if (!this.isNotDisabledFromUV(owner) && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

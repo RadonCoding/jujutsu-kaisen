@@ -42,7 +42,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    protected boolean isNotDisabledFromDA() {
+    protected boolean isNotDisabledFromDA(LivingEntity owner) {
         return true;
     }
 
