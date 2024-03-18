@@ -144,7 +144,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Fly/Idle", 5, this::flyIdlePredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", 2, this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
     }
 

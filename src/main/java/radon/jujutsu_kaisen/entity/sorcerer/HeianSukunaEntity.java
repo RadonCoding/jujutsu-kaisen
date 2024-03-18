@@ -125,7 +125,7 @@ public class HeianSukunaEntity extends SukunaEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Sit", this::walkRunSitPredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", 2, this::swingPredicate));
     }
 
     @Override

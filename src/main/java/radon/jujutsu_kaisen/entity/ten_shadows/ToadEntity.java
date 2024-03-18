@@ -333,7 +333,7 @@ public class ToadEntity extends TenShadowsSummon {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk", this::walkPredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", 2, this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Tongue", this::tonguePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Howl", this::howlPredicate));
     }
