@@ -8,6 +8,7 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.ForestRootsEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ForestRoots extends Ability {
@@ -29,7 +30,7 @@ public class ForestRoots extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE), entity -> entity != owner)) {
+        for (LivingEntity entity : EntityUtil.getTouchableEntities(LivingEntity.class, owner.level(), owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
             owner.level().addFreshEntity(new ForestRootsEntity(owner, this.getOutput(owner), entity));
         }
     }
