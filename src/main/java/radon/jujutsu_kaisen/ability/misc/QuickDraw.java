@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -164,6 +169,12 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             IAbilityData data = cap.getAbilityData();
 
             if (data.hasToggled(JJKAbilities.QUICK_DRAW.get())) return;
+
+            Vec3 center = new Vec3(victim.getX(), victim.getY() + (victim.getBbHeight() / 2.0F), victim.getZ());
+            ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+
+            victim.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            victim.level().playSound(null, center.x, center.y, center.z, SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
 
             event.setAmount(event.getAmount() * 2.0F);
         }
