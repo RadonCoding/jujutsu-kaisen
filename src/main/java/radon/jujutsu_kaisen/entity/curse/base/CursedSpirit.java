@@ -186,23 +186,12 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         return !this.isHiding() && super.shouldRender(pX, pY, pZ);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (this.isTame()) {
-            LivingEntity target = this.getTarget();
-            this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
-            return;
-        }
-
+    private void checkHiding() {
         if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return;
 
-        if (!(this.level() instanceof ServerLevel level)) return;
+        if (this.getTime() % CHECK_HIDING_INTERVAL != 0) return;
 
-        if (this.getTime() - 1 % CHECK_HIDING_INTERVAL != 0) return;
-
-        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(level, this.blockPosition()));
+        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
 
         if (!this.isHiding()) return;
 
@@ -240,6 +229,21 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
+    public void tick() {
+        super.tick();
+
+        if (this.isTame()) {
+            LivingEntity target = this.getTarget();
+            this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
+            return;
+        }
+
+        if (!this.level().isClientSide) {
+        this.checkHiding();
+        }
+    }
+
+    @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.CURSE;
     }
@@ -259,6 +263,10 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         super.onAddedToWorld();
 
         if (!this.isCustom()) this.createGoals();
+
+        if (!this.level().isClientSide) {
+            this.checkHiding();
+        }
     }
 
     @Override
