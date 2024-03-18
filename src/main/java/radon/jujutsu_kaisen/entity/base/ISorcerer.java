@@ -87,6 +87,13 @@ public interface ISorcerer {
         if (sorcererData.isInitialized()) return;
 
         sorcererData.setExperience(this.getExperience());
+
+        int abilityPoints = Math.round(sorcererData.getExperience() / ConfigHolder.SERVER.abilityPointInterval.get().floatValue());
+        int skillPoints = Math.round(sorcererData.getExperience() / ConfigHolder.SERVER.skillPointInterval.get().floatValue());
+
+        sorcererData.setAbilityPoints(abilityPoints);
+        sorcererData.setSkillPoints(skillPoints);
+
         sorcererData.setTechnique(this.getTechnique());
         sorcererData.setNature(this.getNature());
         sorcererData.addTraits(this.getTraits());
