@@ -79,9 +79,8 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if (!this.isTame() && this.getTime() <= RITUAL_DURATION) return false;
-        return super.hurt(pSource, pAmount);
+    public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
+        return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isInvulnerableTo(pSource);
     }
 
     @Override
