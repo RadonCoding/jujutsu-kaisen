@@ -248,7 +248,7 @@ public abstract class DomainExpansionEntity extends Entity {
                     ISkillData data = ownerCap.getSkillData();
 
                     simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability),
-                            data.getSkill(Skill.BARRIER) * 0.05F);
+                            data.getSkill(Skill.BARRIER) * 0.01F);
                 }
             }
         }

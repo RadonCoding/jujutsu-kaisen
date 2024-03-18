@@ -65,7 +65,7 @@ public class SimpleDomainEntity extends Entity {
         ISkillData data = cap.getSkillData();
         
         this.setRadius(getRadius(owner));
-        this.setMaxHealth(1 + data.getSkill(Skill.BARRIER));
+        this.setMaxHealth(1.0F + data.getSkill(Skill.BARRIER));
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
     }
 
