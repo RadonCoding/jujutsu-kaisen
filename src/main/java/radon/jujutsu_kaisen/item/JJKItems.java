@@ -112,6 +112,8 @@ public class JJKItems {
             () -> new DeferredSpawnEggItem(JJKEntities.MAKI_ZENIN, 0x233c3f, 0x8f856d, new Item.Properties()));
     public static DeferredHolder<Item, DeferredSpawnEggItem> AOI_TODO_SPAWN_EGG = ITEMS.register("aoi_todo_spawn_egg",
             () -> new DeferredSpawnEggItem(JJKEntities.AOI_TODO, 0xe1a066, 0x8c6e40, new Item.Properties()));
+    public static DeferredHolder<Item, DeferredSpawnEggItem> MIWA_KASUMI_SPAWN_EGG = ITEMS.register("miwa_kasumi_spawn_egg",
+            () -> new DeferredSpawnEggItem(JJKEntities.MIWA_KASUMI, 0x313850, 0x85b5ce, new Item.Properties()));
     public static DeferredHolder<Item, DeferredSpawnEggItem> SORCERER_VILLAGER = ITEMS.register("sorcerer_villager_spawn_egg",
             () -> new DeferredSpawnEggItem(JJKEntities.SORCERER_VILLAGER, 0x563c33, 0xbd8b72, new Item.Properties()));
 

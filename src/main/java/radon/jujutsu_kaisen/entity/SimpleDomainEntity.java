@@ -64,9 +64,19 @@ public class SimpleDomainEntity extends Entity {
 
         ISkillData data = cap.getSkillData();
         
-        this.setRadius(Math.min(MAX_RADIUS, RADIUS * (1.0F + (data.getSkill(Skill.BARRIER) * 0.1F))));
+        this.setRadius(getRadius(owner));
         this.setMaxHealth(1 + data.getSkill(Skill.BARRIER));
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
+    }
+
+    public static float getRadius(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0.0F;
+
+        ISkillData data = cap.getSkillData();
+
+        return Math.min(MAX_RADIUS, RADIUS * (1.0F + (data.getSkill(Skill.BARRIER) * 0.1F)));
     }
 
     public float getRadius() {

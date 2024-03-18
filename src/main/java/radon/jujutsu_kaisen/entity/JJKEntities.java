@@ -205,6 +205,10 @@ public class JJKEntities {
             EntityType.Builder.<AoiTodoEntity>of(AoiTodoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "aoi_todo")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<MiwaKasumiEntity>> MIWA_KASUMI = ENTITIES.register("miwa_kasumi", () ->
+            EntityType.Builder.<MiwaKasumiEntity>of(MiwaKasumiEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "miwa_kasumi")
+                            .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<SorcererVillager>> SORCERER_VILLAGER = ENTITIES.register("sorcerer_villager", () ->
             EntityType.Builder.<SorcererVillager>of(SorcererVillager::new, MobCategory.AMBIENT)
                     .sized(0.6F, 1.95F)
@@ -590,8 +594,9 @@ public class JJKEntities {
         SpawnPlacements.register(HAJIME_KASHIMO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(MAKI_ZENIN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(AOI_TODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
+        SpawnPlacements.register(MIWA_KASUMI.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(SORCERER_VILLAGER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
-        
+
         SpawnPlacements.register(RUGBY_FIELD_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(FISH_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(CYCLOPS_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
@@ -623,6 +628,7 @@ public class JJKEntities {
         event.put(HAJIME_KASHIMO.get(), SorcererEntity.createAttributes().build());
         event.put(MAKI_ZENIN.get(), SorcererEntity.createAttributes().build());
         event.put(AOI_TODO.get(), SorcererEntity.createAttributes().build());
+        event.put(MIWA_KASUMI.get(), SorcererEntity.createAttributes().build());
         event.put(SORCERER_VILLAGER.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
