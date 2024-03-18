@@ -8,6 +8,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.StructureTags;
@@ -16,14 +19,17 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -35,6 +41,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -61,10 +68,30 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
+    private static final double AWAKEN_RANGE = 8.0D;
+    private static final int CHECK_HIDING_INTERVAL = 5 * 20;
+
+    private static final EntityDataAccessor<Boolean> DATA_HIDING = SynchedEntityData.defineId(CursedSpirit.class, EntityDataSerializers.BOOLEAN);
+
     protected CursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
 
         this.setTame(false);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_HIDING, false);
+    }
+
+    public boolean isHiding() {
+        return this.entityData.get(DATA_HIDING);
+    }
+
+    public void setHiding(boolean hiding) {
+        this.entityData.set(DATA_HIDING, hiding);
     }
 
     @Override
@@ -145,12 +172,70 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
+    public boolean isNoAi() {
+        return super.isNoAi() || this.isHiding();
+    }
+
+    @Override
+    public boolean isInvulnerable() {
+        return super.isInvulnerable() || this.isHiding();
+    }
+
+    @Override
+    public boolean shouldRender(double pX, double pY, double pZ) {
+        return !this.isHiding() && super.shouldRender(pX, pY, pZ);
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
         if (this.isTame()) {
             LivingEntity target = this.getTarget();
             this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
+            return;
+        }
+
+        if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return;
+
+        if (!(this.level() instanceof ServerLevel level)) return;
+
+        if (this.getTime() - 1 % CHECK_HIDING_INTERVAL != 0) return;
+
+        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(level, this.blockPosition()));
+
+        if (!this.isHiding()) return;
+
+        TargetingConditions conditions = TargetingConditions.forCombat().range(AWAKEN_RANGE)
+                .selector(entity -> {
+                    if (entity instanceof AbstractVillager) return true;
+
+                    if (entity instanceof Player) {
+                        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                        if (cap == null) return true;
+
+                        ISorcererData data = cap.getSorcererData();
+
+                        return data.getType() == JujutsuType.SORCERER;
+                    }
+                    return false;
+                });
+
+        AABB bounds = this.getBoundingBox().inflate(AWAKEN_RANGE, 4.0D, AWAKEN_RANGE);
+
+        LivingEntity target = this.level()
+                .getNearestEntity(
+                        this.level().getEntitiesOfClass(LivingEntity.class, bounds),
+                        conditions,
+                        this,
+                        this.getX(),
+                        this.getEyeY(),
+                        this.getZ()
+                );
+
+        if (target != null) {
+            this.setTarget(target);
         }
     }
 

@@ -114,7 +114,7 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Fly", 5, this::flyPredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", 2, this::swingPredicate));
     }
 
     @Override

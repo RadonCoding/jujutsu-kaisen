@@ -170,7 +170,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Idle", state -> state.setAndContinue(IDLE)));
         controllerRegistrar.add(new AnimationController<>(this, "Open", this::openPredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", 2, this::swingPredicate));
     }
 
     @Override

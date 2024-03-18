@@ -151,7 +151,7 @@ public class JogoatEntity extends CursedSpirit {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", 2, this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Smash", this::smashPredicate));
     }
 }

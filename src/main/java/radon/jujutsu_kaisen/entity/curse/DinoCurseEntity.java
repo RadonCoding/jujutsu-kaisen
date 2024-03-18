@@ -77,7 +77,7 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+        return SorcererGrade.SEMI_GRADE_1.getRequiredExperience();
     }
 
     @Override
@@ -191,7 +191,7 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Idle", this::walkRunIdlePredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", 2, this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Shoot", this::shootPredicate));
     }
 

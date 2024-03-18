@@ -4,67 +4,67 @@
   "spawners": [
     {
       "type": "jujutsu_kaisen:rugby_field_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:fish_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:cyclops_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:zomba_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:worm_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:feline_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:fugly_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:bird_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:rainbow_dragon",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:dino_curse",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     },
     {
       "type": "jujutsu_kaisen:ko_guy",
-      "weight": 50,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     }
