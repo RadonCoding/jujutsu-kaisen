@@ -120,8 +120,10 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
             for (SimpleDomainEntity simple : victim.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
                 if (victim.distanceTo(simple) < simple.getRadius()) {
-                    event.setAmount(event.getAmount() * 0.5F);
-                    simple.hurt(event.getSource(), event.getAmount() * 0.5F);
+                    float amount = event.getAmount();
+                    float blocked = amount * 0.5F;
+                    event.setAmount(amount - blocked);
+                    simple.hurt(event.getSource(), blocked);
                 }
             }
         }
