@@ -40,7 +40,6 @@ public class SimpleDomainEntity extends Entity {
     private static final double X_STEP = 0.025D;
     public static final float RADIUS = 2.0F;
     private static final float MAX_RADIUS = 4.0F;
-    private static final float DAMAGE = 10.0F;
 
     @Nullable
     private UUID ownerUUID;
@@ -66,7 +65,7 @@ public class SimpleDomainEntity extends Entity {
         
         this.setRadius(getRadius(owner));
         this.setMaxHealth(1.0F + data.getSkill(Skill.BARRIER));
-        this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
+        this.setHealth(this.getMaxHealth());
     }
 
     public static float getRadius(LivingEntity owner) {
@@ -128,6 +127,9 @@ public class SimpleDomainEntity extends Entity {
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+            System.out.println(ste);
+        }
         this.setHealth(this.getHealth() - pAmount);
         return true;
     }
@@ -158,14 +160,10 @@ public class SimpleDomainEntity extends Entity {
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
-        } else if (owner != null) {
+        } else
             super.tick();
 
-            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (ownerCap == null) return;
-
-            ISorcererData ownerData = ownerCap.getSorcererData();
+            if (owner == null) return;
 
             this.setPos(owner.position());
 
@@ -176,14 +174,14 @@ public class SimpleDomainEntity extends Entity {
                     LivingEntity target = domain.getOwner();
 
                     if (target == null) continue;
-                    
-                    IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    if (targetCap == null) continue;
+                    IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    ISorcererData targetData = targetCap.getSorcererData();
+                    if (cap == null) continue;
 
-                    this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), DAMAGE * (1.0F + Math.max(0.0F, targetData.getAbilityOutput() - ownerData.getAbilityOutput())));
+                    ISkillData data = cap.getSkillData();
+
+                    this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), (1 + data.getSkill(Skill.BARRIER)) * 0.01F);
                 }
             }
 
@@ -198,7 +196,6 @@ public class SimpleDomainEntity extends Entity {
                 double z = this.getZ() + this.getRadius() * Math.sin(phi);
                 this.level().addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
             }
-        }
     }
 
     public void setOwner(@Nullable LivingEntity pOwner) {
