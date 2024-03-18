@@ -186,6 +186,11 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         return !this.isHiding() && super.shouldRender(pX, pY, pZ);
     }
 
+    @Override
+    public boolean canBeSeenAsEnemy() {
+        return !this.isHiding() && super.canBeSeenAsEnemy();
+    }
+
     private void checkHiding() {
         if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return;
 
