@@ -25,7 +25,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
     public static final int DURATION = 2 * 20;
     private static final float RADIUS = 4.0F;
     private static final float MAX_RADIUS = 32.0F;
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 25.0F;
 
     public ElectricBlastEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
