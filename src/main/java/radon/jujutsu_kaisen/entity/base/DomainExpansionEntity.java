@@ -228,29 +228,12 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
-        IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (victimCap != null) {
-            ISorcererData victimSorcererData = victimCap.getSorcererData();
-            IAbilityData abilityData = victimCap.getAbilityData();
-            ITenShadowsData victimTenShadowsData = victimCap.getTenShadowsData();
+        if (cap != null) {
+            ITenShadowsData data = cap.getTenShadowsData();
 
-            if ((victim instanceof MahoragaEntity && victimTenShadowsData.isAdaptedTo(this.ability))) return false;
-
-            if (abilityData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                SimpleDomainEntity simple = victimSorcererData.getSummonByClass(SimpleDomainEntity.class);
-
-                if (simple != null) {
-                    IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                    if (ownerCap == null) return false;
-
-                    ISkillData data = ownerCap.getSkillData();
-
-                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability),
-                            (data.getSkill(Skill.BARRIER) * 0.01F) / 20);
-                }
-            }
+            if ((victim instanceof MahoragaEntity && data.isAdaptedTo(this.ability))) return false;
         }
 
         for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {

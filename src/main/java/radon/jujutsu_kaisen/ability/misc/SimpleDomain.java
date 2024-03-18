@@ -125,30 +125,5 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
                 }
             }
         }
-
-        @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
-            if (!(event.getSource().getDirectEntity() instanceof DomainExpansionEntity)) return;
-
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
-
-            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return;
-
-            ISorcererData sorcererData = cap.getSorcererData();
-            IAbilityData abilityData = cap.getAbilityData();
-
-            if (!abilityData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
-
-            SimpleDomainEntity domain = sorcererData.getSummonByClass(SimpleDomainEntity.class);
-
-            if (domain != null) {
-                domain.hurt(event.getSource(), event.getAmount());
-                event.setCanceled(true);
-            }
-        }
     }
 }
