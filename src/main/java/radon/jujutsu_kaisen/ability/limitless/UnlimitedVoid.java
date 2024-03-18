@@ -25,21 +25,21 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * getStrength(owner, instant)),
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        boolean human = cap == null;
+
+        entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round((human ? 60 : 20) * 20 * getStrength(owner, instant)),
                 0, false, false, false));
-        entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(10 * 20 * getStrength(owner, instant)),
+        entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round((human ? 60 : 20) * getStrength(owner, instant)),
                 1, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * getStrength(owner, instant)),
+        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round((human ? 60 : 20) * getStrength(owner, instant)),
                 4, false, false, false));
 
         if (domain.getTime() % 20 == 0) {
-            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            if (!human) {
+                ISorcererData data = cap.getSorcererData();
 
-            if (cap == null) return;
-
-            ISorcererData data = cap.getSorcererData();
-
-            if (data != null) {
                 data.increaseBrainDamage();
 
                 if (entity instanceof ServerPlayer player) {
