@@ -30,12 +30,12 @@ public class Wheel extends Summon<WheelEntity> {
     }
 
     @Override
-    protected boolean isNotDisabledFromDA() {
+    protected boolean isNotDisabledFromDA(LivingEntity owner) {
         return true;
     }
 
     @Override
-    protected boolean isNotDisabledFromUV() {
+    protected boolean isNotDisabledFromUV(LivingEntity owner) {
         return true;
     }
 
