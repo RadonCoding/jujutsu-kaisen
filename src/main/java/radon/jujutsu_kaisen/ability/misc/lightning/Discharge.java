@@ -96,7 +96,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
         ISorcererData data = cap.getSorcererData();
 
         if (data.getEnergy() >= data.getMaxEnergy() / 2.0F) {
-            if (owner.isInWater()) {
+            if (owner.isInWater() || owner.isInFluidType()) {
                 owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getOutput(owner), data.getEnergy() * 0.01F),
                         owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
 
