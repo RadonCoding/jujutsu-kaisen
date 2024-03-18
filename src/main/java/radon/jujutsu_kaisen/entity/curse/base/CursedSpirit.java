@@ -177,8 +177,13 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
-    public boolean isInvulnerable() {
-        return super.isInvulnerable() || this.isHiding();
+    public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
+        return this.isHiding() || super.isInvulnerableTo(pSource);
+    }
+
+    @Override
+    public boolean isPickable() {
+        return !this.isHiding() && super.isPickable();
     }
 
     @Override
