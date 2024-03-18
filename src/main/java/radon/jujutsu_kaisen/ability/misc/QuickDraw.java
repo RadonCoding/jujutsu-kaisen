@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +27,8 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.util.DamageUtil;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class QuickDraw extends Ability implements Ability.IToggled {
     @Override
@@ -142,6 +145,27 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             Entity attacker = event.getSource().getDirectEntity();
 
             QuickDraw.attack(victim, attacker);
+        }
+
+        @SubscribeEvent
+        public static void onLivingDamage(LivingDamageEvent event) {
+            DamageSource source = event.getSource();
+
+            if (!DamageUtil.isMelee(source)) return;
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            IAbilityData data = cap.getAbilityData();
+
+            if (data.hasToggled(JJKAbilities.QUICK_DRAW.get())) return;
+
+            event.setAmount(event.getAmount() * 2.0F);
         }
     }
 }
