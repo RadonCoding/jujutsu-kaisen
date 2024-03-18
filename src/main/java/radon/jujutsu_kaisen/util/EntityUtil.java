@@ -4,6 +4,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -11,18 +12,42 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.EntityGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.RCT1;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class EntityUtil {
+    public static <T extends Entity> List<T> getTouchableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
+        List<T> entities = new ArrayList<>();
+
+        for (T entity : getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
+                .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
+                .and(entity -> owner == null || !entity.is(owner)))) {
+            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap != null) {
+                IAbilityData data = cap.getAbilityData();
+
+                if (data.hasToggled(JJKAbilities.INFINITY.get())) continue;
+            }
+            entities.add(entity);
+        }
+        return entities;
+    }
+
     public static void makePoofParticles(Entity entity) {
         for (int i = 0; i < 20; ++i) {
             double d0 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
