@@ -11,6 +11,7 @@ import net.minecraft.world.phys.Vec2;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -29,7 +30,7 @@ import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 public class QuickDraw extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target);
     }
 
     @Override
@@ -135,7 +136,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             IAbilityData data = cap.getAbilityData();
 
-            if (data.hasToggled(JJKAbilities.QUICK_DRAW.get()) ||
+            if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get()) ||
                     !data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
             Entity attacker = event.getSource().getDirectEntity();

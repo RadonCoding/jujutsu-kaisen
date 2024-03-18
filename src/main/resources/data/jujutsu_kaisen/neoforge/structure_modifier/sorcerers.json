@@ -51,6 +51,12 @@
       "maxCount": 1
     },
     {
+      "type": "jujutsu_kaisen:miwa_kasumi",
+      "weight": 50,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
       "type": "jujutsu_kaisen:sorcerer_villager",
       "weight": 100,
       "minCount": 1,

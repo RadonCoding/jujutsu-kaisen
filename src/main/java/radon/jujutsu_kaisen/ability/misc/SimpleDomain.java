@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -41,7 +42,16 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
             if (domain.getOwner() == owner || !domain.hasSureHitEffect()) continue;
             return true;
         }
-        return false;
+
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ISorcererData data = cap.getSorcererData();
+
+        return data.isUnlocked(JJKAbilities.QUICK_DRAW.get()) && owner.distanceTo(target) <= SimpleDomainEntity.getRadius(owner);
     }
 
     @Override
@@ -71,7 +81,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 1.0F;
+        return 0.1F;
     }
 
     @Override

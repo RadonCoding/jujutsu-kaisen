@@ -222,6 +222,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(AoiTodoModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(AoiTodoModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(AoiTodoModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(MiwaKasumiModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(MiwaKasumiModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(MiwaKasumiModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -270,6 +274,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MAKI_ZENIN.get(), MakiZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.HAJIME_KASHIMO.get(), HajimeKashimoRenderer::new);
             event.registerEntityRenderer(JJKEntities.AOI_TODO.get(), AoiTodoRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MIWA_KASUMI.get(), MiwaKasumiRenderer::new);
             event.registerEntityRenderer(JJKEntities.SORCERER_VILLAGER.get(), VillagerRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);

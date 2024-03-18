@@ -126,9 +126,9 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
             if (this.getOwner() instanceof LivingEntity owner) {
                 IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+                if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
