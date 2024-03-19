@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -18,6 +19,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
@@ -37,8 +39,7 @@ public class DisasterFlames extends Ability implements IImbuement {
     }
 
     private List<LivingEntity> getTargets(LivingEntity owner) {
-        return owner.level().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(AOE_RANGE),
-                entity -> entity != owner);
+        return EntityUtil.getTouchableEntities(LivingEntity.class, owner.level(), owner, owner.getBoundingBox().inflate(AOE_RANGE));
     }
 
     @Override

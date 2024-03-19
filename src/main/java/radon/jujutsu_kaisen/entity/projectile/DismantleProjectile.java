@@ -180,7 +180,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         double depth = Math.max(1, Math.round(this.getDeltaMovement().length()));
 
-        List<Entity> entities = this.level().getEntities(this, AABB.ofSize(center, 16.0D, 16.0D, 16.0D));
+        List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, AABB.ofSize(center, 16.0D, 16.0D, 16.0D));
 
         for (int z = 0; z < depth; z++) {
             for (int x = 0; x < length; x++) {

@@ -54,7 +54,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         double radius = this.getRadius();
         AABB bounds = this.getBoundingBox().inflate(radius);
 
-        for (Entity entity : this.level().getEntities(owner, bounds)) {
+        for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, bounds)) {
             if (Math.sqrt(entity.distanceToSqr(bounds.getCenter())) > radius) continue;
 
             if (entity == this) continue;

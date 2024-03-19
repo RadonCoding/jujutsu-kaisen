@@ -18,6 +18,10 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class WaterShield extends Ability implements Ability.IChannelened, Ability.IDurationable {
@@ -27,7 +31,18 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return !owner.level().getEntities(owner, owner.getBoundingBox().inflate(1.0D), entity -> entity instanceof Projectile).isEmpty();
+        if (target == null || target.isDeadOrDying()) return false;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        IAbilityData data = cap.getAbilityData();
+
+        if (data.isChanneling(this)) {
+            return HelperMethods.RANDOM.nextInt(20) != 0;
+        }
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
@@ -63,7 +78,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
         AABB bounds = AABB.ofSize(owner.position(), RADIUS, RADIUS, RADIUS).inflate(1.0D);
 
-        for (Entity entity : owner.level().getEntities(owner, bounds)) {
+        for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, bounds)) {
             entity.setDeltaMovement(entity.position().subtract(owner.position()).normalize());
             entity.hurtMarked = true;
         }
@@ -82,7 +97,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                     4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-            for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RADIUS * 2, RADIUS * 2, RADIUS * 2))) {
+            for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, AABB.ofSize(owner.position(), RADIUS * 2, RADIUS * 2, RADIUS * 2))) {
                 entity.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.WATER_SHIELD.get()), DAMAGE * this.getOutput(owner));
             }
         }

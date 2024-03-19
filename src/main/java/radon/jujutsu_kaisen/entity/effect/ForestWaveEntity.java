@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class ForestWaveEntity extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
@@ -54,8 +55,9 @@ public class ForestWaveEntity extends JujutsuProjectile {
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {
+        for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, this.getBoundingBox().inflate(1.0D))) {
             if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * this.getPower())) continue;
+
             entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());
             entity.hurtMarked = true;
         }

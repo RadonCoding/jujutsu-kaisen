@@ -49,7 +49,7 @@ public abstract class PackCursedSpirit extends CursedSpirit {
         if (this.getTarget() != null) {
             double d0 = this.getAttributeValue(Attributes.FOLLOW_RANGE);
             AABB bounds = AABB.unitCubeFromLowerCorner(this.position()).inflate(d0, 10.0D, d0);
-            this.level().getEntitiesOfClass(PackCursedSpirit.class, bounds, EntitySelector.NO_SPECTATORS).stream()
+            this.level().getEntitiesOfClass(PackCursedSpirit.class, bounds).stream()
                     .filter(entity -> entity != this)
                     .filter(entity -> entity.getTarget() == null)
                     .filter(entity -> !entity.isAlliedTo(this.getTarget()))

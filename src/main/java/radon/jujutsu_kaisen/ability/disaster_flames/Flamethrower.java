@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -75,7 +76,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
             AABB bounds = AABB.ofSize(end, 1.0D, 1.0D, 1.0D).inflate(1.0D);
 
-            for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner)) {
+            for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, bounds)) {
                 if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) continue;
 
                 entity.setSecondsOnFire(5);
