@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -96,7 +97,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
         ISorcererData data = cap.getSorcererData();
 
         if (data.getEnergy() >= data.getMaxEnergy() / 2.0F) {
-            if (owner.isInWater() || owner.isInFluidType()) {
+            if (owner.isInWater() || owner.getFeetBlockState().getFluidState().is(Fluids.WATER)) {
                 owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getOutput(owner), data.getEnergy() * 0.01F),
                         owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
 
