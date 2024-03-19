@@ -21,6 +21,7 @@ import java.util.Set;
 public class MissionsScreen extends Screen {
     private static final ResourceLocation WINDOW = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/window.png");
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation MISSION_GRADE_BUTTON = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/mission_grade_button.png");
 
     public static final int WINDOW_WIDTH = 78;
     public static final int WINDOW_HEIGHT = 200;
@@ -71,14 +72,14 @@ public class MissionsScreen extends Screen {
     protected void init() {
         super.init();
 
-        int borderX = (WINDOW_INSIDE_WIDTH - WINDOW_WIDTH) / 2;
+        int offsetX = WINDOW_OFFSET_X;
+        int offsetY = (this.height - WINDOW_HEIGHT) / 2;
 
-        int displayed = WINDOW_INSIDE_HEIGHT / MISSION_GRADE_BUTTON_HEIGHT;
+        double end = (MissionGrade.values().length * MISSION_GRADE_BUTTON_HEIGHT) - WINDOW_INSIDE_HEIGHT;
 
-        this.slider = new VerticalSlider(WINDOW_OFFSET_X + WINDOW_INSIDE_WIDTH - borderX - 8,
-                WINDOW_OFFSET_Y + WINDOW_OFFSET_Y - 2,
+        this.slider = new VerticalSlider(offsetX + WINDOW_INSIDE_X + WINDOW_INSIDE_WIDTH - 8, offsetY + WINDOW_INSIDE_Y,
                 8, WINDOW_INSIDE_HEIGHT, Component.empty(), Component.empty(),
-                0, displayed - MissionGrade.values().length, 0, false);
+                0.0D, end, 0, 0.1D, 0, false);
         this.addRenderableWidget(this.slider);
         this.setInitialFocus(this.slider);
     }
@@ -91,7 +92,7 @@ public class MissionsScreen extends Screen {
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         int offsetX = WINDOW_OFFSET_X;
-        int offsetY = WINDOW_OFFSET_Y;
+        int offsetY = (this.height - WINDOW_HEIGHT) / 2;
 
         this.renderBackground(pGuiGraphics);
         this.renderInside(pGuiGraphics, offsetX, offsetY);
@@ -125,6 +126,18 @@ public class MissionsScreen extends Screen {
     public void renderWindow(GuiGraphics graphics, int offsetX, int offsetY) {
         RenderSystem.enableBlend();
         graphics.blit(WINDOW, offsetX, offsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        graphics.enableScissor(offsetX + WINDOW_INSIDE_X, offsetY + WINDOW_INSIDE_Y,
+                offsetX + WINDOW_INSIDE_X + WINDOW_INSIDE_WIDTH, offsetY + WINDOW_INSIDE_Y + WINDOW_INSIDE_HEIGHT);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0D, -this.slider.getValue(), 0.0D);
+
+        for (int i = 0; i < MissionGrade.values().length; i++) {
+            graphics.blit(MISSION_GRADE_BUTTON, offsetX + WINDOW_INSIDE_X, offsetY + WINDOW_INSIDE_Y + i * MISSION_GRADE_BUTTON_HEIGHT, 0, 0,
+                    MISSION_GRADE_BUTTON_WIDTH, MISSION_GRADE_BUTTON_HEIGHT, MISSION_GRADE_BUTTON_WIDTH, MISSION_GRADE_BUTTON_HEIGHT);
+        }
+        graphics.pose().popPose();
+        graphics.disableScissor();
     }
 
     private record Mission(Component title, Component description) {}
