@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.curse.DinoCurseEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -100,7 +101,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
                 Math.max(from.y, collision.y), Math.max(from.z, collision.z))
                 .inflate(SCALE);
 
-        for (Entity entity : owner.level().getEntities(owner, bounds)) {
+        for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, bounds)) {
             float pad = entity.getPickRadius() + 0.5F;
             AABB padded = entity.getBoundingBox().inflate(pad, pad, pad);
             Optional<Vec3> hit = padded.clip(from, to);

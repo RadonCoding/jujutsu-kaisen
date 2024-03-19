@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class ElectricBlastEntity extends JujutsuProjectile {
     public static final int DURATION = 2 * 20;
@@ -76,7 +77,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
 
             AABB bounds = this.getBoundingBox();
 
-            for (Entity entity : this.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner)) {
+            for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()), DAMAGE * this.getPower());
             }
         }

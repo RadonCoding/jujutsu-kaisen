@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -221,7 +222,9 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 }
                 AABB bounds = owner.getBoundingBox().inflate(2.0D);
 
-                for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(frame, bounds.getXsize(), bounds.getYsize(), bounds.getZsize()))) {
+                for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, AABB.ofSize(frame, bounds.getXsize(), bounds.getYsize(), bounds.getZsize()))) {
+                    if (!owner.hasLineOfSight(entity)) continue;
+
                     owner.swing(InteractionHand.MAIN_HAND, true);
 
                     if (owner instanceof Player player) {

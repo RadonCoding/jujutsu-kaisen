@@ -147,18 +147,6 @@ public abstract class DomainExpansionEntity extends Entity {
         return false;
     }
 
-    @Nullable
-    public DomainExpansionCenterEntity getDomainCenter() {
-        List<DomainExpansionCenterEntity> collisions = this.level().getEntitiesOfClass(DomainExpansionCenterEntity.class, this.getBounds());
-
-        for (DomainExpansionCenterEntity collision : collisions) {
-            if (collision.getDomain() == this) {
-                return collision;
-            }
-        }
-        return null;
-    }
-
     public void setOwner(@Nullable LivingEntity pOwner) {
         if (pOwner != null) {
             this.ownerUUID = pOwner.getUUID();

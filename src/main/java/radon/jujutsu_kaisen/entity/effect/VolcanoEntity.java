@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -78,8 +79,8 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
             if (this.getOwner() instanceof LivingEntity owner) {
                 AABB bounds = this.getBoundingBox().expandTowards(look.scale(RANGE)).inflate(1.0D);
 
-                for (Entity entity : this.level().getEntities(owner, bounds)) {
-                    if (!(entity instanceof LivingEntity living) || !living.hasLineOfSight(this)) continue;
+                for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, bounds)) {
+                    if (!RotationUtil.hasLineOfSight(this, entity)) continue;
 
                     if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.VOLCANO.get()), DAMAGE * this.getPower())) {
                         entity.setSecondsOnFire(5);

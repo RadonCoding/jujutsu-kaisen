@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 
@@ -96,7 +97,7 @@ public class ExplosionHandler {
                     PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, explosion.duration), player);
                 }
 
-                List<Entity> entities = event.level.getEntities(null, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
+                List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, event.level, explosion.instigator, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
                         Mth.floor(explosion.position.y - diameter - 1.0F),
                         Mth.floor(explosion.position.z - diameter - 1.0F),
                         Mth.floor(explosion.position.x + diameter + 1.0F),

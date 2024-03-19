@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -249,7 +250,7 @@ public class MeteorEntity extends JujutsuProjectile {
         AABB bounds = this.getBoundingBox().inflate(radius);
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (Entity entity : this.level().getEntities(owner, bounds)) {
+            for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
                 if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ())) >= this.getSize()) continue;
                 if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower())) continue;
                 entity.setSecondsOnFire(10);

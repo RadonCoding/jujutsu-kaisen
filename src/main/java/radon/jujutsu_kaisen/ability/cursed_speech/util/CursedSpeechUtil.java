@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -42,7 +43,7 @@ public class CursedSpeechUtil {
             if (cap != null) {
                 IAbilityData data = cap.getAbilityData();
 
-                if (data.hasToggled(JJKAbilities.INFINITY.get()) || data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))
+                if (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()))
                     return;
             }
             consumer.accept(entity);
@@ -53,6 +54,6 @@ public class CursedSpeechUtil {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
-        return owner.level().getEntities(owner, bounds);
+        return EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, bounds);
     }
 }

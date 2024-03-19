@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -99,11 +100,12 @@ public class JujutsuLightningEntity extends LightningBolt {
             if (!(this.level() instanceof ServerLevel)) {
                 this.level().setSkyFlashTime(2);
             } else {
-                List<Entity> entities = this.level().getEntities(this, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
-
                 LivingEntity owner = this.getOwner();
 
                 if (owner != null) {
+                List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D,
+                        this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D));
+
                     IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
                     if (cap == null) return;
@@ -111,7 +113,6 @@ public class JujutsuLightningEntity extends LightningBolt {
                     ISorcererData data = cap.getSorcererData();
 
                     for (Entity entity : entities) {
-                        if (entity == owner) continue;
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, null),
                                 this.damage * data.getAbilityOutput());
                     }

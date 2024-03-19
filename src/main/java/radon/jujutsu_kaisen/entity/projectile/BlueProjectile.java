@@ -73,7 +73,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        for (Entity entity : this.level().getEntities(owner, bounds)) {
+        for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
             if (!(entity instanceof LivingEntity) && !(entity instanceof FallingBlockEntity)) continue;
 
             Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).normalize();
@@ -122,7 +122,7 @@ public class BlueProjectile extends JujutsuProjectile {
         AABB bounds = this.getBoundingBox();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (Entity entity : this.level().getEntities(owner, bounds)) {
+            for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
                 if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
 
                 if (entity instanceof LivingEntity) {

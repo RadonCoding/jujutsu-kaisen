@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.List;
 
@@ -121,11 +122,11 @@ public class SkyStrikeEntity extends JujutsuProjectile {
     }
 
     public void hurtEntities(double radius) {
-        AABB bounds = new AABB(this.getX() - radius, this.getY() - 0.5D, this.getZ() - radius, this.getX() + radius, Double.POSITIVE_INFINITY, this.getZ() + radius);
-        List<Entity> entities = this.level().getEntities(this, bounds);
-        double radiusSq = radius * radius;
-
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        AABB bounds = new AABB(this.getX() - radius, this.getY() - 0.5D, this.getZ() - radius, this.getX() + radius, Double.POSITIVE_INFINITY, this.getZ() + radius);
+        List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds);
+        double radiusSq = radius * radius;
 
         for (Entity entity : entities) {
             if (entity == owner) continue;

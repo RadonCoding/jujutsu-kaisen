@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -112,7 +113,7 @@ public class AirFrameEntity extends Entity {
                     owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                             4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-                    for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(center, RANGE, RANGE, RANGE))) {
+                    for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, AABB.ofSize(center, RANGE, RANGE, RANGE))) {
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.AIR_FRAME.get()), DAMAGE * this.getPower());
                     }
                 }

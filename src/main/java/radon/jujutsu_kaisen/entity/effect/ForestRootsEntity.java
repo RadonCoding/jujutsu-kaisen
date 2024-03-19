@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -26,7 +27,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
     @Nullable
     private UUID victimUUID;
     @Nullable
-    private LivingEntity cachedVictim;
+    private Entity cachedVictim;
 
     private Vec3 pos;
 
@@ -36,7 +37,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         this.noCulling = true;
     }
 
-    public ForestRootsEntity(LivingEntity owner, float power, LivingEntity target) {
+    public ForestRootsEntity(LivingEntity owner, float power, Entity target) {
         this(JJKEntities.FOREST_ROOTS.get(), target.level());
 
         this.setOwner(owner);
@@ -51,7 +52,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
 
     @Override
     public void tick() {
-        LivingEntity victim = this.getVictim();
+        Entity victim = this.getVictim();
 
         if (!this.level().isClientSide && (victim == null || victim.isRemoved() || !victim.isAlive())) {
             this.discard();
@@ -68,7 +69,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         }
     }
 
-    public void setVictim(@Nullable LivingEntity victim) {
+    public void setVictim(@Nullable Entity victim) {
         if (victim != null) {
             this.victimUUID = victim.getUUID();
             this.cachedVictim = victim;
@@ -76,11 +77,11 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
     }
 
     @Nullable
-    public LivingEntity getVictim() {
+    public Entity getVictim() {
         if (this.cachedVictim != null && !this.cachedVictim.isRemoved()) {
             return this.cachedVictim;
         } else if (this.victimUUID != null && this.level() instanceof ServerLevel) {
-            this.cachedVictim = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.victimUUID);
+            this.cachedVictim = ((ServerLevel) this.level()).getEntity(this.victimUUID);
             return this.cachedVictim;
         } else {
             return null;

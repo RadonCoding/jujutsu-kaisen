@@ -431,7 +431,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (this.getTime() <= radius * 2) {
             BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
-            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
+            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(),
+                    entity -> this.isInsideBarrier(entity.blockPosition()))) {
                 if (!this.positions.containsKey(entity.getUUID())) {
                     this.positions.put(entity.getUUID(), entity.position());
                 }

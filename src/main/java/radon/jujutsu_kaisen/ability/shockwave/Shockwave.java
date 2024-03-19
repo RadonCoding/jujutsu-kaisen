@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Shockwave extends Ability {
@@ -62,7 +63,7 @@ public class Shockwave extends Ability {
                     level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.0D);
                 }
 
-                for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), radius, radius, radius))) {
+                for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, AABB.ofSize(owner.position(), radius, radius, radius))) {
                     if (entity.distanceTo(owner) > RADIUS) continue;
 
                     if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) {

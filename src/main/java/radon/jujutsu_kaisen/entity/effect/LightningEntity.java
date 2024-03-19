@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -177,6 +178,8 @@ public class LightningEntity extends JujutsuProjectile {
     }
 
     public List<Entity> checkCollisions(Vec3 from, Vec3 to) {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return List.of();
+
         BlockHitResult result = this.level().clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
         if (result.getType() != HitResult.Type.MISS) {
@@ -198,7 +201,7 @@ public class LightningEntity extends JujutsuProjectile {
                 Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
                 .inflate(SCALE);
 
-        for (Entity entity : this.level().getEntities(this.getOwner(), bounds)) {
+        for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
             float pad = entity.getPickRadius() + 0.5F;
             AABB padded = entity.getBoundingBox().inflate(pad, pad, pad);
             Optional<Vec3> hit = padded.clip(from, to);
