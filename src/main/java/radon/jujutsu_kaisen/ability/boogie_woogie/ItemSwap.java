@@ -36,9 +36,9 @@ public class ItemSwap extends Ability {
         Entity target = null;
 
         for (Entity entity : owner.level().getEntitiesOfClass(CursedEnergyImbuedItemProjectile.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
-            if (target == null || entity.distanceTo(owner) < target.distanceTo(owner)) {
-                target = entity;
-            }
+            if (target != null && entity.distanceTo(owner) >= target.distanceTo(owner)) continue;
+
+            target = entity;
         }
         return target;
     }
