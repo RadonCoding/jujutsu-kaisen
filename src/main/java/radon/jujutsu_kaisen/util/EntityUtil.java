@@ -35,7 +35,7 @@ public class EntityUtil {
 
         for (T entity : getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
                 .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
-                .and(entity -> owner == null || !entity.is(owner)))) {
+                .and(entity -> owner == null || entity != owner))) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {

@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,6 +20,8 @@ import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -105,13 +111,18 @@ public class PiercingBullEntity extends TenShadowsSummon {
 
         ISorcererData data = cap.getSorcererData();
 
-        for (Entity entity : this.level().getEntities(null, this.getBoundingBox().inflate(1.0D))) {
-            if ((this.isTame() && entity == this.getOwner()) || entity == this || !entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * data.getAbilityOutput())) continue;
+        for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), this, this.getBoundingBox().inflate(1.0D))) {
+            if (!entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * data.getAbilityOutput())) continue;
 
             entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(data.getAbilityOutput()));
             entity.hurtMarked = true;
 
-            this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), data.getAbilityOutput(), false, Level.ExplosionInteraction.NONE);
+            Vec3 center = new Vec3(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ());
+
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
+                    4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
             if (entity == target) {
                 this.setSprinting(false);
