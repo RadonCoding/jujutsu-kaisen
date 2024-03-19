@@ -94,6 +94,8 @@ public class SukunaEntity extends SorcererEntity {
     protected void customServerAiStep() {
         super.customServerAiStep();
 
+        if (this.getTarget() != null) return;
+
         IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
