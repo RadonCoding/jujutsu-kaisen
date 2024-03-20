@@ -49,7 +49,7 @@ public class CursedEnergyParticle extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return JJKParticleRenderTypes.GLOW;
     }
 
     public record CursedEnergyParticleOptions(Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {
