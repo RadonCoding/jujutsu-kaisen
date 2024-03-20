@@ -34,7 +34,7 @@ import software.bernie.geckolib.animatable.GeoEntity;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
     private static final double AWAKEN_RANGE = 8.0D;
-    private static final double HUNGRY_AWAKEN_RANGE = 8.0D;
+    private static final double HUNGRY_AWAKEN_RANGE = 128.0D;
     private static final int HUNGRY_CHANCE = 300;
     private static final int UPDATE_INTERVAL = 5 * 20;
 
@@ -170,9 +170,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         if (this.getTime() % UPDATE_INTERVAL != 0) return;
 
-        if (this.random.nextInt(HUNGRY_CHANCE) == 0) {
-            this.hungry = !this.hungry;
-        }
+        if (this.random.nextInt(HUNGRY_CHANCE) == 0) this.hungry = true;
 
         this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
 
