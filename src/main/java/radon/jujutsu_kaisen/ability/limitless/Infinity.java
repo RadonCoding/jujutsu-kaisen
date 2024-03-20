@@ -254,9 +254,9 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
             if (!DamageUtil.isBlockable(owner, projectile)) return;
 
-            FrozenProjectileData frozen = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
+            FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
-            frozen.add(owner, projectile);
+            storage.add(owner, projectile);
 
             event.setCanceled(true);
         }
@@ -275,39 +275,52 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
             if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
-            FrozenProjectileData frozen = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
+            FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
             for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
                 if (!DamageUtil.isBlockable(owner, projectile)) continue;
 
-                frozen.add(owner, projectile);
+                storage.add(owner, projectile);
             }
         }
 
         // Has fire before WeaponEventHandler::onLivingAttackLow
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void onLivingAttack(LivingAttackEvent event) {
-            LivingEntity owner = event.getEntity();
+            LivingEntity victim = event.getEntity();
 
-            if (owner.level().isClientSide) return;
+            if (victim.level().isClientSide) return;
 
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability victimCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return;
+            if (victimCap == null) return;
 
-            IAbilityData data = cap.getAbilityData();
+            IAbilityData victimData = victimCap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!victimData.hasToggled(JJKAbilities.INFINITY.get())) return;
 
             DamageSource source = event.getSource();
 
-            if (!DamageUtil.isBlockable(owner, source)) return;
+            if (!DamageUtil.isBlockable(victim, source)) return;
+
+            event.setCanceled(true);
 
             // We don't want to play the sound in-case it's a stopped projectile
             if (!(source.getDirectEntity() instanceof Projectile)) {
-                owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+                if (source.getEntity() instanceof LivingEntity attacker) {
+                    IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                    if (attackerCap != null) {
+                        IAbilityData attackerData = attackerCap.getAbilityData();
+
+                        if (attackerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+                            return;
+                        }
+                    }
+                }
+                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
             }
-            event.setCanceled(true);
         }
     }
 }

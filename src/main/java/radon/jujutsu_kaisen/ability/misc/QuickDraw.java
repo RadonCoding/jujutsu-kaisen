@@ -168,7 +168,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             IAbilityData data = cap.getAbilityData();
 
-            if (data.hasToggled(JJKAbilities.QUICK_DRAW.get())) return;
+            if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get())) return;
 
             Vec3 center = new Vec3(victim.getX(), victim.getY() + (victim.getBbHeight() / 2.0F), victim.getZ());
             ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);

@@ -128,7 +128,6 @@ public class MissionsScreen extends Screen {
         int missionCardOffsetY = (this.height - MISSION_CARD_HEIGHT) / 2;
 
         this.renderBackground(pGuiGraphics);
-        this.renderWindowInside(pGuiGraphics, windowOffsetX, windowOffsetY);
         this.renderWindow(pGuiGraphics, windowOffsetX, windowOffsetY);
         this.renderMissionGrades(pGuiGraphics, windowOffsetX, windowOffsetY);
         this.renderMissionCardsInside(pGuiGraphics, missionCardOffsetX, missionCardOffsetY);
@@ -138,24 +137,6 @@ public class MissionsScreen extends Screen {
 
     private void renderBackground(GuiGraphics graphics) {
         this.renderTransparentBackground(graphics);
-    }
-
-    private void renderWindowInside(GuiGraphics graphics, int offsetX, int offsetY) {
-        int x = offsetX + WINDOW_INSIDE_X;
-        int y = offsetY + WINDOW_INSIDE_Y;
-
-        graphics.enableScissor(x, y, x + WINDOW_INSIDE_WIDTH, y + WINDOW_INSIDE_HEIGHT);
-        graphics.pose().pushPose();
-        graphics.pose().translate((float) x, (float) y, 0.0F);
-
-        for (int i1 = -1; i1 <= WINDOW_INSIDE_WIDTH / BACKGROUND_TILE_WIDTH; ++i1) {
-            for (int j1 = -1; j1 <= WINDOW_INSIDE_HEIGHT / BACKGROUND_TILE_HEIGHT; ++j1) {
-                graphics.blit(BACKGROUND, BACKGROUND_TILE_WIDTH * i1, BACKGROUND_TILE_HEIGHT * j1, 0.0F, 0.0F,
-                        BACKGROUND_TILE_WIDTH, BACKGROUND_TILE_HEIGHT, BACKGROUND_TILE_WIDTH, BACKGROUND_TILE_HEIGHT);
-            }
-        }
-        graphics.pose().popPose();
-        graphics.disableScissor();
     }
 
     private void renderWindow(GuiGraphics graphics, int offsetX, int offsetY) {
