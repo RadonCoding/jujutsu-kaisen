@@ -37,7 +37,7 @@ public class ScrollableSlider extends ExtendedSlider {
 
 
     protected void setValueFromScroll(double scroll) {
-        this.setSliderValue(this.value + scroll);
+        this.setSliderValue(this.value - scroll);
     }
 
     protected void setValueFromMouse(double mouseX, double mouseY) {
