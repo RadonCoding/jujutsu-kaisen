@@ -99,7 +99,7 @@ public class VeilHandler {
         return true;
     }
 
-    public static boolean canDamage(Entity entity, ServerLevel level, double x, double y, double z) {
+    public static boolean canDamage(Entity attacker, LivingEntity victim, ServerLevel level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
         for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
@@ -110,11 +110,11 @@ public class VeilHandler {
 
                 if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity rod)) continue;
 
-                if (entity.getUUID().equals(rod.ownerUUID)) continue;
+                if (attacker.getUUID().equals(rod.ownerUUID)) continue;
 
                 if (!isProtectedByVeil(level, target)) continue;
 
-                if (!rod.isAllowed(entity)) continue;
+                if (!rod.isAllowed(attacker) || !rod.isAllowed(victim)) continue;
 
                 for (Modifier modifier : rod.modifiers) {
                     if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.VIOLENCE) {

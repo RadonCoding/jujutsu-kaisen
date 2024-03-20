@@ -1,16 +1,20 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FormattedCharSequence;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.gui.screen.widget.PactListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ScrollableSlider;
 import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
 
@@ -37,9 +41,12 @@ public class MissionsScreen extends Screen {
     private static final int MISSION_CARD_INSIDE_X = 9;
     private static final int MISSION_CARD_INSIDE_Y = 18;
     private static final int MISSION_CARD_OFFSET_X = 20;
-    private static final int MISSION_CARD_PADDING = 10;
+    private static final int MISSION_CARD_OUTER_PADDING = 10;
+    private static final int MISSION_CARD_INNER_PADDING = 6;
     private static final int MISSION_CARD_INSIDE_WIDTH = 86;
     private static final int MISSION_CARD_INSIDE_HEIGHT = 101;
+    private static final int MISSION_CARD_TITLE_X = 8;
+    private static final int MISSION_CARD_TITLE_Y = 6;
 
     private static final int MISSION_GRADE_SIZE = 52;
 
@@ -110,9 +117,9 @@ public class MissionsScreen extends Screen {
                 0, 0.1D, 0, false);
         this.addRenderableWidget(this.missionGradesSlider);
 
-        this.missionCardsSlider = new ScrollableSlider(missionCardOffsetX, missionCardOffsetY + MISSION_CARD_HEIGHT + MISSION_CARD_PADDING,
+        this.missionCardsSlider = new ScrollableSlider(missionCardOffsetX, missionCardOffsetY + MISSION_CARD_HEIGHT + MISSION_CARD_OUTER_PADDING,
                 this.width - missionCardOffsetX - MISSION_CARD_OFFSET_X, 8, Component.empty(), Component.empty(), 0.0D,
-                Math.max(0, (this.missions.get(this.grade).size() * (MISSION_CARD_WIDTH + MISSION_CARD_PADDING) - MISSION_CARD_PADDING) - (this.width - missionCardOffsetX - MISSION_CARD_OFFSET_X)),
+                Math.max(0, (this.missions.get(this.grade).size() * (MISSION_CARD_WIDTH + MISSION_CARD_OUTER_PADDING) - MISSION_CARD_OUTER_PADDING) - (this.width - missionCardOffsetX - MISSION_CARD_OFFSET_X)),
                 0, 0.1D, 0, false);
         this.addRenderableWidget(this.missionCardsSlider);
     }
@@ -206,7 +213,7 @@ public class MissionsScreen extends Screen {
         List<MissionsScreen.Mission> missions = this.missions.get(this.grade);
 
         for (int i = 0; i < missions.size(); i++) {
-            int x = offsetX - this.missionCardsSlider.getValueInt() + (i * (MISSION_CARD_WIDTH + MISSION_CARD_PADDING)) + MISSION_CARD_INSIDE_X;
+            int x = offsetX - this.missionCardsSlider.getValueInt() + (i * (MISSION_CARD_WIDTH + MISSION_CARD_OUTER_PADDING)) + MISSION_CARD_INSIDE_X;
             int y = offsetY + MISSION_CARD_INSIDE_Y;
 
             graphics.enableScissor(x, y, x + MISSION_CARD_INSIDE_WIDTH, y + MISSION_CARD_INSIDE_HEIGHT);
@@ -226,8 +233,6 @@ public class MissionsScreen extends Screen {
     }
 
     private void renderMissionCardsWindow(GuiGraphics graphics, int offsetX, int offsetY) {
-        RenderSystem.enableBlend();
-
         graphics.enableScissor(offsetX, 0, this.width - MISSION_CARD_OFFSET_X, this.height);
         graphics.pose().pushPose();
         graphics.pose().translate(-this.missionCardsSlider.getValue(), 0.0F, 0.0D);
@@ -235,8 +240,33 @@ public class MissionsScreen extends Screen {
         List<MissionsScreen.Mission> missions = this.missions.get(this.grade);
 
         for (int i = 0; i < missions.size(); i++) {
-            graphics.blit(MISSION_CARD, offsetX + i * (MISSION_CARD_WIDTH + MISSION_CARD_PADDING), offsetY,
-                    0, 0, MISSION_CARD_WIDTH, MISSION_CARD_HEIGHT);
+            int x = offsetX + i * (MISSION_CARD_WIDTH + MISSION_CARD_OUTER_PADDING);
+            int y = offsetY;
+
+            RenderSystem.enableBlend();
+            graphics.blit(MISSION_CARD, x, y, 0, 0, MISSION_CARD_WIDTH, MISSION_CARD_HEIGHT);
+
+            int width = MISSION_CARD_WIDTH - MISSION_CARD_TITLE_X * 2;
+
+            FormattedText formatted = missions.get(i).title();
+
+            int delta = this.font.width(formatted) - width;
+
+            formatted = this.font.substrByWidth(formatted, width);
+
+            if (delta > 0) {
+                String text = formatted.getString();
+                formatted = FormattedText.of(String.format("%s...", text.substring(0, text.length() - 3)));
+            }
+            graphics.drawString(this.font, formatted.getString(), x + MISSION_CARD_TITLE_X, y + MISSION_CARD_TITLE_Y, 0x404040, false);
+
+            for (FormattedCharSequence line : this.font.split(missions.get(i).description(), MISSION_CARD_INSIDE_WIDTH - (MISSION_CARD_INNER_PADDING * 2))) {
+                graphics.drawString(this.font, line,
+                        x + MISSION_CARD_INSIDE_X + MISSION_CARD_INNER_PADDING,
+                        y + MISSION_CARD_INSIDE_Y + MISSION_CARD_INNER_PADDING,
+                        0xFFFFFF, true);
+                y += this.font.lineHeight + 2;
+            }
         }
         graphics.pose().popPose();
         graphics.disableScissor();

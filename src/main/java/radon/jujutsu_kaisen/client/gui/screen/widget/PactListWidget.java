@@ -34,7 +34,7 @@ public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.Entry>
 
         @Override
         public void render(@NotNull GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
-            FormattedText formatted = FormattedText.of(this.pact.getName().getString());
+            FormattedText formatted = this.pact.getName();
 
             int delta = PactListWidget.this.minecraft.font.width(formatted) - pWidth;
 
