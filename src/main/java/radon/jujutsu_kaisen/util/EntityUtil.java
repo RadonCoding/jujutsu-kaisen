@@ -30,32 +30,22 @@ import java.util.List;
 import java.util.UUID;
 
 public class EntityUtil {
+    public static <T extends Entity> List<T> getEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
+        return getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
+                .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
+                .and(entity -> owner == null || entity != owner));
+    }
+
     public static <T extends Entity> List<T> getTouchableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
         List<T> entities = new ArrayList<>();
 
-        boolean bypass = false;
+        for (T entity : getEntities(clazz, getter, owner, bounds)) {
+            IJujutsuCapability entityCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (owner != null) {
-            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            if (entityCap != null) {
+                IAbilityData entityData = entityCap.getAbilityData();
 
-            if (ownerCap != null) {
-                IAbilityData ownerData = ownerCap.getAbilityData();
-
-                bypass = ownerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
-            }
-        }
-
-        for (T entity : getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
-                .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
-                .and(entity -> owner == null || entity != owner))) {
-            if (!bypass) {
-                IJujutsuCapability entityCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                if (entityCap != null) {
-                    IAbilityData entityData = entityCap.getAbilityData();
-
-                    if (entityData.hasToggled(JJKAbilities.INFINITY.get())) continue;
-                }
+                if (entityData.hasToggled(JJKAbilities.INFINITY.get())) continue;
             }
             entities.add(entity);
         }
