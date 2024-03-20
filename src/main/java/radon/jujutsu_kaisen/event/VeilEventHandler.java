@@ -92,7 +92,7 @@ public class VeilEventHandler {
 
             Vec3 center = victim.position();
 
-            if (!VeilHandler.canDamage(attacker, ((ServerLevel) victim.level()), center.x, center.y, center.z)) {
+            if (!VeilHandler.canDamage(attacker, victim, ((ServerLevel) victim.level()), center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
