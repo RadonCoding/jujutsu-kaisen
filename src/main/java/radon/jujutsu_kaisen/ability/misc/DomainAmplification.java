@@ -179,6 +179,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
                 if (victim instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(victimAbilityData.serializeNBT()), player);
                 }
+                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 2.0F, 1.0F);
             }
             this.setDirty();
         }
