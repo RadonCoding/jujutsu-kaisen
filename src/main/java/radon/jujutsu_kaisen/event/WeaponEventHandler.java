@@ -23,6 +23,7 @@ import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -178,7 +179,7 @@ public class WeaponEventHandler {
                     IAbilityData victimData = victimCap.getAbilityData();
 
                     for (Ability ability : victimData.getToggled()) {
-                        if (!ability.isTechnique()) continue;
+                        if (!ability.isTechnique() || ability instanceof Summon<?>) continue;
 
                         victimData.disrupt(ability, 20);
                     }
