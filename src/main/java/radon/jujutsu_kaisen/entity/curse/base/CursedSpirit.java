@@ -208,6 +208,8 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         if (target != null) {
             this.setTarget(target);
+        } else if (this.hungry) {
+            this.hungry = false;
         }
     }
 
