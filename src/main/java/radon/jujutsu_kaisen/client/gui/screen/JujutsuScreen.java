@@ -119,7 +119,7 @@ public class JujutsuScreen extends Screen {
         if (this.selectedTab != null) {
             int i = (this.width - WINDOW_WIDTH) / 2;
             int j = (this.height - WINDOW_HEIGHT) / 2;
-            this.selectedTab.mouseClicked(pMouseX - i - 9, pMouseY - j - 18, pButton);
+            this.selectedTab.mouseClicked(pMouseX - i - WINDOW_INSIDE_X, pMouseY - j - WINDOW_INSIDE_Y, pButton);
         }
 
         if (pButton == 0) {

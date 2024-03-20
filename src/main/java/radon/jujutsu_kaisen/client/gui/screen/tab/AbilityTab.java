@@ -196,7 +196,7 @@ public class AbilityTab extends JJKTab {
         int i = Mth.floor(this.scrollX);
         int j = Mth.floor(this.scrollY);
 
-        if (pMouseX > 0 && pMouseX < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY > 0 && pMouseY < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
+        if (pMouseX > 0.0D && pMouseX < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY > 0.0D && pMouseY < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
             for (AbilityWidget widget : this.children.values()) {
                 if (widget.isMouseOver(i, j, (int) pMouseX, (int) pMouseY)) {
                     widget.unlock();
