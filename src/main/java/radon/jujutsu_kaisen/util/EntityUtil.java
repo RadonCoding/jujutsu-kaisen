@@ -33,15 +33,29 @@ public class EntityUtil {
     public static <T extends Entity> List<T> getTouchableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
         List<T> entities = new ArrayList<>();
 
+        boolean bypass = false;
+
+        if (owner != null) {
+            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (ownerCap != null) {
+                IAbilityData ownerData = ownerCap.getAbilityData();
+
+                bypass = ownerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            }
+        }
+
         for (T entity : getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
                 .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
                 .and(entity -> owner == null || entity != owner))) {
-            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            if (!bypass) {
+                IJujutsuCapability entityCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap != null) {
-                IAbilityData data = cap.getAbilityData();
+                if (entityCap != null) {
+                    IAbilityData entityData = entityCap.getAbilityData();
 
-                if (data.hasToggled(JJKAbilities.INFINITY.get())) continue;
+                    if (entityData.hasToggled(JJKAbilities.INFINITY.get())) continue;
+                }
             }
             entities.add(entity);
         }
