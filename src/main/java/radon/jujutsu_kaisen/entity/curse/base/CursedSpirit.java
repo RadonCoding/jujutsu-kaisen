@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse.base;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -46,6 +47,20 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         super(pType, pLevel);
 
         this.setTame(false);
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putBoolean("hungry", this.hungry);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.hungry = pCompound.getBoolean("hungry");
     }
 
     @Override
