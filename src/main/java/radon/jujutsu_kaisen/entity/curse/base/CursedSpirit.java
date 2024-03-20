@@ -59,6 +59,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -69,6 +70,8 @@ import java.util.UUID;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
     private static final double AWAKEN_RANGE = 8.0D;
+    private static final double HUNGRY_AWAKEN_RANGE = 8.0D;
+    private static final int HUNGRY_CHANCE = 300;
     private static final int CHECK_HIDING_INTERVAL = 5 * 20;
 
     private static final EntityDataAccessor<Boolean> DATA_HIDING = SynchedEntityData.defineId(CursedSpirit.class, EntityDataSerializers.BOOLEAN);
@@ -205,7 +208,9 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         if (!this.isHiding()) return;
 
-        TargetingConditions conditions = TargetingConditions.forCombat().range(AWAKEN_RANGE)
+        double range = this.random.nextInt(HUNGRY_CHANCE) == 0 ? HUNGRY_AWAKEN_RANGE : AWAKEN_RANGE;
+
+        TargetingConditions conditions = TargetingConditions.forCombat().range(range)
                 .selector(entity -> {
                     if (entity instanceof AbstractVillager) return true;
 
@@ -221,7 +226,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
                     return false;
                 });
 
-        AABB bounds = this.getBoundingBox().inflate(AWAKEN_RANGE, 4.0D, AWAKEN_RANGE);
+        AABB bounds = this.getBoundingBox().inflate(range, 4.0D, range);
 
         LivingEntity target = this.level()
                 .getNearestEntity(
