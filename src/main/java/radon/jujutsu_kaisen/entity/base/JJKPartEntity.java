@@ -34,6 +34,11 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
     }
 
     @Override
+    public boolean shouldRender(double pX, double pY, double pZ) {
+        return this.getParent().shouldRender(pX, pY, pZ) && super.shouldRender(pX, pY, pZ);
+    }
+
+    @Override
     public boolean isPickable() {
         return true;
     }
