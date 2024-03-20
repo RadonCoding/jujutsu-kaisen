@@ -291,7 +291,7 @@ public abstract class RadialScreen extends Screen {
                 int x = centerX + RADIUS_OUT + 20;
                 int y = centerY - this.minecraft.font.lineHeight;
 
-                pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 16777215);
+                pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 0xFFFFFF);
             }
             if (page > 0) {
                 String symbol = "<";
@@ -299,7 +299,7 @@ public abstract class RadialScreen extends Screen {
                 int x = centerX - RADIUS_OUT - 20;
                 int y = centerY - this.minecraft.font.lineHeight;
 
-                pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 16777215);
+                pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 0xFFFFFF);
             }
         }
 

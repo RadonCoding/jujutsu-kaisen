@@ -172,6 +172,8 @@ public class MissionsScreen extends Screen {
         graphics.pose().translate(0.0D, -this.missionButtonsSlider.getValue(), 0.0D);
 
         for (int i = 0; i < MissionGrade.values().length; i++) {
+            graphics.drawCenteredString(this.font, MissionGrade.values()[i].name(), x + MISSION_GRADE_SIZE / 2,
+                    y + MISSION_GRADE_SIZE / 2 - this.font.lineHeight / 2 + i * MISSION_GRADE_SIZE, 0xFFFFFF);
             graphics.blit(MISSION_GRADE, x, y + i * MISSION_GRADE_SIZE, this.grade.ordinal() == i ? MISSION_GRADE_SIZE : 0, 0,
                     MISSION_GRADE_SIZE, MISSION_GRADE_SIZE);
         }
