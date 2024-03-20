@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 
-public class VerticalSlider extends ExtendedSlider {
+public class VerticalSlider extends ScrollableSlider {
     public VerticalSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
         super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
     }
@@ -16,43 +16,14 @@ public class VerticalSlider extends ExtendedSlider {
         this(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, 1.0D, 0, drawString);
     }
 
-    private void setValueFromMouse(double mouseY) {
+    @Override
+    protected void setValueFromScroll(double scroll) {
+        this.setSliderValue(this.value - scroll);
+    }
+
+    @Override
+    protected void setValueFromMouse(double mouseX, double mouseY) {
         this.setSliderValue((Math.abs(mouseY) - (this.getY() + 4)) / (this.height - 8));
-    }
-
-    private void setSliderValue(double value) {
-        double oldValue = this.value;
-        this.value = this.snapToNearest(value);
-
-        if (!Mth.equal(oldValue, this.value)) this.applyValue();
-
-        this.updateMessage();
-    }
-
-    private double snapToNearest(double value) {
-        if (this.stepSize <= 0.0D) return Mth.clamp(value, 0.0D, 1.0D);
-
-        value = Mth.lerp(Mth.clamp(value, 0.0D, 1.0D), this.minValue, this.maxValue);
-        value = (this.stepSize * Math.round(value / this.stepSize));
-
-        if (this.minValue > this.maxValue) {
-            value = Mth.clamp(value, this.maxValue, this.minValue);
-        } else {
-            value = Mth.clamp(value, this.minValue, this.maxValue);
-        }
-        return Mth.map(value, this.minValue, this.maxValue, 0.0D, 1.0D);
-    }
-
-    @Override
-    public void onClick(double mouseX, double mouseY) {
-        this.setValueFromMouse(mouseY);
-    }
-
-    @Override
-    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
-        super.onDrag(mouseX, mouseY, dragX, dragY);
-
-        this.setValueFromMouse(mouseY);
     }
 
     @Override

@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.gui.screen.widget.ScrollableSlider;
 import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
 
 import java.util.*;
@@ -109,7 +110,7 @@ public class MissionsScreen extends Screen {
                 0, 0.1D, 0, false);
         this.addRenderableWidget(this.missionGradesSlider);
 
-        this.missionCardsSlider = new ExtendedSlider(missionCardOffsetX, missionCardOffsetY + MISSION_CARD_HEIGHT + MISSION_CARD_PADDING,
+        this.missionCardsSlider = new ScrollableSlider(missionCardOffsetX, missionCardOffsetY + MISSION_CARD_HEIGHT + MISSION_CARD_PADDING,
                 this.width - missionCardOffsetX - MISSION_CARD_OFFSET_X, 8, Component.empty(), Component.empty(), 0.0D,
                 Math.max(0, (this.missions.get(this.grade).size() * (MISSION_CARD_WIDTH + MISSION_CARD_PADDING) - MISSION_CARD_PADDING) - (this.width - missionCardOffsetX - MISSION_CARD_OFFSET_X)),
                 0, 0.1D, 0, false);
