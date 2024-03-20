@@ -1,25 +1,11 @@
 package radon.jujutsu_kaisen.entity.curse.base;
 
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.StructureTags;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -29,22 +15,13 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
-import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
@@ -53,26 +30,15 @@ import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
-import radon.jujutsu_kaisen.entity.curse.FingerBearerEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
-import radon.jujutsu_kaisen.util.EntityUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.UUID;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
     private static final double AWAKEN_RANGE = 8.0D;
     private static final double HUNGRY_AWAKEN_RANGE = 8.0D;
     private static final int HUNGRY_CHANCE = 300;
-    private static final int CHECK_HIDING_INTERVAL = 5 * 20;
+    private static final int UPDATE_INTERVAL = 5 * 20;
+
+    private boolean hungry;
 
     private static final EntityDataAccessor<Boolean> DATA_HIDING = SynchedEntityData.defineId(CursedSpirit.class, EntityDataSerializers.BOOLEAN);
 
@@ -199,16 +165,20 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         return !this.isHiding() && super.canBeSeenAsEnemy();
     }
 
-    private void checkHiding() {
+    private void update() {
         if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return;
 
-        if (this.getTime() % CHECK_HIDING_INTERVAL != 0) return;
+        if (this.getTime() % UPDATE_INTERVAL != 0) return;
+
+        if (this.random.nextInt(HUNGRY_CHANCE) == 0) {
+            this.hungry = !this.hungry;
+        }
 
         this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
 
         if (!this.isHiding()) return;
 
-        double range = this.random.nextInt(HUNGRY_CHANCE) == 0 ? HUNGRY_AWAKEN_RANGE : AWAKEN_RANGE;
+        double range = this.hungry ? HUNGRY_AWAKEN_RANGE : AWAKEN_RANGE;
 
         TargetingConditions conditions = TargetingConditions.forCombat().range(range)
                 .selector(entity -> {
@@ -254,7 +224,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         }
 
         if (!this.level().isClientSide) {
-        this.checkHiding();
+        this.update();
         }
     }
 
@@ -280,7 +250,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         if (!this.isCustom()) this.createGoals();
 
         if (!this.level().isClientSide) {
-            this.checkHiding();
+            this.update();
         }
     }
 
