@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -25,8 +26,6 @@ public abstract class EntityMixin {
     @Shadow public abstract AABB getBoundingBox();
 
     @Shadow public abstract Level level();
-
-    @Shadow @Nullable public abstract <T> T getCapability(EntityCapability<T, Void> capability);
 
     @Inject(method = "getTeamColor", at = @At("TAIL"), cancellable = true)
     public void getTeamColor(CallbackInfoReturnable<Integer> cir) {
@@ -47,16 +46,16 @@ public abstract class EntityMixin {
         cir.setReturnValue((r << 16) | (g << 8) | b);
     }
 
-    @Inject(method = "isPushable", at = @At("TAIL"), cancellable = true)
-    public void isPushable(CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "push*", at = @At("HEAD"), cancellable = true)
+    public void push(Entity pEntity, CallbackInfo ci) {
         if (this.level().isClientSide) {
-            ClientVisualHandler.ClientData client = ClientVisualHandler.get((Entity) (Object) this);
+            ClientVisualHandler.ClientData client = ClientVisualHandler.get(pEntity);
 
             if (client == null || !client.toggled.contains(JJKAbilities.INFINITY.get())) return;
 
-            cir.setReturnValue(false);
+            ci.cancel();
         } else {
-            IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = pEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;
 
@@ -64,7 +63,7 @@ public abstract class EntityMixin {
 
             if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
-            cir.setReturnValue(false);
+            ci.cancel();
         }
     }
 }
