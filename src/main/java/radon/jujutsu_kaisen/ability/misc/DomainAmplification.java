@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -170,16 +171,23 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             nbt.hit(strength);
 
             if (nbt.getHits() >= required) {
+                boolean disabled = false;
+
                 for (Ability ability : victimAbilityData.getToggled()) {
-                    if (!ability.isTechnique()) continue;
+                    if (!ability.isTechnique() || ability instanceof Summon<?>) continue;
 
                     victimAbilityData.disrupt(ability, 20);
+
+                    disabled = true;
                 }
 
-                if (victim instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(victimAbilityData.serializeNBT()), player);
+                if (disabled) {
+                    victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 2.0F, 1.0F);
+
+                    if (victim instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(victimAbilityData.serializeNBT()), player);
+                    }
                 }
-                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 2.0F, 1.0F);
             }
             this.setDirty();
         }
