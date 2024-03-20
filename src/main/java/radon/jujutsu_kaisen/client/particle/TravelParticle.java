@@ -50,11 +50,6 @@ public class TravelParticle extends TextureSheetParticle {
     }
 
     @Override
-    public boolean shouldCull() {
-        return false;
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
