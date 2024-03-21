@@ -157,41 +157,42 @@ public class SimpleDomainEntity extends Entity {
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
-        } else
+        } else {
             super.tick();
 
-        if (owner == null) return;
+            if (owner == null) return;
 
-        this.setPos(owner.position());
+            this.setPos(owner.position());
 
-        if (this.level() instanceof ServerLevel level) {
-            for (DomainExpansionEntity domain : VeilHandler.getDomains(level, owner.blockPosition())) {
-                if (!domain.checkSureHitEffect()) continue;
+            if (this.level() instanceof ServerLevel level) {
+                for (DomainExpansionEntity domain : VeilHandler.getDomains(level, owner.blockPosition())) {
+                    if (!domain.checkSureHitEffect()) continue;
 
-                LivingEntity target = domain.getOwner();
+                    LivingEntity target = domain.getOwner();
 
-                if (target == null) continue;
+                    if (target == null) continue;
 
-                IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (cap == null) continue;
+                    if (cap == null) continue;
 
-                ISkillData data = cap.getSkillData();
+                    ISkillData data = cap.getSkillData();
 
-                this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), (1 + data.getSkill(Skill.BARRIER)) * 0.01F);
+                    this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), (1 + data.getSkill(Skill.BARRIER)) * 0.01F);
+                }
             }
-        }
 
-        float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
+            float factor = this.getHealth() / this.getMaxHealth();
 
-        ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, (float) (this.getRadius() * 0.25D),
-                1.0F, true, 1);
+            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, (float) (this.getRadius() * 0.25D),
+                    1.0F, true, 1);
 
-        for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
-            double x = this.getX() + this.getRadius() * Math.cos(phi);
-            double y = this.getY();
-            double z = this.getZ() + this.getRadius() * Math.sin(phi);
-            this.level().addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
+            for (double phi = 0.0D; phi < Math.PI * 2.0D * factor; phi += X_STEP) {
+                double x = this.getX() + this.getRadius() * Math.cos(phi);
+                double y = this.getY();
+                double z = this.getZ() + this.getRadius() * Math.sin(phi);
+                this.level().addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
+            }
         }
     }
 
