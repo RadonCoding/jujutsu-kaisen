@@ -149,12 +149,13 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
             while (iter.hasNext()) {
                 FrozenProjectileNBT nbt = iter.next();
 
-                Entity projectile = level.getEntity(nbt.getTarget());
+                Entity target = level.getEntity(nbt.getTarget());
 
                 if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner) || owner.isRemoved() || owner.isDeadOrDying()) {
-                    if (projectile != null) {
-                        projectile.setDeltaMovement(nbt.getMovement());
-                        projectile.setNoGravity(nbt.isNoGravity());
+                    if (target != null) {
+                        target.setDeltaMovement(nbt.getMovement());
+                        target.hurtMarked = true;
+                        target.setNoGravity(nbt.isNoGravity());
                     }
                     iter.remove();
                     this.setDirty();
@@ -167,14 +168,14 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
                 IAbilityData data = cap.getAbilityData();
 
-                if (projectile == null) {
+                if (target == null) {
                     iter.remove();
                     this.setDirty();
                 } else {
-                    Vec3 forward = projectile.getLookAngle();
+                    Vec3 forward = target.getLookAngle();
 
                     Vec3 start = owner.position().add(forward.scale(owner.getBbWidth() / 2.0F));
-                    Vec3 end = projectile.position().add(forward.scale(-projectile.getBbWidth() / 2.0F));
+                    Vec3 end = target.position().add(forward.scale(-target.getBbWidth() / 2.0F));
                     float dx = (float) (start.x - end.x);
                     float dz = (float) (start.z - end.z);
                     float distance = (float) Math.sqrt(dx * dx + dz * dz);
@@ -185,11 +186,13 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
                         double slowedY = original.y * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
                         double slowedZ = original.z * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
 
-                        projectile.setDeltaMovement(slowedX, slowedY, slowedZ);
-                        projectile.setNoGravity(true);
+                        target.setDeltaMovement(slowedX, slowedY, slowedZ);
+                        target.hurtMarked = true;
+                        target.setNoGravity(true);
                     } else {
-                        projectile.setDeltaMovement(nbt.getMovement());
-                        projectile.setNoGravity(nbt.isNoGravity());
+                        target.setDeltaMovement(nbt.getMovement());
+                        target.hurtMarked = true;
+                        target.setNoGravity(nbt.isNoGravity());
                         iter.remove();
                         this.setDirty();
                     }
