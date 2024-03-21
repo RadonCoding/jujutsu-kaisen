@@ -289,19 +289,26 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return;
+            if (ownerCap == null) return;
 
-            IAbilityData data = cap.getAbilityData();
+            IAbilityData ownerData = ownerCap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!ownerData.hasToggled(JJKAbilities.INFINITY.get())) return;
 
             FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
             for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, owner.getBoundingBox().inflate(RANGE))) {
                 if (entity instanceof Projectile projectile && !DamageUtil.isBlockable(owner, projectile)) continue;
 
+                IJujutsuCapability entityCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (entityCap != null) {
+                    IAbilityData entityData = entityCap.getAbilityData();
+
+                    if (entityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) continue;
+                }
                 storage.add(owner, entity);
             }
         }
