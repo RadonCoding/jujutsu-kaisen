@@ -173,20 +173,6 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
                     iter.remove();
                     this.setDirty();
                 } else {
-                    IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                    if (targetCap != null) {
-                        IAbilityData targetData = targetCap.getAbilityData();
-
-                        if (targetData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                            target.setDeltaMovement(nbt.getMovement());
-                            target.hurtMarked = true;
-                            target.setNoGravity(nbt.isNoGravity());
-                            iter.remove();
-                            this.setDirty();
-                        }
-                    }
-
                     Vec3 forward = target.getLookAngle();
 
                     Vec3 start = owner.position().add(forward.scale(owner.getBbWidth() / 2.0F));
