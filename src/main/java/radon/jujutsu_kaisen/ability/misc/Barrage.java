@@ -58,6 +58,8 @@ public class Barrage extends Ability {
         IAbilityData data = cap.getAbilityData();
 
         for (int i = 0; i < DURATION; i++) {
+            boolean last = i == Barrage.DURATION - 1;
+
             data.delayTickEvent(() -> {
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
@@ -93,7 +95,10 @@ public class Barrage extends Ability {
                     } else {
                         owner.doHurtTarget(entity);
                     }
-                    entity.invulnerableTime = 0;
+
+                    if (!last) {
+                        entity.invulnerableTime = 0;
+                    }
                 }
             }, i * 2);
         }
