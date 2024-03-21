@@ -196,7 +196,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             IAbilityData data = cap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get()) ||
+            if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get()) &&
                     !data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
             if (!(event.getSource().getDirectEntity() instanceof Projectile)) return;
