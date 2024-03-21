@@ -11,9 +11,12 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -22,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.client.particle.LightningParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -33,6 +38,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.util.DamageUtil;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class QuickDraw extends Ability implements Ability.IToggled {
@@ -55,6 +61,20 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (entity.invulnerableTime > 0) return;
 
             owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D));
+            owner.swing(InteractionHand.MAIN_HAND, true);
+
+            if (owner instanceof Player player) {
+                player.attack(entity);
+            } else {
+                owner.doHurtTarget(entity);
+            }
+
+            for (int i = 0; i < 4; i++) {
+                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2);
+                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight() * 1.25F);
+                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2);
+                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            }
         }
     }
 
@@ -168,13 +188,12 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             IAbilityData data = cap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get())) return;
+            if (data.hasToggled(JJKAbilities.QUICK_DRAW.get())) return;
 
             Vec3 center = new Vec3(victim.getX(), victim.getY() + (victim.getBbHeight() / 2.0F), victim.getZ());
             ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
 
             victim.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
-            victim.level().playSound(null, center.x, center.y, center.z, SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
 
             event.setAmount(event.getAmount() * 2.0F);
         }
