@@ -94,7 +94,7 @@ public class SimpleDomainEntity extends Entity {
         this.entityData.set(DATA_MAX_HEALTH, maxHealth);
     }
 
-    private float getHealth() {
+    public float getHealth() {
         return this.entityData.get(DATA_HEALTH);
     }
 

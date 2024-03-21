@@ -211,12 +211,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
                 for (int i = 0; i < 8; i++) {
-                    double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                    double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                    double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                    double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2);
+                    double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * (victim.getBbHeight() * 1.25F);
+                    double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2);
                     ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F, 1),
-                            victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
-                            0, 0.0D, 0.0D, 0.0D, 0.0D);
+                            x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                 }
             }
             case DIVERGENT -> {
