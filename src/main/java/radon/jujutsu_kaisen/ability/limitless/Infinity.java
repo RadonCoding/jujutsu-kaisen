@@ -163,16 +163,30 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
                     continue;
                 }
 
-                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (cap == null) return;
+                if (ownerCap == null) return;
 
-                IAbilityData data = cap.getAbilityData();
+                IAbilityData ownerData = ownerCap.getAbilityData();
 
                 if (target == null) {
                     iter.remove();
                     this.setDirty();
                 } else {
+                    IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                    if (targetCap != null) {
+                        IAbilityData targetData = targetCap.getAbilityData();
+
+                        if (targetData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            target.setDeltaMovement(nbt.getMovement());
+                            target.hurtMarked = true;
+                            target.setNoGravity(nbt.isNoGravity());
+                            iter.remove();
+                            this.setDirty();
+                        }
+                    }
+
                     Vec3 forward = target.getLookAngle();
 
                     Vec3 start = owner.position().add(forward.scale(owner.getBbWidth() / 2.0F));
@@ -181,7 +195,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
                     float dz = (float) (start.z - end.z);
                     float distance = (float) Math.sqrt(dx * dx + dz * dz);
 
-                    if (data.hasToggled(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
+                    if (ownerData.hasToggled(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
                         Vec3 original = nbt.getMovement();
                         double slowedX = original.x * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
                         double slowedY = original.y * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
@@ -289,26 +303,19 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (ownerCap == null) return;
+            if (cap == null) return;
 
-            IAbilityData ownerData = ownerCap.getAbilityData();
+            IAbilityData data = cap.getAbilityData();
 
-            if (!ownerData.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
             FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
             for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, owner.getBoundingBox().inflate(RANGE))) {
                 if (entity instanceof Projectile projectile && !DamageUtil.isBlockable(owner, projectile)) continue;
 
-                IJujutsuCapability entityCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                if (entityCap != null) {
-                    IAbilityData entityData = entityCap.getAbilityData();
-
-                    if (entityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) continue;
-                }
                 storage.add(owner, entity);
             }
         }
