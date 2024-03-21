@@ -47,7 +47,7 @@ public abstract class EntityMixin {
         cir.setReturnValue((r << 16) | (g << 8) | b);
     }
 
-    @Inject(method = "isPushable", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "isPushable", at = @At("HEAD"), cancellable = true)
     public void isPushable(CallbackInfoReturnable<Boolean> cir) {
         if (this.level().isClientSide) {
             ClientVisualHandler.ClientData client = ClientVisualHandler.get((Entity) (Object) this);

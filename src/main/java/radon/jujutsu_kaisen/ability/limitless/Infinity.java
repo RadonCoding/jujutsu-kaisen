@@ -183,11 +183,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
                     if (ownerData.hasToggled(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
                         Vec3 original = nbt.getMovement();
-                        double slowedX = original.x * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
-                        double slowedY = original.y * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
-                        double slowedZ = original.z * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
-
-                        target.setDeltaMovement(slowedX, slowedY, slowedZ);
+                        target.setDeltaMovement(original.scale(Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR)));
                         target.hurtMarked = true;
                         target.setNoGravity(true);
                     } else {
