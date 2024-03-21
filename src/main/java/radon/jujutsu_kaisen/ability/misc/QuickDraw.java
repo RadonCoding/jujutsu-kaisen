@@ -199,7 +199,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get()) &&
                     !data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
-            if (!(event.getSource().getDirectEntity() instanceof Projectile)) return;
+            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile)) return;
 
             ItemStack stack = victim.getItemInHand(InteractionHand.MAIN_HAND);
 
@@ -213,6 +213,8 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             float reduced = amount - blocked;
 
             if (reduced > 0.0F) return;
+
+            victim.lookAt(EntityAnchorArgument.Anchor.EYES, projectile.position().add(0.0D, projectile.getBbHeight() / 2.0F, 0.0D));
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 
@@ -243,7 +245,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get()) &&
                     !data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
 
-            if (!(event.getSource().getDirectEntity() instanceof Projectile)) return;
+            if (!(event.getSource().getDirectEntity() instanceof Projectile projectile)) return;
 
             ItemStack stack = victim.getItemInHand(InteractionHand.MAIN_HAND);
 
@@ -253,6 +255,8 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             int remaining = stack.getMaxDamage() - stack.getDamageValue();
 
             int blocked = Math.min(remaining, amount);
+
+            victim.lookAt(EntityAnchorArgument.Anchor.EYES, projectile.position().add(0.0D, projectile.getBbHeight() / 2.0F, 0.0D));
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 
