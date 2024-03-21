@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,10 +37,14 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.DamageUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.*;
 
 public class Infinity extends Ability implements Ability.IToggled, Ability.IDurationable {
+    private static final double SLOWING_FACTOR = 0.001D;
+    private static final double RANGE = 3.0D;
+
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -165,9 +171,21 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
                     iter.remove();
                     this.setDirty();
                 } else {
-                    if (data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(projectile) < 2.5F) {
+                    Vec3 forward = projectile.getLookAngle();
+
+                    Vec3 start = owner.position().add(forward.scale(owner.getBbWidth() / 2.0F));
+                    Vec3 end = projectile.position().add(forward.scale(-projectile.getBbWidth() / 2.0F));
+                    float dx = (float) (start.x - end.x);
+                    float dz = (float) (start.z - end.z);
+                    float distance = (float) Math.sqrt(dx * dx + dz * dz);
+
+                    if (data.hasToggled(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
                         Vec3 original = nbt.getMovement();
-                        projectile.setDeltaMovement(original.scale(Double.MIN_VALUE));
+                        double slowedX = original.x * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
+                        double slowedY = original.y * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
+                        double slowedZ = original.z * Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR);
+
+                        projectile.setDeltaMovement(slowedX, slowedY, slowedZ);
                         projectile.setNoGravity(true);
                     } else {
                         projectile.setDeltaMovement(nbt.getMovement());
@@ -277,7 +295,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
             FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
-            for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
+            for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(RANGE))) {
                 if (!DamageUtil.isBlockable(owner, projectile)) continue;
 
                 storage.add(owner, projectile);
