@@ -37,6 +37,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.DamageUtil;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.*;
@@ -298,7 +299,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
             FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
-            for (Entity entity : owner.level().getEntitiesOfClass(Entity.class, owner.getBoundingBox().inflate(RANGE))) {
+            for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, owner.getBoundingBox().inflate(RANGE))) {
                 if (entity instanceof Projectile projectile && !DamageUtil.isBlockable(owner, projectile)) continue;
 
                 storage.add(owner, entity);
