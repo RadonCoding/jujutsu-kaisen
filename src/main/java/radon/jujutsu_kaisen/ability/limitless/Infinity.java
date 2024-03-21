@@ -136,7 +136,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
             return pCompoundTag;
         }
 
-        public void add(LivingEntity source, Projectile target) {
+        public void add(LivingEntity source, Entity target) {
             if (!this.frozen.containsKey(target.getUUID())) {
                 this.frozen.put(target.getUUID(), new FrozenProjectileNBT(source, target));
                 this.setDirty();
@@ -198,7 +198,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
         }
 
         private static class FrozenProjectileNBT extends CompoundTag {
-            public FrozenProjectileNBT(LivingEntity source, Projectile target) {
+            public FrozenProjectileNBT(LivingEntity source, Entity target) {
                 this.putUUID("source", source.getUUID());
                 this.putUUID("target", target.getUUID());
 
@@ -295,10 +295,10 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
 
             FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
-            for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(RANGE))) {
-                if (!DamageUtil.isBlockable(owner, projectile)) continue;
+            for (Entity entity : owner.level().getEntitiesOfClass(Entity.class, owner.getBoundingBox().inflate(RANGE))) {
+                if (entity instanceof Projectile projectile && !DamageUtil.isBlockable(owner, projectile)) continue;
 
-                storage.add(owner, projectile);
+                storage.add(owner, entity);
             }
         }
 
