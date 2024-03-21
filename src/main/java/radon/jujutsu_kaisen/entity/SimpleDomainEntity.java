@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -126,12 +127,6 @@ public class SimpleDomainEntity extends Entity {
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        this.setHealth(this.getHealth() - pAmount);
-        return true;
-    }
-
-    @Override
     public void tick() {
         if (this.getHealth() == 0.0F) {
             this.discard();
@@ -178,7 +173,8 @@ public class SimpleDomainEntity extends Entity {
 
                     ISkillData data = cap.getSkillData();
 
-                    this.hurt(JJKDamageSources.indirectJujutsuAttack(domain, target, null), (1 + data.getSkill(Skill.BARRIER)) * 0.01F);
+                    float damage = (1 + data.getSkill(Skill.BARRIER)) * 0.01F;
+                    this.setHealth(this.getHealth() - damage);
                 }
             }
 
