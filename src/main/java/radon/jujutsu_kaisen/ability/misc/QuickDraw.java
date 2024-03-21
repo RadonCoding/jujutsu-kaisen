@@ -14,6 +14,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -40,6 +42,7 @@ import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class QuickDraw extends Ability implements Ability.IToggled {
     @Override
@@ -61,19 +64,46 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (entity.invulnerableTime > 0) return;
 
             owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D));
-            owner.swing(InteractionHand.MAIN_HAND, true);
 
-            if (owner instanceof Player player) {
-                player.attack(entity);
-            } else {
-                owner.doHurtTarget(entity);
-            }
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            for (int i = 0; i < 4; i++) {
-                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2);
-                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight() * 1.25F);
-                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2);
-                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            if (cap == null) return;
+
+            IAbilityData data = cap.getAbilityData();
+
+            for (int i = 0; i < Barrage.DURATION; i++) {
+                data.delayTickEvent(() -> {
+                    owner.swing(InteractionHand.MAIN_HAND, true);
+
+                    Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+
+                    for (int j = 0; j < 4; j++) {
+                        Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
+                        ((ServerLevel) owner.level()).sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                                pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                0, 0.0D, 0.0D, 0.0D, 1.0D);
+                    }
+                    for (int j = 0; j < 4; j++) {
+                        Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
+                        ((ServerLevel) owner.level()).sendParticles(ParticleTypes.CRIT,
+                                pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                0, 0.0D, 0.0D, 0.0D, 1.0D);
+                    }
+
+                    Vec3 pos = owner.getEyePosition().add(look);
+                    owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+
+                    if (owner instanceof Player player) {
+                        player.attack(entity);
+                    } else {
+                        owner.doHurtTarget(entity);
+                    }
+                    entity.invulnerableTime = 0;
+                }, i * 2);
             }
         }
     }
