@@ -206,31 +206,5 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             QuickDraw.attack(victim, attacker);
         }
-
-        @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
-            DamageSource source = event.getSource();
-
-            if (!DamageUtil.isMelee(source)) return;
-
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
-
-            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return;
-
-            IAbilityData data = cap.getAbilityData();
-
-            if (data.hasToggled(JJKAbilities.QUICK_DRAW.get())) return;
-
-            Vec3 center = new Vec3(victim.getX(), victim.getY() + (victim.getBbHeight() / 2.0F), victim.getZ());
-            ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-
-            victim.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
-
-            event.setAmount(event.getAmount() * 2.0F);
-        }
     }
 }
