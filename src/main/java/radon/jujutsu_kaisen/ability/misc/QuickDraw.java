@@ -185,6 +185,50 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
+        public static void onLivingAttack(LivingAttackEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            IAbilityData data = cap.getAbilityData();
+
+            if (!data.hasToggled(JJKAbilities.QUICK_DRAW.get()) &&
+                    !data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
+
+            if (!(event.getSource().getDirectEntity() instanceof Projectile)) return;
+
+            ItemStack stack = victim.getItemInHand(InteractionHand.MAIN_HAND);
+
+            if (!(stack.getItem() instanceof SwordItem)) return;
+
+            int amount = Math.round(event.getAmount());
+            int remaining = stack.getMaxDamage() - stack.getDamageValue();
+
+            int blocked = Math.min(remaining, amount);
+
+            float reduced = amount - blocked;
+
+            if (reduced > 0.0F) return;
+
+            victim.swing(InteractionHand.MAIN_HAND, true);
+
+            stack.hurtAndBreak(blocked, victim, entity -> {
+                entity.broadcastBreakEvent(InteractionHand.MAIN_HAND);
+
+                if (victim instanceof Player player) {
+                    EventHooks.onPlayerDestroyItem(player, stack, InteractionHand.MAIN_HAND);
+                }
+                entity.stopUsingItem();
+            });
+
+            event.setCanceled(true);
+        }
+
+        @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -205,12 +249,12 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
             if (!(stack.getItem() instanceof SwordItem)) return;
 
-            victim.swing(InteractionHand.MAIN_HAND, true);
-
             int amount = Math.round(event.getAmount());
             int remaining = stack.getMaxDamage() - stack.getDamageValue();
 
             int blocked = Math.min(remaining, amount);
+
+            victim.swing(InteractionHand.MAIN_HAND, true);
 
             stack.hurtAndBreak(blocked, victim, entity -> {
                 entity.broadcastBreakEvent(InteractionHand.MAIN_HAND);
@@ -224,10 +268,6 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             float reduced = amount - blocked;
 
             event.setAmount(reduced);
-
-            if (reduced == 0.0F) {
-                victim.hurtMarked = false;
-            }
         }
     }
 }
