@@ -43,7 +43,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.*;
 
 public class Infinity extends Ability implements Ability.IToggled, Ability.IDurationable {
-    private static final double SLOWING_FACTOR = 0.001D;
+    private static final double SLOWING_FACTOR = 0.0001D;
     private static final double RANGE = 3.0D;
 
     @Override
