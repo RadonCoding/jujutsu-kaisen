@@ -303,12 +303,6 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getAbilityOutput(Ability ability) {
-        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return 0.0F;
-
-        IAbilityData data = cap.getAbilityData();
-
         float power = this.getBaseOutput() * ChantHandler.getOutput(this.owner, ability);
 
         if (this.hasSummonOfClass(SimpleDomainEntity.class) || this.hasSummonOfClass(DomainExpansionEntity.class)) {
@@ -1034,7 +1028,7 @@ public class SorcererData implements ISorcererData {
         ListTag summonsTag = new ListTag();
 
         for (UUID identifier : this.summons) {
-            summonsTag.add(new LongArrayTag(new long[] { identifier.getLeastSignificantBits(), identifier.getMostSignificantBits() }));
+            summonsTag.add(new LongArrayTag(new long[] { identifier.getMostSignificantBits(), identifier.getLeastSignificantBits() }));
         }
         nbt.put("summons", summonsTag);
 
