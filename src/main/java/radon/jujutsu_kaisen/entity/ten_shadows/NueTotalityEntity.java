@@ -19,7 +19,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -120,7 +127,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         if (super.doHurtTarget(pEntity)) {
             if (pEntity instanceof LivingEntity living) {
                 Ability lightning = JJKAbilities.NUE_LIGHTNING.get();
-                ((Ability.ITenShadowsAttack) lightning).perform(this, living);
+                ((ITenShadowsAttack) lightning).perform(this, living);
             }
             return true;
         }

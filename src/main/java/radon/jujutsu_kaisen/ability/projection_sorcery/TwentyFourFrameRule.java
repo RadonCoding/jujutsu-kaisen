@@ -16,14 +16,21 @@ import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
 
-public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ability.IAttack {
+public class TwentyFourFrameRule extends Ability implements IToggled, IAttack {
     private static final float DAMAGE = 15.0F;
 
     @Override

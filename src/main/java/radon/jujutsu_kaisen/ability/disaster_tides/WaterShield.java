@@ -12,7 +12,14 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -24,7 +31,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class WaterShield extends Ability implements Ability.IChannelened, Ability.IDurationable {
+public class WaterShield extends Ability implements IChanneled, IDurationable {
     private static final double RADIUS = 3.0D;
     private static final double X_STEP = 0.05D;
     private static final float DAMAGE = 10.0F;

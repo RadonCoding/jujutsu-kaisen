@@ -8,7 +8,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -22,7 +29,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.Iterator;
 import java.util.List;
 
-public class Shuffle extends Ability implements Ability.IChannelened, Ability.IDurationable {
+public class Shuffle extends Ability implements IChanneled, IDurationable {
     public static final double RANGE = 30.0D;
 
     @Override

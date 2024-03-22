@@ -2,7 +2,14 @@ package radon.jujutsu_kaisen.ability;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.NeoForge;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -54,7 +61,7 @@ public class AbilityHandler {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof IAttack)) {
                 ability.addDuration(owner);
 
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
@@ -63,7 +70,7 @@ public class AbilityHandler {
             }
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
+            if (force || status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof IAttack)) {
                 ability.addDuration(owner);
 
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));

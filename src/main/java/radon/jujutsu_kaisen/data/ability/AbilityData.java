@@ -13,7 +13,14 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -98,11 +105,11 @@ public class AbilityData implements IAbilityData {
             if (remaining >= 0) {
                 this.durations.put(entry.getKey(), --remaining);
             } else {
-                if (ability instanceof Ability.IToggled) {
+                if (ability instanceof IToggled) {
                     if (this.hasToggled(ability)) {
                         this.toggle(ability);
                     }
-                } else if (ability instanceof Ability.IChannelened) {
+                } else if (ability instanceof IChanneled) {
                     if (this.isChanneling(ability)) {
                         this.channel(ability);
                     }
@@ -132,10 +139,10 @@ public class AbilityData implements IAbilityData {
 
             Ability.Status status = ability.isStillUsable(this.owner);
 
-            if (status == Ability.Status.SUCCESS || ((status == Ability.Status.ENERGY || status == Ability.Status.COOLDOWN) && ability instanceof Ability.IAttack)) {
+            if (status == Ability.Status.SUCCESS || ((status == Ability.Status.ENERGY || status == Ability.Status.COOLDOWN) && ability instanceof IAttack)) {
                 ability.run(this.owner);
 
-                ((Ability.IToggled) ability).applyModifiers(this.owner);
+                ((IToggled) ability).applyModifiers(this.owner);
             } else {
                 remove.add(ability);
             }
@@ -152,7 +159,7 @@ public class AbilityData implements IAbilityData {
 
             Ability.Status status = this.channeled.isStillUsable(this.owner);
 
-            if (status == Ability.Status.SUCCESS || ((status == Ability.Status.ENERGY || status == Ability.Status.COOLDOWN) && this.channeled instanceof Ability.IAttack)) {
+            if (status == Ability.Status.SUCCESS || ((status == Ability.Status.ENERGY || status == Ability.Status.COOLDOWN) && this.channeled instanceof IAttack)) {
                 this.channeled.run(this.owner);
             } else {
                 this.channel(this.channeled);
@@ -175,7 +182,7 @@ public class AbilityData implements IAbilityData {
 
     @Override
     public void attack(DamageSource source, LivingEntity target) {
-        if (this.channeled instanceof Ability.IAttack attack) {
+        if (this.channeled instanceof IAttack attack) {
             if (this.channeled.getStatus(this.owner) == Ability.Status.SUCCESS && attack.attack(source, this.owner, target)) {
                 this.channeled.charge(this.owner);
                 this.charge = 0;
@@ -186,7 +193,7 @@ public class AbilityData implements IAbilityData {
             // In-case any of IAttack's kill the target just break the loop
             if (target.isDeadOrDying()) break;
 
-            if (!(ability instanceof Ability.IAttack attack)) continue;
+            if (!(ability instanceof IAttack attack)) continue;
             if (ability.getStatus(this.owner) != Ability.Status.SUCCESS) continue;
             if (!attack.attack(source, this.owner, target)) continue;
 
@@ -215,15 +222,15 @@ public class AbilityData implements IAbilityData {
 
             ability.cooldown(this.owner);
 
-            ((Ability.IToggled) ability).onDisabled(this.owner);
+            ((IToggled) ability).onDisabled(this.owner);
 
-            ((Ability.IToggled) ability).removeModifiers(this.owner);
+            ((IToggled) ability).removeModifiers(this.owner);
 
             NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
             this.toggled.add(ability);
 
-            ((Ability.IToggled) ability).onEnabled(this.owner);
+            ((IToggled) ability).onEnabled(this.owner);
         }
 
         ability.run(this.owner);
@@ -255,9 +262,9 @@ public class AbilityData implements IAbilityData {
     @Override
     public void channel(@Nullable Ability ability) {
         if (this.channeled != null) {
-            ((Ability.IChannelened) this.channeled).onStop(this.owner);
+            ((IChanneled) this.channeled).onStop(this.owner);
 
-            if (this.channeled instanceof Ability.ICharged charged) {
+            if (this.channeled instanceof ICharged charged) {
                 if (charged.onRelease(this.owner)) {
                     this.channeled.charge(this.owner);
                 }
@@ -329,7 +336,7 @@ public class AbilityData implements IAbilityData {
 
     @Override
     public void addDuration(Ability ability) {
-        this.durations.put(ability, ((Ability.IDurationable) ability).getRealDuration(this.owner));
+        this.durations.put(ability, ((IDurationable) ability).getRealDuration(this.owner));
     }
 
     @Override

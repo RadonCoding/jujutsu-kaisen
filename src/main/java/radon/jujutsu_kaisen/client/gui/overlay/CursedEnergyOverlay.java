@@ -14,7 +14,14 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ImbuementHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
@@ -128,7 +135,7 @@ public class CursedEnergyOverlay {
         }
 
         for (Ability ability : abilityData.getToggled()) {
-            if (!(ability instanceof Ability.IAttack)) continue;
+            if (!(ability instanceof IAttack)) continue;
 
             int cooldown = abilityData.getRemainingCooldown(ability);
 
@@ -139,7 +146,7 @@ public class CursedEnergyOverlay {
 
         Ability channeled = abilityData.getChanneled();
 
-        if (channeled instanceof Ability.IAttack) {
+        if (channeled instanceof IAttack) {
             int cooldown = abilityData.getRemainingCooldown(channeled);
 
             if (cooldown > 0) {
