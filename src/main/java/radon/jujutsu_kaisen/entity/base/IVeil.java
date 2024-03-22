@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.entity.base;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.util.VeilUtil;
 
@@ -20,12 +19,12 @@ public interface IVeil extends IBarrier {
         return VeilUtil.isAllowed(entity, owner.getUUID(), this.getModifiers());
     }
 
-    default boolean canDamage(Entity attacker, LivingEntity victim) {
+    default boolean canDamage(LivingEntity victim) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return true;
 
-        return VeilUtil.canDamage(attacker, victim, owner.getUUID(), this.getModifiers());
+        return VeilUtil.canDamage(owner.getUUID(), this.getModifiers());
     }
 
     default boolean canDestroy(Entity entity, BlockPos target) {

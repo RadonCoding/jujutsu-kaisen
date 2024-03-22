@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -9,14 +8,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
-import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -25,7 +20,6 @@ import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.base.IBarrier;
 import radon.jujutsu_kaisen.entity.base.IDomain;
 import radon.jujutsu_kaisen.entity.base.IVeil;
-import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -84,7 +78,7 @@ public class VeilHandler {
 
         IBarrier owner = getOwner(level, target);
 
-        if (owner instanceof IVeil veil) return veil.canDamage(attacker, victim);
+        if (owner instanceof IVeil veil) return veil.canDamage(victim);
 
         return true;
     }
