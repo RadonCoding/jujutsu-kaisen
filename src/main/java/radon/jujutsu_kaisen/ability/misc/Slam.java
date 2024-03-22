@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -39,12 +40,14 @@ public class Slam extends Ability implements Ability.ICharged {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
 
-        BlockPos above = BlockPos.containing(owner.position()
-                .add(0.0D, owner.getBbHeight(), 0.0D)
-                .add(0.0D, 0.5D, 0.0D));
+        if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get()) {
+            BlockPos above = BlockPos.containing(owner.position()
+                    .add(0.0D, owner.getBbHeight(), 0.0D)
+                    .add(0.0D, 0.5D, 0.0D));
 
-        if (owner.getNavigation().isStuck() && owner.level().getBlockState(above).getCollisionShape(owner.level(), above).isEmpty()) return true;
-
+            if (owner.getNavigation().isStuck() && owner.level().getBlockState(above).getCollisionShape(owner.level(), above).isEmpty())
+                return true;
+        }
         return owner.hasLineOfSight(target);
     }
 

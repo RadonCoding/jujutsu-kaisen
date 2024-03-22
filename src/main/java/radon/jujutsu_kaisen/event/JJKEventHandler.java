@@ -361,15 +361,6 @@ public class JJKEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            if (event.getEntity() instanceof ServerPlayer player) {
-                if (player.getLastDeathLocation().isPresent() && player.getLastDeathLocation().get().pos().equals(player.blockPosition())) {
-                    for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-                        System.out.println(ste);
-                    }
-                    throw new RuntimeException();
-                }
-            }
-
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap == null) return;

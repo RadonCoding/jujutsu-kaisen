@@ -13,6 +13,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -43,14 +44,16 @@ public class Punch extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (owner.isInWall() || (owner.getNavigation().isStuck() && !owner.isInFluidType())) return true;
+        if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get() && (owner.isInWall() || (owner.getNavigation().isStuck() && !owner.isInFluidType()))) return true;
         if (target == null || target.isDeadOrDying()) return false;
 
-        HitResult hit = RotationUtil.getLookAtHit(owner, 1.0D);
+        if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get()) {
+            HitResult hit = RotationUtil.getLookAtHit(owner, 1.0D);
 
-        if (hit.getType() == HitResult.Type.BLOCK) {
-            if (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos()).getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                return true;
+            if (hit.getType() == HitResult.Type.BLOCK) {
+                if (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos()).getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                    return true;
+                }
             }
         }
 

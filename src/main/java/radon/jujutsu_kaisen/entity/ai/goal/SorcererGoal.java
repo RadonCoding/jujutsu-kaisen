@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
@@ -25,7 +24,6 @@ import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.SkillUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
@@ -62,7 +60,7 @@ public class SorcererGoal extends Goal {
             List<Skill> skills = new ArrayList<>();
 
             for (Skill skill : Skill.values()) {
-                if (!SkillUtil.hasSkill(this.mob, skill)) continue;
+                if (!skill.isValid(this.mob)) continue;
 
                 skills.add(skill);
             }
