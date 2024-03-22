@@ -97,7 +97,7 @@ public class ExplosionHandler {
                     PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, explosion.duration), player);
                 }
 
-                List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, event.level, explosion.instigator, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
+                List<Entity> entities = event.level.getEntities(explosion.instigator, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
                         Mth.floor(explosion.position.y - diameter - 1.0F),
                         Mth.floor(explosion.position.z - diameter - 1.0F),
                         Mth.floor(explosion.position.x + diameter + 1.0F),
