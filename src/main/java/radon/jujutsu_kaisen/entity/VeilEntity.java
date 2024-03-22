@@ -70,9 +70,9 @@ public class VeilEntity extends Entity implements IBarrier {
 
         this.setOwner(owner);
 
-        this.setRadius(radius);
+        this.setPos(pos.subtract(0.0D, radius, 0.0D));
 
-        this.setPos(pos.subtract(0.0D, (double) radius / 2, 0.0D));
+        this.setRadius(radius);
 
         this.modifiers = modifiers;
     }
@@ -157,14 +157,16 @@ public class VeilEntity extends Entity implements IBarrier {
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
         int radius = this.getRadius();
-        BlockPos relative = pos.subtract(this.blockPosition());
+        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < (radius - 2) * (radius - 2);
     }
 
     @Override
     public boolean isBarrier(BlockPos pos) {
         int radius = this.getRadius();
-        BlockPos relative = pos.subtract(this.blockPosition());
+        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < radius * radius;
     }
 
