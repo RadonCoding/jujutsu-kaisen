@@ -70,9 +70,9 @@ public class VeilEntity extends Entity implements IBarrier {
 
         this.setOwner(owner);
 
-        this.setPos(pos);
-
         this.setRadius(radius);
+
+        this.setPos(pos.subtract(0.0D, (double) radius / 2, 0.0D));
 
         this.modifiers = modifiers;
     }
