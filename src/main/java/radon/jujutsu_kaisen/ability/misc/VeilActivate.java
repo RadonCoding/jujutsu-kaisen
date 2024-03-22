@@ -14,6 +14,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.VeilEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -41,6 +44,12 @@ public class VeilActivate extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         AtomicBoolean activated = new AtomicBoolean();
@@ -49,7 +58,8 @@ public class VeilActivate extends Ability {
             if (!(owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) return;
             if (be.getOwnerUUID() == null || !be.getOwnerUUID().equals(owner.getUUID())) return;
 
-            be.setActive(true);
+            VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos);
+            data.addSummon(veil);
 
             activated.set(true);
         });
@@ -62,7 +72,10 @@ public class VeilActivate extends Ability {
 
             Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
 
-            owner.level().addFreshEntity(new VeilEntity(owner, pos, RADIUS, List.of()));
+            VeilEntity veil = new VeilEntity(owner, pos, RADIUS, List.of());
+            owner.level().addFreshEntity(veil);
+
+            data.addSummon(veil);
         }
 
         for (ServerPlayer player : level.players()) {

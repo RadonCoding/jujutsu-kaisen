@@ -11,11 +11,12 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.VeilEntity;
 
 public class VeilDeactivate extends Ability {
-    private static final double RANGE = 16.0D;
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
@@ -33,18 +34,18 @@ public class VeilDeactivate extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
         if (owner.level().isClientSide) return;
 
-        BlockPos.betweenClosedStream(AABB.ofSize(owner.position(), RANGE, RANGE, RANGE)).forEach(pos -> {
-            if (!(owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) return;
-            if (be.getOwnerUUID() == null || !be.getOwnerUUID().equals(owner.getUUID())) return;
-
-            be.setActive(false);
-        });
-
-        for (VeilEntity veil : owner.level().getEntitiesOfClass(VeilEntity.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
+        for (VeilEntity veil : data.getSummonsByClass(VeilEntity.class)) {
             if (veil.getOwner() != owner) continue;
 
+            data.removeSummon(veil);
             veil.discard();
         }
     }

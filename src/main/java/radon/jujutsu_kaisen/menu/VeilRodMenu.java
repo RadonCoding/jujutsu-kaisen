@@ -26,7 +26,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
             if (level.isClientSide) return null;
 
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
-                return be.getSize();
+                return be.getRadius();
             }
             return ConfigHolder.SERVER.minimumVeilSize.get();
         }).ifPresent(this::setSize);
@@ -57,7 +57,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
 
         this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
-                be.setSize(size);
+                be.setRadius(size);
                 return true;
             }
             return false;
