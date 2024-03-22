@@ -183,6 +183,16 @@ public class VeilEntity extends Entity implements IBarrier {
         return false;
     }
 
+    @Override
+    public @NotNull Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
+    }
+
+    @Override
+    protected boolean updateInWaterStateAndDoFluidPushing() {
+        return false;
+    }
+
     private boolean charge(LivingEntity owner) {
         // Creating a new veil block consumes cursed energy from the caster
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {

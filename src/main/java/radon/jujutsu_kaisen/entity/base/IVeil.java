@@ -24,7 +24,7 @@ public interface IVeil extends IBarrier {
 
         if (owner == null) return true;
 
-        return VeilUtil.canDamage(owner.getUUID(), this.getModifiers());
+        return VeilUtil.canDamage(this.getModifiers());
     }
 
     default boolean canDestroy(Entity entity, BlockPos target) {
