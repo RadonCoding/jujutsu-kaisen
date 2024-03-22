@@ -277,7 +277,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.HAJIME_KASHIMO.get(), HajimeKashimoRenderer::new);
             event.registerEntityRenderer(JJKEntities.AOI_TODO.get(), AoiTodoRenderer::new);
             event.registerEntityRenderer(JJKEntities.MIWA_KASUMI.get(), MiwaKasumiRenderer::new);
-            event.registerEntityRenderer(JJKEntities.SORCERER_VILLAGER.get(), VillagerRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SORCERER_VILLAGER.get(), SorcererVillagerRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
 
