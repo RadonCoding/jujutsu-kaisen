@@ -106,7 +106,7 @@ public class VeilHandler {
 
         ISkillData data = cap.getSkillData();
 
-        return data.getSkill(Skill.BARRIER);
+        return data.getSkill(Skill.BARRIER) + 1;
     }
 
     @Nullable
