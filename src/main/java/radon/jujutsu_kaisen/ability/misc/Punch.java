@@ -44,10 +44,9 @@ public class Punch extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get() && (owner.isInWall() || (owner.getNavigation().isStuck() && !owner.isInFluidType()))) return true;
-        if (target == null || target.isDeadOrDying()) return false;
-
         if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get()) {
+            if (owner.isInWall() || (owner.getNavigation().isStuck() && !owner.isInFluidType())) return true;
+
             HitResult hit = RotationUtil.getLookAtHit(owner, 1.0D);
 
             if (hit.getType() == HitResult.Type.BLOCK) {
@@ -56,6 +55,8 @@ public class Punch extends Ability {
                 }
             }
         }
+
+        if (target == null || target.isDeadOrDying()) return false;
 
         if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return false;
 
