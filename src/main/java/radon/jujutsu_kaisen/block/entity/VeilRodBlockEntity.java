@@ -58,8 +58,6 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     private int counter;
 
-    private boolean first;
-
     public List<Modifier> modifiers;
 
     public VeilRodBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -140,7 +138,9 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         pBlockEntity.counter++;
 
-        if (!pBlockEntity.first) {
+        int radius = pBlockEntity.size;
+
+        if (pBlockEntity.counter > radius * 2) {
             if (pBlockEntity.counter != INTERVAL) return;
 
             pBlockEntity.counter = 0;
@@ -159,7 +159,13 @@ public class VeilRodBlockEntity extends BlockEntity {
             }
         }
 
-        int radius = pBlockEntity.size;
+        if (pBlockEntity.counter - 1 == 0) {
+            int diameter = radius * 2;
+
+            for (CursedSpirit curse : pLevel.getEntitiesOfClass(CursedSpirit.class, AABB.ofSize(pPos.getCenter(), diameter, diameter, diameter))) {
+                curse.setHiding(false);
+            }
+        }
 
         for (int y = radius; y >= -radius; y--) {
             int delay = Math.abs(y - radius);
@@ -232,7 +238,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public void setActive(boolean active) {
         this.active = active;
-        this.first = true;
+        this.counter = 0;
         this.setChanged();
     }
 
@@ -272,8 +278,6 @@ public class VeilRodBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
-        pTag.putBoolean("first", this.first);
-
         if (this.ownerUUID != null) {
             pTag.putUUID("owner", this.ownerUUID);
         }
@@ -290,8 +294,6 @@ public class VeilRodBlockEntity extends BlockEntity {
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
-
-        this.first = pTag.getBoolean("first");
 
         if (pTag.contains("owner")) {
             this.ownerUUID = pTag.getUUID("owner");
