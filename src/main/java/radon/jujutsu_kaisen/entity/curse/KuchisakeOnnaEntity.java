@@ -213,7 +213,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
         if (this.cooldown > 0) this.cooldown--;
 
-        if (!VeilHandler.getDomains(((ServerLevel) this.level()), this.blockPosition()).isEmpty()) {
+        if (!VeilHandler.getBarriers(((ServerLevel) this.level()), this.blockPosition()).isEmpty()) {
             this.reset();
             return;
         }

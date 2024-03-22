@@ -185,7 +185,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         if (this.getTime() % UPDATE_INTERVAL != 0) return;
 
-        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
+        this.setHiding(this.getTarget() == null && !VeilHandler.isInsideBarrier(((ServerLevel) this.level()), this.blockPosition()));
 
         if (this.random.nextInt(HUNGRY_CHANCE) == 0) this.hungry = true;
 

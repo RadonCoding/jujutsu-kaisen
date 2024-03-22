@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.domain.base;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -9,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -18,11 +20,11 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.IBarrier;
+import radon.jujutsu_kaisen.entity.base.IDomain;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.Set;
 
 public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
@@ -45,6 +47,23 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
+    public AABB getBounds() {
+        int width = this.getWidth();
+        int height = this.getHeight();
+        return new AABB(this.getX() - width, this.getY() - ((double) height / 2), this.getZ() - width,
+                this.getX() + width, this.getY() + ((double) height / 2), this.getZ() + width);
+    }
+
+    @Override
+    public boolean isInsideBarrier(BlockPos pos) {
+        int width = this.getWidth();
+        int height = this.getHeight();
+        BlockPos center = this.blockPosition();
+        BlockPos relative = pos.subtract(center);
+        return relative.getY() > -height / 2 && relative.distSqr(Vec3i.ZERO) < width * width;
+    }
+
+    @Override
     public void push(@NotNull Entity pEntity) {
 
     }
@@ -52,21 +71,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean canBeCollidedWith() {
         return true;
-    }
-
-    @Override
-    public boolean isAffected(BlockPos pos) {
-        if (!(this.level() instanceof ServerLevel level)) return false;
-        if (VeilHandler.isProtectedByVeil(level, pos)) return false;
-
-        Set<DomainExpansionEntity> domains = VeilHandler.getDomains(level, pos);
-
-        for (DomainExpansionEntity domain : domains) {
-            if (domain == this) continue;
-
-            return false;
-        }
-        return super.isAffected(pos);
     }
 
     public int getWidth() {
@@ -119,7 +123,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds())) {
+        for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds())) {
+            if (!(barrier instanceof IDomain domain)) continue;
             if (domain == this || domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition())) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {

@@ -5,16 +5,12 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -29,19 +25,15 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.IBarrier;
+import radon.jujutsu_kaisen.entity.base.IDomain;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -77,7 +69,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean shouldCollapse(float strength) {
         int radius = this.getRadius();
-        boolean completed = this.getTime() >= radius;
+        boolean completed = this.getTime() >= radius * 2;
         return completed && super.shouldCollapse(strength);
     }
 
@@ -136,29 +128,36 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() == this.uuid)
-            return true;
-
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius, 0);
         BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < (radius - 2) * (radius - 2);
     }
 
+    @Override
+    public boolean isBarrier(BlockPos pos) {
+        int radius = this.getRadius();
+        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos relative = pos.subtract(center);
+        return relative.distSqr(Vec3i.ZERO) < radius * radius;
+    }
+
     protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
-        if (!this.level().isInWorldBounds(pos)) return;
-
-        if (this.isRemoved()) return;
-
         if (distance >= radius) return;
 
-        LivingEntity owner = this.getOwner();
-
-        if (owner == null) return;
+        if (!this.level().isInWorldBounds(pos)) return;
 
         BlockState state = this.level().getBlockState(pos);
 
         if (state.is(Blocks.BEDROCK)) return;
+
+        if (this.isRemoved()) return;
+
+        if (!this.isOwned(pos)) return;
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
 
         BlockEntity existing = this.level().getBlockEntity(pos);
 
@@ -213,10 +212,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         owner.level().removeBlockEntity(pos);
-
-        if (!this.level().getBlockState(pos.above()).isAir() && !(this.level().getBlockEntity(pos.above()) instanceof DomainBlockEntity)) {
-            this.createBlock(delay, pos.above(), radius, Math.sqrt(pos.above().distSqr(center)));
-        }
 
         boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
                 Block.UPDATE_CLIENTS);
@@ -317,9 +312,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (!completed) return false;
 
-        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds());
+        Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
 
-        for (DomainExpansionEntity domain : domains) {
+        for (IBarrier barrier : barriers) {
+            if (!(barrier instanceof IDomain domain)) continue;
             if (domain == this) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
@@ -390,9 +386,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
 
-        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds());
+        Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
 
-        for (DomainExpansionEntity domain : domains) {
+        for (IBarrier barrier : barriers) {
+            if (!(barrier instanceof IDomain domain)) continue;
             if (domain == this || !(domain instanceof ClosedDomainExpansionEntity closed)) continue;
 
             closed.createBarrier(true);

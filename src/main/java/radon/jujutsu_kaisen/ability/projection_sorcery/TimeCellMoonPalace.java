@@ -44,14 +44,14 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
         owner.level().addFreshEntity(domain);
 
-        TimeCellMoonPalaceEntity entity = new TimeCellMoonPalaceEntity(domain);
+        TimeCellMoonPalaceEntity center = new TimeCellMoonPalaceEntity(domain);
 
         Vec3 pos = owner.position()
                 .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
-                        .multiply(entity.getBbWidth() / 2.0F, 0.0D, entity.getBbWidth() / 2.0F));
-        entity.moveTo(pos.x, pos.y, pos.z, 180.0F - RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
+                        .multiply(center.getBbWidth() / 2.0F, 0.0D, center.getBbWidth() / 2.0F));
+        center.moveTo(pos.x, pos.y, pos.z, 180.0F - RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
 
-        owner.level().addFreshEntity(entity);
+        owner.level().addFreshEntity(center);
 
         return domain;
     }

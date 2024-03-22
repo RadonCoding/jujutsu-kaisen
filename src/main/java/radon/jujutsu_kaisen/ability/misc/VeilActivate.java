@@ -6,15 +6,24 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.entity.VeilEntity;
+import radon.jujutsu_kaisen.util.RotationUtil;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VeilActivate extends Ability {
+    private static final double RANGE = 16.0D;
+    private static final int RADIUS = 32;
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
@@ -34,12 +43,27 @@ public class VeilActivate extends Ability {
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        BlockPos.betweenClosedStream(AABB.ofSize(owner.position(), 8.0D, 8.0D, 8.0D)).forEach(pos -> {
+        AtomicBoolean activated = new AtomicBoolean();
+
+        BlockPos.betweenClosedStream(AABB.ofSize(owner.position(), RANGE, RANGE, RANGE)).forEach(pos -> {
             if (!(owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) return;
             if (be.getOwnerUUID() == null || !be.getOwnerUUID().equals(owner.getUUID())) return;
 
             be.setActive(true);
+
+            activated.set(true);
         });
+
+        if (!activated.get()) {
+            Vec3 start = owner.getEyePosition();
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+            Vec3 end = start.add(look.scale(RANGE));
+            HitResult result = RotationUtil.getHitResult(owner, start, end);
+
+            Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
+
+            owner.level().addFreshEntity(new VeilEntity(owner, pos, RADIUS, List.of()));
+        }
 
         for (ServerPlayer player : level.players()) {
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.veil", JujutsuKaisen.MOD_ID), owner.getName().getString()));

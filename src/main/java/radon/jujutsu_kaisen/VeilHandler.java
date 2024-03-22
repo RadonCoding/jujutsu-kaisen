@@ -22,7 +22,9 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.IBarrier;
+import radon.jujutsu_kaisen.entity.base.IDomain;
+import radon.jujutsu_kaisen.entity.base.IVeil;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
 import javax.annotation.Nullable;
@@ -30,51 +32,37 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class VeilHandler {
-    private static final Map<ResourceKey<Level>, Set<BlockPos>> veils = new HashMap<>();
-    private static final Map<ResourceKey<Level>, Set<UUID>> domains = new HashMap<>();
+    private static final Map<ResourceKey<Level>, Set<UUID>> barriers = new HashMap<>();
 
-    public static void veil(ResourceKey<Level> dimension, BlockPos pos) {
-        if (!veils.containsKey(dimension)) {
-            veils.put(dimension, new HashSet<>());
+    public static void barrier(ResourceKey<Level> dimension, UUID identifier) {
+        if (!barriers.containsKey(dimension)) {
+            barriers.put(dimension, new HashSet<>());
         }
-        veils.get(dimension).add(pos);
+        barriers.get(dimension).add(identifier);
     }
 
-    public static void domain(ResourceKey<Level> dimension, UUID identifier) {
-        if (!domains.containsKey(dimension)) {
-            domains.put(dimension, new HashSet<>());
-        }
-        domains.get(dimension).add(identifier);
-    }
+    public static Set<IBarrier> getBarriers(ServerLevel level, BlockPos target) {
+        Set<IBarrier> result = new HashSet<>();
 
-    public static Set<DomainExpansionEntity> getDomains(ServerLevel level, BlockPos pos) {
-        if (!domains.containsKey(level.dimension())) return Set.of();
-
-        Set<UUID> current = domains.get(level.dimension());
-
-        if (current.isEmpty()) return Set.of();
-
-        Set<DomainExpansionEntity> result = new HashSet<>();
-
-        for (UUID identifier : current) {
-            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !domain.isInsideBarrier(pos)) continue;
-            result.add(domain);
+        if (barriers.containsKey(level.dimension())) {
+            for (UUID identifier : barriers.get(level.dimension())) {
+                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !barrier.isInsideBarrier(target))
+                    continue;
+                result.add(barrier);
+            }
         }
         return result;
     }
 
-    public static Set<DomainExpansionEntity> getDomains(ServerLevel level, AABB bounds) {
-        if (!domains.containsKey(level.dimension())) return Set.of();
+    public static Set<IBarrier> getBarriers(ServerLevel level, AABB bounds) {
+        Set<IBarrier> result = new HashSet<>();
 
-        Set<UUID> current = domains.get(level.dimension());
-
-        if (current.isEmpty()) return Set.of();
-
-        Set<DomainExpansionEntity> result = new HashSet<>();
-
-        for (UUID identifier : current) {
-            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !bounds.intersects(domain.getBounds())) continue;
-            result.add(domain);
+        if (barriers.containsKey(level.dimension())) {
+            for (UUID identifier : barriers.get(level.dimension())) {
+                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !bounds.intersects(barrier.getBounds()))
+                    continue;
+                result.add(barrier);
+            }
         }
         return result;
     }
@@ -82,79 +70,32 @@ public class VeilHandler {
     public static boolean canSpawn(ServerLevel level, Mob mob, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
-        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
-            ResourceKey<Level> dimension = entry.getKey();
+        IBarrier owner = getOwner(level, target);
 
-            for (BlockPos pos : entry.getValue()) {
-                if (mob.level().dimension() != dimension || !(mob.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be))
-                    continue;
+        if (owner instanceof IVeil veil) return veil.isAllowed(mob);
 
-                if (!isProtectedByVeil(level, target)) continue;
-
-                if (!be.isAllowed(mob)) {
-                    return false;
-                }
-            }
-        }
         return true;
     }
 
     public static boolean canDamage(Entity attacker, LivingEntity victim, ServerLevel level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
-        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
-            ResourceKey<Level> dimension1 = entry.getKey();
+        if (level.getBlockState(target).is(JJKBlocks.VEIL_ROD)) return true;
 
-            for (BlockPos pos : entry.getValue()) {
-                if (level.dimension() != dimension1) continue;
+        IBarrier owner = getOwner(level, target);
 
-                if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity rod)) continue;
+        if (owner instanceof IVeil veil) return veil.canDamage(attacker, victim);
 
-                if (attacker.getUUID().equals(rod.getOwnerUUID())) continue;
-
-                if (!isProtectedByVeil(level, target)) continue;
-
-                if (!rod.isAllowed(attacker) || !rod.isAllowed(victim)) continue;
-
-                for (Modifier modifier : rod.modifiers) {
-                    if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.VIOLENCE) {
-                        return false;
-                    }
-                }
-            }
-        }
         return true;
     }
 
     public static boolean canDestroy(@Nullable Entity entity, ServerLevel level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
-        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> veilEntry : veils.entrySet()) {
-            ResourceKey<Level> dimension1 = veilEntry.getKey();
+        IBarrier owner = getOwner(level, target);
 
-            for (BlockPos pos : veilEntry.getValue()) {
-                // So that veil rods can still be broken
-                if (target.equals(pos)) continue;
+        if (owner instanceof IVeil veil) return veil.canDestroy(entity, target);
 
-                // So that veils can still be destroyed
-                if (level.getBlockEntity(target) instanceof VeilBlockEntity veil) {
-                    if (veil.getParent() == pos) continue;
-                }
-
-                if (level.dimension() != dimension1 || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
-                    continue;
-
-                if (entity != null && entity.getUUID().equals(be.getOwnerUUID())) continue;
-
-                if (!isProtectedByVeil(level, target)) continue;
-
-                for (Modifier modifier : be.modifiers) {
-                    if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.GRIEFING) {
-                        return false;
-                    }
-                }
-            }
-        }
         return true;
     }
 
@@ -168,100 +109,48 @@ public class VeilHandler {
         return data.getSkill(Skill.BARRIER);
     }
 
-    public static boolean isProtectedByDomain(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
-        if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity be)) return false;
+    @Nullable
+    private static IBarrier getOwner(ServerLevel level, BlockPos target) {
+        IBarrier strongest = null;
 
-        // If there's a domain that is at least 50% the strength of the veil's then it will win
-        for (Map.Entry<ResourceKey<Level>, Set<UUID>> domainEntry : domains.entrySet()) {
-            if (domainEntry.getKey() != dimension) continue;
+        if (barriers.containsKey(level.dimension())) {
+            for (UUID identifier : barriers.get(level.dimension())) {
+                if (!(level.getEntity(identifier) instanceof IBarrier current)) continue;
+                if (!current.isBarrier(target)) continue;
 
-            for (UUID identifier : domainEntry.getValue()) {
-                if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain)) continue;
-                if (!domain.isInsideBarrier(target)) continue;
-
-                if (be.getOwnerUUID() == null || !(level.getEntity(be.getOwnerUUID()) instanceof LivingEntity veilOwner)) {
-                    return true;
+                if (strongest == null) {
+                    strongest = current;
+                    continue;
                 }
 
-                LivingEntity domainOwner = domain.getOwner();
+                LivingEntity strongestOwner = strongest.getOwner();
 
-                if (domainOwner == null) continue;
-
-                boolean outside = veilOwner.distanceToSqr(veil.getCenter()) >= be.getSize() * be.getSize();
-
-                if (Math.round(getBarrierSkill(veilOwner) * (1.0F / ConfigHolder.SERVER.domainStrength.get()) * (outside ? 1.5F : 1.0F)) < getBarrierSkill(domainOwner)) {
-                    return true;
+                if (strongestOwner == null) {
+                    strongest = current;
+                    continue;
                 }
+
+                LivingEntity currentOwner = current.getOwner();
+
+                if (currentOwner == null) continue;
+
+                int strongestSkill = Math.round(getBarrierSkill(strongestOwner) * (strongest.isInsideBarrier(strongestOwner.blockPosition()) ? 1.0F : 1.5F) *
+                        (strongest instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F));
+                int currentSkill = Math.round(getBarrierSkill(currentOwner) * (current.isInsideBarrier(currentOwner.blockPosition()) ? 1.0F : 1.5F) *
+                        (current instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F));
+
+                if (currentSkill > strongestSkill) strongest = current;
             }
         }
-        return false;
+        return strongest;
     }
 
-    public static boolean isProtectedBy(ServerLevel level, ResourceKey<Level> dimension, BlockPos veil, BlockPos target) {
-        if (level.dimension() != dimension || !(level.getBlockEntity(veil) instanceof VeilRodBlockEntity firstVeil))
-            return false;
-
-        if (target.subtract(veil).distSqr(Vec3i.ZERO) >= firstVeil.getSize() * firstVeil.getSize()) return false;
-
-        if (isProtectedByDomain(level, dimension, veil, target)) return false;
-
-        BlockPos protector = null;
-
-        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
-            for (BlockPos pos : entry.getValue()) {
-                if (pos == veil) continue;
-
-                if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity secondVeil)) {
-                    continue;
-                }
-
-                if (target.subtract(pos).distSqr(Vec3i.ZERO) >= secondVeil.getSize() * secondVeil.getSize()) continue;
-
-                if (isProtectedByDomain(level, dimension, veil, target)) continue;
-
-                if (firstVeil.getOwnerUUID() == null || !(level.getEntity(firstVeil.getOwnerUUID()) instanceof LivingEntity firstOwner)) {
-                    protector = pos;
-                    continue;
-                }
-
-                if (protector == null) {
-                    protector = pos;
-                    continue;
-                }
-
-                if (secondVeil.getOwnerUUID() == null || !(level.getEntity(secondVeil.getOwnerUUID()) instanceof LivingEntity secondOwner)) {
-                    continue;
-                }
-
-                int first = Math.round(getBarrierSkill(firstOwner) * (firstOwner.distanceToSqr(protector.getCenter()) >=
-                        firstVeil.getSize() * firstVeil.getSize() ? 1.5F : 1.0F));
-                int second = Math.round(getBarrierSkill(secondOwner) * (secondOwner.distanceToSqr(pos.getCenter()) >=
-                        secondVeil.getSize() * secondVeil.getSize() ? 1.5F : 1.0F));
-
-                // Check if the current one is stronger than the current strongest
-                if (second > first) {
-                    protector = pos;
-                    continue;
-                }
-
-                // If they're equal neither wins
-                if (first == second) {
-                    protector = null;
-                }
-            }
-        }
-        return protector == null;
+    public static boolean isOwnedBy(ServerLevel level, BlockPos target, IBarrier barrier) {
+        return getOwner(level, target) == barrier;
     }
 
-    public static boolean isProtectedByVeil(ServerLevel level, BlockPos target) {
-        for (Map.Entry<ResourceKey<Level>, Set<BlockPos>> entry : veils.entrySet()) {
-            ResourceKey<Level> dimension = entry.getKey();
-
-            for (BlockPos pos : entry.getValue()) {
-                if (isProtectedBy(level, dimension, pos, target)) return true;
-            }
-        }
-        return false;
+    public static boolean isInsideBarrier(ServerLevel level, BlockPos target) {
+        return getOwner(level, target) != null;
     }
 
     @SubscribeEvent
@@ -269,24 +158,13 @@ public class VeilHandler {
         Level level = event.getLevel();
         Entity entity = event.getEntity();
 
-        if (domains.containsKey(level.dimension())) {
-            Set<UUID> current = domains.get(level.dimension());
+        if (barriers.containsKey(level.dimension())) {
+            Set<UUID> current = barriers.get(level.dimension());
             current.remove(entity.getUUID());
 
             if (current.isEmpty()) {
-                domains.remove(level.dimension());
+                barriers.remove(level.dimension());
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.side == LogicalSide.CLIENT || event.type != TickEvent.Type.LEVEL || event.phase == TickEvent.Phase.START || event.level.isClientSide)
-            return;
-
-        if (veils.containsKey(event.level.dimension())) {
-            Set<BlockPos> current = veils.get(event.level.dimension());
-            current.removeIf(pos -> (!(event.level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) || !be.isValid()));
         }
     }
 }

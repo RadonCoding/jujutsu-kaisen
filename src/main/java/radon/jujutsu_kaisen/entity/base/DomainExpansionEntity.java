@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.base;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -24,10 +23,7 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
-import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 
@@ -35,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class DomainExpansionEntity extends Entity {
+public abstract class DomainExpansionEntity extends Entity implements IDomain {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
 
     public static final int OFFSET = 5;
@@ -84,7 +80,7 @@ public abstract class DomainExpansionEntity extends Entity {
         super.onAddedToWorld();
 
         if (!this.level().isClientSide) {
-            VeilHandler.domain(this.level().dimension(), this.getUUID());
+            VeilHandler.barrier(this.level().dimension(), this.getUUID());
         }
     }
 
@@ -132,11 +128,10 @@ public abstract class DomainExpansionEntity extends Entity {
         return this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), this::isAffected);
     }
 
+    @Override
     public boolean hasSureHitEffect() {
         return true;
     }
-
-    public abstract boolean checkSureHitEffect();
 
     public Ability getAbility() {
         return this.ability;
@@ -154,6 +149,7 @@ public abstract class DomainExpansionEntity extends Entity {
         }
     }
 
+    @Override
     @Nullable
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
@@ -165,10 +161,6 @@ public abstract class DomainExpansionEntity extends Entity {
             return null;
         }
     }
-
-    public abstract AABB getBounds();
-
-    public abstract boolean isInsideBarrier(BlockPos pos);
 
     @Override
     public boolean isInWall() {
@@ -201,10 +193,6 @@ public abstract class DomainExpansionEntity extends Entity {
         }
     }
 
-    public boolean isAffected(BlockPos pos) {
-        return this.isInsideBarrier(pos);
-    }
-
     public boolean isAffected(LivingEntity victim) {
         LivingEntity owner = this.getOwner();
 
@@ -234,18 +222,9 @@ public abstract class DomainExpansionEntity extends Entity {
         return (strength / this.getStrength()) > 1.75F;
     }
 
+    @Override
     public float getStrength() {
-        LivingEntity owner = this.getOwner();
-
-        if (owner == null) return 0.0F;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return 0.0F;
-
-        ISkillData data = cap.getSkillData();
-
-        return (data.getSkill(Skill.BARRIER) * 0.01F) * (owner.getHealth() / owner.getMaxHealth()) * DomainExpansion.getStrength(false, this.size);
+        return IDomain.super.getStrength() * DomainExpansion.getStrength(false, this.size);
     }
 
     @Override

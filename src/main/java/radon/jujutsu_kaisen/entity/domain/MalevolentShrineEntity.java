@@ -53,20 +53,8 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     }
 
     @Override
-    public AABB getBounds() {
-        int width = this.getWidth();
-        int height = this.getHeight();
-        return new AABB(this.getX() - width, this.getY() - ((double) height / 2), this.getZ() - width,
-                this.getX() + width, this.getY() + ((double) height / 2), this.getZ() + width);
-    }
-
-    @Override
-    public boolean isInsideBarrier(BlockPos pos) {
-        int width = this.getWidth();
-        int height = this.getHeight();
-        BlockPos center = this.blockPosition();
-        BlockPos relative = pos.subtract(center);
-        return relative.getY() > -height / 2 && relative.distSqr(Vec3i.ZERO) < width * width;
+    public boolean isBarrier(BlockPos pos) {
+        return this.isInsideBarrier(pos);
     }
 
     @Override
@@ -125,7 +113,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                                 if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, owner, pos)) {
                                     owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                            Block.UPDATE_CLIENTS);
 
                                     if (this.random.nextInt(10) == 0) {
                                         owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,

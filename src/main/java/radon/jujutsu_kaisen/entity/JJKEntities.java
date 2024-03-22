@@ -61,6 +61,11 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chimera_shadow_garden")
                             .toString()));
 
+    public static DeferredHolder<EntityType<?>, EntityType<VeilEntity>> VEIL = ENTITIES.register("veil", () ->
+            EntityType.Builder.<VeilEntity>of(VeilEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "veil")
+                            .toString()));
+
     public static DeferredHolder<EntityType<?>, EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->
             EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.CREATURE)
                     .sized(0.9F, 1.9F)
