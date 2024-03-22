@@ -19,6 +19,7 @@ import java.util.UUID;
 
 public class ToadTongueProjectile extends JujutsuProjectile {
     public static final float SPEED = 2.0F;
+    private static final int DURATION = 3 * 20;
 
     private int range;
     private UUID target;
@@ -89,11 +90,14 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide) return;
-
         Entity owner = this.getOwner();
 
-        if (owner == null) return;
+        if (this.level().isClientSide || owner == null) return;
+
+        if (this.getTime() >= DURATION) {
+            this.discard();
+            return;
+        }
 
         if (this.grabbed) {
             if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {

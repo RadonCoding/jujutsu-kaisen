@@ -35,6 +35,7 @@ public class BlueProjectile extends JujutsuProjectile {
     public static final double RANGE = 15.0D;
     private static final int DELAY = 20;
     private static final float DAMAGE = 3.0F;
+    private static final int DURATION = 5 * 20;
     private static final float RADIUS = 3.0F;
     private static final float MAX_RADIUS = 5.0F;
     private static final double OFFSET = 8.0D;
@@ -54,11 +55,6 @@ public class BlueProjectile extends JujutsuProjectile {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
-    }
-
-    @Override
-    protected int getDuration() {
-        return DELAY + 5 * 20;
     }
 
     @Override
@@ -257,35 +253,39 @@ public class BlueProjectile extends JujutsuProjectile {
             }
         }
 
-        this.spawnParticles();
+        if (this.getTime() >= DURATION) {
+            this.discard();
+        } else {
+            this.spawnParticles();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
-                if (!owner.isAlive()) {
-                    this.discard();
-                } else {
-                    if (this.getTime() % 5 == 0) {
-                        owner.swing(InteractionHand.MAIN_HAND);
+            if (this.getOwner() instanceof LivingEntity owner) {
+                if (this.getTime() < DELAY) {
+                    if (!owner.isAlive()) {
+                        this.discard();
+                    } else {
+                        if (this.getTime() % 5 == 0) {
+                            owner.swing(InteractionHand.MAIN_HAND);
+                        }
+                        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+                        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
                     }
-                    Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                    EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
-                }
-            } else {
-                if (this.getTime() == DELAY) {
-                    Vec3 start = owner.getEyePosition();
-                    Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                    Vec3 end = start.add(look.scale(RANGE));
-                    HitResult result = RotationUtil.getHitResult(owner, start, end);
+                } else {
+                    if (this.getTime() == DELAY) {
+                        Vec3 start = owner.getEyePosition();
+                        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+                        Vec3 end = start.add(look.scale(RANGE));
+                        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
-                    Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
-                    this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
-                }
-                this.pullEntities();
-                this.hurtEntities();
+                        Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
+                        this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+                    }
+                    this.pullEntities();
+                    this.hurtEntities();
 
-                if (!this.level().isClientSide) {
-                    this.pullBlocks();
-                    this.breakBlocks();
+                    if (!this.level().isClientSide) {
+                        this.pullBlocks();
+                        this.breakBlocks();
+                    }
                 }
             }
         }
