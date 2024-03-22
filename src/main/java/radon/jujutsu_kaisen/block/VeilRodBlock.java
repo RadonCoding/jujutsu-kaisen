@@ -32,6 +32,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -127,8 +129,9 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
 
             pLevel.addFreshEntity(villager);
 
-            be.setOwner(villager.getUUID());
-            be.setActive(true);
+            be.setOwnerUUID(villager.getUUID());
+
+            AbilityHandler.trigger(villager, JJKAbilities.VEIL_ACTIVATE.get());
 
             pState.setValue(SPAWN_VEIL_MASTER, false);
         }
@@ -143,11 +146,5 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return JJKBlockEntities.VEIL_ROD.get().create(pPos, pState);
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.VEIL_ROD.get(), VeilRodBlockEntity::tick);
     }
 }

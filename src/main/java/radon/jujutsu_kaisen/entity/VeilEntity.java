@@ -276,7 +276,7 @@ public class VeilEntity extends Entity implements IBarrier {
 
     private void check() {
         if (this.center != null) {
-            if (!(this.level().getBlockEntity(this.center) instanceof VeilRodBlockEntity be) || !be.isActive()) {
+            if (!this.level().getBlockState(this.center).is(JJKBlocks.VEIL_ROD)) {
                 this.discard();
                 return;
             }
