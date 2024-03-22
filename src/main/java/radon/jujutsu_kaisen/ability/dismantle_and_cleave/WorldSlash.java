@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -62,6 +63,13 @@ public class WorldSlash extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
+        for (SimpleDomainEntity simple : owner.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(owner.position(),
+                SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2))) {
+            if (simple.getOwner() == owner || owner.distanceTo(simple) >= simple.getRadius()) continue;
+
+            return Status.FAILURE;
+        }
+
         if (!(owner instanceof MahoragaEntity)) {
             if (ChantHandler.getOutput(owner, this) < 1.5F) return Status.FAILURE;
         }
