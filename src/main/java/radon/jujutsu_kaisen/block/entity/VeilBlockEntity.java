@@ -42,7 +42,6 @@ public class VeilBlockEntity extends BlockEntity {
 
     private int size;
 
-    @Nullable
     private List<Modifier> modifiers;
 
     @Nullable
@@ -57,6 +56,8 @@ public class VeilBlockEntity extends BlockEntity {
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL.get(), pPos, pBlockState);
+
+        this.modifiers = new ArrayList<>();
     }
 
     public @Nullable UUID getParentUUID() {
@@ -160,10 +161,7 @@ public class VeilBlockEntity extends BlockEntity {
                 pTag.putUUID("owner", this.ownerUUID);
             }
             pTag.putInt("size", this.size);
-
-            if (this.modifiers != null) {
-                pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
-            }
+            pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
 
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
@@ -191,10 +189,7 @@ public class VeilBlockEntity extends BlockEntity {
                 this.ownerUUID = pTag.getUUID("owner");
             }
             this.size = pTag.getInt("size");
-
-            if (pTag.contains("modifiers")) {
-                this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
-            }
+            this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
             this.deferred = pTag.getCompound("original");
         }
 

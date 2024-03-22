@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,7 +62,7 @@ public class VeilUtil {
         return false;
     }
 
-    public static boolean canDamage(Entity attacker, LivingEntity victim, UUID ownerUUID, List<Modifier> modifiers) {
+    public static boolean canDamage(List<Modifier> modifiers) {
         for (Modifier modifier : modifiers) {
             if (modifier.getType() == Modifier.Type.VIOLENCE && modifier.getAction() == Modifier.Action.DENY) return false;
         }
