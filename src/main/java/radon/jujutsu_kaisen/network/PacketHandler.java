@@ -99,9 +99,6 @@ public class PacketHandler {
         registrar.play(RightClickInputListenerC2SPacket.IDENTIFIER, RightClickInputListenerC2SPacket::new, handler -> handler
                 .client(RightClickInputListenerC2SPacket::handle)
                 .server(RightClickInputListenerC2SPacket::handle));
-        registrar.play(ToggleVeilC2SPacket.IDENTIFIER, ToggleVeilC2SPacket::new, handler -> handler
-                .client(ToggleVeilC2SPacket::handle)
-                .server(ToggleVeilC2SPacket::handle));
         registrar.play(SetVeilSizeC2SPacket.IDENTIFIER, SetVeilSizeC2SPacket::new, handler -> handler
                 .client(SetVeilSizeC2SPacket::handle)
                 .server(SetVeilSizeC2SPacket::handle));

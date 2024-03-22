@@ -58,7 +58,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Punch> PUNCH = ABILITIES.register("punch", Punch::new);
     public static DeferredHolder<Ability, Slam> SLAM = ABILITIES.register("slam", Slam::new);
     public static DeferredHolder<Ability, Barrage> BARRAGE = ABILITIES.register("barrage", Barrage::new);
-    public static DeferredHolder<Ability, Heal> HEAL = ABILITIES.register("heal", Heal::new);
     public static DeferredHolder<Ability, DomainAmplification> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static DeferredHolder<Ability, SimpleDomain> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
     public static DeferredHolder<Ability, QuickDraw> QUICK_DRAW = ABILITIES.register("quick_draw", QuickDraw::new);
@@ -76,6 +75,9 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, RCT2> RCT2 = ABILITIES.register("rct2", RCT2::new);
     public static DeferredHolder<Ability, RCT3> RCT3 = ABILITIES.register("rct3", RCT3::new);
     public static DeferredHolder<Ability, OutputRCT> OUTPUT_RCT = ABILITIES.register("output_rct", OutputRCT::new);
+    public static DeferredHolder<Ability, Heal> HEAL = ABILITIES.register("heal", Heal::new);
+    public static DeferredHolder<Ability, VeilActivate> VEIL_ACTIVATE = ABILITIES.register("veil_activate", VeilActivate::new);
+    public static DeferredHolder<Ability, VeilDeactivate> VEIL_DEACTIVATE = ABILITIES.register("veil_deactivate", VeilDeactivate::new);
 
     public static DeferredHolder<Ability, ShootPureLove> SHOOT_PURE_LOVE = ABILITIES.register("shoot_pure_love", ShootPureLove::new);
     public static DeferredHolder<Ability, Water> WATER = ABILITIES.register("water", Water::new);

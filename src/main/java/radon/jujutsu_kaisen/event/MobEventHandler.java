@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -132,7 +133,8 @@ public class MobEventHandler {
                             ServerChantHandler.onChant(owner, chants.get(i));
 
                             for (ServerPlayer player : level.players()) {
-                                if (player.distanceTo(owner) > 32.0D) continue;
+                                if (player.distanceTo(owner) > owner.getAttributeValue(Attributes.FOLLOW_RANGE)) continue;
+
                                 player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
                             }
                         }

@@ -51,7 +51,7 @@ public class VeilRodBlockEntity extends BlockEntity {
     private static final float COST = 0.01F;
 
     @Nullable
-    public UUID ownerUUID;
+    private UUID ownerUUID;
 
     private boolean active;
     private int size;
@@ -65,6 +65,10 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         this.size = ConfigHolder.SERVER.minimumVeilSize.get();
         this.modifiers = new ArrayList<>();
+    }
+
+    public UUID getOwnerUUID() {
+        return this.ownerUUID;
     }
 
     public boolean isValid() {

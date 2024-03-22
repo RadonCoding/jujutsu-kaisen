@@ -266,6 +266,9 @@
 
   "ability.jujutsu_kaisen.heal": "Heal",
 
+  "ability.jujutsu_kaisen.veil_activate": "Veil: Activate",
+  "ability.jujutsu_kaisen.veil_deactivate": "Veil: Deactivate",
+
   "ability.jujutsu_kaisen.infinity": "Infinity",
   "ability.jujutsu_kaisen.infinity.enable": "Activated infinity",
   "ability.jujutsu_kaisen.infinity.disable": "Deactivated infinity",
@@ -586,6 +589,8 @@
 
   "chat.jujutsu_kaisen.targeting_stick.add": "First target set, hit another entity to start the battle",
   "chat.jujutsu_kaisen.targeting_stick.reset": "Successfully reset targets",
+
+  "chat.jujutsu_kaisen.veil": "<%1$s> Emerge from the darkness, blacker than darkness. Purify that which is impure.",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
   "entity.jujutsu_kaisen.authentic_mutual_love": "Authentic Mutual Love",
