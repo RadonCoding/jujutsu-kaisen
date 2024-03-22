@@ -1,11 +1,14 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.bytes.ByteHash;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -45,6 +48,16 @@ public class SorcererVillager extends Villager implements ISorcerer {
         this.majors = new HashSet<>();
 
         this.grade = SorcererGrade.values()[this.random.nextInt(SorcererGrade.GRADE_4.ordinal(), SorcererGrade.GRADE_2.ordinal() + 1)];
+    }
+
+    @Override
+    protected Brain.@NotNull Provider<Villager> brainProvider() {
+        return Brain.provider(ImmutableList.of(), ImmutableList.of());
+    }
+
+    @Override
+    protected @NotNull Brain<?> makeBrain(@NotNull Dynamic<?> pDynamic) {
+        return this.brainProvider().makeBrain(pDynamic);
     }
 
     public void setGrade(SorcererGrade grade) {
