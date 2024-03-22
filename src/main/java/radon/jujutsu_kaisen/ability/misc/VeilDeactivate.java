@@ -40,12 +40,6 @@ public class VeilDeactivate extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         HitResult hit = RotationUtil.getHitResult(owner, owner.getEyePosition(),
@@ -56,10 +50,9 @@ public class VeilDeactivate extends Ability {
         BlockPos pos = blockHit.getBlockPos();
 
         if (!(owner.level().getBlockEntity(pos) instanceof VeilBlockEntity be)) return;
-        if (!(level.getEntity(be.getParentUUID()) instanceof VeilEntity veil)) return;
+        if (be.getParentUUID() == null || !(level.getEntity(be.getParentUUID()) instanceof VeilEntity veil)) return;
         if (veil.getOwner() != owner) return;
 
-        data.removeSummon(veil);
         veil.discard();
     }
 
