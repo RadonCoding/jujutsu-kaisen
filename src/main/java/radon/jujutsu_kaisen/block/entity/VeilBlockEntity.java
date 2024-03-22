@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 import radon.jujutsu_kaisen.util.VeilUtil;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +40,9 @@ public class VeilBlockEntity extends BlockEntity {
     @Nullable
     private UUID ownerUUID;
 
-    private int death;
+    private int size;
+
+    private List<Modifier> modifiers;
 
     @Nullable
     private BlockState original;
@@ -49,12 +52,12 @@ public class VeilBlockEntity extends BlockEntity {
     @Nullable
     private CompoundTag saved;
 
-    private int size;
-
-    private List<Modifier> modifiers;
+    private int death;
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL.get(), pPos, pBlockState);
+
+        this.modifiers = new ArrayList<>();
     }
 
     public @Nullable UUID getParentUUID() {
@@ -154,10 +157,11 @@ public class VeilBlockEntity extends BlockEntity {
             if (this.parentUUID != null) {
                 pTag.putUUID("parent", this.parentUUID);
             }
-
             if (this.ownerUUID != null) {
                 pTag.putUUID("owner", this.ownerUUID);
             }
+            pTag.putInt("size", this.size);
+            pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
 
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
@@ -169,9 +173,6 @@ public class VeilBlockEntity extends BlockEntity {
                 pTag.put("saved", this.saved);
             }
         }
-
-        pTag.putInt("size", this.size);
-        pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
     }
 
     @Override
@@ -184,15 +185,14 @@ public class VeilBlockEntity extends BlockEntity {
             if (pTag.contains("parent")) {
                 this.parentUUID = pTag.getUUID("parent");
             }
-
             if (pTag.contains("owner")) {
                 this.ownerUUID = pTag.getUUID("owner");
             }
+            this.size = pTag.getInt("size");
+            this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
+
             this.deferred = pTag.getCompound("original");
         }
-
-        this.size = pTag.getInt("size");
-        this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
 
         if (pTag.contains("saved")) {
             this.saved = pTag.getCompound("saved");
