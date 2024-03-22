@@ -114,7 +114,7 @@ public class VeilBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, @Nullable List<Modifier> modifiers, BlockState original, CompoundTag saved) {
+    public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, List<Modifier> modifiers, BlockState original, CompoundTag saved) {
         this.parentUUID = parentUUID;
         this.ownerUUID = ownerUUID;
         this.initialized = true;
@@ -159,9 +159,6 @@ public class VeilBlockEntity extends BlockEntity {
                 pTag.putUUID("owner", this.ownerUUID);
             }
 
-            pTag.putInt("size", this.size);
-            pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
-
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
             } else {
@@ -172,6 +169,9 @@ public class VeilBlockEntity extends BlockEntity {
                 pTag.put("saved", this.saved);
             }
         }
+
+        pTag.putInt("size", this.size);
+        pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
     }
 
     @Override
@@ -188,12 +188,11 @@ public class VeilBlockEntity extends BlockEntity {
             if (pTag.contains("owner")) {
                 this.ownerUUID = pTag.getUUID("owner");
             }
-
-            this.size = pTag.getInt("size");
-            this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
-
             this.deferred = pTag.getCompound("original");
         }
+
+        this.size = pTag.getInt("size");
+        this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
 
         if (pTag.contains("saved")) {
             this.saved = pTag.getCompound("saved");
