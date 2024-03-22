@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IAdditionalAdaptation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -287,6 +288,8 @@ public class TenShadowsData implements ITenShadowsData {
     @Override
     public void tryAdapt(Ability ability) {
         Adaptation adaptation = new Adaptation(JJKDamageSources.JUJUTSU.location(), ability);
+
+        if (this.adapted.containsKey(adaptation) && (!(ability instanceof IAdditionalAdaptation additional) || this.adapted.get(adaptation) >= additional.getAdditional() + 1)) return;
 
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);
