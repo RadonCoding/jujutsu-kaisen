@@ -6,6 +6,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -15,6 +18,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.VeilEntity;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class VeilDeactivate extends Ability {
     @Override
@@ -42,12 +46,15 @@ public class VeilDeactivate extends Ability {
 
         if (owner.level().isClientSide) return;
 
-        for (VeilEntity veil : data.getSummonsByClass(VeilEntity.class)) {
-            if (veil.getOwner() != owner) continue;
+        HitResult hit = RotationUtil.getHitResult(owner, owner.getEyePosition(),
+                owner.getEyePosition().add(owner.getLookAngle().scale(VeilActivate.RANGE)), target -> !target.isSpectator());
 
-            data.removeSummon(veil);
-            veil.discard();
-        }
+        if (!(hit instanceof EntityHitResult entityHit)) return;
+        if (!(entityHit.getEntity() instanceof VeilEntity veil)) return;
+        if (veil.getOwner() != owner) return;
+
+        data.removeSummon(veil);
+        veil.discard();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -130,6 +131,8 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
             pLevel.addFreshEntity(villager);
 
             be.setOwnerUUID(villager.getUUID());
+
+            villager.lookAt(EntityAnchorArgument.Anchor.EYES, pPos.getCenter());
 
             AbilityHandler.trigger(villager, JJKAbilities.VEIL_ACTIVATE.get());
 

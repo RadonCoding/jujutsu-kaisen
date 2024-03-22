@@ -5,8 +5,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VeilActivate extends Ability {
-    private static final double RANGE = 16.0D;
+    public static final double RANGE = 16.0D;
     private static final int RADIUS = 32;
 
     @Override
@@ -52,37 +55,39 @@ public class VeilActivate extends Ability {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        AtomicBoolean activated = new AtomicBoolean();
-
-        BlockPos.betweenClosedStream(AABB.ofSize(owner.position(), RANGE, RANGE, RANGE)).forEach(pos -> {
-            if (!(owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) return;
-            if (be.getOwnerUUID() == null || !be.getOwnerUUID().equals(owner.getUUID())) return;
-
-            VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos.immutable());
-            owner.level().addFreshEntity(veil);
-
-            data.addSummon(veil);
-
-            activated.set(true);
-        });
-
-        if (!activated.get()) {
-            Vec3 start = owner.getEyePosition();
-            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-            Vec3 end = start.add(look.scale(RANGE));
-            HitResult result = RotationUtil.getHitResult(owner, start, end);
-
-            Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
-
-            VeilEntity veil = new VeilEntity(owner, pos, RADIUS, List.of());
-            owner.level().addFreshEntity(veil);
-
-            data.addSummon(veil);
-        }
-
         for (ServerPlayer player : level.players()) {
+            if (owner instanceof Mob && player.distanceTo(owner) > owner.getAttributeValue(Attributes.FOLLOW_RANGE)) continue;
+
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.veil", JujutsuKaisen.MOD_ID), owner.getName().getString()));
         }
+
+        HitResult hit = RotationUtil.getHitResult(owner, owner.getEyePosition(), owner.getEyePosition().add(owner.getLookAngle().scale(RANGE)));
+
+        if (hit instanceof BlockHitResult blockHit) {
+            BlockPos pos = blockHit.getBlockPos();
+
+            if (owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
+                if (be.getOwnerUUID() != null && be.getOwnerUUID().equals(owner.getUUID())) {
+                    VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos.immutable());
+                    owner.level().addFreshEntity(veil);
+
+                    data.addSummon(veil);
+                    return;
+                }
+            }
+        }
+
+        Vec3 start = owner.getEyePosition();
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        Vec3 end = start.add(look.scale(RANGE));
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
+
+        Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
+
+        VeilEntity veil = new VeilEntity(owner, pos, RADIUS, List.of());
+        owner.level().addFreshEntity(veil);
+
+        data.addSummon(veil);
     }
 
     @Override
