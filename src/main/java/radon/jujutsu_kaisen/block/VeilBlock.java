@@ -61,9 +61,9 @@ public class VeilBlock extends Block implements EntityBlock {
 
         if (!(level.getBlockEntity(parent) instanceof VeilRodBlockEntity rod)) return resistance;
 
-        if (rod.ownerUUID == null) return resistance;
+        if (rod.getOwnerUUID() == null) return resistance;
 
-        Entity owner = serverLevel.getEntity(rod.ownerUUID);
+        Entity owner = serverLevel.getEntity(rod.getOwnerUUID());
 
         if (owner == null) return resistance;
 

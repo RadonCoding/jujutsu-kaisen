@@ -110,7 +110,7 @@ public class VeilHandler {
 
                 if (!(level.getBlockEntity(pos) instanceof VeilRodBlockEntity rod)) continue;
 
-                if (attacker.getUUID().equals(rod.ownerUUID)) continue;
+                if (attacker.getUUID().equals(rod.getOwnerUUID())) continue;
 
                 if (!isProtectedByVeil(level, target)) continue;
 
@@ -144,7 +144,7 @@ public class VeilHandler {
                 if (level.dimension() != dimension1 || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
                     continue;
 
-                if (entity != null && entity.getUUID().equals(be.ownerUUID)) continue;
+                if (entity != null && entity.getUUID().equals(be.getOwnerUUID())) continue;
 
                 if (!isProtectedByVeil(level, target)) continue;
 
@@ -179,7 +179,7 @@ public class VeilHandler {
                 if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain)) continue;
                 if (!domain.isInsideBarrier(target)) continue;
 
-                if (be.ownerUUID == null || !(level.getEntity(be.ownerUUID) instanceof LivingEntity veilOwner)) {
+                if (be.getOwnerUUID() == null || !(level.getEntity(be.getOwnerUUID()) instanceof LivingEntity veilOwner)) {
                     return true;
                 }
 
@@ -219,7 +219,7 @@ public class VeilHandler {
 
                 if (isProtectedByDomain(level, dimension, veil, target)) continue;
 
-                if (firstVeil.ownerUUID == null || !(level.getEntity(firstVeil.ownerUUID) instanceof LivingEntity firstOwner)) {
+                if (firstVeil.getOwnerUUID() == null || !(level.getEntity(firstVeil.getOwnerUUID()) instanceof LivingEntity firstOwner)) {
                     protector = pos;
                     continue;
                 }
@@ -229,7 +229,7 @@ public class VeilHandler {
                     continue;
                 }
 
-                if (secondVeil.ownerUUID == null || !(level.getEntity(secondVeil.ownerUUID) instanceof LivingEntity secondOwner)) {
+                if (secondVeil.getOwnerUUID() == null || !(level.getEntity(secondVeil.getOwnerUUID()) instanceof LivingEntity secondOwner)) {
                     continue;
                 }
 
