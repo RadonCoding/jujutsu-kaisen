@@ -40,6 +40,7 @@ import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.VeilEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererVillager;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 
@@ -132,9 +133,8 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
 
             be.setOwnerUUID(villager.getUUID());
 
-            villager.lookAt(EntityAnchorArgument.Anchor.EYES, pPos.getCenter());
-
-            AbilityHandler.trigger(villager, JJKAbilities.VEIL_ACTIVATE.get());
+            VeilEntity veil = new VeilEntity(villager, pPos.getCenter(), be.getRadius(), be.getModifiers(), pPos);
+            pLevel.addFreshEntity(veil);
 
             pState.setValue(SPAWN_VEIL_MASTER, false);
         }

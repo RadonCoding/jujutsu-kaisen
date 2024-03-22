@@ -55,14 +55,12 @@ public class VeilActivate extends Ability {
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.veil", JujutsuKaisen.MOD_ID), owner.getName().getString()));
         }
 
-        HitResult hit = RotationUtil.getHitResult(owner, owner.getEyePosition(), owner.getEyePosition().add(owner.getLookAngle().scale(RANGE)));
-
-        if (hit instanceof BlockHitResult blockHit) {
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof BlockHitResult blockHit) {
             BlockPos pos = blockHit.getBlockPos();
 
             if (owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
                 if (be.getOwnerUUID() != null && be.getOwnerUUID().equals(owner.getUUID())) {
-                    VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos.immutable());
+                    VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos);
                     owner.level().addFreshEntity(veil);
                     return;
                 }
