@@ -23,7 +23,6 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class ElectricBlastEntity extends JujutsuProjectile {
-    public static final int DURATION = 2 * 20;
     private static final float RADIUS = 4.0F;
     private static final float MAX_RADIUS = 32.0F;
     private static final float DAMAGE = 35.0F;
@@ -42,6 +41,11 @@ public class ElectricBlastEntity extends JujutsuProjectile {
 
         float radius = this.getRadius();
         this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
+    }
+
+    @Override
+    protected int getDuration() {
+        return 2 * 20;
     }
 
     private float getRadius() {
@@ -64,11 +68,6 @@ public class ElectricBlastEntity extends JujutsuProjectile {
         super.tick();
 
         this.refreshDimensions();
-
-        if (this.getTime() >= DURATION) {
-            this.discard();
-            return;
-        }
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 

@@ -42,7 +42,6 @@ public class MeteorEntity extends JujutsuProjectile {
     private static final int MAX_SIZE = 15;
     public static final int DELAY = 3 * 20;
     private static final double SPEED = 3.0D;
-    private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 10.0F;
 
     private int lerpSteps;
@@ -64,6 +63,11 @@ public class MeteorEntity extends JujutsuProjectile {
         owner.setPos(owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.getSize(power), 0.0D));
 
         this.applyOffset();
+    }
+
+    @Override
+    protected int getDuration() {
+        return DELAY + 5 * 20;
     }
 
     @Override
@@ -364,11 +368,6 @@ public class MeteorEntity extends JujutsuProjectile {
         super.tick();
 
         this.refreshDimensions();
-
-        if (this.getExplosionTime() == 0 && this.getTime() - DELAY >= DURATION) {
-            this.discard();
-            return;
-        }
 
         this.spawnParticles();
 

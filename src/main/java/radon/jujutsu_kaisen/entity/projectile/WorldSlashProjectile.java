@@ -35,7 +35,6 @@ public class WorldSlashProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.INT);
 
-    private static final int DURATION = 10;
     public static final int MIN_LENGTH = 6;
     public static final int MAX_LENGTH = 24;
     private static final int SCALAR = 6;
@@ -179,10 +178,6 @@ public class WorldSlashProjectile extends JujutsuProjectile {
                 float strength = 1.0F - (Math.min(living.getBbHeight(), distance) / living.getBbHeight());
                 living.hurt(JJKDamageSources.worldSlash(this, owner), living.getMaxHealth() * strength);
             }
-        }
-
-        if (this.getTime() >= DURATION) {
-            this.discard();
         }
     }
 }

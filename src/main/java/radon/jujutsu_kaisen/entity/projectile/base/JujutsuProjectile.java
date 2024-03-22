@@ -20,6 +20,8 @@ import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
 public class JujutsuProjectile extends Projectile {
+    public static final int DURATION = 3 * 20;
+
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_POWER = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> DATA_DOMAIN = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.BOOLEAN);
@@ -45,6 +47,10 @@ public class JujutsuProjectile extends Projectile {
         this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_POWER, 0.0F);
         this.entityData.define(DATA_DOMAIN, false);
+    }
+
+    protected int getDuration() {
+        return DURATION;
     }
 
     public int getTime() {
@@ -113,6 +119,11 @@ public class JujutsuProjectile extends Projectile {
             this.discard();
         } else {
             super.tick();
+
+            if (this.getTime() >= this.getDuration()) {
+                this.discard();
+                return;
+            }
 
             if (this.isProjectile()) {
                 HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);

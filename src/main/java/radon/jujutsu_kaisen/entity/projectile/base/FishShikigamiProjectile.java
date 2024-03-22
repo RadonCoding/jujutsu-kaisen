@@ -40,7 +40,6 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
     private static final float DAMAGE = 10.0F;
     private static final int DELAY = 20;
-    private static final int DURATION = 20;
     private static final double SPEED = 2.0D;
 
     @Nullable
@@ -61,6 +60,11 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         this.setTarget(target);
 
         this.applyOffset();
+    }
+
+    @Override
+    protected int getDuration() {
+        return DELAY + 20;
     }
 
     public void setTarget(@Nullable LivingEntity target) {
@@ -197,11 +201,6 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     @Override
     public void tick() {
         super.tick();
-
-        if (this.getTime() - DELAY >= DURATION) {
-            this.discard();
-            return;
-        }
 
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.getTime() < DELAY) {
