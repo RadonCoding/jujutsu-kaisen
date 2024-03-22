@@ -36,7 +36,7 @@ public class SimpleDomainEntity extends Entity {
 
     private static final double X_STEP = 0.025D;
     public static final float RADIUS = 2.0F;
-    private static final float MAX_RADIUS = 4.0F;
+    public static final float MAX_RADIUS = 4.0F;
 
     @Nullable
     private UUID ownerUUID;

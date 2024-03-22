@@ -219,7 +219,8 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
             if ((victim instanceof MahoragaEntity && data.isAdaptedTo(this.ability))) return false;
         }
 
-        for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
+        for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(),
+                SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2))) {
             if (victim.distanceTo(simple) < simple.getRadius()) return false;
         }
         return this.isAffected(victim.blockPosition());
