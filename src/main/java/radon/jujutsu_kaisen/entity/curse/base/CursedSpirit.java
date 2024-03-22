@@ -48,6 +48,11 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
+    public boolean canBeCollidedWith() {
+        return !this.isHiding() && super.canBeCollidedWith();
+    }
+
+    @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 

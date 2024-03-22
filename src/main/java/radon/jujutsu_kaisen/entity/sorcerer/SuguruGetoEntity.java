@@ -52,13 +52,13 @@ public class SuguruGetoEntity extends SorcererEntity {
     private AbsorbedCurse createCurse(EntityType<?> type) {
         if (!(type.create(this.level()) instanceof CursedSpirit curse)) return null;
 
+        curse.init();
+
         IJujutsuCapability cap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return null;
 
         ISorcererData data = cap.getSorcererData();
-
-        if (data == null) return null;
 
         return new AbsorbedCurse(type.getDescription(), type, data.serializeNBT());
     }

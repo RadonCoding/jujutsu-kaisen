@@ -35,7 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SorcererVillager extends Villager implements ISorcerer {
+public class SorcererVillager extends SorcererEntity {
     private static final int TECHNIQUE_CHANCE = 10;
 
     private final Set<Skill> majors;
@@ -50,16 +50,6 @@ public class SorcererVillager extends Villager implements ISorcerer {
         this.grade = SorcererGrade.values()[this.random.nextInt(SorcererGrade.GRADE_4.ordinal(), SorcererGrade.GRADE_2.ordinal() + 1)];
     }
 
-    @Override
-    protected Brain.@NotNull Provider<Villager> brainProvider() {
-        return Brain.provider(ImmutableList.of(), ImmutableList.of());
-    }
-
-    @Override
-    protected @NotNull Brain<?> makeBrain(@NotNull Dynamic<?> pDynamic) {
-        return this.brainProvider().makeBrain(pDynamic);
-    }
-
     public void setGrade(SorcererGrade grade) {
         this.grade = grade;
     }
@@ -72,6 +62,11 @@ public class SorcererVillager extends Villager implements ISorcerer {
     @Override
     public Set<Skill> getMajors() {
         return this.majors;
+    }
+
+    @Override
+    protected boolean isCustom() {
+        return false;
     }
 
     @Override
@@ -103,41 +98,6 @@ public class SorcererVillager extends Villager implements ISorcerer {
     }
 
     @Override
-    protected void registerGoals() {
-        int target = 1;
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new ChantGoal<>(this));
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this, SorcererEntity.class, SorcererVillager.class));
-        this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
-    }
-
-    @Override
-    public boolean hasMeleeAttack() {
-        return true;
-    }
-
-    @Override
-    public boolean hasArms() {
-        return true;
-    }
-
-    @Override
-    public boolean canJump() {
-        return true;
-    }
-
-    @Override
-    public boolean canChant() {
-        return true;
-    }
-
-    @Override
     public float getExperience() {
         return this.grade.getRequiredExperience();
     }
@@ -156,7 +116,7 @@ public class SorcererVillager extends Villager implements ISorcerer {
         if (this.random.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
             return HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));
         }
-        return ISorcerer.super.getNature();
+        return super.getNature();
     }
 
     @Override
