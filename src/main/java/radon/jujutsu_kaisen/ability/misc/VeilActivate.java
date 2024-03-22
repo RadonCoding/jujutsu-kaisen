@@ -47,12 +47,6 @@ public class VeilActivate extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         for (ServerPlayer player : level.players()) {
@@ -70,8 +64,6 @@ public class VeilActivate extends Ability {
                 if (be.getOwnerUUID() != null && be.getOwnerUUID().equals(owner.getUUID())) {
                     VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos.immutable());
                     owner.level().addFreshEntity(veil);
-
-                    data.addSummon(veil);
                     return;
                 }
             }
@@ -86,8 +78,6 @@ public class VeilActivate extends Ability {
 
         VeilEntity veil = new VeilEntity(owner, pos, RADIUS, List.of());
         owner.level().addFreshEntity(veil);
-
-        data.addSummon(veil);
     }
 
     @Override
