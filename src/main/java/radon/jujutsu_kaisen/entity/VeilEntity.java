@@ -72,7 +72,7 @@ public class VeilEntity extends Entity implements IBarrier {
 
         this.setRadius(radius);
 
-        this.setPos(pos);
+        this.setPos(pos.subtract(0.0D, (double) radius / 2, 0.0D));
 
         this.modifiers = modifiers;
     }
@@ -234,6 +234,8 @@ public class VeilEntity extends Entity implements IBarrier {
 
         int radius = this.getRadius();
 
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+
         if (this.getTime() - 1 == 0) {
             int diameter = radius * 2;
 
@@ -252,7 +254,7 @@ public class VeilEntity extends Entity implements IBarrier {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
                     if (distance < radius && distance >= radius - 1) {
-                        BlockPos pos = this.blockPosition().offset(x, y, z);
+                        BlockPos pos = center.offset(x, y, z);
 
                         if (!this.level().isInWorldBounds(pos)) continue;
 
@@ -302,13 +304,15 @@ public class VeilEntity extends Entity implements IBarrier {
 
         int radius = this.getRadius();
 
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
                     if (distance < radius && distance >= radius - 1) {
-                        BlockPos pos = this.blockPosition().offset(x, y, z);
+                        BlockPos pos = center.offset(x, y, z);
 
                         if (this.level().getBlockEntity(pos) instanceof VeilBlockEntity) count++;
                     }
