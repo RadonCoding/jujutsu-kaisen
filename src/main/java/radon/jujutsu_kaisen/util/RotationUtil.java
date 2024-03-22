@@ -117,11 +117,7 @@ public class RotationUtil {
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {
-        return getHitResult(entity, start, end, CollisionContext.of(entity));
-    }
-
-    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, CollisionContext ctx) {
-        return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable(), ctx);
+        return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable(), CollisionContext.of(entity));
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter, CollisionContext ctx) {
@@ -142,18 +138,21 @@ public class RotationUtil {
         return blockHit;
     }
 
-    public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter, CollisionContext ctx) {
+    public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter) {
         Vec3 start = entity.getEyePosition();
         Vec3 look = getTargetAdjustedLookAngle(entity);
         Vec3 end = start.add(look.scale(range));
-        return getHitResult(entity, start, end, filter, ctx);
+        return getHitResult(entity, start, end, filter, CollisionContext.of(entity));
     }
 
     public static HitResult getLookAtHit(Entity entity, double range) {
-        return getLookAtHit(entity, range, target -> !target.isSpectator() && target.isPickable(), CollisionContext.of(entity));
+        return getLookAtHit(entity, range, CollisionContext.of(entity));
     }
 
     public static HitResult getLookAtHit(Entity entity, double range, CollisionContext ctx) {
-        return getLookAtHit(entity, range, target -> !target.isSpectator() && target.isPickable(), ctx);
+        Vec3 start = entity.getEyePosition();
+        Vec3 look = getTargetAdjustedLookAngle(entity);
+        Vec3 end = start.add(look.scale(range));
+        return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable(), ctx);
     }
 }
