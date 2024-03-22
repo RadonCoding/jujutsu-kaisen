@@ -40,11 +40,73 @@ public class MissionsScreen extends Screen {
 
     private MissionGrade grade;
 
+    private boolean isScrolling;
+
     public MissionsScreen() {
         super(GameNarrator.NO_TITLE);
 
         this.missions = new LinkedHashMap<>();
         this.grade = MissionGrade.D;
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (pButton != 0) {
+            this.isScrolling = false;
+            return false;
+        } else {
+            if (!this.isScrolling) {
+                this.isScrolling = true;
+            } else {
+                int offsetX = WINDOW_OFFSET_X + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
+                int offsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
+
+                double x = pMouseX - offsetX - MissionCard.WINDOW_INSIDE_X;
+                double y = pMouseY - offsetY - MissionCard.WINDOW_INSIDE_Y;
+
+                if (y > 0.0D && y < WINDOW_INSIDE_HEIGHT) {
+                    List<MissionCard> missions = this.missions.get(this.grade);
+
+                    for (int i = 0; i < missions.size(); i++) {
+                        int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
+
+                        double relativeX = x - insideX;
+
+                        if (relativeX > 0.0D && relativeX < MissionCard.WINDOW_INSIDE_WIDTH) {
+                            missions.get(i).scroll(pDragY);
+                            break;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (this.minecraft == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
+
+        int windowOffsetX = WINDOW_OFFSET_X;
+        int windowOffsetY = (this.height - WINDOW_HEIGHT) / 2;
+
+        double x = pMouseX - windowOffsetX - WINDOW_INSIDE_X;
+        double y = pMouseY - windowOffsetY - WINDOW_INSIDE_Y;
+
+        if (x > 0.0D && x < MISSION_GRADE_SIZE && y > 0.0D && y < WINDOW_INSIDE_HEIGHT) {
+            for (int i = 0; i < MissionGrade.values().length; i++) {
+                double offset = (i * MISSION_GRADE_SIZE) - this.missionGradesSlider.getValue();
+
+                double relative = y - offset;
+
+                if (relative > 0.0D && relative < MISSION_GRADE_SIZE) {
+                    this.grade = MissionGrade.values()[i];
+                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+        }
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
     private void setGrade(MissionGrade grade) {
@@ -60,7 +122,7 @@ public class MissionsScreen extends Screen {
         this.missions.clear();
 
         List<Mission> d = new ArrayList<>();
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
+        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")));
         d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
         d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
         d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
@@ -109,32 +171,6 @@ public class MissionsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (this.minecraft == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
-
-        int windowOffsetX = WINDOW_OFFSET_X;
-        int windowOffsetY = (this.height - WINDOW_HEIGHT) / 2;
-
-        double x = pMouseX - windowOffsetX - WINDOW_INSIDE_X;
-        double y = pMouseY - windowOffsetY - WINDOW_INSIDE_Y;
-
-        if (x > 0.0D && x < MISSION_GRADE_SIZE && y > 0.0D && y < WINDOW_INSIDE_HEIGHT) {
-            for (int i = 0; i < MissionGrade.values().length; i++) {
-                double offset = (i * MISSION_GRADE_SIZE) - this.missionGradesSlider.getValue();
-
-                double relative = y - offset;
-
-                if (relative > 0.0D && relative < MISSION_GRADE_SIZE) {
-                    this.grade = MissionGrade.values()[i];
-                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    return true;
-                }
-            }
-        }
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
-    }
-
-    @Override
     public void renderBackground(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
 
     }
@@ -144,13 +180,14 @@ public class MissionsScreen extends Screen {
         int windowOffsetX = WINDOW_OFFSET_X;
         int windowOffsetY = (this.height - WINDOW_HEIGHT) / 2;
 
-        int missionCardOffsetX = windowOffsetX + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
+        int missionCardOffsetX = WINDOW_OFFSET_X + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
         int missionCardOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
 
         this.renderBackground(pGuiGraphics);
         this.renderWindow(pGuiGraphics, windowOffsetX, windowOffsetY);
         this.renderMissionGrades(pGuiGraphics, windowOffsetX, windowOffsetY);
         this.renderMissionCards(pGuiGraphics, missionCardOffsetX, missionCardOffsetY);
+        this.renderMissionCardTooltips(pGuiGraphics, pMouseX, pMouseY, missionCardOffsetX, missionCardOffsetY);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
@@ -197,7 +234,7 @@ public class MissionsScreen extends Screen {
 
         for (int i = 0; i < missions.size(); i++) {
             int insideX = offsetX - this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING)) + MissionCard.WINDOW_INSIDE_X;
-            int insideY = offsetY + MissionCard.INSIDE_Y;
+            int insideY = offsetY + MissionCard.WINDOW_INSIDE_Y;
 
             int windowX = offsetX - this.missionCardsSlider.getValueInt() + i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING);
             int windowY = offsetY;
@@ -206,6 +243,26 @@ public class MissionsScreen extends Screen {
             missions.get(i).drawWindow(graphics, windowX, windowY);
         }
         graphics.disableScissor();
+    }
+
+    private void renderMissionCardTooltips(GuiGraphics graphics, int mouseX, int mouseY, int offsetX, int offsetY) {
+        double x = mouseX - offsetX;
+        double y = mouseY - offsetY;
+
+        if (y > 0.0D && y < MissionCard.WINDOW_INSIDE_Y) {
+            List<MissionCard> missions = this.missions.get(this.grade);
+
+            for (int i = 0; i < missions.size(); i++) {
+                int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
+
+                double relativeX = x - insideX;
+
+                if (relativeX > 0.0D && relativeX < MissionCard.WINDOW_WIDTH) {
+                    missions.get(i).drawTooltip(graphics, mouseX, mouseY);
+                    break;
+                }
+            }
+        }
     }
 
     public record Mission(Component title, Component description) {}
