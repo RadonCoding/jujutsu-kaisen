@@ -45,7 +45,9 @@ public class VeilEntity extends Entity implements IBarrier {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(VeilEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(VeilEntity.class, EntityDataSerializers.INT);
 
-    public static final float COST = 0.01F;
+    private static final float COST = 0.01F;
+    private static final int CHECK_INTERVAL = 20;
+    private static final int HEAL_INTERVAL = 5 * 20;
 
     @Nullable
     private UUID ownerUUID;
@@ -204,6 +206,8 @@ public class VeilEntity extends Entity implements IBarrier {
     }
 
     private void createBarrier() {
+        this.total = 0;
+
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -334,8 +338,12 @@ public class VeilEntity extends Entity implements IBarrier {
         boolean completed = this.getTime() >= radius * 2;
 
         if (completed) {
-            if (this.getTime() % 20 == 0) {
+            if (this.getTime() % CHECK_INTERVAL == 0) {
                 this.check();
+            }
+
+            if (this.getTime() % HEAL_INTERVAL == 0) {
+                this.createBarrier();
             }
         } else {
             this.createBarrier();
