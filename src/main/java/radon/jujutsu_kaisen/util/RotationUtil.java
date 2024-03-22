@@ -120,7 +120,7 @@ public class RotationUtil {
         return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable(), CollisionContext.of(entity));
     }
 
-    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter, CollisionContext ctx) {
+    private static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter, CollisionContext ctx) {
         Level level = entity.level();
 
         HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, ctx));
