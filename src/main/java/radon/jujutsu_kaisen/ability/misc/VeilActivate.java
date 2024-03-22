@@ -59,6 +59,8 @@ public class VeilActivate extends Ability {
             if (be.getOwnerUUID() == null || !be.getOwnerUUID().equals(owner.getUUID())) return;
 
             VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos);
+            owner.level().addFreshEntity(veil);
+
             data.addSummon(veil);
 
             activated.set(true);
