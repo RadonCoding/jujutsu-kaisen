@@ -195,16 +195,13 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
                 .selector(entity -> {
                     if (entity instanceof AbstractVillager) return true;
 
-                    if (entity instanceof Player) {
-                        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                        if (cap == null) return true;
+                    if (cap == null) return false;
 
-                        ISorcererData data = cap.getSorcererData();
+                    ISorcererData data = cap.getSorcererData();
 
-                        return data.getType() == JujutsuType.SORCERER;
-                    }
-                    return false;
+                    return data.getType() == JujutsuType.SORCERER;
                 });
 
         AABB bounds = this.getBoundingBox().inflate(range, 4.0D, range);
