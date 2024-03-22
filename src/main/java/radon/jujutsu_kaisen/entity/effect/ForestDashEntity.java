@@ -11,7 +11,6 @@ import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 
 public class ForestDashEntity extends JujutsuProjectile {
     public static final float SIZE = 3.0F;
-    private static final int DURATION = 5 * 20;
 
     public ForestDashEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -19,6 +18,11 @@ public class ForestDashEntity extends JujutsuProjectile {
 
     public ForestDashEntity(LivingEntity owner) {
         super(JJKEntities.FOREST_DASH.get(), owner.level(), owner);
+    }
+
+    @Override
+    protected int getDuration() {
+        return 5 * 20;
     }
 
     @Override
@@ -34,14 +38,5 @@ public class ForestDashEntity extends JujutsuProjectile {
     @Override
     protected boolean isProjectile() {
         return false;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-       if (this.getTime() >= DURATION) {
-           this.discard();
-       }
     }
 }

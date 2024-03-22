@@ -37,7 +37,6 @@ public class RedProjectile extends JujutsuProjectile {
     private static final float EXPLOSIVE_POWER = 5.0F;
     private static final float MAX_EXPLOSION = 15.0F;
     public static final int DELAY = 20;
-    private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
     private static final float DAMAGE = 20.0F;
 
@@ -82,7 +81,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         if (entity == owner) return;
 
-        float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
+        float factor = 1.0F - (((float) this.getTime() - DELAY) / JujutsuProjectile.DURATION);
 
         if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
             entity.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
@@ -121,8 +120,6 @@ public class RedProjectile extends JujutsuProjectile {
                     Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                     EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
                 }
-            } else if (this.getTime() >= DURATION) {
-                this.discard();
             } else if (this.getTime() >= DELAY) {
                 if (!this.level().isClientSide) {
                     if (this.chanted) {

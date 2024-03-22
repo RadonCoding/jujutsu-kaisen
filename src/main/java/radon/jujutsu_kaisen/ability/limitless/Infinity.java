@@ -296,6 +296,7 @@ public class Infinity extends Ability implements Ability.IToggled, Ability.IDura
             FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
             for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, owner.getBoundingBox().inflate(RANGE))) {
+                if (entity.getDeltaMovement().lengthSqr() <= 1.0E-7D) continue;
                 if (entity instanceof Projectile projectile && !DamageUtil.isBlockable(owner, projectile)) continue;
 
                 storage.add(owner, entity);

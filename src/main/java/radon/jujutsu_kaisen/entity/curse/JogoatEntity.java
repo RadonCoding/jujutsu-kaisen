@@ -87,7 +87,6 @@ public class JogoatEntity extends CursedSpirit {
         return List.of(Trait.SIX_EYES);
     }
 
-
     @Override
     public float getMaxEnergy() {
         return Float.POSITIVE_INFINITY;
