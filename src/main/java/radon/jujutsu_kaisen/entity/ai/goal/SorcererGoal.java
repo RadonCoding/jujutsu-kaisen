@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.SkillUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
@@ -58,10 +59,18 @@ public class SorcererGoal extends Goal {
         int points = ownerSorcererData.getSkillPoints();
 
         if (points > 0) {
-            int distributed = points / Skill.values().length;
+            List<Skill> skills = new ArrayList<>();
+
+            for (Skill skill : Skill.values()) {
+                if (!SkillUtil.hasSkill(this.mob, skill)) continue;
+
+                skills.add(skill);
+            }
+
+            int distributed = points / skills.size();
 
             if (distributed > 0) {
-                for (Skill skill : Skill.values()) {
+                for (Skill skill : skills) {
                     int current = ownerSkillData.getSkill(skill);
 
                     int max = SorcererUtil.getMaximumSkillLevel(ownerSorcererData.getExperience(), current, distributed);

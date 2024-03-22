@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -11,8 +12,10 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.util.SkillUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -116,10 +119,17 @@ public interface ISorcerer {
         // Spread them evenly by giving each skill total_points / total_skill_count
 
         if (majors.isEmpty()) {
-            int distributed = points / Skill.values().length;
+            List<Skill> skills = new ArrayList<>();
+
+            for (Skill skill : Skill.values()) {
+                if (!SkillUtil.hasSkill((LivingEntity) this, skill)) continue;
+
+                skills.add(skill);
+            }
+            int distributed = points / skills.size();
 
             if (distributed > 0) {
-                for (Skill skill : Skill.values()) {
+                for (Skill skill : skills) {
                     int current = skillData.getSkill(skill);
 
                     int max = SorcererUtil.getMaximumSkillLevel(sorcererData.getExperience(), current, distributed);
@@ -133,10 +143,18 @@ public interface ISorcerer {
                 }
             }
         } else {
-            int distributed = points / majors.size();
+            List<Skill> skills = new ArrayList<>();
+
+            for (Skill skill : majors) {
+                if (!SkillUtil.hasSkill((LivingEntity) this, skill)) continue;
+
+                skills.add(skill);
+            }
+
+            int distributed = points / skills.size();
 
             if (distributed > 0) {
-                for (Skill major : majors) {
+                for (Skill major : skills) {
                     int current = skillData.getSkill(major);
 
                     int max = SorcererUtil.getMaximumSkillLevel(sorcererData.getExperience(), current, distributed);

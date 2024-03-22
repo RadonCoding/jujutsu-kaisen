@@ -20,6 +20,8 @@ import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
 public class JujutsuProjectile extends Projectile {
+    private static final int MAX_DURATION = 10 * 20;
+
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_POWER = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> DATA_DOMAIN = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.BOOLEAN);
@@ -109,7 +111,7 @@ public class JujutsuProjectile extends Projectile {
 
         Entity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (this.getTime() >= MAX_DURATION || (owner == null || owner.isRemoved() || !owner.isAlive()))) {
             this.discard();
         } else {
             super.tick();
