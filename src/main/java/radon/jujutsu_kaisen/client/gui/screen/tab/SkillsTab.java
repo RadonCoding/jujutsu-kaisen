@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.util.SkillUtil;
 
 import java.util.*;
 
@@ -38,7 +39,11 @@ public class SkillsTab extends JJKTab {
     public SkillsTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
         super(minecraft, screen, type, index, page, Items.IRON_PICKAXE.getDefaultInstance(), TITLE, true);
 
+        if (this.minecraft.player == null) return;
+
         for (Skill skill : Skill.values()) {
+            if (!SkillUtil.hasSkill(this.minecraft.player, skill)) continue;
+
             this.addSkill(skill, 0.0F, this.y);
 
             this.y += 2.0F;

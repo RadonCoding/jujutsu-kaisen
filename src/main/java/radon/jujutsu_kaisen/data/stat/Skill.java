@@ -12,6 +12,10 @@ public enum Skill {
     ENERGY,
     REGENERATION;
 
+    public boolean isJujutsu() {
+        return this == Skill.BARRIER || this == Skill.ENERGY || this == Skill.REGENERATION;
+    }
+
     public Component getName() {
         return Component.translatable(String.format("skill.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
     }

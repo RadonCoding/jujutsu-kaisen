@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.util.SkillUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public class IncreaseSkillC2SPacket implements CustomPacketPayload {
@@ -35,6 +36,8 @@ public class IncreaseSkillC2SPacket implements CustomPacketPayload {
     public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
+
+            if (!SkillUtil.hasSkill(sender, this.skill)) return;
 
             IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

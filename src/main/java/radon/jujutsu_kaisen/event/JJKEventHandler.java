@@ -164,7 +164,7 @@ public class JJKEventHandler {
             float armor = skillData.getSkill(Skill.REINFORCEMENT) * 0.25F;
 
             if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                armor *= 15.0F;
+                armor *= 10.0F;
             }
 
             if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
@@ -360,6 +360,15 @@ public class JJKEventHandler {
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
+
+            if (event.getEntity() instanceof ServerPlayer player) {
+                if (player.getLastDeathLocation().isPresent() && player.getLastDeathLocation().get().pos().equals(player.blockPosition())) {
+                    for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+                        System.out.println(ste);
+                    }
+                    throw new RuntimeException();
+                }
+            }
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
