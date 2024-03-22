@@ -58,7 +58,7 @@ public class VeilActivate extends Ability {
             if (!(owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) return;
             if (be.getOwnerUUID() == null || !be.getOwnerUUID().equals(owner.getUUID())) return;
 
-            VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos);
+            VeilEntity veil = new VeilEntity(owner, pos.getCenter(), be.getRadius(), be.getModifiers(), pos.immutable());
             owner.level().addFreshEntity(veil);
 
             data.addSummon(veil);
