@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +33,7 @@ import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
-    private static final double AWAKEN_RANGE = 8.0D;
-    private static final double HUNGRY_AWAKEN_RANGE = 128.0D;
+    private static final double HUNGRY_RANGE = 128.0D;
     private static final int HUNGRY_CHANCE = 300;
     private static final int UPDATE_INTERVAL = 5 * 20;
 
@@ -187,11 +185,13 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         if (this.getTime() % UPDATE_INTERVAL != 0) return;
 
+        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
+
         if (this.random.nextInt(HUNGRY_CHANCE) == 0) this.hungry = true;
 
-        double range = this.hungry ? HUNGRY_AWAKEN_RANGE : AWAKEN_RANGE;
+        if (!this.hungry) return;
 
-        TargetingConditions conditions = TargetingConditions.forCombat().range(range)
+        TargetingConditions conditions = TargetingConditions.forCombat().range(HUNGRY_RANGE)
                 .selector(entity -> {
                     if (entity instanceof AbstractVillager) return true;
 
@@ -204,7 +204,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
                     return data.getType() == JujutsuType.SORCERER;
                 });
 
-        AABB bounds = this.getBoundingBox().inflate(range, 4.0D, range);
+        AABB bounds = this.getBoundingBox().inflate(HUNGRY_RANGE, 4.0D, HUNGRY_RANGE);
 
         LivingEntity target = this.level()
                 .getNearestEntity(
@@ -221,7 +221,6 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         } else if (this.hungry) {
             this.hungry = false;
         }
-        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
     }
 
     @Override
