@@ -1,24 +1,19 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.SkillWidget;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.util.SkillUtil;
 
 import java.util.*;
 
@@ -42,7 +37,7 @@ public class SkillsTab extends JJKTab {
         if (this.minecraft.player == null) return;
 
         for (Skill skill : Skill.values()) {
-            if (!SkillUtil.hasSkill(this.minecraft.player, skill)) continue;
+            if (!skill.isValid(this.minecraft.player)) continue;
 
             this.addSkill(skill, 0.0F, this.y);
 

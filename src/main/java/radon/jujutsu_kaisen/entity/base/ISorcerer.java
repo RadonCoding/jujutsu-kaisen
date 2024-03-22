@@ -12,7 +12,6 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.util.SkillUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
@@ -122,7 +121,7 @@ public interface ISorcerer {
             List<Skill> skills = new ArrayList<>();
 
             for (Skill skill : Skill.values()) {
-                if (!SkillUtil.hasSkill((LivingEntity) this, skill)) continue;
+                if (!skill.isValid((LivingEntity) this)) continue;
 
                 skills.add(skill);
             }
@@ -146,7 +145,7 @@ public interface ISorcerer {
             List<Skill> skills = new ArrayList<>();
 
             for (Skill skill : majors) {
-                if (!SkillUtil.hasSkill((LivingEntity) this, skill)) continue;
+                if (!skill.isValid((LivingEntity) this)) continue;
 
                 skills.add(skill);
             }
