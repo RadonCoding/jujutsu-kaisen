@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.item.veil.modifier;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
@@ -31,8 +30,8 @@ public class ColorModifier extends Modifier {
     }
 
     @Override
-    public CompoundTag serialize() {
-        CompoundTag nbt = super.serialize();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = super.serializeNBT();
         nbt.putInt("color", this.color.ordinal());
         return nbt;
     }

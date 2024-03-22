@@ -7,7 +7,7 @@ public class Modifier {
     private final Modifier.Type type;
     private final Modifier.Action action;
 
-    public CompoundTag serialize() {
+    public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("action", this.action.ordinal());

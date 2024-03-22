@@ -37,12 +37,12 @@ public class ModifierUtils {
             ListTag modifiersTag = new ListTag();
 
             for (int i = 0; i < MAX_MODIFIERS; i++) {
-                modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serialize());
+                modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serializeNBT());
             }
             nbt.put("modifiers", modifiersTag);
         }
         ListTag modifiersTag = nbt.getList("modifiers", Tag.TAG_COMPOUND);
-        modifiersTag.set(index, modifier.serialize());
+        modifiersTag.set(index, modifier.serializeNBT());
     }
 
     public static List<Modifier> deserialize(ListTag modifiersTag) {
@@ -59,7 +59,7 @@ public class ModifierUtils {
         ListTag modifiersTag = new ListTag();
 
         for (Modifier modifier : modifiers) {
-            modifiersTag.add(modifier.serialize());
+            modifiersTag.add(modifier.serializeNBT());
         }
         return modifiersTag;
     }
