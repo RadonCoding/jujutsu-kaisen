@@ -34,7 +34,7 @@ import software.bernie.geckolib.animatable.GeoEntity;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
     private static final double HUNGRY_RANGE = 128.0D;
-    private static final int HUNGRY_CHANCE = 300;
+    private static final int HUNGRY_CHANCE = 100;
     private static final int UPDATE_INTERVAL = 5 * 20;
 
     private boolean hungry;
