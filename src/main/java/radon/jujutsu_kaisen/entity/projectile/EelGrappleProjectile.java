@@ -19,6 +19,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity {
     public static final float SPEED = 2.0F;
+    private static final int DURATION = 5 * 20;
     public static final double RANGE = 16.0D;
 
     private LivingEntity pulled;
@@ -43,11 +44,6 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
     }
 
     @Override
-    protected int getDuration() {
-        return 5 * 20;
-    }
-
-    @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
@@ -69,6 +65,11 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
         super.tick();
 
         Entity owner = this.getOwner();
+
+        if (this.getTime() >= DURATION) {
+            this.discard();
+            return;
+        }
 
         if (owner == null) return;
 

@@ -40,6 +40,8 @@ import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -309,12 +311,8 @@ public class SorcererData implements ISorcererData {
 
         float power = this.getBaseOutput() * ChantHandler.getOutput(this.owner, ability);
 
-        if (this.technique != null) {
-            Ability domain = this.technique.getDomain();
-
-            if (domain != null && data.hasToggled(domain)) {
-                power *= 1.2F;
-            }
+        if (this.hasSummonOfClass(SimpleDomainEntity.class) || this.hasSummonOfClass(DomainExpansionEntity.class)) {
+            power *= 1.2F;
         }
 
         if (this.isInZone()) power *= 1.2F;

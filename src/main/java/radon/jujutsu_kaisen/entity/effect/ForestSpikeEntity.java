@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestSpikeEntity extends JujutsuProjectile {
+    private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 10.0F;
 
     public ForestSpikeEntity(EntityType<? extends Projectile> pType, Level pLevel) {
@@ -26,11 +27,6 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     }
 
     @Override
-    protected int getDuration() {
-        return 5 * 20;
-    }
-
-    @Override
     public @NotNull Vec3 getDeltaMovement() {
         return Vec3.ZERO;
     }
@@ -39,7 +35,9 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.getTime() - 1 == 0) {
+        if (this.getTime() >= DURATION) {
+            this.discard();
+        } else if (this.getTime() - 1 == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
             if (this.level().isClientSide) return;

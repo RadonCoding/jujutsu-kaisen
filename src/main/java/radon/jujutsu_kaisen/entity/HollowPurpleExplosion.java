@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 
 public class HollowPurpleExplosion extends JujutsuProjectile {
+    public static final int DURATION = 3 * 20;
     private static final float EXPLOSIVE_POWER = 5.0F;
     private static final float MAX_EXPLOSION = 20.0F;
 
@@ -53,6 +54,11 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         this.refreshDimensions();
 
         if (this.level().isClientSide) return;
+
+        if (this.getTime() >= DURATION) {
+            this.discard();
+            return;
+        }
 
         if (this.getTime() - 1 == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
