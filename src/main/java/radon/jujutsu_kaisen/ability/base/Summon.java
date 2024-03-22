@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
 
-public abstract class Summon<T extends Entity> extends Ability implements Ability.IToggled {
+public abstract class Summon<T extends Entity> extends Ability implements IToggled {
     private final Class<T> clazz;
 
     public Summon(Class<T> clazz) {

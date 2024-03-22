@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 import java.util.ArrayList;
 
-public abstract class Transformation extends Ability implements Ability.IToggled, ITransformation {
+public abstract class Transformation extends Ability implements IToggled, ITransformation {
     @Override
     public Status isTriggerable(LivingEntity owner) {
         if (this.getBodyPart() == Part.RIGHT_ARM && !owner.getMainHandItem().isEmpty() || this.getBodyPart() == Part.LEFT_ARM && !owner.getOffhandItem().isEmpty()) {

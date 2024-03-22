@@ -24,7 +24,14 @@ import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.base.IAttack;
+import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ICharged;
+import radon.jujutsu_kaisen.ability.base.IDomainAttack;
+import radon.jujutsu_kaisen.ability.base.IDurationable;
+import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.IAdditionalAdaptation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -37,7 +44,7 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.*;
 
-public class Infinity extends Ability implements Ability.IToggled, Ability.IDurationable, IAdditionalAdaptation {
+public class Infinity extends Ability implements IToggled, IDurationable, IAdditionalAdaptation {
     private static final double SLOWING_FACTOR = 0.0001D;
     private static final double RANGE = 3.0D;
 
