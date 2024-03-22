@@ -31,8 +31,8 @@ public class PlayerModifier extends Modifier {
     }
 
     @Override
-    public CompoundTag serialize() {
-        CompoundTag nbt = super.serialize();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = super.serializeNBT();
         nbt.putString("name", this.name);
         return nbt;
     }

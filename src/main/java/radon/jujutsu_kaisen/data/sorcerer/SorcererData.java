@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.gui.font.providers.UnihexProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.StructureUtils;
 import net.minecraft.nbt.*;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -89,7 +91,7 @@ public class SorcererData implements ISorcererData {
     private long lastBlackFlashTime;
 
     private final Set<Trait> traits;
-    private final Set<UUID> summons;
+    private final Set<SummonData> summons;
 
     private int fingers;
 
@@ -121,18 +123,23 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateSummons() {
-        if (!(this.owner.level() instanceof ServerLevel level)) return;
-        if (!this.owner.level().isLoaded(this.owner.blockPosition())) return;
+        if (this.owner.level().isClientSide) return;
 
-        Iterator<UUID> iter = this.summons.iterator();
+        for (ServerLevel level : ((ServerLevel) this.owner.level()).getServer().getAllLevels()) {
+            Iterator<SummonData> iter = this.summons.iterator();
 
-        while (iter.hasNext()) {
-            UUID identifier = iter.next();
+            while (iter.hasNext()) {
+                SummonData data = iter.next();
 
-            Entity entity = level.getEntity(identifier);
+                if (level.dimension() != data.getDimension() || !level.areEntitiesLoaded(data.getChunkPos())) continue;
 
-            if (entity == null || !entity.isAlive() || entity.isRemoved()) {
-                iter.remove();
+                Entity entity = level.getEntity(data.getUUID());
+
+                if (entity == null || !entity.isAlive() || entity.isRemoved()) {
+                    iter.remove();
+                    continue;
+                }
+                data.setChunkPos(entity.chunkPosition().toLong());
             }
         }
     }
@@ -696,12 +703,12 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void addSummon(Entity entity) {
-        this.summons.add(entity.getUUID());
+        this.summons.add(new SummonData(entity));
     }
 
     @Override
     public void removeSummon(Entity entity) {
-        this.summons.remove(entity.getUUID());
+        this.summons.removeIf(data -> data.getUUID().equals(entity.getUUID()));
     }
 
     @Override
@@ -710,8 +717,8 @@ public class SorcererData implements ISorcererData {
 
         List<Entity> entities = new ArrayList<>();
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getUUID());
 
             if (entity == null) continue;
 
@@ -726,8 +733,8 @@ public class SorcererData implements ISorcererData {
 
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getUUID());
 
             if (entity == null) continue;
 
@@ -748,8 +755,8 @@ public class SorcererData implements ISorcererData {
 
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getUUID());
 
             if (entity == null) continue;
 
@@ -768,12 +775,12 @@ public class SorcererData implements ISorcererData {
 
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<UUID> iter = this.summons.iterator();
+        Iterator<SummonData> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            UUID identifier = iter.next();
+            SummonData data = iter.next();
 
-            Entity entity = level.getEntity(identifier);
+            Entity entity = level.getEntity(data.getUUID());
 
             if (entity == null) continue;
 
@@ -792,12 +799,12 @@ public class SorcererData implements ISorcererData {
 
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<UUID> iter = this.summons.iterator();
+        Iterator<SummonData> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            UUID identifier = iter.next();
+            SummonData data = iter.next();
 
-            Entity entity = level.getEntity(identifier);
+            Entity entity = level.getEntity(data.getUUID());
 
             if (entity == null) continue;
 
@@ -815,8 +822,8 @@ public class SorcererData implements ISorcererData {
 
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+        for (SummonData data : this.summons) {
+            Entity entity = level.getEntity(data.getUUID());
 
             if (entity == null) continue;
 
@@ -1027,8 +1034,8 @@ public class SorcererData implements ISorcererData {
 
         ListTag summonsTag = new ListTag();
 
-        for (UUID identifier : this.summons) {
-            summonsTag.add(new LongArrayTag(new long[] { identifier.getMostSignificantBits(), identifier.getLeastSignificantBits() }));
+        for (SummonData data : this.summons) {
+            summonsTag.add(data.serializeNBT());
         }
         nbt.put("summons", summonsTag);
 
@@ -1084,9 +1091,8 @@ public class SorcererData implements ISorcererData {
 
         this.summons.clear();
 
-        for (Tag tag : nbt.getList("summons", Tag.TAG_LONG_ARRAY)) {
-            LongArrayTag array = (LongArrayTag) tag;
-            this.summons.add(new UUID(array.get(0).getAsLong(), array.get(1).getAsLong()));
+        for (Tag tag : nbt.getList("summons", Tag.TAG_COMPOUND)) {
+            this.summons.add(new SummonData((CompoundTag) tag));
         }
     }
 }
