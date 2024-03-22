@@ -1031,6 +1031,13 @@ public class SorcererData implements ISorcererData {
 
         nbt.put("traits", new IntArrayTag(this.traits.stream().map(Enum::ordinal).toList()));
 
+        ListTag summonsTag = new ListTag();
+
+        for (UUID identifier : this.summons) {
+            summonsTag.add(new LongArrayTag(new long[] { identifier.getLeastSignificantBits(), identifier.getMostSignificantBits() }));
+        }
+        nbt.put("summons", summonsTag);
+
         return nbt;
     }
 
@@ -1079,6 +1086,13 @@ public class SorcererData implements ISorcererData {
 
         for (int index : nbt.getIntArray("traits")) {
             this.traits.add(Trait.values()[index]);
+        }
+
+        this.summons.clear();
+
+        for (Tag tag : nbt.getList("summons", Tag.TAG_LONG_ARRAY)) {
+            LongArrayTag array = (LongArrayTag) tag;
+            this.summons.add(new UUID(array.get(0).getAsLong(), array.get(1).getAsLong()));
         }
     }
 }
