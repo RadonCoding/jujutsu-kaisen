@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.util.function.Predicate;
 
@@ -116,13 +117,17 @@ public class RotationUtil {
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {
-        return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable());
+        return getHitResult(entity, start, end, CollisionContext.of(entity));
     }
 
-    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter) {
+    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, CollisionContext ctx) {
+        return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable(), ctx);
+    }
+
+    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter, CollisionContext ctx) {
         Level level = entity.level();
 
-        HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+        HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, ctx));
 
         if (blockHit.getType() != HitResult.Type.MISS) {
             end = blockHit.getLocation();
@@ -137,14 +142,18 @@ public class RotationUtil {
         return blockHit;
     }
 
-    public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter) {
+    public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter, CollisionContext ctx) {
         Vec3 start = entity.getEyePosition();
         Vec3 look = getTargetAdjustedLookAngle(entity);
         Vec3 end = start.add(look.scale(range));
-        return getHitResult(entity, start, end, filter);
+        return getHitResult(entity, start, end, filter, ctx);
     }
 
     public static HitResult getLookAtHit(Entity entity, double range) {
-        return getLookAtHit(entity, range, target -> !target.isSpectator() && target.isPickable());
+        return getLookAtHit(entity, range, target -> !target.isSpectator() && target.isPickable(), CollisionContext.of(entity));
+    }
+
+    public static HitResult getLookAtHit(Entity entity, double range, CollisionContext ctx) {
+        return getLookAtHit(entity, range, target -> !target.isSpectator() && target.isPickable(), ctx);
     }
 }
