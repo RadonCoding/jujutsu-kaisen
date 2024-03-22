@@ -267,6 +267,8 @@ public class VeilEntity extends Entity implements IBarrier {
 
                             if (this.level().setBlock(pos, replacement,
                                     Block.UPDATE_CLIENTS)) this.total++;
+                        } else {
+                            this.total++;
                         }
 
                         if (this.level().getBlockEntity(pos) instanceof VeilBlockEntity be) {
