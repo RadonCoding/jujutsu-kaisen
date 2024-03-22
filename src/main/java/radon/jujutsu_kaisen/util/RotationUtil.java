@@ -138,15 +138,15 @@ public class RotationUtil {
         return blockHit;
     }
 
+    public static HitResult getLookAtHit(Entity entity, double range) {
+        return getLookAtHit(entity, range, CollisionContext.of(entity));
+    }
+
     public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter) {
         Vec3 start = entity.getEyePosition();
         Vec3 look = getTargetAdjustedLookAngle(entity);
         Vec3 end = start.add(look.scale(range));
         return getHitResult(entity, start, end, filter, CollisionContext.of(entity));
-    }
-
-    public static HitResult getLookAtHit(Entity entity, double range) {
-        return getLookAtHit(entity, range, CollisionContext.of(entity));
     }
 
     public static HitResult getLookAtHit(Entity entity, double range, CollisionContext ctx) {
