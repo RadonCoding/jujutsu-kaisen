@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -11,6 +13,7 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -18,12 +21,15 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.domain.ChimeraShadowGardenEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.SelfEmbodimentOfPerfectionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChimeraShadowGarden extends DomainExpansion implements DomainExpansion.IOpenDomain {
+public class ChimeraShadowGarden extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
 
@@ -42,11 +48,19 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
         ISorcererData data = cap.getSorcererData();
 
-        int width = Math.round(this.getWidth() * data.getDomainSize());
-        int height = Math.round(this.getHeight() * data.getDomainSize());
+        int radius = Math.round(this.getRadius(owner));
 
-        ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height);
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
         owner.level().addFreshEntity(domain);
+
+        ChimeraShadowGardenEntity center = new ChimeraShadowGardenEntity(domain);
+
+        Vec3 pos = owner.position()
+                .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
+                        .multiply(center.getBbWidth() / 2.0F, 0.0D, center.getBbWidth() / 2.0F));
+        center.moveTo(pos.x, pos.y, pos.z, 180.0F - RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
+
+        owner.level().addFreshEntity(center);
 
         if (owner.level() instanceof ServerLevel) {
             List<TenShadowsSummon> summons = new ArrayList<>();
@@ -65,13 +79,8 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     }
 
     @Override
-    public int getWidth() {
-        return 32;
-    }
-
-    @Override
-    public int getHeight() {
-        return 8;
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

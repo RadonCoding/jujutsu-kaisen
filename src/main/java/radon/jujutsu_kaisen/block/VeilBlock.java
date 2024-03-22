@@ -28,12 +28,12 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+
+import java.util.UUID;
 
 public class VeilBlock extends Block implements EntityBlock {
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
@@ -55,15 +55,11 @@ public class VeilBlock extends Block implements EntityBlock {
 
         if (!(level.getBlockEntity(pos) instanceof VeilBlockEntity veil)) return resistance;
 
-        BlockPos parent = veil.getParent();
+        UUID identifier = veil.getOwnerUUID();
 
-        if (parent == null) return resistance;
+        if (identifier == null) return resistance;
 
-        if (!(level.getBlockEntity(parent) instanceof VeilRodBlockEntity rod)) return resistance;
-
-        if (rod.getOwnerUUID() == null) return resistance;
-
-        Entity owner = serverLevel.getEntity(rod.getOwnerUUID());
+        Entity owner = serverLevel.getEntity(identifier);
 
         if (owner == null) return resistance;
 
@@ -91,7 +87,7 @@ public class VeilBlock extends Block implements EntityBlock {
         VoxelShape shape = super.getCollisionShape(pState, pLevel, pPos, pContext);
 
         if (pContext instanceof EntityCollisionContext ctx) {
-            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity block)) return shape;
+            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity veil)) return shape;
 
             Entity entity = ctx.getEntity();
 
@@ -104,12 +100,7 @@ public class VeilBlock extends Block implements EntityBlock {
                     entity = projectile.getOwner();
                 }
             }
-
-            BlockPos parent = block.getParent();
-
-            if (parent == null || !(pLevel.getBlockEntity(parent) instanceof VeilRodBlockEntity rod)) return shape;
-
-            return rod.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
+            return veil.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
         }
         return shape;
     }

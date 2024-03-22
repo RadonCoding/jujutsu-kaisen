@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.IBarrier;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -80,7 +81,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             boolean result = owner.onGround() && sorcererData.getType() == JujutsuType.CURSE || sorcererData.isUnlocked(JJKAbilities.RCT1.get()) ?
                     owner.getHealth() / owner.getMaxHealth() < 0.8F : owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
-            for (DomainExpansionEntity ignored : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+            for (IBarrier ignored : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
                 result = true;
                 break;
             }

@@ -242,6 +242,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), ChimeraShadowGardenRenderer::new);
 
+            event.registerEntityRenderer(JJKEntities.VEIL.get(), EmptyRenderer::new);
+
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
             event.registerEntityRenderer(JJKEntities.JOGOAT.get(), JogoatRenderer::new);
             event.registerEntityRenderer(JJKEntities.DAGON.get(), DagonRenderer::new);

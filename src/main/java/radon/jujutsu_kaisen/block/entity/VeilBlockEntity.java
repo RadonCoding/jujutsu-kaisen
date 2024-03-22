@@ -4,22 +4,40 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.VeilEntity;
+import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
+import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
+import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
+import radon.jujutsu_kaisen.util.VeilUtil;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
 
 public class VeilBlockEntity extends BlockEntity {
-    private int counter;
-
     private boolean initialized;
 
     @Nullable
-    private BlockPos parent;
+    private UUID parentUUID;
+
+    @Nullable
+    private UUID ownerUUID;
 
     private int death;
 
@@ -33,12 +51,26 @@ public class VeilBlockEntity extends BlockEntity {
 
     private int size;
 
+    private List<Modifier> modifiers;
+
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL.get(), pPos, pBlockState);
     }
 
+    public @Nullable UUID getParentUUID() {
+        return this.parentUUID;
+    }
+
+    public @Nullable UUID getOwnerUUID() {
+        return this.ownerUUID;
+    }
+
+    public boolean isAllowed(Entity entity) {
+        return VeilUtil.isAllowed(entity, this.ownerUUID, this.modifiers);
+    }
+
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
-        if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || !be.isActive() || be.getSize() != pBlockEntity.size) {
+        if (pBlockEntity.parentUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.parentUUID) instanceof VeilEntity veil) || veil.isRemoved() || !veil.isAlive()) {
             --pBlockEntity.death;
         }
 
@@ -71,10 +103,6 @@ public class VeilBlockEntity extends BlockEntity {
         }
     }
 
-    public @Nullable BlockPos getParent() {
-        return this.parent;
-    }
-
     public @Nullable BlockState getOriginal() {
         if (this.level == null) return this.original;
 
@@ -86,11 +114,13 @@ public class VeilBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(BlockPos parent, int delay, int size, BlockState original, CompoundTag saved) {
+    public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, @Nullable List<Modifier> modifiers, BlockState original, CompoundTag saved) {
+        this.parentUUID = parentUUID;
+        this.ownerUUID = ownerUUID;
         this.initialized = true;
-        this.parent = parent;
         this.death = delay;
         this.size = size;
+        this.modifiers = modifiers;
         this.original = original;
         this.saved = saved;
         this.setChanged();
@@ -121,11 +151,16 @@ public class VeilBlockEntity extends BlockEntity {
         pTag.putBoolean("initialized", this.initialized);
 
         if (this.initialized) {
-            if (this.parent != null) {
-                pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
+            if (this.parentUUID != null) {
+                pTag.putUUID("parent", this.parentUUID);
+            }
+
+            if (this.ownerUUID != null) {
+                pTag.putUUID("owner", this.ownerUUID);
             }
 
             pTag.putInt("size", this.size);
+            pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
 
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
@@ -143,14 +178,20 @@ public class VeilBlockEntity extends BlockEntity {
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
 
-        this.size = pTag.getInt("size");
-
         this.initialized = pTag.getBoolean("initialized");
 
         if (this.initialized) {
             if (pTag.contains("parent")) {
-                this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
+                this.parentUUID = pTag.getUUID("parent");
             }
+
+            if (pTag.contains("owner")) {
+                this.ownerUUID = pTag.getUUID("owner");
+            }
+
+            this.size = pTag.getInt("size");
+            this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
+
             this.deferred = pTag.getCompound("original");
         }
 

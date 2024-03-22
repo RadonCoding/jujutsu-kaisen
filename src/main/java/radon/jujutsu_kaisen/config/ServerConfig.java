@@ -139,7 +139,7 @@ public class ServerConfig {
         this.minimumVeilSize = builder.comment("Minimum size for a veil")
                 .defineInRange("minimumVeilSize", 4, 4, 64);
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
-                .defineInRange("maximumVeilSize", 64, 64, 256);
+                .defineInRange("maximumVeilSize", 128, 64, 256);
         builder.pop();
 
         builder.comment("Domains").push("domains");
@@ -150,8 +150,8 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Barriers").push("barriers");
-        this.domainStrength = builder.comment("The percentage of how much domain barriers are stronger than veil barriers (defaults to 200%)")
-                        .defineInRange("domainStrength", 2.0F, 1.0F, 100000.0F);
+        this.domainStrength = builder.comment("The percentage of how much domain barriers are stronger than veil barriers (defaults to 150%)")
+                        .defineInRange("domainStrength", 1.5F, 1.0F, 100000.0F);
         builder.pop();
 
         builder.comment("Chants").push("chants");

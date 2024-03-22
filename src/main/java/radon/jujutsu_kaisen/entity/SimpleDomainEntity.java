@@ -10,9 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -21,13 +19,11 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.IBarrier;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -160,10 +156,10 @@ public class SimpleDomainEntity extends Entity {
             this.setPos(owner.position());
 
             if (this.level() instanceof ServerLevel level) {
-                for (DomainExpansionEntity domain : VeilHandler.getDomains(level, owner.blockPosition())) {
-                    if (!domain.checkSureHitEffect()) continue;
+                for (IBarrier barrier : VeilHandler.getBarriers(level, owner.blockPosition())) {
+                    if (!barrier.checkSureHitEffect()) continue;
 
-                    LivingEntity target = domain.getOwner();
+                    LivingEntity target = barrier.getOwner();
 
                     if (target == null) continue;
 

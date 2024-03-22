@@ -11,8 +11,11 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.entity.VeilEntity;
 
 public class VeilDeactivate extends Ability {
+    private static final double RANGE = 16.0D;
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
@@ -32,12 +35,18 @@ public class VeilDeactivate extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        BlockPos.betweenClosedStream(AABB.ofSize(owner.position(), 8.0D, 8.0D, 8.0D)).forEach(pos -> {
+        BlockPos.betweenClosedStream(AABB.ofSize(owner.position(), RANGE, RANGE, RANGE)).forEach(pos -> {
             if (!(owner.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) return;
             if (be.getOwnerUUID() == null || !be.getOwnerUUID().equals(owner.getUUID())) return;
 
             be.setActive(false);
         });
+
+        for (VeilEntity veil : owner.level().getEntitiesOfClass(VeilEntity.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
+            if (veil.getOwner() != owner) continue;
+
+            veil.discard();
+        }
     }
 
     @Override
