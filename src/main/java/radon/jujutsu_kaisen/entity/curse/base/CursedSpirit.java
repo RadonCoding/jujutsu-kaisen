@@ -189,10 +189,6 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         if (this.random.nextInt(HUNGRY_CHANCE) == 0) this.hungry = true;
 
-        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
-
-        if (!this.isHiding()) return;
-
         double range = this.hungry ? HUNGRY_AWAKEN_RANGE : AWAKEN_RANGE;
 
         TargetingConditions conditions = TargetingConditions.forCombat().range(range)
@@ -228,6 +224,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         } else if (this.hungry) {
             this.hungry = false;
         }
+        this.setHiding(this.getTarget() == null && !VeilHandler.isProtectedByVeil(((ServerLevel) this.level()), this.blockPosition()));
     }
 
     @Override
