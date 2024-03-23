@@ -112,12 +112,8 @@ public class AdaptationEventHandler {
 
                         if (attacker != null) {
                             victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
-
                             victim.swing(InteractionHand.MAIN_HAND);
-
-                            if (victim.doHurtTarget(attacker)) {
-                                victim.invulnerableTime = 0;
-                            }
+                            victim.doHurtTarget(attacker);
                         }
                     }
                 }
