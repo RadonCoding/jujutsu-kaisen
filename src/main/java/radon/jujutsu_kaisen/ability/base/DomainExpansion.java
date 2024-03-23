@@ -50,7 +50,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
+        if (target == null || target.isDeadOrDying()) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -71,7 +71,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
                 float yaw = RotationUtil.getTargetAdjustedYRot(owner);
                 Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
-                Vec3 behind = owner.position().add(direction.scale(radius - DomainExpansionEntity.OFFSET));
+                Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - DomainExpansionEntity.OFFSET));
                 BlockPos center = BlockPos.containing(behind.x, behind.y, behind.z).offset(0, radius, 0);
                 BlockPos relative = target.blockPosition().subtract(center);
 
