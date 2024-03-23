@@ -253,7 +253,7 @@ public class JJKAbilities {
         for (DeferredHolder<Ability, ? extends Ability> entry : ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
-            if (!ability.isTechnique() && (!data.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
+            if (!ability.isTechnique() && (!data.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.isMelee())) {
                 abilities.add(ability);
             }
         }
