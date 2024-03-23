@@ -79,7 +79,11 @@ public class QuickDraw extends Ability implements IToggled {
         for (int i = 0; i < Barrage.DURATION; i++) {
             boolean last = i == Barrage.DURATION - 1;
 
+            int delay = i * 2;
+
             data.delayTickEvent(() -> {
+                entity.invulnerableTime = 0;
+
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
@@ -111,9 +115,9 @@ public class QuickDraw extends Ability implements IToggled {
                 }
 
                 if (!last) {
-                    entity.invulnerableTime = 0;
+                    entity.invulnerableTime = delay;
                 }
-            }, i * 2);
+            }, delay);
         }
     }
 
