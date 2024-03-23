@@ -225,6 +225,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(MiwaKasumiModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(MiwaKasumiModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(MiwaKasumiModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(WindowModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(WindowModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(WindowModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
