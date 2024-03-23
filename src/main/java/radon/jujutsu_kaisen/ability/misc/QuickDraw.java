@@ -77,11 +77,9 @@ public class QuickDraw extends Ability implements IToggled {
         IAbilityData data = cap.getAbilityData();
 
         for (int i = 0; i < Barrage.DURATION; i++) {
-            boolean last = i == Barrage.DURATION - 1;
-
-            int delay = i * 2;
-
             data.delayTickEvent(() -> {
+                int previous = entity.invulnerableTime;
+
                 entity.invulnerableTime = 0;
 
                 owner.swing(InteractionHand.MAIN_HAND, true);
@@ -113,11 +111,8 @@ public class QuickDraw extends Ability implements IToggled {
                 } else {
                     owner.doHurtTarget(entity);
                 }
-
-                if (!last) {
-                    entity.invulnerableTime = delay;
-                }
-            }, delay);
+                entity.invulnerableTime = previous;
+            }, i * 2);
         }
     }
 
