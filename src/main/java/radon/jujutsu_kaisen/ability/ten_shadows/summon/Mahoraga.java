@@ -30,7 +30,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
+        if (target == null || target.isDeadOrDying()) return false;
 
         IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
