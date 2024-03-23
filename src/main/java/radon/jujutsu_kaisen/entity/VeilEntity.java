@@ -31,6 +31,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.IBarrier;
+import radon.jujutsu_kaisen.entity.base.IVeil;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
@@ -41,7 +42,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import java.util.List;
 import java.util.UUID;
 
-public class VeilEntity extends Entity implements IBarrier {
+public class VeilEntity extends Entity implements IVeil {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(VeilEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(VeilEntity.class, EntityDataSerializers.INT);
 
@@ -183,6 +184,11 @@ public class VeilEntity extends Entity implements IBarrier {
     @Override
     public boolean checkSureHitEffect() {
         return false;
+    }
+
+    @Override
+    public List<Modifier> getModifiers() {
+        return this.modifiers;
     }
 
     @Override
