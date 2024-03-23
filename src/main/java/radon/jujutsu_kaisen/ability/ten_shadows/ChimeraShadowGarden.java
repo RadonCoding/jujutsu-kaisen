@@ -83,6 +83,11 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
         return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
     }
 
+    @Override
+    public List<Block> getFillBlocks() {
+        return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
