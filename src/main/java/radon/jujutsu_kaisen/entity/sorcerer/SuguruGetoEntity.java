@@ -34,7 +34,7 @@ public class SuguruGetoEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 1.5F;
     }
 
     @Override
