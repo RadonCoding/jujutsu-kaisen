@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -81,16 +82,18 @@ public abstract class DomainExpansion extends Ability implements IToggled {
             boolean result = owner.onGround() && sorcererData.getType() == JujutsuType.CURSE || sorcererData.isUnlocked(JJKAbilities.RCT1.get()) ?
                     owner.getHealth() / owner.getMaxHealth() < 0.8F : owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
-            for (IBarrier ignored : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
-                result = true;
-                break;
+            if (!result) {
+                for (IBarrier ignored : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+                    result = true;
+                    break;
+                }
             }
 
             Status status = this.getStatus(owner);
 
-            if (result && (status == Status.SUCCESS)) {
+            if (result && status == Status.SUCCESS) {
                 if (abilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    abilityData.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                    AbilityHandler.trigger(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }
             return result;
