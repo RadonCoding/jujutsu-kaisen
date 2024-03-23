@@ -209,7 +209,7 @@ public class SorcererData implements ISorcererData {
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
-                this.owner.heal(2.0F / 20);
+                this.owner.heal(1.0F / 20);
             }
         }
     }
