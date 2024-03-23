@@ -19,7 +19,7 @@
 
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
-  "gui.jujutsu_kaisen.six_eyes_overlay.experience": "Experience: %1$d",
+  "gui.jujutsu_kaisen.six_eyes_overlay.experience": "Experience: %1$f",
 
   "gui.jujutsu_kaisen.stats": "Stats",
 
