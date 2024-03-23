@@ -16,8 +16,8 @@ public class WindowRenderer extends HumanoidMobRenderer<WindowEntity, WindowMode
     public WindowRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new WindowModel(pContext.bakeLayer(WindowModel.LAYER)), 0.5F);
 
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(MegumiFushiguroModel.INNER_LAYER)),
-                new HumanoidModel<>(pContext.bakeLayer(MegumiFushiguroModel.OUTER_LAYER)), pContext.getModelManager()));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(WindowModel.INNER_LAYER)),
+                new HumanoidModel<>(pContext.bakeLayer(WindowModel.OUTER_LAYER)), pContext.getModelManager()));
         this.addLayer(new JJKOverlayLayer<>(this));
     }
 
