@@ -120,35 +120,15 @@ public class MissionsScreen extends Screen {
 
         this.missions.clear();
 
-        List<Mission> d = new ArrayList<>();
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
-        d.add(new Mission(Component.literal("D-tier mission title"), Component.literal("D-tier mission description")));
+        for (MissionGrade grade : MissionGrade.values()) {
+            List<MissionCard> missions = new ArrayList<>();
 
-        List<Mission> c = new ArrayList<>();
-        c.add(new Mission(Component.literal("C-tier mission title"), Component.literal("C-tier mission description")));
-
-        List<Mission> b = new ArrayList<>();
-        b.add(new Mission(Component.literal("B-tier mission title"), Component.literal("B-tier mission description")));
-
-        List<Mission> a = new ArrayList<>();
-        a.add(new Mission(Component.literal("A-tier mission title"), Component.literal("A-tier mission description")));
-
-        List<Mission> s = new ArrayList<>();
-        s.add(new Mission(Component.literal("S-tier mission title"), Component.literal("S-tier mission description")));
-
-        this.missions.put(MissionGrade.D, d.stream().map(mission -> new MissionCard(this.minecraft, mission)).collect(Collectors.toList()));
-        this.missions.put(MissionGrade.C, c.stream().map(mission -> new MissionCard(this.minecraft, mission)).collect(Collectors.toList()));
-        this.missions.put(MissionGrade.B, b.stream().map(mission -> new MissionCard(this.minecraft, mission)).collect(Collectors.toList()));
-        this.missions.put(MissionGrade.A, a.stream().map(mission -> new MissionCard(this.minecraft, mission)).collect(Collectors.toList()));
-        this.missions.put(MissionGrade.S, s.stream().map(mission -> new MissionCard(this.minecraft, mission)).collect(Collectors.toList()));
+            for (int i = 0; i < 16; i++) {
+                missions.add(new MissionCard(this.minecraft, new Mission(Component.literal(String.format("%s-tier mission title", grade.name())),
+                        Component.literal("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))));
+            }
+            this.missions.put(grade, missions);
+        }
 
         int windowOffsetX = WINDOW_OFFSET_X;
         int windowOffsetY = (this.height - WINDOW_HEIGHT) / 2;
