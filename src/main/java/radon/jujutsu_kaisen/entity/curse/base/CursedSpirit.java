@@ -186,7 +186,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     private void update() {
         if (this.isTame()) return;
 
-        if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return;
+        if (this.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal()) return;
 
         if (this.getTime() % UPDATE_INTERVAL != 0) return;
 
