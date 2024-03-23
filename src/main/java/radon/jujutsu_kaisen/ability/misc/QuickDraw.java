@@ -66,6 +66,8 @@ public class QuickDraw extends Ability implements IToggled {
     }
 
     private static void attack(LivingEntity owner, LivingEntity entity) {
+        if (entity.invulnerableTime > 0) return;
+
         owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D));
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -78,8 +80,6 @@ public class QuickDraw extends Ability implements IToggled {
             boolean last = i == Barrage.DURATION - 1;
 
             data.delayTickEvent(() -> {
-                if (entity.invulnerableTime > 0) return;
-
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);

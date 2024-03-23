@@ -53,7 +53,6 @@ public class MissionsScreen extends Screen {
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         if (pButton != 0) {
             this.isScrolling = false;
-            return false;
         } else {
             if (!this.isScrolling) {
                 this.isScrolling = true;
@@ -79,8 +78,8 @@ public class MissionsScreen extends Screen {
                     }
                 }
             }
-            return true;
         }
+        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
     }
 
     @Override
