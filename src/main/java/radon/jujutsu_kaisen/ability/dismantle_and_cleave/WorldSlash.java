@@ -63,13 +63,6 @@ public class WorldSlash extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        for (SimpleDomainEntity simple : owner.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(owner.position(),
-                SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2))) {
-            if (simple.getOwner() == owner || owner.distanceTo(simple) >= simple.getRadius()) continue;
-
-            return Status.FAILURE;
-        }
-
         if (!(owner instanceof MahoragaEntity)) {
             if (ChantHandler.getOutput(owner, this) < 1.5F) return Status.FAILURE;
         }
