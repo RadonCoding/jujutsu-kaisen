@@ -115,7 +115,7 @@ public class JJKItems {
     public static DeferredHolder<Item, DeferredSpawnEggItem> MIWA_KASUMI_SPAWN_EGG = ITEMS.register("miwa_kasumi_spawn_egg",
             () -> new DeferredSpawnEggItem(JJKEntities.MIWA_KASUMI, 0x313850, 0x85b5ce, new Item.Properties()));
     public static DeferredHolder<Item, DeferredSpawnEggItem> WINDOW_SPAWN_EGG = ITEMS.register("window_spawn_egg",
-            () -> new DeferredSpawnEggItem(JJKEntities.WINDOW, 0x363936, 0xffffff, new Item.Properties()));
+            () -> new DeferredSpawnEggItem(JJKEntities.WINDOW, 0x363936, 0x6b462e, new Item.Properties()));
 
     public static DeferredHolder<Item, DeferredSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new DeferredSpawnEggItem(JJKEntities.JOGO, 0xb4b544, 0x0e0e10, new Item.Properties()));
