@@ -53,6 +53,9 @@ public class SixEyesOverlay {
                 SorcererUtil.getGrade(client.experience).getName());
         lines.add(gradeText);
 
+        Component experienceText = Component.translatable(String.format("gui.%s.six_eyes_overlay.experience", JujutsuKaisen.MOD_ID), (int) client.experience);
+        lines.add(experienceText);
+
         int offset = 0;
 
         for (Component line : lines) {
