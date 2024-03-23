@@ -77,11 +77,9 @@ public class QuickDraw extends Ability implements IToggled {
         IAbilityData data = cap.getAbilityData();
 
         for (int i = 0; i < Barrage.DURATION; i++) {
+            boolean last = i == Barrage.DURATION - 1;
+
             data.delayTickEvent(() -> {
-                int previous = entity.invulnerableTime;
-
-                entity.invulnerableTime = 0;
-
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
@@ -111,7 +109,10 @@ public class QuickDraw extends Ability implements IToggled {
                 } else {
                     owner.doHurtTarget(entity);
                 }
-                entity.invulnerableTime = previous;
+
+                if (!last) {
+                    entity.invulnerableTime = 0;
+                }
             }, i * 2);
         }
     }
