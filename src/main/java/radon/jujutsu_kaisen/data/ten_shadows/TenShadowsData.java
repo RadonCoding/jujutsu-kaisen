@@ -245,6 +245,13 @@ public class TenShadowsData implements ITenShadowsData {
 
     @Override
     public boolean isAdaptedTo(DamageSource source) {
+        if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu) {
+            Ability ability = jujutsu.getAbility();
+
+            if (ability != null) {
+                return this.isAdaptedTo(ability);
+            }
+        }
         Adaptation adaptation = this.getAdaptation(source);
         return this.adapted.containsKey(adaptation);
     }
@@ -286,6 +293,8 @@ public class TenShadowsData implements ITenShadowsData {
             return;
         }
 
+        if (this.isAdaptedTo(source)) return;
+
         RegistryAccess registry = this.owner.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
 
@@ -304,7 +313,7 @@ public class TenShadowsData implements ITenShadowsData {
     public void tryAdapt(Ability ability) {
         Adaptation adaptation = new Adaptation(JJKDamageSources.JUJUTSU.location(), ability);
 
-        if (this.adapted.containsKey(adaptation) && (!(ability instanceof IAdditionalAdaptation additional) || this.adapted.get(adaptation) >= additional.getAdditional() + 1)) return;
+        if (this.isAdaptedTo(ability) && (!(ability instanceof IAdditionalAdaptation additional) || this.adapted.get(adaptation) >= additional.getAdditional() + 1)) return;
 
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);
