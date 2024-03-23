@@ -129,7 +129,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
         int radius = this.getRadius();
-        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < (radius - 2) * (radius - 2);
     }
@@ -137,7 +137,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean isBarrier(BlockPos pos) {
         int radius = this.getRadius();
-        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < radius * radius;
     }
