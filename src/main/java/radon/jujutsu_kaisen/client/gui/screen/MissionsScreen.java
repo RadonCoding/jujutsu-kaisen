@@ -108,12 +108,6 @@ public class MissionsScreen extends Screen {
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
-    private void setGrade(MissionGrade grade) {
-        this.grade = grade;
-
-        this.rebuildWidgets();
-    }
-
     @Override
     protected void init() {
         super.init();
