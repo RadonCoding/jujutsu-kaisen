@@ -2,7 +2,7 @@
   "type": "neoforge:add_spawn_costs",
   "biomes": "#minecraft:is_overworld",
   "entity_types": [
-    "jujutsu_kaisen:sorcerer_villager"
+    "jujutsu_kaisen:window"
   ],
   "spawn_cost": {
     "charge": 0.16,

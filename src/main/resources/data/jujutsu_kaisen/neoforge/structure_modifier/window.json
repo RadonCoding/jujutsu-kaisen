@@ -3,7 +3,7 @@
   "structures": "#jujutsu_kaisen:is_haunted",
   "spawners": [
     {
-      "type": "jujutsu_kaisen:sorcerer_villager",
+      "type": "jujutsu_kaisen:window",
       "weight": 300,
       "minCount": 2,
       "maxCount": 6
