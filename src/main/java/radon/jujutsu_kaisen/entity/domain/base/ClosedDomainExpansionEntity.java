@@ -131,7 +131,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < (radius - 2) * (radius - 2);
+        return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
 
     @Override
