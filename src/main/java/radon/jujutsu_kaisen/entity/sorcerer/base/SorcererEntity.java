@@ -10,14 +10,10 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.sorcerer.SorcererVillager;
+import radon.jujutsu_kaisen.entity.sorcerer.WindowEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -77,7 +73,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         this.goalSelector.addGoal(goal++, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(goal, new BlindfoldGoal(this));
 
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this, SorcererEntity.class, SorcererVillager.class));
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this, SorcererEntity.class, WindowEntity.class));
 
         if (this.targetsSorcerers()) {
             this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));

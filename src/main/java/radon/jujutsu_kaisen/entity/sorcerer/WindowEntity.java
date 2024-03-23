@@ -1,53 +1,64 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Dynamic;
-import it.unimi.dsi.fastutil.bytes.ByteHash;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.Brain;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.ai.goal.*;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SorcererVillager extends SorcererEntity {
+public class WindowEntity extends SorcererEntity {
+    private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(WindowEntity.class, EntityDataSerializers.INT);
+
+    private static final int MAX_VARIANTS = 4;
     private static final int TECHNIQUE_CHANCE = 10;
 
     private final Set<Skill> majors;
 
     private SorcererGrade grade;
 
-    public SorcererVillager(EntityType<? extends Villager> pEntityType, Level pLevel) {
+    public WindowEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.majors = new HashSet<>();
 
         this.grade = SorcererGrade.values()[this.random.nextInt(SorcererGrade.GRADE_4.ordinal(), SorcererGrade.GRADE_2.ordinal() + 1)];
+
+        this.setVariant(this.random.nextInt(1, MAX_VARIANTS + 1));
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_VARIANT, 1);
+    }
+
+    public int getVariant() {
+        return this.entityData.get(DATA_VARIANT);
+    }
+
+    public void setVariant(int variant) {
+        this.entityData.set(DATA_VARIANT, variant);
     }
 
     public void setGrade(SorcererGrade grade) {
@@ -86,6 +97,8 @@ public class SorcererVillager extends SorcererEntity {
             majorsTag.add(IntTag.valueOf(major.ordinal()));
         }
         pCompound.put("majors", majorsTag);
+
+        pCompound.putInt("variant", this.getVariant());
     }
 
     @Override
@@ -95,6 +108,7 @@ public class SorcererVillager extends SorcererEntity {
         for (Tag tag : pCompound.getList("majors", Tag.TAG_INT)) {
             this.majors.add(Skill.values()[((IntTag) tag).getAsInt()]);
         }
+        this.setVariant(pCompound.getInt("variant"));
     }
 
     @Override

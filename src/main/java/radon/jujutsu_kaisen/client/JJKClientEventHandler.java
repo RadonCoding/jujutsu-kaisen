@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
-import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
@@ -277,7 +276,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.HAJIME_KASHIMO.get(), HajimeKashimoRenderer::new);
             event.registerEntityRenderer(JJKEntities.AOI_TODO.get(), AoiTodoRenderer::new);
             event.registerEntityRenderer(JJKEntities.MIWA_KASUMI.get(), MiwaKasumiRenderer::new);
-            event.registerEntityRenderer(JJKEntities.SORCERER_VILLAGER.get(), SorcererVillagerRenderer::new);
+            event.registerEntityRenderer(JJKEntities.WINDOW.get(), WindowRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
 
