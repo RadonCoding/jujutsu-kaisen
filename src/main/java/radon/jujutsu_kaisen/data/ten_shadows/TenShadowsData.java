@@ -277,11 +277,19 @@ public class TenShadowsData implements ITenShadowsData {
 
     @Override
     public void tryAdapt(DamageSource source) {
+        if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu) {
+            Ability ability = jujutsu.getAbility();
+
+            if (ability != null) {
+                this.tryAdapt(ability);
+            }
+            return;
+        }
+
         RegistryAccess registry = this.owner.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
 
-        Adaptation adaptation = new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource cap ? cap.getAbility() : null);
+        Adaptation adaptation = new Adaptation(types.getKey(source.type()), null);
 
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);
