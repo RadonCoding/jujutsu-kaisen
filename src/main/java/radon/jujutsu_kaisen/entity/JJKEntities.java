@@ -214,10 +214,9 @@ public class JJKEntities {
             EntityType.Builder.<MiwaKasumiEntity>of(MiwaKasumiEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "miwa_kasumi")
                             .toString()));
-    public static DeferredHolder<EntityType<?>, EntityType<SorcererVillager>> SORCERER_VILLAGER = ENTITIES.register("sorcerer_villager", () ->
-            EntityType.Builder.<SorcererVillager>of(SorcererVillager::new, MobCategory.AMBIENT)
-                    .sized(0.6F, 1.95F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sorcerer_villager")
+    public static DeferredHolder<EntityType<?>, EntityType<WindowEntity>> WINDOW = ENTITIES.register("window", () ->
+            EntityType.Builder.<WindowEntity>of(WindowEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "window")
                             .toString()));
 
 
@@ -600,7 +599,7 @@ public class JJKEntities {
         SpawnPlacements.register(MAKI_ZENIN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(AOI_TODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(MIWA_KASUMI.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
-        SpawnPlacements.register(SORCERER_VILLAGER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
+        SpawnPlacements.register(WINDOW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
 
         SpawnPlacements.register(RUGBY_FIELD_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         SpawnPlacements.register(FISH_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
@@ -634,7 +633,7 @@ public class JJKEntities {
         event.put(MAKI_ZENIN.get(), SorcererEntity.createAttributes().build());
         event.put(AOI_TODO.get(), SorcererEntity.createAttributes().build());
         event.put(MIWA_KASUMI.get(), SorcererEntity.createAttributes().build());
-        event.put(SORCERER_VILLAGER.get(), SorcererEntity.createAttributes().build());
+        event.put(WINDOW.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 

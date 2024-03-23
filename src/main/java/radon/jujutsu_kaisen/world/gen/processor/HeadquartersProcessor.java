@@ -2,23 +2,16 @@ package radon.jujutsu_kaisen.world.gen.processor;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilRodBlock;
-import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.sorcerer.SorcererVillager;
-
-import java.util.List;
 
 public class HeadquartersProcessor extends StructureProcessor {
     public static final Codec<HeadquartersProcessor> CODEC = Codec.unit(HeadquartersProcessor::new);

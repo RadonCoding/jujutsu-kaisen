@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.block;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -22,8 +21,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RodBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -33,15 +30,13 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.VeilEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SorcererVillager;
+import radon.jujutsu_kaisen.entity.sorcerer.WindowEntity;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 
 import javax.annotation.Nullable;
@@ -114,7 +109,7 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
         if (pState.getValue(SPAWN_VEIL_MASTER)) {
             if (!(pLevel.getBlockEntity(pPos) instanceof VeilRodBlockEntity be)) return;
 
-            SorcererVillager villager = JJKEntities.SORCERER_VILLAGER.get().create(pLevel);
+            WindowEntity villager = JJKEntities.WINDOW.get().create(pLevel);
 
             if (villager == null) return;
 
