@@ -22,7 +22,7 @@ public class ChimeraShadowGardenRenderer extends GeoEntityRenderer<ChimeraShadow
     public void preRender(PoseStack poseStack, ChimeraShadowGardenEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
 
-        poseStack.mulPose(Axis.YN.rotationDegrees(yaw));
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
