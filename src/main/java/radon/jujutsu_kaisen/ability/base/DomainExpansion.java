@@ -167,14 +167,11 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
         if (cap == null) return;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         DomainExpansionEntity domain = this.createBarrier(owner);
-        sorcererData.addSummon(domain);
 
-        if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
-        }
+        data.addSummon(domain);
     }
 
     @Override
