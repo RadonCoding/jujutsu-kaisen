@@ -154,6 +154,8 @@ public class VeilBlockEntity extends BlockEntity {
         pTag.putBoolean("initialized", this.initialized);
 
         if (this.initialized) {
+            pTag.putInt("death", this.death);
+
             if (this.parentUUID != null) {
                 pTag.putUUID("parent", this.parentUUID);
             }
@@ -182,6 +184,8 @@ public class VeilBlockEntity extends BlockEntity {
         this.initialized = pTag.getBoolean("initialized");
 
         if (this.initialized) {
+            this.death = pTag.getInt("death");
+
             if (pTag.contains("parent")) {
                 this.parentUUID = pTag.getUUID("parent");
             }
