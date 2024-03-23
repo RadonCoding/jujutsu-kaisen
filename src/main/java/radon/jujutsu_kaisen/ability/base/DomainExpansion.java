@@ -68,10 +68,11 @@ public abstract class DomainExpansion extends Ability implements IToggled {
         } else {
             if (this instanceof DomainExpansion.IClosedDomain closed) {
                 int radius = Math.round(closed.getRadius(owner));
-                Vec3 direction = RotationUtil.getTargetAdjustedLookAngle(owner);
+
+                float yaw = RotationUtil.getTargetAdjustedYRot(owner);
+                Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
                 Vec3 behind = owner.position().add(direction.scale(radius - DomainExpansionEntity.OFFSET));
-                BlockPos center = BlockPos.containing(behind.x, behind.y - (double) (radius / 2), behind.z)
-                        .offset(0, radius / 2, 0);
+                BlockPos center = BlockPos.containing(behind.x, behind.y, behind.z).offset(0, radius, 0);
                 BlockPos relative = target.blockPosition().subtract(center);
 
                 if (relative.distSqr(Vec3i.ZERO) >= (radius - 1) * (radius - 1)) {
