@@ -107,13 +107,16 @@ public class AdaptationEventHandler {
                     event.setAmount(event.getAmount() * process);
                 }
                 case COUNTER -> {
-                    if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
+                    if (HelperMethods.RANDOM.nextInt(Math.max(2, Math.round(20 * process))) == 0) {
                         Entity attacker = source.getEntity();
 
                         if (attacker != null) {
                             victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
                             victim.swing(InteractionHand.MAIN_HAND);
-                            victim.doHurtTarget(attacker);
+
+                            victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+
+                            event.setCanceled(true);
                         }
                     }
                 }
