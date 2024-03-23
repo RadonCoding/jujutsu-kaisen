@@ -73,7 +73,7 @@ public class ServerConfig {
     public ServerConfig(ModConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
         this.cursedEnergyAmount = builder.comment("Base cursed energy amount")
-                .defineInRange("cursedEnergyAmount", 150.0F, 0.0F, 100000.0F);
+                .defineInRange("cursedEnergyAmount", 300.0F, 0.0F, 100000.0F);
         this.cursedEnergyRegenerationAmount = builder.comment("Cursed energy regeneration amount (depends on food level)")
                 .defineInRange("cursedEnergyRegenerationAmount", 0.25F, 0.0F, 100000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
