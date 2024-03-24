@@ -348,7 +348,8 @@ public class SorcererData implements ISorcererData {
         IAbilityData data = cap.getAbilityData();
 
         float power = this.getBaseOutput() * this.getOutput();
-
+        if (cap.getSorcererData().hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY))
+            power *= 1.5;
         if (this.technique != null) {
             Ability domain = this.technique.getDomain();
 
@@ -371,10 +372,7 @@ public class SorcererData implements ISorcererData {
         if (cap == null) return 0.0F;
 
         ISkillData data = cap.getSkillData();
-        float amount = 1.0F + (data.getSkill(Skill.OUTPUT) * 0.1F);
-        if (cap.getSorcererData().hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY))
-            amount *= 1.5;
-        return amount;
+        return 1.0F + (data.getSkill(Skill.OUTPUT) * 0.1F);
     }
 
     @Override
