@@ -1,25 +1,33 @@
 ## FAQ
 
 ### Commands
-/addpoints (gives you points)
+/jjkaddabilitypoints (gives you ability points)
 
-/refill (refills your cursed energy)
+/jjkaddadditional (adds an additional ct you can use)
 
-/reroll (resets your character)
+/jjkaddskillpoints (gives you skill points)
 
-/resetsummons (resets all ten shadows shikigami)
+/jjkrefill (refills your cursed energy)
 
-/setexperience (sets your experience)
+/jjkreroll (resets your character)
 
-/setgrade (sets your experience to the experience of a specific grade)
+/jjkresetskills (resets skill points in skill tree)
 
-/setnature (sets your cursed energy nature)
+/jjkresetsummons (resets all ten shadows shikigami)
 
-/settechnique (sets your technique)
+/jjksetexperience (sets your experience)
 
-/settype (sets your type to either sorcerer or curse)
+/jjksetgrade (sets your experience to the experience of a specific grade)
 
-/trait (allows you to manage traits)
+/jjksetnature (sets your cursed energy nature)
+
+/jjksettechnique (sets your technique)
+
+/jjksettype (sets your type to either sorcerer or curse)
+
+/jjksetveilowner (allows you to change the owner of a veil rod)
+
+/jjktrait (allows you to manage traits)
 
 ### Experience
 

@@ -24,7 +24,7 @@ public enum Skill {
 
         ISorcererData data = cap.getSorcererData();
 
-        if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
             return !this.isJujutsu();
         }
         return true;
