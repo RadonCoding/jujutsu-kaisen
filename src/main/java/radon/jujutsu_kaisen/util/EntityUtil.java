@@ -3,10 +3,7 @@ package radon.jujutsu_kaisen.util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -30,6 +27,18 @@ import java.util.List;
 import java.util.UUID;
 
 public class EntityUtil {
+    @Nullable
+    public static LivingEntity getOwner(TamableAnimal tamable) {
+        LivingEntity owner = tamable;
+
+        while (owner instanceof TamableAnimal parent && parent.isTame()) {
+            owner = parent.getOwner();
+
+            if (owner == null) return null;
+        }
+        return owner;
+    }
+
     public static <T extends Entity> List<T> getEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
         return getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
                 .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
