@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -93,19 +94,26 @@ public class MobEventHandler {
             DamageSource source = event.getSource();
 
             if (source.getEntity() instanceof LivingEntity attacker) {
+                if (victim == attacker) return;
+
                 // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
                 if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
-                    if (tamable1.isTame() && tamable1.getOwner() == victim) {
+                    LivingEntity owner1 = EntityUtil.getOwner(tamable1);
+
+                    if (owner1 == victim) {
                         event.setCanceled(true);
                     } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
+                        LivingEntity owner2 = EntityUtil.getOwner(tamable2);
+
                         // Prevent tames with the same owner from attacking each other
-                        if (!tamable1.is(tamable2) && tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()) {
+                        if (owner1 == owner2) {
                             event.setCanceled(true);
                         }
                     }
                 } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
-                    // Prevent the owner from attacking the tame
-                    if (tamable.isTame() && tamable.getOwner() == attacker) {
+                    LivingEntity owner = EntityUtil.getOwner(tamable);
+
+                    if (owner == attacker) {
                         event.setCanceled(true);
                     }
                 }
