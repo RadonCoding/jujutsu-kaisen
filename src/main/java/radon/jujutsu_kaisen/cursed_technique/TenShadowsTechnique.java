@@ -28,7 +28,6 @@ public class TenShadowsTechnique implements ICursedTechnique {
         ABILITIES.add(JJKAbilities.WHEEL.get());
         ABILITIES.add(JJKAbilities.GREAT_SERPENT_GRAB.get());
 
-        ABILITIES.add(JJKAbilities.DIVINE_DOGS.get());
         ABILITIES.add(JJKAbilities.DIVINE_DOG_WHITE.get());
         ABILITIES.add(JJKAbilities.DIVINE_DOG_BLACK.get());
         ABILITIES.add(JJKAbilities.DIVINE_DOG_TOTALITY.get());

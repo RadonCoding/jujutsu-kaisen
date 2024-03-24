@@ -14,11 +14,13 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.event.LivingInsideDomainEvent;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -26,6 +28,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -82,6 +85,14 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         if (!this.level().isClientSide) {
             VeilHandler.barrier(this.level().dimension(), this.getUUID());
+        }
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        for (LivingEntity entity : this.getAffected()) {
+            NeoForge.EVENT_BUS.post(new LivingInsideDomainEvent(entity, this.ability, owner));
         }
     }
 
@@ -203,7 +214,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         if (!owner.canAttack(victim)) return false;
 
-        if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
+        if (victim instanceof TamableAnimal tamable && EntityUtil.getOwner(tamable) == owner) return false;
 
         IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

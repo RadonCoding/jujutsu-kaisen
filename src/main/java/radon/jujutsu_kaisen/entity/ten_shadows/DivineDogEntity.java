@@ -36,7 +36,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable {
+public abstract class DivineDogEntity extends TenShadowsSummon implements PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_LEAP = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_RITUAL = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
@@ -266,11 +266,6 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     public Variant getVariant() {
         return Variant.values()[this.entityData.get(DATA_VARIANT)];
-    }
-
-    @Override
-    public Summon<?> getAbility() {
-        return JJKAbilities.DIVINE_DOGS.get();
     }
 
     @Override

@@ -10,6 +10,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.ability.event.LivingInsideDomainEvent;
 import radon.jujutsu_kaisen.chant.ServerChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -40,7 +41,7 @@ public class MobEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
+        public static void onLivingInsideDomain(LivingInsideDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
             if (victim instanceof ISorcerer && victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
