@@ -17,14 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -51,7 +44,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     protected DomainExpansion ability;
     protected boolean first = true;
 
-    private float size;
+    private float scale;
 
     protected DomainExpansionEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
@@ -70,11 +63,12 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         ISorcererData data = cap.getSorcererData();
 
-        this.size = data.getDomainSize();
+        this.scale = data.getDomainSize();
     }
 
-    public float getSize() {
-        return this.size;
+    @Override
+    public float getScale() {
+        return this.scale;
     }
 
     @Override
@@ -112,7 +106,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("first", this.first);
         pCompound.putInt("time", this.getTime());
-        pCompound.putFloat("scale", this.size);
+        pCompound.putFloat("scale", this.scale);
     }
 
     @Override
@@ -123,7 +117,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.first = pCompound.getBoolean("first");
         this.setTime(pCompound.getInt("time"));
-        this.size = pCompound.getFloat("scale");
+        this.scale = pCompound.getFloat("scale");
     }
 
     @Override
@@ -232,7 +226,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
     @Override
     public float getStrength() {
-        return IDomain.super.getStrength() * DomainExpansion.getStrength(false, this.size);
+        return IDomain.super.getStrength() * DomainExpansion.getStrength(false, this.scale);
     }
 
     @Override

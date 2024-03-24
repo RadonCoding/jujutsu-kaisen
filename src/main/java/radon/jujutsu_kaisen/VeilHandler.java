@@ -11,6 +11,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -93,16 +94,6 @@ public class VeilHandler {
         return true;
     }
 
-    private static int getBarrierSkill(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return 0;
-
-        ISkillData data = cap.getSkillData();
-
-        return data.getSkill(Skill.BARRIER) + 1;
-    }
-
     @Nullable
     private static IBarrier getOwner(ServerLevel level, BlockPos target) {
         IBarrier strongest = null;
@@ -117,23 +108,7 @@ public class VeilHandler {
                     continue;
                 }
 
-                LivingEntity strongestOwner = strongest.getOwner();
-
-                if (strongestOwner == null) {
-                    strongest = current;
-                    continue;
-                }
-
-                LivingEntity currentOwner = current.getOwner();
-
-                if (currentOwner == null) continue;
-
-                int strongestSkill = Math.round(getBarrierSkill(strongestOwner) * (strongest.isInsideBarrier(strongestOwner.blockPosition()) ? 1.0F : 1.5F) *
-                        (strongest instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F));
-                int currentSkill = Math.round(getBarrierSkill(currentOwner) * (current.isInsideBarrier(currentOwner.blockPosition()) ? 1.0F : 1.5F) *
-                        (current instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F));
-
-                if (currentSkill > strongestSkill) strongest = current;
+                if (current.getStrength() > strongest.getStrength()) strongest = current;
             }
         }
         return strongest;
