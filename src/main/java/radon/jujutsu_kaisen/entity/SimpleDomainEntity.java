@@ -204,14 +204,18 @@ public class SimpleDomainEntity extends Entity {
 
             float factor = this.getHealth() / this.getMaxHealth();
 
-            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, (float) (this.getRadius() * 0.25D),
+            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, 1.0F,
                     1.0F, true, 1);
 
-            for (double phi = 0.0D; phi < Math.PI * 2.0D * factor; phi += X_STEP) {
-                double x = this.getX() + this.getRadius() * Math.cos(phi);
+            double circumference = Math.PI * 2.0D * factor;
+
+            float radius = this.getRadius();
+
+            for (double phi = 0.0D; phi < circumference; phi += circumference / radius * X_STEP) {
+                double x = this.getX() + radius * Math.cos(phi);
                 double y = this.getY();
-                double z = this.getZ() + this.getRadius() * Math.sin(phi);
-                this.level().addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
+                double z = this.getZ() + radius * Math.sin(phi);
+                this.level().addParticle(particle, true, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
             }
         }
     }
