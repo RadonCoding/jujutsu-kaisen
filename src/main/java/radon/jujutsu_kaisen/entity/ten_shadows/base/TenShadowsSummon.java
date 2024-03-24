@@ -46,6 +46,7 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
+import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -115,24 +116,6 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     entity -> this.participants.contains(entity.getUUID())));
         }
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-    }
-
-    @Override
-    public boolean canAttack(@NotNull LivingEntity pTarget) {
-        if (!super.canAttack(pTarget)) return false;
-
-        if (!this.isTame()) return true;
-
-        if (pTarget == this.getOwner()) return false;
-
-        if (!(pTarget instanceof TamableAnimal)) return true;
-
-        while (pTarget instanceof TamableAnimal tamable1) {
-            if (!(tamable1.getOwner() instanceof TamableAnimal tamable2)) break;
-
-            pTarget = tamable2;
-        }
-        return ((TamableAnimal) pTarget).getOwner() != this.getOwner() || ((TamableAnimal) pTarget).isTame() != this.isTame();
     }
 
     public void setClone(boolean clone) {
@@ -228,7 +211,9 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         ITenShadowsData data = cap.getTenShadowsData();
 
         if (!this.isTame()) {
-            if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
+            Entity attacker = pCause.getEntity();
+
+            if (attacker == owner || attacker instanceof TamableAnimal tamable && EntityUtil.getOwner(tamable) == owner) {
                 data.tame(this.getType());
 
                 if (owner instanceof ServerPlayer player) {
