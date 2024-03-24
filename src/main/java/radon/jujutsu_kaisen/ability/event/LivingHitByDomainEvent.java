@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability;
+package radon.jujutsu_kaisen.ability.event;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;

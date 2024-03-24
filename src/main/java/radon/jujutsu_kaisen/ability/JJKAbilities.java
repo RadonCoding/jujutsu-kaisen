@@ -164,7 +164,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Wheel> WHEEL = ABILITIES.register("wheel", Wheel::new);
     public static DeferredHolder<Ability, GreatSerpentGrab> GREAT_SERPENT_GRAB = ABILITIES.register("great_serpent_grab", GreatSerpentGrab::new);
     public static DeferredHolder<Ability, Mahoraga> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
-    public static DeferredHolder<Ability, DivineDogs> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
     public static DeferredHolder<Ability, DivineDogWhite> DIVINE_DOG_WHITE = ABILITIES.register("divine_dog_white", DivineDogWhite::new);
     public static DeferredHolder<Ability, DivineDogBlack> DIVINE_DOG_BLACK = ABILITIES.register("divine_dog_black", DivineDogBlack::new);
 

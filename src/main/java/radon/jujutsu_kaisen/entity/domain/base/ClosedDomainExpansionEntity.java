@@ -277,15 +277,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         for (LivingEntity entity : this.getAffected()) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) continue;
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
 
-            ISorcererData data = cap.getSorcererData();
-
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                this.ability.onHitBlock(this, owner, entity.blockPosition());
-            } else {
-                this.ability.onHitEntity(this, owner, entity, false);
+                if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
+                    this.ability.onHitBlock(this, owner, entity.blockPosition());
+                    continue;
+                }
             }
+            this.ability.onHitEntity(this, owner, entity, false);
         }
 
         int radius = this.getRadius();
