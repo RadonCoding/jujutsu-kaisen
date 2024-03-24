@@ -9,7 +9,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -20,6 +22,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -125,7 +128,7 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     }
 
     @Override
-    public @Nullable PartEntity<?>[] getParts() {
+    public PartEntity<?> @NotNull [] getParts() {
         return this.segments;
     }
 
@@ -175,12 +178,8 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
-            if (pPlayer.startRiding(this)) {
-                pPlayer.setYRot(this.getYRot());
-                pPlayer.setXRot(this.getXRot());
-            }
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+        if (this.isTame()) {
+            return pPlayer.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
@@ -210,6 +209,27 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
             return living;
         }
         return null;
+    }
+
+    @Override
+    public @NotNull Vec3 getPassengerRidingPosition(@NotNull Entity pEntity) {
+        int i = this.getPassengers().indexOf(pEntity);
+
+        if (i > 0) {
+            RainbowDragonSegmentEntity segment = this.segments[i - 1];
+            return new Vec3(new Vector3f(0.0F, segment.getBbHeight(), 0.0F))
+                    .add(segment.position());
+        }
+        return super.getPassengerRidingPosition(pEntity);
+    }
+
+    @Override
+    protected boolean canAddPassenger(@NotNull Entity pPassenger) {
+        return this.getPassengers().size() < this.getMaxPassengers();
+    }
+
+    private int getMaxPassengers() {
+        return this.segments.length + 1;
     }
 
     private Vec2 getRiddenRotation(LivingEntity pEntity) {

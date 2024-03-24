@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.PlayerRideable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -15,7 +16,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class RainbowDragonSegmentEntity extends JJKPartEntity<RainbowDragonEntity> implements GeoEntity {
+public class RainbowDragonSegmentEntity extends JJKPartEntity<RainbowDragonEntity> implements GeoEntity, PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_INDEX = SynchedEntityData.defineId(RainbowDragonSegmentEntity.class, EntityDataSerializers.INT);
 
     public static final ResourceLocation RENDERER = new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon_segment");
