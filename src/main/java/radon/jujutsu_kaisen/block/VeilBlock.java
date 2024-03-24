@@ -25,6 +25,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
@@ -32,6 +33,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.entity.base.IBarrier;
 
 import java.util.UUID;
 
@@ -55,21 +57,13 @@ public class VeilBlock extends Block implements EntityBlock {
 
         if (!(level.getBlockEntity(pos) instanceof VeilBlockEntity veil)) return resistance;
 
-        UUID identifier = veil.getOwnerUUID();
+        UUID identifier = veil.getParentUUID();
 
         if (identifier == null) return resistance;
 
-        Entity owner = serverLevel.getEntity(identifier);
+        if (!(serverLevel.getEntity(identifier) instanceof IBarrier barrier)) return resistance;
 
-        if (owner == null) return resistance;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return resistance;
-
-        ISkillData data = cap.getSkillData();
-
-        return resistance * data.getSkill(Skill.BARRIER);
+        return resistance * barrier.getStrength();
     }
 
     @Override

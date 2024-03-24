@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.IBarrier;
 
 import java.util.UUID;
 
@@ -85,19 +86,9 @@ public class DomainBlock extends Block implements EntityBlock {
 
         if (identifier == null) return resistance;
 
-        if (!(serverLevel.getEntity(identifier) instanceof DomainExpansionEntity domain)) return resistance;
+        if (!(serverLevel.getEntity(identifier) instanceof IBarrier barrier)) return resistance;
 
-        LivingEntity owner = domain.getOwner();
-
-        if (owner == null) return resistance;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return resistance;
-
-        ISkillData data = cap.getSkillData();
-
-        return resistance * data.getSkill(Skill.BARRIER) * DomainExpansion.getStrength(false, domain.getSize());
+        return resistance * barrier.getStrength();
     }
 
     @Override

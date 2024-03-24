@@ -8,6 +8,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.VeilHandler;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 
 public interface IBarrier {
     Level level();
@@ -33,4 +39,22 @@ public interface IBarrier {
     boolean hasSureHitEffect();
 
     boolean checkSureHitEffect();
+
+    default float getStrength() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return 0;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return 0;
+
+        ISkillData data = cap.getSkillData();
+
+        int skill = data.getSkill(Skill.BARRIER) + 1;
+
+        return Math.round(skill * (this.isInsideBarrier(owner.blockPosition()) ? 1.0F : 1.5F) *
+                (this instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F)) *
+                (owner.getHealth() / owner.getMaxHealth());
+    }
 }
