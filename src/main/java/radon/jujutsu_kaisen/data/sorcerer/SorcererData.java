@@ -1,9 +1,7 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.gui.font.providers.UnihexProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.StructureUtils;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -20,20 +18,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.chant.ChantHandler;
@@ -51,7 +41,6 @@ import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -132,6 +121,8 @@ public class SorcererData implements ISorcererData {
     private void updateSummons() {
         if (this.owner.level().isClientSide) return;
 
+        boolean dirty = false;
+
         for (ServerLevel level : ((ServerLevel) this.owner.level()).getServer().getAllLevels()) {
             Iterator<SummonData> iter = this.summons.iterator();
 
@@ -140,14 +131,19 @@ public class SorcererData implements ISorcererData {
 
                 if (level.dimension() != data.getDimension() || !level.areEntitiesLoaded(data.getChunkPos())) continue;
 
-                Entity entity = level.getEntity(data.getUUID());
+                Entity entity = level.getEntity(data.getId());
 
                 if (entity == null || !entity.isAlive() || entity.isRemoved()) {
+                    dirty = true;
                     iter.remove();
                     continue;
                 }
                 data.setChunkPos(entity.chunkPosition().toLong());
             }
+        }
+
+        if (dirty && this.owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
         }
     }
 
@@ -715,17 +711,15 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void removeSummon(Entity entity) {
-        this.summons.removeIf(data -> data.getUUID().equals(entity.getUUID()));
+        this.summons.removeIf(data -> data.getId() == entity.getId());
     }
 
     @Override
     public List<Entity> getSummons() {
-        if (!(this.owner.level() instanceof ServerLevel level)) return List.of();
-
         List<Entity> entities = new ArrayList<>();
 
         for (SummonData data : this.summons) {
-            Entity entity = level.getEntity(data.getUUID());
+            Entity entity = this.owner.level().getEntity(data.getId());
 
             if (entity == null) continue;
 
@@ -736,12 +730,10 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> @Nullable T getSummonByClass(Class<T> clazz) {
-        if (!(this.owner.level() instanceof ServerLevel level)) return null;
-
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
         for (SummonData data : this.summons) {
-            Entity entity = level.getEntity(data.getUUID());
+            Entity entity = this.owner.level().getEntity(data.getId());
 
             if (entity == null) continue;
 
@@ -756,14 +748,12 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> List<T> getSummonsByClass(Class<T> clazz) {
-        if (!(this.owner.level() instanceof ServerLevel level)) return List.of();
-
         List<T> entities = new ArrayList<>();
 
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
         for (SummonData data : this.summons) {
-            Entity entity = level.getEntity(data.getUUID());
+            Entity entity = this.owner.level().getEntity(data.getId());
 
             if (entity == null) continue;
 
@@ -778,8 +768,6 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> void unsummonByClass(Class<T> clazz) {
-        if (!(this.owner.level() instanceof ServerLevel level)) return;
-
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
         Iterator<SummonData> iter = this.summons.iterator();
@@ -787,7 +775,7 @@ public class SorcererData implements ISorcererData {
         while (iter.hasNext()) {
             SummonData data = iter.next();
 
-            Entity entity = level.getEntity(data.getUUID());
+            Entity entity = this.owner.level().getEntity(data.getId());
 
             if (entity == null) continue;
 
@@ -802,8 +790,6 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> void removeSummonByClass(Class<T> clazz) {
-        if (!(this.owner.level() instanceof ServerLevel level)) return;
-
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
         Iterator<SummonData> iter = this.summons.iterator();
@@ -811,7 +797,7 @@ public class SorcererData implements ISorcererData {
         while (iter.hasNext()) {
             SummonData data = iter.next();
 
-            Entity entity = level.getEntity(data.getUUID());
+            Entity entity = this.owner.level().getEntity(data.getId());
 
             if (entity == null) continue;
 
@@ -825,12 +811,10 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public <T extends Entity> boolean hasSummonOfClass(Class<T> clazz) {
-        if (!(this.owner.level() instanceof ServerLevel level)) return false;
-
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
         for (SummonData data : this.summons) {
-            Entity entity = level.getEntity(data.getUUID());
+            Entity entity = this.owner.level().getEntity(data.getId());
 
             if (entity == null) continue;
 

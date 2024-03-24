@@ -80,7 +80,7 @@ public class AbilityTab extends JJKTab {
                 if (this.last != null) {
                     // If the parents are the same we need to increase the Y
                     if (this.last.getKey().getParent(this.minecraft.player) == parent) {
-                        y += 2.0F;
+                        y = this.last.getValue().getY() + 2.0F;
                     }
                 }
             }
@@ -88,12 +88,13 @@ public class AbilityTab extends JJKTab {
 
         this.addAbility(ability, x, y);
 
+        this.y = Math.max(this.y, y);
+
         for (Ability current : this.abilities) {
             if (current.isDisplayed(this.minecraft.player) && current.getParent(this.minecraft.player) == ability) {
                 this.addAbilityAndChildren(current);
             }
         }
-        this.y = Math.max(this.y, y);
     }
 
     @Override
