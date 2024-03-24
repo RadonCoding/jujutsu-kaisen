@@ -16,14 +16,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
@@ -110,7 +103,7 @@ public class Dash extends Ability {
 
         if (data == null) return 0.0F;
 
-        return (float) (RANGE * (data.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F));
+        return (float) (RANGE * (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 2.0F : 1.0F));
     }
 
     @Override
@@ -126,7 +119,7 @@ public class Dash extends Ability {
         ISorcererData sorcererData = cap.getSorcererData();
         IProjectionSorceryData projectionSorceryData = cap.getProjectionSorceryData();
 
-        if (projectionSorceryData.getSpeedStacks() > 0 || sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (projectionSorceryData.getSpeedStacks() > 0 || sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
             level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
@@ -137,8 +130,8 @@ public class Dash extends Ability {
 
         HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
-        float power = Math.min(MAX_DASH * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F),
-                DASH * (1.0F + this.getOutput(owner) * 0.1F) * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
+        float power = Math.min(MAX_DASH * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 1.5F : 1.0F),
+                DASH * (1.0F + this.getOutput(owner) * 0.1F) * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 1.5F : 1.0F));
 
         if (hit.getType() == HitResult.Type.MISS) {
             float f = owner.getYRot();
@@ -207,7 +200,7 @@ public class Dash extends Ability {
         
         if (data == null) return 0;
 
-        if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
             return 0;
         }
         return super.getRealCooldown(owner);

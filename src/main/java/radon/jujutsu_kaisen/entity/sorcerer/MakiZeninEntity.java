@@ -38,7 +38,7 @@ public class MakiZeninEntity extends SorcererEntity {
 
     @Override
     public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.HEAVENLY_RESTRICTION);
+        return List.of(Trait.HEAVENLY_RESTRICTION_BODY);
     }
 
     @Override
