@@ -141,12 +141,6 @@ public class WeaponEventHandler {
                 ISorcererData attackerData = attackerCap.getSorcererData();
 
                 if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
-                    if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                        float cost = KamutokeDaggerItem.MELEE_COST * (attackerData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                        if (attackerData.getEnergy() < cost) return;
-                        attackerData.useEnergy(cost);
-                    }
-
                     if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerData.getAbilityOutput())) {
                         if (victim.isDeadOrDying()) {
                             event.setCanceled(true);
@@ -166,10 +160,6 @@ public class WeaponEventHandler {
                                     victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
                                     0, 0.0D, 0.0D, 0.0D, 0.0D);
                         }
-                    }
-
-                    if (attacker instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerData.serializeNBT()), player);
                     }
                 }
             }
