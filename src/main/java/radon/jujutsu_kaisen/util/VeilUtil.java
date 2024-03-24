@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
@@ -15,7 +14,6 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +26,7 @@ public class VeilUtil {
         if (cap != null) {
             ISorcererData data = cap.getSorcererData();
 
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return true;
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) return true;
         }
 
         if (entity instanceof Player player) {

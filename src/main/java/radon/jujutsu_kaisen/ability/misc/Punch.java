@@ -6,8 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -21,14 +19,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -145,7 +136,7 @@ public class Punch extends Ability {
             }
             entity.invulnerableTime = 0;
 
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
                 if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getOutput(owner))) {
                     entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getOutput(owner) * 0.1F) * 2.0F)
                             .multiply(1.0D, 0.25D, 1.0D));
@@ -193,7 +184,7 @@ public class Punch extends Ability {
 
         if (data == null) return 0.0F;
 
-        return data.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 0.0F : 30.0F;
+        return data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 0.0F : 30.0F;
     }
 
     @Override

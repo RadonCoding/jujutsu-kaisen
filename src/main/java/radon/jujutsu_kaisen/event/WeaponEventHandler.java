@@ -22,14 +22,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -90,7 +83,7 @@ public class WeaponEventHandler {
                 if (attackerCap != null) {
                     ISorcererData attackerData = attackerCap.getSorcererData();
 
-                    if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) || attackerData.getFingers() > 0 ||
+                    if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) || attackerData.getFingers() > 0 ||
                             attackerData.hasTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
                         float amount = JJKItems.SPLIT_SOUL_KATANA.get().getDamage();
 

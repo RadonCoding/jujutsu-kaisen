@@ -281,7 +281,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             ISorcererData data = cap.getSorcererData();
 
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
                 this.ability.onHitBlock(this, owner, entity.blockPosition());
             } else {
                 this.ability.onHitEntity(this, owner, entity, false);

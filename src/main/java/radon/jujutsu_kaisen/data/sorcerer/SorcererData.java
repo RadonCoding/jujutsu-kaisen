@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -94,6 +95,7 @@ public class SorcererData implements ISorcererData {
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
+    private static final UUID HEALTH_UUID = UUID.fromString("7d1ab920-e9ff-11ee-bd3d-0242ac120002");
 
     private final LivingEntity owner;
 
@@ -166,7 +168,7 @@ public class SorcererData implements ISorcererData {
 
     private void checkAdvancements(ServerPlayer player) {
         if (this.traits.contains(Trait.SIX_EYES)) PlayerUtil.giveAdvancement(player, "six_eyes");
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) PlayerUtil.giveAdvancement(player, "heavenly_restriction");
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) PlayerUtil.giveAdvancement(player, "heavenly_restriction");
         if (this.traits.contains(Trait.VESSEL)) PlayerUtil.giveAdvancement(player, "vessel");
         if (this.unlocked.contains(JJKAbilities.RCT1.get()))
             PlayerUtil.giveAdvancement(player, "reverse_cursed_technique");
@@ -194,7 +196,11 @@ public class SorcererData implements ISorcererData {
 
         this.energy = Math.min(this.getMaxEnergy(), this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)));
 
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+        /**
+         * Applies the attribute modifiers to the player with heavenly restrictions
+         * Could be called in another way instead of every tick
+         */
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) {
             double damage = this.getBaseOutput() * 3.0D;
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
@@ -207,6 +213,15 @@ public class SorcererData implements ISorcererData {
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(1.0F / 20);
             }
+        }
+        else if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY))
+        {
+            double damage = this.getBaseOutput() * 0.5D;
+            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+
+            double movement = this.getBaseOutput() * 0.05D;
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.7,  movement), AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, HEALTH_UUID, "Health", -16, AttributeModifier.Operation.ADDITION);
         }
     }
 
@@ -346,7 +361,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getBaseOutput() {
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) {
             // Just makes it so heavenly restricted people's output scales with experience
             return 1.0F + (Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), this.experience / ConfigHolder.SERVER.skillPointInterval.get().floatValue()) * 0.1F);
         }
@@ -356,8 +371,10 @@ public class SorcererData implements ISorcererData {
         if (cap == null) return 0.0F;
 
         ISkillData data = cap.getSkillData();
-
-        return 1.0F + (data.getSkill(Skill.OUTPUT) * 0.1F);
+        float amount = 1.0F + (data.getSkill(Skill.OUTPUT) * 0.1F);
+        if (cap.getSorcererData().hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY))
+            amount *= 1.5;
+        return amount;
     }
 
     @Override
@@ -613,7 +630,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getEnergy() {
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) {
             return 0.0F;
         }
         return Math.min(this.getMaxEnergy(), this.energy);
@@ -645,6 +662,8 @@ public class SorcererData implements ISorcererData {
             boolean night = time >= 13000 && time < 24000;
             amount *= night ? 1.2F : 0.9F;
         }
+        if (cap.getSorcererData().hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY))
+            amount *= 10;
         return amount;
     }
 
@@ -827,6 +846,9 @@ public class SorcererData implements ISorcererData {
         return false;
     }
 
+    /**
+     * Where the randomization of the player happens when he spawns in the world
+     */
     @Override
     public void generate(ServerPlayer owner) {
         this.initialized = true;
@@ -836,7 +858,7 @@ public class SorcererData implements ISorcererData {
         this.nature = CursedEnergyNature.BASIC;
 
         this.traits.remove(Trait.SIX_EYES);
-        this.traits.remove(Trait.HEAVENLY_RESTRICTION);
+        this.traits.remove(Trait.HEAVENLY_RESTRICTION_BODY);
         this.traits.remove(Trait.VESSEL);
 
         Set<ICursedTechnique> taken = new HashSet<>();
@@ -869,10 +891,15 @@ public class SorcererData implements ISorcererData {
             }
         }
 
-        if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION)) &&
+        if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) &&
                 HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
-            this.addTrait(Trait.HEAVENLY_RESTRICTION);
-        } else {
+            this.addTrait(Trait.HEAVENLY_RESTRICTION_BODY);
+        }
+        else if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) &&
+                HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
+            this.addTrait(Trait.HEAVENLY_RESTRICTION_SORCERY);
+        }
+        else {
             List<ICursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
 
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
