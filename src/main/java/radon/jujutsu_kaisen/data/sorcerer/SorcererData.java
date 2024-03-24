@@ -348,11 +348,6 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getBaseOutput() {
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) {
-            // Just makes it so heavenly restricted people's output scales with experience
-            return 1.0F + (Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), this.experience / ConfigHolder.SERVER.skillPointInterval.get().floatValue()) * 0.1F);
-        }
-
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return 0.0F;
