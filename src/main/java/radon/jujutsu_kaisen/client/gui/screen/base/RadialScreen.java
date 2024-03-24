@@ -405,7 +405,7 @@ public abstract class RadialScreen extends Screen {
                         scale = Math.max(scale, (int) Math.max(3.0F, 10.0F - tmp.getBbHeight()));
                     }
 
-                    float offset = -(width * scale) * (types.size() - 1);
+                    float offset = -((width / 2) * scale) * (types.size() - 1);
 
                     for (EntityType<?> type : types) {
                         Entity tmp = type.create(this.minecraft.level);
