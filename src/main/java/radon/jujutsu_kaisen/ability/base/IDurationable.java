@@ -20,7 +20,7 @@ public interface IDurationable {
         ISorcererData data = cap.getSorcererData();
 
         if (duration > 0) {
-            duration = (int) (duration * data.getBaseOutput());
+            duration = (int) (duration * data.getAbilityOutput());
         }
         return duration;
     }

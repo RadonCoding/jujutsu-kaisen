@@ -147,7 +147,7 @@ public class WeaponEventHandler {
                         attackerData.useEnergy(cost);
                     }
 
-                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerData.getBaseOutput())) {
+                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerData.getAbilityOutput())) {
                         if (victim.isDeadOrDying()) {
                             event.setCanceled(true);
                             return;
