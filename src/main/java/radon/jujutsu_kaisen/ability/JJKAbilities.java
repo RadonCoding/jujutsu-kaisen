@@ -247,12 +247,12 @@ public class JJKAbilities {
         for (DeferredHolder<Ability, ? extends Ability> entry : ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
-            if (!ability.isTechnique() && (!data.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.isMelee())) {
+            if (!ability.isTechnique() && (!data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) || ability.isMelee())) {
                 abilities.add(ability);
             }
         }
 
-        if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
             for (ICursedTechnique technique : data.getActiveTechniques()) {
                 abilities.addAll(technique.getAbilities());
             }
