@@ -1,11 +1,8 @@
 package radon.jujutsu_kaisen.item.cursed_object;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +15,6 @@ import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.curse.FingerBearerEntity;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
@@ -69,7 +65,7 @@ public class SukunaFingerItem extends CursedObjectItem {
         if (cap != null) {
             ISorcererData data = cap.getSorcererData();
 
-            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return pStack;
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) return pStack;
 
             if (isFull(pStack)) {
                 data.addTrait(Trait.PERFECT_BODY);

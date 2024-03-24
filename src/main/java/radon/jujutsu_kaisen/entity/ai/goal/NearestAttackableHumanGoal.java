@@ -7,7 +7,6 @@ import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -67,7 +66,7 @@ public class NearestAttackableHumanGoal extends TargetGoal {
                 if (cap == null) return false;
 
                 ISorcererData data = cap.getSorcererData();
-                return data.hasTrait(Trait.HEAVENLY_RESTRICTION);
+                return data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY);
             }
             return false;
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());

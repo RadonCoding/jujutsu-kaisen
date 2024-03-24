@@ -1,9 +1,7 @@
 package radon.jujutsu_kaisen.ability.base;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -21,7 +19,6 @@ import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -213,7 +210,7 @@ public abstract class Ability {
 
         if (data == null) return 0;
 
-        if ((this.isMelee() && data.hasTrait(Trait.HEAVENLY_RESTRICTION)) || (this.getCost(owner) > 0.0F && data.hasTrait(Trait.SIX_EYES))) {
+        if ((this.isMelee() && data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) || (this.getCost(owner) > 0.0F && data.hasTrait(Trait.SIX_EYES))) {
             return this.getCooldown() / 2;
         }
         return this.getCooldown();
