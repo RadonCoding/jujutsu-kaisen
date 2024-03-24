@@ -11,7 +11,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -103,7 +102,7 @@ public class StatsTab extends JJKTab {
             component.append(Component.translatable(String.format("gui.%s.stats.cursed_technique", JujutsuKaisen.MOD_ID), technique.getName()));
             component.append("\n");
         }
-        if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
             component.append(Component.translatable(String.format("gui.%s.stats.cursed_energy_nature", JujutsuKaisen.MOD_ID), data.getNature().getName()));
             component.append("\n");
         }
