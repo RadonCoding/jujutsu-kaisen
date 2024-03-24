@@ -53,7 +53,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         super(pType, pLevel);
     }
 
-    public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual, Variant variant) {
+    public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual) {
         super(type, owner.level());
 
         this.setTame(true);
@@ -67,8 +67,6 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        this.setVariant(variant);
     }
 
     @Override

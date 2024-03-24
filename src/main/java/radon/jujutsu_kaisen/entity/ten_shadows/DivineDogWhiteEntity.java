@@ -9,10 +9,12 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 public class DivineDogWhiteEntity extends DivineDogEntity {
     public DivineDogWhiteEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+
+        this.setVariant(Variant.WHITE);
     }
 
     public DivineDogWhiteEntity(LivingEntity owner, boolean ritual) {
-        super(JJKEntities.DIVINE_DOG_WHITE.get(), owner, ritual, Variant.WHITE);
+        super(JJKEntities.DIVINE_DOG_WHITE.get(), owner, ritual);
     }
 }
 

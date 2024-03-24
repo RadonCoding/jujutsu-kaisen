@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -378,14 +379,44 @@ public abstract class RadialScreen extends Screen {
             }
 
             if ((item.ability instanceof Summon<?> summon && summon.display()) || item.type == DisplayItem.Type.CURSE) {
-                Entity tmp = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level) :
-                        CurseManipulationUtil.createCurse(this.minecraft.player, item.curse.getKey());
+                float height = 0.0F;
+                int scale = 0;
 
-                if (tmp == null) continue;
+                if (item.type == DisplayItem.Type.CURSE) {
+                    Entity tmp = CurseManipulationUtil.createCurse(this.minecraft.player, item.curse.getKey());
 
-                float height = tmp.getBbHeight();
-                int scale = (int) Math.max(3.0F, 10.0F - tmp.getBbHeight());
-                renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, tmp);
+                    if (tmp == null) continue;
+
+                    height = tmp.getBbHeight();
+                    scale = (int) Math.max(3.0F, 10.0F - tmp.getBbHeight());
+                    renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, tmp);
+                } else {
+                    List<EntityType<?>> types = ((Summon<?>) item.ability).getTypes();
+
+                    float width = 0.0F;
+
+                    for (EntityType<?> type : types) {
+                        Entity tmp = type.create(this.minecraft.level);
+
+                        if (tmp == null) continue;
+
+                        width = Math.max(width, tmp.getBbWidth());
+                        height = Math.max(height, tmp.getBbHeight());
+                        scale = Math.max(scale, (int) Math.max(3.0F, 10.0F - tmp.getBbHeight()));
+                    }
+
+                    float offset = -(width * scale) * (types.size() - 1);
+
+                    for (EntityType<?> type : types) {
+                        Entity tmp = type.create(this.minecraft.level);
+
+                        if (tmp == null) continue;
+
+                        renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), Math.round(posX + offset), (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, tmp);
+
+                        offset += width * scale;
+                    }
+                }
 
                 if (item.ability instanceof Summon<?> summon) {
                     if (summon.getActivationType(this.minecraft.player) == Ability.ActivationType.TOGGLED) {
