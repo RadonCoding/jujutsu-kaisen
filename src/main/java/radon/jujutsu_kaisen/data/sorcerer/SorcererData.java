@@ -328,7 +328,14 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getAbilityOutput(Ability ability) {
-        float power = this.getBaseOutput() * ChantHandler.getOutput(this.owner, ability);
+        return this.getAbilityOutput() * ChantHandler.getOutput(this.owner, ability);
+    }
+
+    @Override
+    public float getAbilityOutput() {
+        float power = this.getBaseOutput() * this.getOutput();
+
+        if (this.hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY)) power *= 1.5F;
 
         if (this.hasSummonOfClass(SimpleDomainEntity.class) || this.hasSummonOfClass(DomainExpansionEntity.class)) {
             power *= 1.2F;
@@ -336,27 +343,6 @@ public class SorcererData implements ISorcererData {
 
         if (this.isInZone()) power *= 1.2F;
 
-        return power;
-    }
-
-    @Override
-    public float getAbilityOutput() {
-        IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return 0.0F;
-
-        IAbilityData data = cap.getAbilityData();
-
-        float power = this.getBaseOutput() * this.getOutput();
-        if (cap.getSorcererData().hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY))
-            power *= 1.5;
-        if (this.technique != null) {
-            Ability domain = this.technique.getDomain();
-
-            if (domain != null && data.hasToggled(domain)) {
-                power *= 1.2F;
-            }
-        }
         return power;
     }
 
