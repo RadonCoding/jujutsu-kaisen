@@ -4,39 +4,37 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
 import java.util.UUID;
 
 public class SummonData {
-    private final UUID uuid;
+    private final int id;
     private final ResourceKey<Level> dimension;
     private Long chunkPos;
 
     public SummonData(Entity entity) {
-        this.uuid = entity.getUUID();
+        this.id = entity.getId();
         this.dimension = entity.level().dimension();
         this.chunkPos = entity.chunkPosition().toLong();
     }
 
     public SummonData(CompoundTag nbt) {
-        this.uuid = nbt.getUUID("uuid");
+        this.id = nbt.getInt("id");
         this.dimension = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("dimension")));
         this.chunkPos = nbt.getLong("chunk_pos");
     }
 
-    public UUID getUUID() {
-        return this.uuid;
+    public int getId() {
+        return this.id;
     }
 
     public ResourceKey<Level> getDimension() {
         return this.dimension;
     }
 
-    public Long getChunkPos() {
+    public long getChunkPos() {
         return this.chunkPos;
     }
 
@@ -46,7 +44,7 @@ public class SummonData {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putUUID("uuid", this.uuid);
+        nbt.putInt("id", this.id);
         nbt.putString("dimension", this.dimension.location().toString());
         nbt.putLong("chunk_pos", this.chunkPos);
         return nbt;
@@ -58,11 +56,11 @@ public class SummonData {
         if (!(obj instanceof SummonData other)) {
             return false;
         }
-        return this.getUUID() == other.getUUID();
+        return this.getId() == other.getId();
     }
 
     @Override
     public int hashCode() {
-        return this.getUUID().hashCode();
+        return this.getId();
     }
 }

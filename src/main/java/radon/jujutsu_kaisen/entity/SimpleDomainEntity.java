@@ -31,6 +31,7 @@ import java.util.UUID;
 
 public class SimpleDomainEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_ENLARGEMENT = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_MAX_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
 
@@ -76,11 +77,37 @@ public class SimpleDomainEntity extends Entity {
     }
 
     public float getRadius() {
-        return this.entityData.get(DATA_RADIUS);
+        return this.entityData.get(DATA_RADIUS) * (1.0F + this.getEnlargement());
     }
 
     private void setRadius(float radius) {
         this.entityData.set(DATA_RADIUS, radius);
+    }
+
+    public float getEnlargement() {
+        return this.entityData.get(DATA_ENLARGEMENT);
+    }
+
+    public void setEnlargement(float enlargement) {
+        this.entityData.set(DATA_ENLARGEMENT, enlargement);
+    }
+
+    public boolean canEnlarge() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return false;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ISkillData data = cap.getSkillData();
+
+        return this.getEnlargement() < 1.0F + (data.getSkill(Skill.BARRIER) * 0.01F);
+    }
+
+    public void enlarge() {
+        this.setEnlargement(this.getEnlargement() + 0.1F);
     }
 
     private float getMaxHealth() {
@@ -113,6 +140,7 @@ public class SimpleDomainEntity extends Entity {
     @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_RADIUS, 0.0F);
+        this.entityData.define(DATA_ENLARGEMENT, 0.0F);
         this.entityData.define(DATA_MAX_HEALTH, 0.0F);
         this.entityData.define(DATA_HEALTH, 0.0F);
     }
@@ -218,6 +246,7 @@ public class SimpleDomainEntity extends Entity {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putFloat("radius", this.getRadius());
+        pCompound.putFloat("enlargement", this.getEnlargement());
         pCompound.putFloat("max_health", this.getMaxHealth());
         pCompound.putFloat("health", this.getHealth());
     }
@@ -228,6 +257,7 @@ public class SimpleDomainEntity extends Entity {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.setRadius(pCompound.getFloat("radius"));
+        this.setEnlargement(pCompound.getFloat("enlargement"));
         this.setMaxHealth(pCompound.getFloat("max_health"));
         this.setHealth(pCompound.getFloat("health"));
     }

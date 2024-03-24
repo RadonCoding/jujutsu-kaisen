@@ -42,6 +42,7 @@ public class ServerConfig {
     public final ModConfigSpec.DoubleValue chantSimilarityThreshold;
 
     public final ModConfigSpec.IntValue simpleDomainCost;
+    public final ModConfigSpec.IntValue simpleDomainEnlargementCost;
     public final ModConfigSpec.IntValue quickDrawCost;
     public final ModConfigSpec.IntValue fallingBlossomEmotionCost;
     public final ModConfigSpec.IntValue domainExpansionCost;
@@ -166,6 +167,8 @@ public class ServerConfig {
         builder.comment("Abilities").push("abilities");
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
+        this.simpleDomainEnlargementCost = builder.comment("The amount of points simple domain enlargement costs to unlock")
+                .defineInRange("quickDrawCost", 50, 1, 10000);
         this.quickDrawCost = builder.comment("The amount of points quick draw costs to unlock")
                 .defineInRange("quickDrawCost", 50, 1, 10000);
         this.fallingBlossomEmotionCost = builder.comment("The amount of points falling blossom emotion costs to unlock")
