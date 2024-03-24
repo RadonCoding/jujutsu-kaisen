@@ -168,7 +168,7 @@ public class SorcererData implements ISorcererData {
 
     private void checkAdvancements(ServerPlayer player) {
         if (this.traits.contains(Trait.SIX_EYES)) PlayerUtil.giveAdvancement(player, "six_eyes");
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) PlayerUtil.giveAdvancement(player, "heavenly_restriction");
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY) || this.traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) PlayerUtil.giveAdvancement(player, "heavenly_restriction");
         if (this.traits.contains(Trait.VESSEL)) PlayerUtil.giveAdvancement(player, "vessel");
         if (this.unlocked.contains(JJKAbilities.RCT1.get()))
             PlayerUtil.giveAdvancement(player, "reverse_cursed_technique");
@@ -196,9 +196,8 @@ public class SorcererData implements ISorcererData {
 
         this.energy = Math.min(this.getMaxEnergy(), this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)));
 
-        /**
+        /*
          * Applies the attribute modifiers to the player with heavenly restrictions
-         * Could be called in another way instead of every tick
          */
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) {
             double damage = this.getBaseOutput() * 3.0D;
