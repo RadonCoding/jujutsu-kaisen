@@ -19,17 +19,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -47,9 +39,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideable, IRightClickInputListener {
-    private static final double EXPLOSION_FALL_DISTANCE = 10.0D;
-    private static final int EXPLOSION_DURATION = 20;
-    private static final float EXPLOSION_POWER = 10.0F;
+    private static final float EXPLOSION_FALL_DISTANCE = 10.0F;
 
     private static final EntityDataAccessor<Boolean> DATA_SHOOTING = SynchedEntityData.defineId(MaxElephantEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -129,13 +119,10 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
 
         if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
-            IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            float radius = Math.min(EXPLOSION_FALL_DISTANCE * 10, pFallDistance) * 0.25F;
+            int duration = (int) (radius / 5.0F * 20);
 
-            if (cap == null) return true;
-
-            ISorcererData data = cap.getSorcererData();
-
-            ExplosionHandler.spawn(this.level().dimension(), this.position(), EXPLOSION_POWER, EXPLOSION_DURATION, data.getBaseOutput(), this,
+            ExplosionHandler.spawn(this.level().dimension(), this.position(), radius, duration, radius * 0.1F, this,
                     this.damageSources().mobAttack(this), false);
         }
         return result;
