@@ -213,15 +213,10 @@ public class SorcererData implements ISorcererData {
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(1.0F / 20);
             }
-        }
-        else if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY))
-        {
-            double damage = this.getBaseOutput() * 0.5D;
-            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
-
-            double movement = this.getBaseOutput() * 0.05D;
-            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.7,  movement), AttributeModifier.Operation.ADDITION);
-            EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, HEALTH_UUID, "Health", -16, AttributeModifier.Operation.ADDITION);
+        } else if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) {
+            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 0.5D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.5D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, HEALTH_UUID, "Health", -14, AttributeModifier.Operation.ADDITION);
         }
     }
 
@@ -641,8 +636,9 @@ public class SorcererData implements ISorcererData {
             boolean night = time >= 13000 && time < 24000;
             amount *= night ? 1.2F : 0.9F;
         }
-        if (cap.getSorcererData().hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY))
-            amount *= 10;
+
+        if (cap.getSorcererData().hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY)) amount *= 10.0F;
+
         return amount;
     }
 
@@ -873,12 +869,10 @@ public class SorcererData implements ISorcererData {
         if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) &&
                 HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION_BODY);
-        }
-        else if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) &&
+        } else if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) &&
                 HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION_SORCERY);
-        }
-        else {
+        } else {
             List<ICursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
 
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
