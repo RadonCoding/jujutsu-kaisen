@@ -7,22 +7,23 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.*;
+import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogBlackEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogWhiteEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class DivineDogs extends Summon<DivineDogEntity> {
-    public DivineDogs() {
-        super(DivineDogEntity.class);
+public class DivineDogWhite extends Summon<DivineDogWhiteEntity> {
+    public DivineDogWhite() {
+        super(DivineDogWhiteEntity.class);
     }
 
     @Override
@@ -57,8 +58,8 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     }
 
     @Override
-    protected DivineDogEntity summon(LivingEntity owner) {
-        return null;
+    protected DivineDogWhiteEntity summon(LivingEntity owner) {
+        return new DivineDogWhiteEntity(owner, false);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
         ITenShadowsData data = cap.getTenShadowsData();
 
-        return data.isDead(JJKEntities.DIVINE_DOG_WHITE.get()) || data.isDead(JJKEntities.DIVINE_DOG_BLACK.get());
+        return data.isDead(JJKEntities.DIVINE_DOG_WHITE.get());
     }
 
     @Override
@@ -88,11 +89,6 @@ public class DivineDogs extends Summon<DivineDogEntity> {
         owner.level().addFreshEntity(white);
         sorcererData.addSummon(white);
 
-        DivineDogBlackEntity black = new DivineDogBlackEntity(owner, false);
-        black.setClone(clone);
-        owner.level().addFreshEntity(black);
-        sorcererData.addSummon(black);
-
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
         }
@@ -107,7 +103,6 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
             ISorcererData data = cap.getSorcererData();
             data.unsummonByClass(DivineDogWhiteEntity.class);
-            data.unsummonByClass(DivineDogBlackEntity.class);
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
@@ -117,7 +112,7 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     public List<EntityType<?>> getTypes() {
-        return List.of(JJKEntities.DIVINE_DOG_WHITE.get(), JJKEntities.DIVINE_DOG_BLACK.get());
+        return List.of(JJKEntities.DIVINE_DOG_WHITE.get());
     }
 
     @Override
