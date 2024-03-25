@@ -28,7 +28,8 @@ public class WormCurseGrab extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
+        if (target == null || target.isDeadOrDying()) return false;
+        return HelperMethods.RANDOM.nextInt(40) == 0 && this.getTarget(owner) == target;
     }
 
     @Override
@@ -68,7 +69,6 @@ public class WormCurseGrab extends Ability {
 
         ICurseManipulationData data = cap.getCurseManipulationData();
 
-
         AbsorbedCurse curse = data.getCurse(JJKEntities.WORM_CURSE.get());
 
         if (!(CurseManipulationUtil.summonCurse(owner, curse, false) instanceof WormCurseEntity worm)) return;
@@ -93,8 +93,6 @@ public class WormCurseGrab extends Ability {
         if (cap == null) return 0.0F;
 
         ICurseManipulationData data = cap.getCurseManipulationData();
-
-        if (data == null) return 0.0F;
 
         AbsorbedCurse curse = data.getCurse(JJKEntities.WORM_CURSE.get());
         return curse == null ? 0.0F : CurseManipulationUtil.getCurseCost(curse);

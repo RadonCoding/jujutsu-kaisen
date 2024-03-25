@@ -23,26 +23,30 @@ public class FishSwarm extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
+        if (target == null || target.isDeadOrDying()) return false;
+        return HelperMethods.RANDOM.nextInt(40) == 0 && this.getTarget(owner) == target;
     }
 
     @Override
     public boolean isValid(LivingEntity owner)
     {
-        if (!super.isValid(owner))
-            return false;
+        if (!super.isValid(owner)) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-        if (cap == null)
-            return false;
+
+        if (cap == null) return false;
+
         ICurseManipulationData data = cap.getCurseManipulationData();
-        int amountFishes = 0;
+
+        int amount = 0;
+
         for (int i = 0; i < data.getCurses().size(); i++)
         {
-            if (data.getCurses().get(i).getType().equals(JJKEntities.FISH_CURSE.get()))
-                amountFishes++;
+            if (data.getCurses().get(i).getType() != JJKEntities.FISH_CURSE.get()) continue;
+
+            amount++;
         }
-        return amountFishes >= 5;
+        return amount >= 5;
     }
 
     @Override
@@ -62,20 +66,22 @@ public class FishSwarm extends Ability {
     public void run(LivingEntity owner)
     {
         LivingEntity target = this.getTarget(owner);
-        if (target == null)
-            return;
+
+        if (target == null) return;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
 
         ICurseManipulationData data = cap.getCurseManipulationData();
+
         for (int i = 0; i < 5; i++)
         {
             AbsorbedCurse curse = data.getCurse(JJKEntities.FISH_CURSE.get());
-            if (!(CurseManipulationUtil.summonCurse(owner, curse, false) instanceof FishCurseEntity fishCurse))
-                return;
-            fishCurse.setTarget(target);
+
+            if (!(CurseManipulationUtil.summonCurse(owner, curse, false) instanceof FishCurseEntity fish)) continue;
+
+            fish.setTarget(target);
         }
     }
 
@@ -95,8 +101,6 @@ public class FishSwarm extends Ability {
         if (cap == null) return 0.0F;
 
         ICurseManipulationData data = cap.getCurseManipulationData();
-
-        if (data == null) return 0.0F;
 
         AbsorbedCurse curse = data.getCurse(JJKEntities.FISH_CURSE.get());
         return curse == null ? 0.0F : CurseManipulationUtil.getCurseCost(curse);
