@@ -868,10 +868,12 @@ public class SorcererData implements ISorcererData {
         if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) &&
                 HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION_BODY);
-        } else if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) &&
-                HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
-            this.addTrait(Trait.HEAVENLY_RESTRICTION_SORCERY);
         } else {
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || !traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) &&
+                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
+                this.addTrait(Trait.HEAVENLY_RESTRICTION_SORCERY);
+            }
+
             List<ICursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
 
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
