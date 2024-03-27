@@ -53,7 +53,9 @@ public class MissionData implements IMissionData {
 
                 if (!((type.create(this.level)) instanceof CursedSpirit curse)) continue;
 
-                if (curse.getGrade().ordinal() == mission.getGrade().toSorcererGrade().ordinal() + 1) {
+                int diff = mission.getGrade().toSorcererGrade().ordinal() - curse.getGrade().ordinal();
+
+                if (diff >= 1 && diff < 3) {
                     bosses.add(type);
                     continue;
                 }
