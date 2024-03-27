@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -25,7 +25,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJumpInputListener {
+public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IControllableFlyingRide {
     private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 

@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
 
 public class JumpInputListenerC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "jump_input_listener_serverbound");
@@ -26,9 +26,9 @@ public class JumpInputListenerC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            if (sender.getVehicle() instanceof IJumpInputListener listener) {
+            if (sender.getVehicle() instanceof IControllableFlyingRide listener) {
                 listener.setJump(this.down);
-            } else if (sender.getFirstPassenger() instanceof IJumpInputListener listener) {
+            } else if (sender.getFirstPassenger() instanceof IControllableFlyingRide listener) {
                 listener.setJump(this.down);
             }
         });

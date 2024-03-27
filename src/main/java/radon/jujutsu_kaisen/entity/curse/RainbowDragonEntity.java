@@ -9,9 +9,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -26,7 +24,7 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -34,7 +32,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable, IJumpInputListener {
+public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable, IControllableFlyingRide {
     private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
 
     private static final int MAX_IDLE_Y = 16;
