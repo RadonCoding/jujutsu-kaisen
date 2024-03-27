@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "jujutsu_kaisen:block/black"
+      "model": "jujutsu_kaisen:block/domain"
     }
   }
 }

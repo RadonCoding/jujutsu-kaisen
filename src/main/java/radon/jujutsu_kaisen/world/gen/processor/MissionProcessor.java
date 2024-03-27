@@ -35,7 +35,7 @@ public class MissionProcessor extends StructureProcessor {
         return JJKProcessors.MISSION_PROCESSOR.get();
     }
 
-    @Nullable
+    /*@Nullable
     @Override
     public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader pLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, StructureTemplate.@NotNull StructureBlockInfo pBlockInfo, StructureTemplate.@NotNull StructureBlockInfo pRelativeBlockInfo, @NotNull StructurePlaceSettings pSettings, @Nullable StructureTemplate template) {
         if (!pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER.get())) return pRelativeBlockInfo;
@@ -50,7 +50,7 @@ public class MissionProcessor extends StructureProcessor {
         mission.addSpawn(pPos);
 
         return new StructureTemplate.StructureBlockInfo(pPos, Blocks.AIR.defaultBlockState(), null);
-    }
+    }*/
 
     @Override
     public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(@NotNull ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, @NotNull List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
