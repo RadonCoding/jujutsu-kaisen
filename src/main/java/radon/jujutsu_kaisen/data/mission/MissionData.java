@@ -20,6 +20,7 @@ import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -44,16 +45,35 @@ public class MissionData implements IMissionData {
         for (Mission mission : this.missions) {
             if (mission.isSpawned()) continue;
 
-            List<EntityType<?>> types = new ArrayList<>();
+            List<EntityType<?>> spawns = new ArrayList<>();
+            List<EntityType<?>> bosses = new ArrayList<>();
 
             for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
                 if (!type.is(JJKEntityTypeTags.SPAWNABLE_CURSE)) continue;
 
-                types.add(type);
+                if (!((type.create(this.level)) instanceof CursedSpirit curse)) continue;
+
+                if (curse.getGrade().ordinal() == mission.getGrade().toSorcererGrade().ordinal() + 1) {
+                    bosses.add(type);
+                    continue;
+                }
+
+                if (curse.getGrade().ordinal() > mission.getGrade().toSorcererGrade().ordinal()) continue;
+
+                spawns.add(type);
             }
 
-            // types.get(HelperMethods.RANDOM.nextInt(types.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+            if (!spawns.isEmpty()) {
+                for (BlockPos pos : mission.getSpawns()) {
+                    spawns.get(HelperMethods.RANDOM.nextInt(spawns.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+                }
+            }
 
+            if (!bosses.isEmpty()) {
+                for (BlockPos pos : mission.getBosses()) {
+                    bosses.get(HelperMethods.RANDOM.nextInt(bosses.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+                }
+            }
             mission.setSpawned(true);
         }
     }
