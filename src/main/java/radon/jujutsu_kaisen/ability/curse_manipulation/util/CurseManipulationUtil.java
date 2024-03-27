@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.BirdCurseEntity;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -112,7 +113,7 @@ public class CurseManipulationUtil {
 
         ownerSorcererData.addSummon(entity);
         ownerCurseManipulationData.removeCurse(curse);
-        if (!owner.onGround() && entity instanceof BirdCurseEntity)
+        if (!owner.onGround() && entity instanceof IControllableFlyingRide)
         {
             if (owner.startRiding(entity)) {
                 owner.setYRot(entity.getYRot());

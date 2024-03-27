@@ -27,7 +27,7 @@ import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.Polymorphi
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulSmallRenderer;
-import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.util.CuriosUtil;
@@ -93,10 +93,10 @@ public class JJKClientEventHandler {
                 if (event.getAction() == InputConstants.PRESS || event.getAction() == InputConstants.RELEASE) {
                     boolean down = event.getAction() == InputConstants.PRESS;
 
-                    if (mc.player.getVehicle() instanceof IJumpInputListener listener) {
+                    if (mc.player.getVehicle() instanceof IControllableFlyingRide listener) {
                         listener.setJump(down);
                         PacketHandler.sendToServer(new JumpInputListenerC2SPacket(down));
-                    } else if (mc.player.getFirstPassenger() instanceof IJumpInputListener listener) {
+                    } else if (mc.player.getFirstPassenger() instanceof IControllableFlyingRide listener) {
                         listener.setJump(down);
                         PacketHandler.sendToServer(new JumpInputListenerC2SPacket(down));
                     }
