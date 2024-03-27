@@ -48,8 +48,8 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
-    public boolean canBeCollidedWith() {
-        return !this.isHiding() && super.canBeCollidedWith();
+    public boolean isPushable() {
+        return !this.isHiding() && super.isPushable();
     }
 
     @Override
@@ -83,7 +83,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
     @Override
     public boolean isPersistenceRequired() {
-        return this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
+        return true;
     }
 
     protected abstract boolean isCustom();
@@ -192,6 +192,8 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         this.setHiding(this.getTarget() == null && !VeilHandler.isInsideBarrier(((ServerLevel) this.level()), this.blockPosition()));
 
+        if (!this.isHiding()) return;
+
         if (this.random.nextInt(HUNGRY_CHANCE) == 0) this.hungry = true;
 
         if (!this.hungry) return;
@@ -235,7 +237,6 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         if (this.isTame()) {
             LivingEntity target = this.getTarget();
             this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
-            return;
         }
 
         if (!this.level().isClientSide) {

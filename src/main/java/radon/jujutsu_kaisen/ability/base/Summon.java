@@ -221,11 +221,9 @@ public abstract class Summon<T extends Entity> extends Ability implements IToggl
             ((TenShadowsSummon) summon).setClone(clone);
         }
         owner.level().addFreshEntity(summon);
-        if (!owner.onGround() && owner.getVehicle() == null && this.isTamed(owner) && canFly(summon))
-        {
+
+        if (!owner.onGround() && owner.getVehicle() == null && this.isTamed(owner) && canFly(summon)) {
             owner.startRiding(summon);
-            owner.setYRot(summon.getYRot());
-            owner.setXRot(summon.getXRot());
         }
         data.addSummon(summon);
 

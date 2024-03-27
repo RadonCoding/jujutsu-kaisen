@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -10,12 +12,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ScrollableSlider;
 import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.mission.IMissionData;
+import radon.jujutsu_kaisen.data.mission.Mission;
+import radon.jujutsu_kaisen.data.mission.MissionGrade;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MissionsScreen extends Screen {
     private static final ResourceLocation WINDOW = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/window.png");
@@ -33,25 +39,38 @@ public class MissionsScreen extends Screen {
 
     private static final int MISSION_GRADE_SIZE = 52;
 
-    private final Map<MissionGrade, List<MissionCard>> missions;
+    private static final int ACCEPT_BUTTON_WIDTH = 128;
+    private static final int ACCEPT_BUTTON_HEIGHT = 16;
+
+    private final List<MissionCard> cards;
 
     private ExtendedSlider missionGradesSlider;
     private ExtendedSlider missionCardsSlider;
+    private Button acceptButton;
 
     private MissionGrade grade;
 
     private boolean isScrolling;
 
+    @Nullable
+    private MissionCard selected;
+
     public MissionsScreen() {
         super(GameNarrator.NO_TITLE);
 
-        this.missions = new LinkedHashMap<>();
+        this.cards = new ArrayList<>();
         this.grade = MissionGrade.D;
+    }
+
+    private void setSelected(@Nullable MissionCard selected) {
+        this.selected = selected;
+
+        this.acceptButton.active = this.selected != null;
     }
 
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (pButton != 0) {
+        if (pButton != InputConstants.MOUSE_BUTTON_LEFT) {
             this.isScrolling = false;
         } else {
             if (!this.isScrolling) {
@@ -64,7 +83,8 @@ public class MissionsScreen extends Screen {
                 double y = pMouseY - offsetY - MissionCard.WINDOW_INSIDE_Y;
 
                 if (y > 0.0D && y < WINDOW_INSIDE_HEIGHT) {
-                    List<MissionCard> missions = this.missions.get(this.grade);
+                    List<MissionCard> missions = new ArrayList<>(this.cards);
+                    missions.removeIf(card -> card.getGrade() != this.grade);
 
                     for (int i = 0; i < missions.size(); i++) {
                         int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
@@ -89,17 +109,40 @@ public class MissionsScreen extends Screen {
         int windowOffsetX = WINDOW_OFFSET_X;
         int windowOffsetY = (this.height - WINDOW_HEIGHT) / 2;
 
-        double x = pMouseX - windowOffsetX - WINDOW_INSIDE_X;
-        double y = pMouseY - windowOffsetY - WINDOW_INSIDE_Y;
+        double windowRelativeX = pMouseX - windowOffsetX - WINDOW_INSIDE_X;
+        double windowRelativeY = pMouseY - windowOffsetY - WINDOW_INSIDE_Y;
 
-        if (x > 0.0D && x < MISSION_GRADE_SIZE && y > 0.0D && y < WINDOW_INSIDE_HEIGHT) {
+        if (windowRelativeX > 0.0D && windowRelativeX < MISSION_GRADE_SIZE && windowRelativeY > 0.0D && windowRelativeY < WINDOW_INSIDE_HEIGHT) {
             for (int i = 0; i < MissionGrade.values().length; i++) {
                 double offset = (i * MISSION_GRADE_SIZE) - this.missionGradesSlider.getValue();
 
-                double relative = y - offset;
+                double relative = windowRelativeY - offset;
 
                 if (relative > 0.0D && relative < MISSION_GRADE_SIZE) {
                     this.grade = MissionGrade.values()[i];
+                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+        }
+
+        int missionCardsOffsetX = WINDOW_OFFSET_X + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
+        int missionCardsOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
+
+        double missionCardsRelativeX = pMouseX - missionCardsOffsetX - MissionCard.WINDOW_INSIDE_X;
+        double missionCardsRelativeY = pMouseY - missionCardsOffsetY - MissionCard.WINDOW_INSIDE_Y;
+
+        if (missionCardsRelativeY > 0.0D && missionCardsRelativeY < WINDOW_INSIDE_HEIGHT) {
+            List<MissionCard> missions = new ArrayList<>(this.cards);
+            missions.removeIf(card -> card.getGrade() != this.grade);
+
+            for (int i = 0; i < missions.size(); i++) {
+                int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
+
+                double relativeX = missionCardsRelativeX - insideX;
+
+                if (relativeX > 0.0D && relativeX < MissionCard.WINDOW_INSIDE_WIDTH) {
+                    this.setSelected(this.selected == missions.get(i) ? null : missions.get(i));
                     this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     return true;
                 }
@@ -112,16 +155,14 @@ public class MissionsScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.missions.clear();
+        if (this.minecraft == null || this.minecraft.level == null) return;
 
-        for (MissionGrade grade : MissionGrade.values()) {
-            List<MissionCard> missions = new ArrayList<>();
+        this.cards.clear();
 
-            for (int i = 0; i < 16; i++) {
-                missions.add(new MissionCard(this.minecraft, new Mission(Component.literal(String.format("%s-tier mission title", grade.name())),
-                        Component.literal("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))));
-            }
-            this.missions.put(grade, missions);
+        IMissionData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION);
+
+        for (Mission mission : data.getMissions()) {
+            this.cards.add(new MissionCard(this.minecraft, mission));
         }
 
         int windowOffsetX = WINDOW_OFFSET_X;
@@ -129,6 +170,9 @@ public class MissionsScreen extends Screen {
 
         int missionCardOffsetX = windowOffsetX + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
         int missionCardOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
+
+        List<MissionCard> missions = new ArrayList<>(this.cards);
+        missions.removeIf(card -> card.getGrade() != this.grade);
 
         this.missionGradesSlider = new VerticalSlider(windowOffsetX + WINDOW_INSIDE_X + WINDOW_INSIDE_WIDTH - 8, windowOffsetY + WINDOW_INSIDE_Y,
                 8, WINDOW_INSIDE_HEIGHT, Component.empty(), Component.empty(), 0.0D,
@@ -138,9 +182,15 @@ public class MissionsScreen extends Screen {
 
         this.missionCardsSlider = new ScrollableSlider(missionCardOffsetX, missionCardOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING,
                 this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X, 8, Component.empty(), Component.empty(), 0.0D,
-                Math.max(0, (this.missions.get(this.grade).size() * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING) - MissionCard.OUTER_PADDING) - (this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X)),
+                Math.max(0, (missions.size() * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING) - MissionCard.OUTER_PADDING) - (this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X)),
                 0, 0.1D, 0, false);
         this.addRenderableWidget(this.missionCardsSlider);
+
+        this.acceptButton = Button.builder(Component.translatable(String.format("gui.%s.missions.accept", JujutsuKaisen.MOD_ID)), pButton -> {
+
+        }).pos(missionCardOffsetX + (this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2, missionCardOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
+                .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT).build();
+        this.addRenderableWidget(this.acceptButton);
     }
 
     @Override
@@ -203,7 +253,8 @@ public class MissionsScreen extends Screen {
     private void renderMissionCards(GuiGraphics graphics, int offsetX, int offsetY) {
         graphics.enableScissor(offsetX, 0, this.width - MISSION_CARDS_OFFSET_X, this.height);
 
-        List<MissionCard> missions = this.missions.get(this.grade);
+        List<MissionCard> missions = new ArrayList<>(this.cards);
+        missions.removeIf(card -> card.getGrade() != this.grade);
 
         for (int i = 0; i < missions.size(); i++) {
             int insideX = offsetX - this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING)) + MissionCard.WINDOW_INSIDE_X;
@@ -213,7 +264,7 @@ public class MissionsScreen extends Screen {
             int windowY = offsetY;
 
             missions.get(i).drawInside(graphics, insideX, insideY);
-            missions.get(i).drawWindow(graphics, windowX, windowY);
+            missions.get(i).drawWindow(graphics, windowX, windowY, this.selected == missions.get(i));
         }
         graphics.disableScissor();
     }
@@ -223,7 +274,8 @@ public class MissionsScreen extends Screen {
         double y = mouseY - offsetY;
 
         if (y > 0.0D && y < MissionCard.WINDOW_INSIDE_Y) {
-            List<MissionCard> missions = this.missions.get(this.grade);
+            List<MissionCard> missions = new ArrayList<>(this.cards);
+            missions.removeIf(card -> card.getGrade() != this.grade);
 
             for (int i = 0; i < missions.size(); i++) {
                 int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
@@ -235,26 +287,6 @@ public class MissionsScreen extends Screen {
                     break;
                 }
             }
-        }
-    }
-
-    public record Mission(Component title, Component description) {}
-
-    private enum MissionGrade {
-        D(0x7FFFFF),
-        C(0x7EFF80),
-        B(0xFEFF7F),
-        A(0xFFBF7F),
-        S(0xFF7F7E);
-
-        private final int color;
-
-        MissionGrade(int color) {
-            this.color = color;
-        }
-
-        public int getColor() {
-            return this.color;
         }
     }
 }

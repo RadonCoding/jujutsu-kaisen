@@ -15,4 +15,6 @@ public class JJKProcessors {
             () -> () -> WaterloggingFixProcessor.CODEC);
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<HeadquartersProcessor>> HEADQUARTERS_PROCESSOR = PROCESSORS.register("headquarters_processor",
             () -> () -> HeadquartersProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<MissionProcessor>> MISSION_PROCESSOR = PROCESSORS.register("mission_processor",
+            () -> () -> MissionProcessor.CODEC);
 }

@@ -1,0 +1,10 @@
+{
+  "processors": [
+    {
+      "processor_type": "jujutsu_kaisen:waterlogging_fix_processor"
+    },
+    {
+      "processor_type": "jujutsu_kaisen:mission_processor"
+    }
+  ]
+}

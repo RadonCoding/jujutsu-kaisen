@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -12,6 +13,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.mission.IMissionData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
@@ -40,6 +42,14 @@ public class DataProvider {
         cap.getIdleTransfigurationData().tick();
         cap.getMimicryData().tick();
         cap.getCursedSpeechData().tick();
+    }
+
+    @SubscribeEvent
+    public static void onLevelTick(TickEvent.LevelTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) return;
+
+        IMissionData data = event.level.getData(JJKAttachmentTypes.MISSION);
+        data.tick();
     }
 
     @SubscribeEvent
@@ -99,6 +109,9 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
+
+        IMissionData data = player.level().getData(JJKAttachmentTypes.MISSION);
+        PacketHandler.broadcast(new SyncMissionDataS2CPacket(player.level().dimension(), data.serializeNBT()));
     }
 
     @SubscribeEvent
@@ -120,6 +133,9 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
         PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
+
+        IMissionData data = player.level().getData(JJKAttachmentTypes.MISSION);
+        PacketHandler.broadcast(new SyncMissionDataS2CPacket(player.level().dimension(), data.serializeNBT()));
     }
 
     @SubscribeEvent

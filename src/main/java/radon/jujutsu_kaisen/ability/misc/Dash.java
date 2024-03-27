@@ -40,6 +40,11 @@ public class Dash extends Ability {
     }
 
     @Override
+    public boolean isPhysical() {
+        return true;
+    }
+
+    @Override
     public boolean isTechnique() {
         return false;
     }

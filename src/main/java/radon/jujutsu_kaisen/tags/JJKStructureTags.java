@@ -8,4 +8,5 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKStructureTags {
     public static final TagKey<Structure> HAS_SORCERERS = TagKey.create(Registries.STRUCTURE, new ResourceLocation(JujutsuKaisen.MOD_ID, "has_sorcerers"));
+    public static final TagKey<Structure> IS_MISSION = TagKey.create(Registries.STRUCTURE, new ResourceLocation(JujutsuKaisen.MOD_ID, "is_mission"));
 }

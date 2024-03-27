@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
@@ -207,7 +208,7 @@ public class JujutsuScreen extends Screen {
 
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (pButton != 0) {
+        if (pButton != InputConstants.MOUSE_BUTTON_LEFT) {
             this.isScrolling = false;
             return false;
         } else {

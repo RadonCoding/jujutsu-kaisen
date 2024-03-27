@@ -182,6 +182,10 @@ public abstract class Ability {
         return false;
     }
 
+    public boolean isPhysical() {
+        return this.isMelee();
+    }
+
     // Used for AI
     public abstract boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target);
 

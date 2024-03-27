@@ -82,6 +82,9 @@ public class PacketHandler {
         registrar.play(OpenMissionScreenS2CPacket.IDENTIFIER, OpenMissionScreenS2CPacket::new, handler -> handler
                 .client(OpenMissionScreenS2CPacket::handle)
                 .server(OpenMissionScreenS2CPacket::handle));
+        registrar.play(SyncMissionDataS2CPacket.IDENTIFIER, SyncMissionDataS2CPacket::new, handler -> handler
+                .client(SyncMissionDataS2CPacket::handle)
+                .server(SyncMissionDataS2CPacket::handle));
 
         // Serverbound packets
         registrar.play(TriggerAbilityC2SPacket.IDENTIFIER, TriggerAbilityC2SPacket::new, handler -> handler
