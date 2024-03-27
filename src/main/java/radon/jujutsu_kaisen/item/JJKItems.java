@@ -86,8 +86,11 @@ public class JJKItems {
             () -> new BlockItem(JJKBlocks.ALTAR.get(), new Item.Properties()));
     public static DeferredHolder<Item, Item> MISSION = ITEMS.register("mission",
             () -> new BlockItem(JJKBlocks.MISSION.get(), new Item.Properties()));
+
     public static DeferredHolder<Item, Item> CURSE_SPAWNER = ITEMS.register("curse_spawner",
             () -> new BlockItem(JJKBlocks.CURSE_SPAWNER.get(), new Item.Properties()));
+    public static DeferredHolder<Item, Item> CURSE_BOSS_SPAWNER = ITEMS.register("curse_boss_spawner",
+            () -> new BlockItem(JJKBlocks.CURSE_BOSS_SPAWNER.get(), new Item.Properties()));
 
     public static DeferredHolder<Item, Item> TARGETING_STICK = ITEMS.register("targeting_stick",
             () -> new TargetingStickItem(new Item.Properties()));

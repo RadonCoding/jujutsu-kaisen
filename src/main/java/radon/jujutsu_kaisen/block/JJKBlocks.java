@@ -218,6 +218,8 @@ public class JJKBlocks {
 
     public static DeferredHolder<Block, Block> CURSE_SPAWNER = BLOCKS.register("curse_spawner", () ->
             new Block(BlockBehaviour.Properties.of().noCollission()));
+    public static DeferredHolder<Block, Block> CURSE_BOSS_SPAWNER = BLOCKS.register("curse_boss_spawner", () ->
+            new Block(BlockBehaviour.Properties.of().noCollission()));
 
     public static DeferredHolder<Block, FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
             new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
