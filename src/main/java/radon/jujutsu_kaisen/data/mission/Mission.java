@@ -22,12 +22,14 @@ public class Mission {
     private final BlockPos pos;
     private boolean spawned;
     private final Set<BlockPos> spawns;
+    private final Set<BlockPos> bosses;
 
     public Mission(MissionType type, MissionGrade grade, BlockPos pos) {
         this.type = type;
         this.grade = grade;
         this.pos = pos;
         this.spawns = new HashSet<>();
+        this.bosses = new HashSet<>();
     }
 
     public Mission(CompoundTag nbt) {
@@ -40,6 +42,12 @@ public class Mission {
 
         for (Tag tag : nbt.getList("spawns", Tag.TAG_COMPOUND)) {
             this.spawns.add(NbtUtils.readBlockPos((CompoundTag) tag));
+        }
+
+        this.bosses = new HashSet<>();
+
+        for (Tag tag : nbt.getList("bosses", Tag.TAG_COMPOUND)) {
+            this.bosses.add(NbtUtils.readBlockPos((CompoundTag) tag));
         }
     }
 
@@ -67,6 +75,14 @@ public class Mission {
         this.spawns.add(pos);
     }
 
+    public Set<BlockPos> getBosses() {
+        return this.bosses;
+    }
+
+    public void addBoss(BlockPos pos) {
+        this.bosses.add(pos);
+    }
+
     public void setSpawned(boolean spawned) {
         this.spawned = spawned;
     }
@@ -84,6 +100,13 @@ public class Mission {
             spawnsTag.add(NbtUtils.writeBlockPos(pos));
         }
         nbt.put("spawns", spawnsTag);
+
+        ListTag bossesTag = new ListTag();
+
+        for (BlockPos pos : this.bosses) {
+            bossesTag.add(NbtUtils.writeBlockPos(pos));
+        }
+        nbt.put("bosses", bossesTag);
 
         return nbt;
     }
