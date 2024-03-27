@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
+import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
@@ -89,7 +90,10 @@ public abstract class Summon<T extends Entity> extends Ability implements IToggl
         }
         return false;
     }
-
+    public boolean canFly(T summon)
+    {
+        return summon instanceof IControllableFlyingRide;
+    }
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
@@ -217,7 +221,12 @@ public abstract class Summon<T extends Entity> extends Ability implements IToggl
             ((TenShadowsSummon) summon).setClone(clone);
         }
         owner.level().addFreshEntity(summon);
-
+        if (!owner.onGround() && owner.getVehicle() == null && this.isTamed(owner) && canFly(summon))
+        {
+            owner.startRiding(summon);
+            owner.setYRot(summon.getYRot());
+            owner.setXRot(summon.getXRot());
+        }
         data.addSummon(summon);
 
         if (owner instanceof ServerPlayer player) {
