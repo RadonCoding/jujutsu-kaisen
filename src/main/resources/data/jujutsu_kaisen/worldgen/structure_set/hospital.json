@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "jujutsu_kaisen:hospital",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 109796940,
+    "spacing": 45,
+    "separation": 35,
+    "type": "minecraft:random_spread"
+  }
+}

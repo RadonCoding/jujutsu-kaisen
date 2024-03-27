@@ -1,0 +1,15 @@
+{
+  "name": "jujutsu_kaisen:hospital/start_pool_4",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "jujutsu_kaisen:hospital_4",
+        "processors": "jujutsu_kaisen:mission_processors",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

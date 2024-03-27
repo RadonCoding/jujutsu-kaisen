@@ -113,13 +113,11 @@ public class CurseManipulationUtil {
 
         ownerSorcererData.addSummon(entity);
         ownerCurseManipulationData.removeCurse(curse);
-        if (!owner.onGround() && entity instanceof IControllableFlyingRide)
-        {
-            if (owner.startRiding(entity)) {
-                owner.setYRot(entity.getYRot());
-                owner.setXRot(entity.getXRot());
-            }
+
+        if (!owner.onGround() && entity instanceof IControllableFlyingRide) {
+            owner.startRiding(entity);
         }
+
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
             PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerCurseManipulationData.serializeNBT()), player);

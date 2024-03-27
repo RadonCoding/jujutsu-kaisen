@@ -13,5 +13,5 @@ import javax.swing.text.html.parser.Entity;
 
 public class JJKEntityTypeTags {
     public static final TagKey<EntityType<?>> FORCE_FEEDABLE = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "force_feedable"));
-
+    public static final TagKey<EntityType<?>> SPAWNABLE_CURSE = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "spawnable_curse"));
 }

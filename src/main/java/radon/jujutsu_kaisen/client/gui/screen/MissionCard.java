@@ -3,18 +3,24 @@ package radon.jujutsu_kaisen.client.gui.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.mission.Mission;
+import radon.jujutsu_kaisen.data.mission.MissionGrade;
 
 import java.util.List;
 
 public class MissionCard {
     private static final ResourceLocation MISSION_CARD = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/mission_card.png");
+    private static final ResourceLocation OUTLINE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/outline.png");
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
-    
+
     public static final int WINDOW_WIDTH = 104;
     public static final int WINDOW_HEIGHT = 128;
     public static final int WINDOW_INSIDE_X = 9;
@@ -30,19 +36,23 @@ public class MissionCard {
     private static final int BACKGROUND_TILE_HEIGHT = 16;
     
     private final Minecraft minecraft;
-    private final MissionsScreen.Mission mission;
+    private final Mission mission;
     private final List<FormattedCharSequence> description;
 
     private double scroll;
 
-    public MissionCard(Minecraft minecraft, MissionsScreen.Mission mission) {
+    public MissionCard(Minecraft minecraft, Mission mission) {
         this.minecraft = minecraft;
         this.mission = mission;
-        this.description = this.minecraft.font.split(this.mission.description(), WINDOW_INSIDE_WIDTH - (INNER_PADDING * 2));
+        this.description = this.minecraft.font.split(this.mission.getType().getDescription(), WINDOW_INSIDE_WIDTH - (INNER_PADDING * 2));
+    }
+
+    public MissionGrade getGrade() {
+        return this.mission.getGrade();
     }
 
     public void scroll(double dragY) {
-        int height = this.description.size() * (this.minecraft.font.lineHeight + 2) - 2;
+        int height = this.description.size() * (this.minecraft.font.lineHeight + 2) - 2 + this.minecraft.font.lineHeight;
         int displayed = WINDOW_INSIDE_HEIGHT - (INNER_PADDING * 2);
 
         if (height - displayed > 0) {
@@ -53,9 +63,9 @@ public class MissionCard {
     public void drawTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         int width = WINDOW_WIDTH - TITLE_X * 2;
 
-        if (this.minecraft.font.width(this.mission.title()) <= width) return;
+        if (this.minecraft.font.width(this.mission.getType().getTitle()) <= width) return;
 
-        graphics.renderTooltip(this.minecraft.font, this.mission.title(), mouseX, mouseY);
+        graphics.renderTooltip(this.minecraft.font, this.mission.getType().getTitle(), mouseX, mouseY);
     }
 
     public void drawInside(GuiGraphics graphics, int offsetX, int offsetY) {
@@ -72,14 +82,18 @@ public class MissionCard {
         graphics.pose().popPose();
         graphics.disableScissor();
     }
-    
-    public void drawWindow(GuiGraphics graphics, int offsetX, int offsetY) {
+
+    public void drawWindow(GuiGraphics graphics, int offsetX, int offsetY, boolean selected) {
         RenderSystem.enableBlend();
         graphics.blit(MISSION_CARD, offsetX, offsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+        if (selected) {
+            graphics.blit(OUTLINE, offsetX, offsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        }
+
         int width = WINDOW_WIDTH - TITLE_X * 2;
 
-        FormattedText formatted = this.mission.title();
+        FormattedText formatted = this.mission.getType().getTitle();
 
         int delta = this.minecraft.font.width(formatted) - width;
 
@@ -100,7 +114,20 @@ public class MissionCard {
             graphics.drawString(this.minecraft.font, line,
                     offsetX + WINDOW_INSIDE_X + INNER_PADDING,
                     offsetY + WINDOW_INSIDE_Y + INNER_PADDING,
-                    0xFFFFFF, true);
+                    0xffffff, true);
+            offsetY += this.minecraft.font.lineHeight + 2;
+        }
+
+        offsetY += this.minecraft.font.lineHeight + 2;
+
+        BlockPos pos = this.mission.getPos();
+
+        for (FormattedCharSequence line : this.minecraft.font.split(FormattedText.of(String.format("XYZ: %d, %d, %d", pos.getX(), pos.getY(), pos.getZ())),
+                WINDOW_INSIDE_WIDTH - (INNER_PADDING * 2))) {
+            graphics.drawString(this.minecraft.font, line,
+                    offsetX + WINDOW_INSIDE_X + INNER_PADDING,
+                    offsetY + WINDOW_INSIDE_Y + INNER_PADDING,
+                    0xededed, true);
             offsetY += this.minecraft.font.lineHeight + 2;
         }
         graphics.pose().popPose();

@@ -70,6 +70,8 @@
   "gui.jujutsu_kaisen.veil_rod.activate": "Activate",
   "gui.jujutsu_kaisen.veil_rod.deactivate": "Deactivate",
 
+  "gui.jujutsu_kaisen.missions.accept": "Accept",
+
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
   "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
   "key.jujutsu_kaisen.activate_melee_menu": "Activate Melee Menu",
@@ -198,6 +200,8 @@
   "block.jujutsu_kaisen.veil": "Veil",
   "block.jujutsu_kaisen.altar": "Altar",
   "block.jujutsu_kaisen.mission": "Mission",
+
+  "block.jujutsu_kaisen.curse_spawner": "Curse Spawner",
 
   "block.jujutsu_kaisen.fake_water_duration": "Water",
   "block.jujutsu_kaisen.fake_water_domain": "Water",
@@ -537,6 +541,9 @@
 
   "skill.jujutsu_kaisen.regeneration": "Regeneration",
   "skill.jujutsu_kaisen.regeneration.description": "Increases cursed energy healing speed.",
+
+  "mission_type.jujutsu_kaisen.exorcise_curses": "Exorcise Curses",
+  "mission_type.jujutsu_kaisen.exorcise_curses.description": "Exorcise every cursed spirit in the target location.",
 
   "ten_shadows_mode.jujutsu_kaisen.summon": "Summon",
   "ten_shadows_mode.jujutsu_kaisen.ability": "Ability",

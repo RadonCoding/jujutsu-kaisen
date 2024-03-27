@@ -28,7 +28,7 @@ public class WaterloggingFixProcessor extends StructureProcessor {
     @Override
     public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader pLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, StructureTemplate.@NotNull StructureBlockInfo pBlockInfo, StructureTemplate.@NotNull StructureBlockInfo pRelativeBlockInfo, @NotNull StructurePlaceSettings pSettings, @Nullable StructureTemplate template) {
         if (!pRelativeBlockInfo.state().getFluidState().isEmpty()) {
-            if (pLevel instanceof WorldGenRegion worldGenRegion && !worldGenRegion.getCenter().equals(new ChunkPos(pRelativeBlockInfo.pos()))) {
+            if (pLevel instanceof WorldGenRegion region && !region.getCenter().equals(new ChunkPos(pRelativeBlockInfo.pos()))) {
                 return pRelativeBlockInfo;
             }
 

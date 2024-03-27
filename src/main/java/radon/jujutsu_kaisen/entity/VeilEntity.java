@@ -46,7 +46,7 @@ public class VeilEntity extends Entity implements IVeil {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(VeilEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(VeilEntity.class, EntityDataSerializers.INT);
 
-    private static final float COST = 0.01F;
+    private static final float COST = 0.001F;
     private static final int CHECK_INTERVAL = 20;
     private static final int HEAL_INTERVAL = 5 * 20;
 

@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.data;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -26,6 +27,9 @@ import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationDataSer
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.mimicry.MimicryData;
 import radon.jujutsu_kaisen.data.mimicry.MimicryDataSerializer;
+import radon.jujutsu_kaisen.data.mission.IMissionData;
+import radon.jujutsu_kaisen.data.mission.MissionData;
+import radon.jujutsu_kaisen.data.mission.MissionDataSerializer;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.projection_sorcery.ProjectionSorcereryDataSerializer;
 import radon.jujutsu_kaisen.data.projection_sorcery.ProjectionSorceryData;
@@ -66,4 +70,7 @@ public class JJKAttachmentTypes {
             AttachmentType.<ICursedSpeechData>builder(holder -> new CursedSpeechData()).serialize(new CursedSpeechDataSerializer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<ISkillData>> SKILL = ATTACHMENT_TYPES.register("skill",
             AttachmentType.<ISkillData>builder(holder -> new SkillData()).serialize(new SkillDataSerializer()).copyOnDeath()::build);
+
+    public static final Supplier<AttachmentType<IMissionData>> MISSION = ATTACHMENT_TYPES.register("mission",
+            AttachmentType.<IMissionData>builder(holder -> new MissionData((Level) holder)).serialize(new MissionDataSerializer())::build);
 }
