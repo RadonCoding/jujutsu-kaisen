@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "jujutsu_kaisen:block/red"
+  }
+}
