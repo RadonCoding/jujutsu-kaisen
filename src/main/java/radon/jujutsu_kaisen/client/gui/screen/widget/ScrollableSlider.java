@@ -20,6 +20,9 @@ public class ScrollableSlider extends ExtendedSlider {
         return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
     }
 
+    public void setMaxValue(int maxValue) {
+        this.maxValue = maxValue;
+    }
 
     @Override
     public void onClick(double mouseX, double mouseY) {

@@ -40,6 +40,8 @@ public class SyncMissionDataS2CPacket implements CustomPacketPayload {
 
             IMissionData data = player.level().getData(JJKAttachmentTypes.MISSION);
             data.deserializeNBT(this.nbt);
+
+            ClientWrapper.refreshMissions();
         });
     }
 

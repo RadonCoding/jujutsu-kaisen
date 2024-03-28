@@ -29,4 +29,10 @@ public class ClientWrapper {
     public static void openMissions() {
         Minecraft.getInstance().setScreen(new MissionsScreen());
     }
+
+    public static void refreshMissions() {
+        if (!(Minecraft.getInstance().screen instanceof MissionsScreen missions)) return;
+
+        missions.refresh();
+    }
 }
