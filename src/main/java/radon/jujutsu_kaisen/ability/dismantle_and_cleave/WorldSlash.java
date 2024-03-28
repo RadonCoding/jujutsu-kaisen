@@ -57,11 +57,6 @@ public class WorldSlash extends Ability {
     }
 
     @Override
-    public boolean isChantable() {
-        return true;
-    }
-
-    @Override
     public boolean isValid(LivingEntity owner) {
         if (!(owner instanceof MahoragaEntity)) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
