@@ -38,21 +38,13 @@ public class MissionProcessor extends StructureProcessor {
         return JJKProcessors.MISSION_PROCESSOR.get();
     }
 
-    private static void registerIfNotPresent(Level level, BlockPos pos) {
-        IMissionData data = level.getData(JJKAttachmentTypes.MISSION);
-
-        if (!data.isRegistered(pos)) {
-            data.register(HelperMethods.randomEnum(MissionType.class), HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S)), pos);
-        }
-    }
-
     @Nullable
     @Override
     public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader pLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, StructureTemplate.@NotNull StructureBlockInfo pBlockInfo, StructureTemplate.@NotNull StructureBlockInfo pRelativeBlockInfo, @NotNull StructurePlaceSettings pSettings, @Nullable StructureTemplate template) {
         if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER.get())) {
             IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
-            registerIfNotPresent(((ServerLevelAccessor) pLevel).getLevel(), pPos);
+            if (!data.isRegistered(pPos)) data.register(pPos);
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
@@ -63,7 +55,7 @@ public class MissionProcessor extends StructureProcessor {
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER.get())) {
             IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
-            registerIfNotPresent(((ServerLevelAccessor) pLevel).getLevel(), pPos);
+            if (!data.isRegistered(pPos)) data.register(pPos);
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
@@ -76,12 +68,10 @@ public class MissionProcessor extends StructureProcessor {
     }
 
     @Override
-    public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(@NotNull ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, @NotNull List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
+    public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, @NotNull List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
         IMissionData data = pServerLevel.getLevel().getData(JJKAttachmentTypes.MISSION);
 
-        registerIfNotPresent(pServerLevel.getLevel(), pPos);
-
-        PacketHandler.broadcast(new SyncMissionDataS2CPacket(pServerLevel.getLevel().dimension(), data.serializeNBT()));
+        if (!data.isRegistered(pPos)) data.register(pPos);
 
         return super.finalizeProcessing(pServerLevel, pOffset, pPos, pOriginalBlockInfos, pProcessedBlockInfos, pSettings);
     }

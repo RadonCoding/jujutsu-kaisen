@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.data.mission;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
+import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -10,10 +12,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
+import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
+import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import net.minecraft.world.level.lighting.SkyLightEngine;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.core.tools.picocli.CommandLine;
@@ -21,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -83,6 +91,13 @@ public class MissionData implements IMissionData {
     @Override
     public void register(MissionType type, MissionGrade grade, BlockPos pos) {
         this.missions.add(new Mission(type, grade, pos));
+
+        PacketHandler.broadcast(new SyncMissionDataS2CPacket(this.level.dimension(), this.serializeNBT()));
+    }
+
+    @Override
+    public void register(BlockPos pos) {
+        this.register(HelperMethods.randomEnum(MissionType.class), HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S)), pos);
     }
 
     @Override
