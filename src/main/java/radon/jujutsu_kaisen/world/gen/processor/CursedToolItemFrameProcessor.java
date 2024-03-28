@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -56,7 +57,8 @@ public class CursedToolItemFrameProcessor extends StructureProcessor {
 
         if (entity.isPresent()) {
             if (entity.get() instanceof ItemFrame frame) {
-                frame.setItem(getRandomCursedTool(placementSettings.getRandom(seedPos)), false);
+                RandomSource random = RandomSource.create(Mth.getSeed(seedPos));
+                frame.setItem(getRandomCursedTool(random), false);
                 return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT());
             }
         }

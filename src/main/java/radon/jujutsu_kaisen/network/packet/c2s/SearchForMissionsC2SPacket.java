@@ -10,6 +10,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -86,17 +88,18 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                             pos.set(SectionPos.sectionToBlockCoord(chunk.x, 8), 32, SectionPos.sectionToBlockCoord(chunk.z, 8));
 
                             if (!data.isRegistered(pos)) {
-                                data.register(pos);
-
+                                RandomSource random = RandomSource.create(Mth.getSeed(pos));
+                                data.register(HelperMethods.randomEnum(MissionType.class, random),
+                                        HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
                                 dirty = true;
                             }
                         }
-                    } else if (placement instanceof RandomSpreadStructurePlacement random) {
+                    } else if (placement instanceof RandomSpreadStructurePlacement spread) {
                         int x = SectionPos.blockToSectionCoord(sender.getX());
                         int z = SectionPos.blockToSectionCoord(sender.getZ());
 
                         for (int y = 0; y <= SEARCH_RADIUS; y++) {
-                            int i = random.spacing();
+                            int i = spread.spacing();
 
                             for (int j = -y; j <= y; j++) {
                                 boolean flag = j == -y || j == y;
@@ -105,7 +108,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                                     if (flag || (k == -y || k == y)) {
                                         int l = x + i * j;
                                         int i1 = z + i * k;
-                                        ChunkPos chunk = random.getPotentialStructureChunk(sender.serverLevel().getChunkSource().getGeneratorState().getLevelSeed(), l, i1);
+                                        ChunkPos chunk = spread.getPotentialStructureChunk(sender.serverLevel().getChunkSource().getGeneratorState().getLevelSeed(), l, i1);
 
                                         StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
 
@@ -114,11 +117,12 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                                             StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
 
                                             if (start != null && start.isValid() && (tryAddReference(sender.serverLevel().structureManager(), start))) {
-                                                BlockPos pos = random.getLocatePos(start.getChunkPos());
+                                                BlockPos pos = spread.getLocatePos(start.getChunkPos());
 
                                                 if (!data.isRegistered(pos)) {
-                                                    data.register(pos);
-
+                                                    RandomSource random = RandomSource.create(Mth.getSeed(pos));
+                                                    data.register(HelperMethods.randomEnum(MissionType.class, random),
+                                                            HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
                                                     dirty = true;
                                                 }
                                             }
