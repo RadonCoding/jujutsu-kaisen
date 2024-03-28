@@ -86,7 +86,7 @@ public class MobEventHandler {
             }
         }
 
-        @SubscribeEvent
+        /*@SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -94,32 +94,32 @@ public class MobEventHandler {
 
             DamageSource source = event.getSource();
 
-            if (source.getEntity() instanceof LivingEntity attacker) {
-                if (victim == attacker) return;
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-                // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
-                if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
-                    LivingEntity owner1 = EntityUtil.getOwner(tamable1);
+            if (victim == attacker) return;
 
-                    if (owner1 == victim) {
-                        event.setCanceled(true);
-                    } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
-                        LivingEntity owner2 = EntityUtil.getOwner(tamable2);
+            // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
+            if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
+                LivingEntity owner1 = EntityUtil.getOwner(tamable1);
 
-                        // Prevent tames with the same owner from attacking each other
-                        if (owner1 == owner2) {
-                            event.setCanceled(true);
-                        }
-                    }
-                } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
-                    LivingEntity owner = EntityUtil.getOwner(tamable);
+                if (owner1 == victim) {
+                    event.setCanceled(true);
+                } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
+                    LivingEntity owner2 = EntityUtil.getOwner(tamable2);
 
-                    if (owner == attacker) {
+                    // Prevent tames with the same owner from attacking each other
+                    if (owner1 == owner2) {
                         event.setCanceled(true);
                     }
                 }
+            } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
+                LivingEntity owner = EntityUtil.getOwner(tamable);
+
+                if (owner == attacker) {
+                    event.setCanceled(true);
+                }
             }
-        }
+        }*/
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
