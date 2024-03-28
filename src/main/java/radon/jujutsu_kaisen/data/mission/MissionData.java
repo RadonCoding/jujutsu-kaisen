@@ -67,6 +67,7 @@ public class MissionData implements IMissionData {
 
             if (!spawns.isEmpty()) {
                 for (BlockPos pos : mission.getSpawns()) {
+                    System.out.println(pos.toString());
                     spawns.get(HelperMethods.RANDOM.nextInt(spawns.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
                 }
             }
