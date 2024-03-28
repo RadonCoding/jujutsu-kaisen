@@ -36,7 +36,7 @@ import software.bernie.geckolib.animatable.GeoEntity;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
     private static final double HUNGRY_RANGE = 128.0D;
-    private static final int HUNGRY_CHANCE = 100;
+    private static final int HUNGRY_CHANCE = 50;
     private static final int UPDATE_INTERVAL = 5 * 20;
 
     private boolean hungry;
@@ -126,8 +126,6 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         }
         this.goalSelector.addGoal(goal++, new ChantGoal<>(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-
-        this.goalSelector.addGoal(goal, new MoveThroughMissionGoal(this, 1.0D, false, 8));
 
         if (GoalUtils.hasGroundPathNavigation(this)) {
             this.goalSelector.addGoal(goal, new MoveThroughVillageGoal(this, 1.0D, false, 8, () -> true));
