@@ -72,7 +72,7 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
 
         if (cap != null) {
             ISkillData data = cap.getSkillData();
-            strength += data.getSkill(Skill.SOUL) * 10;
+            strength *= data.getSkill(Skill.SOUL) + 1;
         }
         return strength;
     }
