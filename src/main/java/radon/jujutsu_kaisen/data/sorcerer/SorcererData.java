@@ -347,7 +347,7 @@ public class SorcererData implements ISorcererData {
         if (cap == null) return 0.0F;
 
         ISkillData data = cap.getSkillData();
-        return 1.0F + (data.getSkill(Skill.OUTPUT) * 0.1F);
+        return 1.0F + (data.getSkill(this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY) ? Skill.STRENGTH : Skill.OUTPUT) * 0.1F);
     }
 
     @Override
