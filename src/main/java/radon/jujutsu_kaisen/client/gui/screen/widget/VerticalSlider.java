@@ -17,11 +17,6 @@ public class VerticalSlider extends ScrollableSlider {
     }
 
     @Override
-    protected void setValueFromScroll(double scroll) {
-        this.setSliderValue(this.value - scroll);
-    }
-
-    @Override
     protected void setValueFromMouse(double mouseX, double mouseY) {
         this.setSliderValue((Math.abs(mouseY) - (this.getY() + 4)) / (this.height - 8));
     }
