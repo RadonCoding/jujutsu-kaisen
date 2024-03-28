@@ -63,8 +63,7 @@ public class ForestWave extends Ability {
                     ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
 
                     Vec3 offset = spawn
-                            .subtract(owner.getUpVector(1.0F).scale(forest.getBbHeight()))
-                            .add(look.yRot(90.0F).scale(-forest.getBbWidth() * 1.5F))
+                            .add(look.yRot(90.0F).scale(-forest.getBbWidth() * 2.0F))
                             .add(look.scale((current + j) * forest.getBbWidth()));
                     forest.moveTo(offset.x, offset.y, offset.z, yRot, xRot);
                     owner.level().addFreshEntity(forest);
@@ -83,8 +82,7 @@ public class ForestWave extends Ability {
                     ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
 
                     Vec3 offset = spawn
-                            .subtract(owner.getUpVector(1.0F).scale(forest.getBbHeight()))
-                            .add(look.yRot(90.0F).scale(forest.getBbWidth() * 1.5F))
+                            .add(look.yRot(90.0F).scale(forest.getBbWidth() * 2.0F))
                             .add(look.scale((current + j) * forest.getBbWidth()));
                     forest.moveTo(offset.x, offset.y, offset.z, yRot, xRot);
                     owner.level().addFreshEntity(forest);
