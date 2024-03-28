@@ -1,15 +1,20 @@
 package radon.jujutsu_kaisen.entity.curse.base;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
 
@@ -33,10 +38,29 @@ public abstract class PackCursedSpirit extends CursedSpirit {
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         if (this.getLeader() == null) {
+            int x = Mth.floor(this.getX());
+            int y = Mth.floor(this.getY());
+            int z = Mth.floor(this.getZ());
+
             for (int i = 0; i < this.random.nextInt(this.getMinCount(), this.getMaxCount()); i++) {
-                PackCursedSpirit entity = this.spawn();
-                entity.setPos(this.position());
-                this.level().addFreshEntity(entity);
+                BlockPos pos = BlockPos.containing(
+                        x + Mth.nextFloat(this.random, this.getBbWidth(), this.getBbWidth() * 4) * Mth.nextInt(this.random, -1, 1),
+                        y,
+                        z + Mth.nextFloat(this.random, this.getBbWidth(), this.getBbWidth() * 4) * Mth.nextInt(this.random, -1, 1)
+                );
+
+                if (NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(this.getType()), this.level(), pos, this.getType())
+                        && SpawnPlacements.checkSpawnRules(this.getType(), pLevel.getLevel(), MobSpawnType.REINFORCEMENT, pos, this.level().random)) {
+                    PackCursedSpirit entity = this.spawn();
+                    entity.moveTo(
+                            (double) pos.getX() + 0.5D,
+                            pos.getY(),
+                            (double) pos.getZ() + 0.5D,
+                            Mth.wrapDegrees(this.random.nextFloat() * 360.0F),
+                            0.0F
+                    );
+                    this.level().addFreshEntity(entity);
+                }
             }
         }
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
