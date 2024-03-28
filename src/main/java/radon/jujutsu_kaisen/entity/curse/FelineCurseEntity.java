@@ -36,14 +36,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideable {
-    private static final EntityDataAccessor<Integer> DATA_LEAP = SynchedEntityData.defineId(FelineCurseEntity.class, EntityDataSerializers.INT);
-
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
-    private static final RawAnimation LEAP = RawAnimation.begin().thenPlay("attack.leap");
-
-    private static final int LEAP_DURATION = 10;
 
     public FelineCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -130,13 +125,6 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_LEAP, 0);
-    }
-
-    @Override
     protected boolean isCustom() {
         return true;
     }
@@ -180,28 +168,8 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
         }
     }
 
-    private PlayState leapPredicate(AnimationState<FelineCurseEntity> animationState) {
-        if (this.entityData.get(DATA_LEAP) > 0) {
-            return animationState.setAndContinue(LEAP);
-        }
-        animationState.getController().forceAnimationReset();
-        return PlayState.STOP;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Idle", this::walkRunIdlePredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Leap", this::leapPredicate));
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        int leap = this.entityData.get(DATA_LEAP);
-
-        if (leap > 0) {
-            this.entityData.set(DATA_LEAP, --leap);
-        }
     }
 }

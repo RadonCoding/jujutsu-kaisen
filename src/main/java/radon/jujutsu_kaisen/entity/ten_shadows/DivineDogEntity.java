@@ -38,16 +38,12 @@ import software.bernie.geckolib.core.object.PlayState;
 
 public abstract class DivineDogEntity extends TenShadowsSummon implements PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> DATA_LEAP = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_RITUAL = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
-    private static final RawAnimation LEAP = RawAnimation.begin().thenPlay("attack.leap");
     private static final RawAnimation HOWL = RawAnimation.begin().thenPlayAndHold("misc.howl");
-
-    private static final int LEAP_DURATION = 10;
 
     public DivineDogEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -186,7 +182,6 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
         super.defineSynchedData();
 
         this.entityData.define(DATA_VARIANT, Variant.WHITE.ordinal());
-        this.entityData.define(DATA_LEAP, 0);
         this.entityData.define(DATA_RITUAL, 0);
     }
 
@@ -214,14 +209,6 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
         }
     }
 
-    private PlayState leapPredicate(AnimationState<DivineDogEntity> animationState) {
-        if (this.entityData.get(DATA_LEAP) > 0) {
-            return animationState.setAndContinue(LEAP);
-        }
-        animationState.getController().forceAnimationReset();
-        return PlayState.STOP;
-    }
-
     private PlayState howlPredicate(AnimationState<DivineDogEntity> animationState) {
         if (this.getRitual() > 0) {
             return animationState.setAndContinue(HOWL);
@@ -233,23 +220,11 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Idle", this::walkRunIdlePredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Leap", this::leapPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Howl", this::howlPredicate));
     }
 
     public Variant getVariant() {
         return Variant.values()[this.entityData.get(DATA_VARIANT)];
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        int leap = this.entityData.get(DATA_LEAP);
-
-        if (leap > 0) {
-            this.entityData.set(DATA_LEAP, --leap);
-        }
     }
 
     @Override
