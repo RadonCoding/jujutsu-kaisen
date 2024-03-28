@@ -126,7 +126,7 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
 
     @Override
     protected boolean isCustom() {
-        return true;
+        return false;
     }
 
     @Override
