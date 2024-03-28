@@ -15,7 +15,9 @@ public enum Skill {
     OUTPUT,
     REINFORCEMENT,
     ENERGY,
-    REGENERATION;
+    REGENERATION,
+    STRENGTH,
+    SHIELDING;
 
     public boolean isValid(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -26,12 +28,17 @@ public enum Skill {
 
         if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
             return !this.isJujutsu();
+        } else {
+            return !this.isPhysical();
         }
-        return true;
     }
 
     public boolean isJujutsu() {
-        return this == Skill.BARRIER || this == Skill.ENERGY || this == Skill.REGENERATION;
+        return this == Skill.BARRIER || this == Skill.OUTPUT || this == Skill.REINFORCEMENT || this == Skill.ENERGY || this == Skill.REGENERATION;
+    }
+
+    public boolean isPhysical() {
+        return this == Skill.STRENGTH || this == Skill.SHIELDING;
     }
 
     public Component getName() {

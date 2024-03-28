@@ -532,16 +532,22 @@
   "skill.jujutsu_kaisen.barrier.description": "Increases the strength of your domain and veils.",
 
   "skill.jujutsu_kaisen.output": "Output",
-  "skill.jujutsu_kaisen.output.description": "Increases your output.",
+  "skill.jujutsu_kaisen.output.description": "Increases your cursed energy output.",
 
   "skill.jujutsu_kaisen.reinforcement": "Reinforcement",
-  "skill.jujutsu_kaisen.reinforcement.description": "Increases your reinforcement.",
+  "skill.jujutsu_kaisen.reinforcement.description": "Increases your cursed energy reinforcement.",
 
   "skill.jujutsu_kaisen.energy": "Energy",
   "skill.jujutsu_kaisen.energy.description": "Increases your maximum cursed energy capacity.",
 
   "skill.jujutsu_kaisen.regeneration": "Regeneration",
   "skill.jujutsu_kaisen.regeneration.description": "Increases cursed energy healing speed.",
+
+  "skill.jujutsu_kaisen.strength": "Strength",
+  "skill.jujutsu_kaisen.strength.description": "Increases your physical strength.",
+
+  "skill.jujutsu_kaisen.shielding": "Shielding",
+  "skill.jujutsu_kaisen.shielding.description": "Increases your shielding.",
 
   "mission_type.jujutsu_kaisen.exorcise_curses": "Exorcise Curses",
   "mission_type.jujutsu_kaisen.exorcise_curses.description": "Exorcise every cursed spirit in the target location.",
