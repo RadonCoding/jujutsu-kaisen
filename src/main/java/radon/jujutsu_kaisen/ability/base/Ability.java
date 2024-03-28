@@ -242,7 +242,7 @@ public abstract class Ability {
                 }
             }
 
-            if (sorcererData.hasBurnout()) {
+            if (sorcererData.hasBurnout() && !(this instanceof Summon<?>)) {
                 return false;
             }
         }
