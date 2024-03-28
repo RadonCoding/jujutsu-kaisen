@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -32,7 +33,7 @@ public class CursedToolItemFrameProcessor extends StructureProcessor {
         return JJKProcessors.CURSED_TOOL_ITEM_FRAME_PROCESSOR.get();
     }
 
-    private static ItemStack getRandomCursedTool() {
+    private static ItemStack getRandomCursedTool(RandomSource random) {
         Map<ItemStack, Double> pool = new HashMap<>();
 
         for (Item item : BuiltInRegistries.ITEM) {
@@ -44,7 +45,7 @@ public class CursedToolItemFrameProcessor extends StructureProcessor {
                 pool.put(stack, (double) SorcererGrade.values().length - grade.ordinal());
             }
         }
-        return HelperMethods.getWeightedRandom(pool, HelperMethods.RANDOM);
+        return HelperMethods.getWeightedRandom(pool, random);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class CursedToolItemFrameProcessor extends StructureProcessor {
 
         if (entity.isPresent()) {
             if (entity.get() instanceof ItemFrame frame) {
-                frame.setItem(getRandomCursedTool(), false);
+                frame.setItem(getRandomCursedTool(placementSettings.getRandom(seedPos)), false);
                 return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT());
             }
         }

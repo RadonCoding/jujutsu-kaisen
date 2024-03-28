@@ -120,18 +120,26 @@ public class HelperMethods {
     }
 
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
+        return randomEnum(clazz, RANDOM);
+    }
+
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz, RandomSource random) {
+        return clazz.getEnumConstants()[random.nextInt(clazz.getEnumConstants().length)];
     }
 
     public static <T extends Enum<T>> T randomEnum(Class<T> clazz, Set<T> excluded) {
+        return randomEnum(clazz, excluded, RANDOM);
+    }
+
+    public static <T extends Enum<T>> T randomEnum(Class<T> clazz, Set<T> excluded, RandomSource random) {
         if (!excluded.isEmpty()) {
             EnumSet<T> available = EnumSet.complementOf(EnumSet.copyOf(excluded));
 
             if (!available.isEmpty()) {
-                return (T) available.toArray()[RANDOM.nextInt(available.size())];
+                return (T) available.toArray()[random.nextInt(available.size())];
             }
         }
-        return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
+        return clazz.getEnumConstants()[random.nextInt(clazz.getEnumConstants().length)];
     }
 
     public static int toRGB24(int r, int g, int b, int a) {
