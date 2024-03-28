@@ -214,8 +214,6 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         if (!owner.canAttack(victim)) return false;
 
-        if (victim instanceof TamableAnimal tamable && EntityUtil.getOwner(tamable) == owner) return false;
-
         IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap != null) {
