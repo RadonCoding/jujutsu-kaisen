@@ -5,7 +5,7 @@
   "spawn_overrides": {},
   "start_pool": "jujutsu_kaisen:ancient_shrine/start_pool",
   "size": 1,
-  "terrain_adaptation": "beard_box",
+  "terrain_adaptation": "beard_thin",
   "start_height": {
     "absolute": -6
   },

@@ -44,7 +44,8 @@ public class MissionProcessor extends StructureProcessor {
         if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER.get())) {
             IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
-            if (!data.isRegistered(pPos)) data.register(pPos);
+            if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, pSettings.getRandom(pPos)),
+                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), pSettings.getRandom(pPos)), pPos);
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
@@ -55,7 +56,8 @@ public class MissionProcessor extends StructureProcessor {
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER.get())) {
             IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
-            if (!data.isRegistered(pPos)) data.register(pPos);
+            if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, pSettings.getRandom(pPos)),
+                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), pSettings.getRandom(pPos)), pPos);
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
@@ -71,7 +73,8 @@ public class MissionProcessor extends StructureProcessor {
     public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, @NotNull List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
         IMissionData data = pServerLevel.getLevel().getData(JJKAttachmentTypes.MISSION);
 
-        if (!data.isRegistered(pPos)) data.register(pPos);
+        if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, pSettings.getRandom(pPos)),
+                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), pSettings.getRandom(pPos)), pPos);
 
         Mission mission = data.getMission(pPos);
         mission.setFinalized(true);

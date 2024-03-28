@@ -96,11 +96,6 @@ public class MissionData implements IMissionData {
     }
 
     @Override
-    public void register(BlockPos pos) {
-        this.register(HelperMethods.randomEnum(MissionType.class), HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S)), pos);
-    }
-
-    @Override
     public Set<Mission> getMissions() {
         return this.missions;
     }
