@@ -62,14 +62,6 @@ public class WorldSlash extends Ability {
     }
 
     @Override
-    public Status isTriggerable(LivingEntity owner) {
-        if (!(owner instanceof MahoragaEntity)) {
-            if (ChantHandler.getOutput(owner, this) < 1.5F) return Status.FAILURE;
-        }
-        return super.isTriggerable(owner);
-    }
-
-    @Override
     public boolean isValid(LivingEntity owner) {
         if (!(owner instanceof MahoragaEntity)) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);

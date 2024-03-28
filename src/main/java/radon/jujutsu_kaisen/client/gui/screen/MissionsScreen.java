@@ -20,6 +20,8 @@ import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.IMissionData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.SearchForMissionsC2SPacket;
 
 import java.util.*;
 
@@ -133,16 +135,16 @@ public class MissionsScreen extends Screen {
         double missionCardsRelativeY = pMouseY - missionCardsOffsetY - MissionCard.WINDOW_INSIDE_Y;
 
         if (missionCardsRelativeY > 0.0D && missionCardsRelativeY < WINDOW_INSIDE_HEIGHT) {
-            List<MissionCard> missions = new ArrayList<>(this.cards);
-            missions.removeIf(card -> card.getGrade() != this.grade);
+            List<MissionCard> subset = new ArrayList<>(this.cards);
+            subset.removeIf(card -> card.getGrade() != this.grade);
 
-            for (int i = 0; i < missions.size(); i++) {
+            for (int i = 0; i < subset.size(); i++) {
                 int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
 
                 double relativeX = missionCardsRelativeX - insideX;
 
                 if (relativeX > 0.0D && relativeX < MissionCard.WINDOW_INSIDE_WIDTH) {
-                    this.setSelected(this.selected == missions.get(i) ? null : missions.get(i));
+                    this.setSelected(this.selected == subset.get(i) ? null : subset.get(i));
                     this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     return true;
                 }
@@ -161,7 +163,13 @@ public class MissionsScreen extends Screen {
 
         IMissionData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION);
 
-        for (Mission mission : data.getMissions()) {
+        Set<Mission> missions = data.getMissions();
+
+        if (missions.isEmpty()) {
+            PacketHandler.sendToServer(new SearchForMissionsC2SPacket());
+        }
+
+        for (Mission mission : missions) {
             this.cards.add(new MissionCard(this.minecraft, mission));
         }
 
@@ -171,8 +179,8 @@ public class MissionsScreen extends Screen {
         int missionCardOffsetX = windowOffsetX + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
         int missionCardOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
 
-        List<MissionCard> missions = new ArrayList<>(this.cards);
-        missions.removeIf(card -> card.getGrade() != this.grade);
+        List<MissionCard> subset = new ArrayList<>(this.cards);
+        subset.removeIf(card -> card.getGrade() != this.grade);
 
         this.missionGradesSlider = new VerticalSlider(windowOffsetX + WINDOW_INSIDE_X + WINDOW_INSIDE_WIDTH - 8, windowOffsetY + WINDOW_INSIDE_Y,
                 8, WINDOW_INSIDE_HEIGHT, Component.empty(), Component.empty(), 0.0D,
@@ -182,7 +190,7 @@ public class MissionsScreen extends Screen {
 
         this.missionCardsSlider = new ScrollableSlider(missionCardOffsetX, missionCardOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING,
                 this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X, 8, Component.empty(), Component.empty(), 0.0D,
-                Math.max(0, (missions.size() * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING) - MissionCard.OUTER_PADDING) - (this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X)),
+                Math.max(0, (subset.size() * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING) - MissionCard.OUTER_PADDING) - (this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X)),
                 0, 0.1D, 0, false);
         this.addRenderableWidget(this.missionCardsSlider);
 
@@ -253,18 +261,18 @@ public class MissionsScreen extends Screen {
     private void renderMissionCards(GuiGraphics graphics, int offsetX, int offsetY) {
         graphics.enableScissor(offsetX, 0, this.width - MISSION_CARDS_OFFSET_X, this.height);
 
-        List<MissionCard> missions = new ArrayList<>(this.cards);
-        missions.removeIf(card -> card.getGrade() != this.grade);
+        List<MissionCard> subset = new ArrayList<>(this.cards);
+        subset.removeIf(card -> card.getGrade() != this.grade);
 
-        for (int i = 0; i < missions.size(); i++) {
+        for (int i = 0; i < subset.size(); i++) {
             int insideX = offsetX - this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING)) + MissionCard.WINDOW_INSIDE_X;
             int insideY = offsetY + MissionCard.WINDOW_INSIDE_Y;
 
             int windowX = offsetX - this.missionCardsSlider.getValueInt() + i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING);
             int windowY = offsetY;
 
-            missions.get(i).drawInside(graphics, insideX, insideY);
-            missions.get(i).drawWindow(graphics, windowX, windowY, this.selected == missions.get(i));
+            subset.get(i).drawInside(graphics, insideX, insideY);
+            subset.get(i).drawWindow(graphics, windowX, windowY, this.selected == subset.get(i));
         }
         graphics.disableScissor();
     }
@@ -274,16 +282,16 @@ public class MissionsScreen extends Screen {
         double y = mouseY - offsetY;
 
         if (y > 0.0D && y < MissionCard.WINDOW_INSIDE_Y) {
-            List<MissionCard> missions = new ArrayList<>(this.cards);
-            missions.removeIf(card -> card.getGrade() != this.grade);
+            List<MissionCard> subset = new ArrayList<>(this.cards);
+            subset.removeIf(card -> card.getGrade() != this.grade);
 
-            for (int i = 0; i < missions.size(); i++) {
+            for (int i = 0; i < subset.size(); i++) {
                 int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
 
                 double relativeX = x - insideX;
 
                 if (relativeX > 0.0D && relativeX < MissionCard.WINDOW_WIDTH) {
-                    missions.get(i).drawTooltip(graphics, mouseX, mouseY);
+                    subset.get(i).drawTooltip(graphics, mouseX, mouseY);
                     break;
                 }
             }

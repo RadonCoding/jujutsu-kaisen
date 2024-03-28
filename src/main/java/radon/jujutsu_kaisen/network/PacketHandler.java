@@ -183,6 +183,9 @@ public class PacketHandler {
         registrar.play(IncreaseSkillC2SPacket.IDENTIFIER, IncreaseSkillC2SPacket::new, handler -> handler
                 .client(IncreaseSkillC2SPacket::handle)
                 .server(IncreaseSkillC2SPacket::handle));
+        registrar.play(SearchForMissionsC2SPacket.IDENTIFIER, SearchForMissionsC2SPacket::new, handler -> handler
+                .client(SearchForMissionsC2SPacket::handle)
+                .server(SearchForMissionsC2SPacket::handle));
     }
 
     public static <MSG extends CustomPacketPayload> void broadcast(MSG message) {
