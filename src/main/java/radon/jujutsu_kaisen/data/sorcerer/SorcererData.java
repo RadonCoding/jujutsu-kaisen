@@ -836,12 +836,13 @@ public class SorcererData implements ISorcererData {
 
         this.traits.remove(Trait.SIX_EYES);
         this.traits.remove(Trait.HEAVENLY_RESTRICTION_BODY);
+        this.traits.remove(Trait.HEAVENLY_RESTRICTION_SORCERY);
         this.traits.remove(Trait.VESSEL);
 
         Set<ICursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
 
-        if (ConfigHolder.SERVER.uniqueTraits.get() || ConfigHolder.SERVER.uniqueTraits.get()) {
+        if (ConfigHolder.SERVER.uniqueTraits.get()) {
             GameProfileCache cache = owner.server.getProfileCache();
 
             if (cache == null) throw new NullPointerException();
