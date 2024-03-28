@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.world.gen.processor;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -44,8 +46,10 @@ public class MissionProcessor extends StructureProcessor {
         if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER.get())) {
             IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
-            if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, pSettings.getRandom(pPos)),
-                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), pSettings.getRandom(pPos)), pPos);
+            RandomSource random = RandomSource.create(Mth.getSeed(pPos));
+
+            if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
+                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
@@ -56,8 +60,10 @@ public class MissionProcessor extends StructureProcessor {
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER.get())) {
             IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
-            if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, pSettings.getRandom(pPos)),
-                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), pSettings.getRandom(pPos)), pPos);
+            RandomSource random = RandomSource.create(Mth.getSeed(pPos));
+
+            if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
+                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
@@ -73,8 +79,10 @@ public class MissionProcessor extends StructureProcessor {
     public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, @NotNull List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
         IMissionData data = pServerLevel.getLevel().getData(JJKAttachmentTypes.MISSION);
 
-        if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, pSettings.getRandom(pPos)),
-                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), pSettings.getRandom(pPos)), pPos);
+        RandomSource random = RandomSource.create(Mth.getSeed(pPos));
+
+        if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
+                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
         Mission mission = data.getMission(pPos);
         mission.setFinalized(true);
