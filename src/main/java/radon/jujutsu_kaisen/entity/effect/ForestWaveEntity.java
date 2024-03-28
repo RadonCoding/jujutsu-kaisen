@@ -20,8 +20,7 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class ForestWaveEntity extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
-
-    private boolean damage;
+    private static final int DURATION = 5 * 20;
 
     public ForestWaveEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -41,17 +40,11 @@ public class ForestWaveEntity extends JujutsuProjectile {
         return true;
     }
 
-    public void setDamage(boolean damage) {
-        this.damage = damage;
-    }
-
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
         if (this.level().isClientSide) return;
-
-        if (!this.damage) return;
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
@@ -67,32 +60,8 @@ public class ForestWaveEntity extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide) return;
-
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        IAbilityData data = cap.getAbilityData();
-
-        if (!data.isChanneling(JJKAbilities.FOREST_WAVE.get())) {
+        if (this.getTime() >= DURATION) {
             this.discard();
         }
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        pCompound.putBoolean("damage", this.damage);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.damage = pCompound.getBoolean("damage");
     }
 }
