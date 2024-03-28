@@ -17,33 +17,24 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class ForestWave extends Ability implements IChanneled, IDurationable {
-    private static final int DELAY = 3;
-    private static final int SPEED = 5;
+public class ForestWave extends Ability {
+    private static final int RANGE = 64;
+    private static final int SPEED = 8;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        IAbilityData data = cap.getAbilityData();
-
-        if (data.isChanneling(this)) {
-            return HelperMethods.RANDOM.nextInt(5) != 0;
-        }
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.CHANNELED;
+        return ActivationType.INSTANT;
     }
 
     @Override
@@ -52,41 +43,53 @@ public class ForestWave extends Ability implements IChanneled, IDurationable {
 
         if (owner.level().isClientSide) return;
 
-        int charge = this.getCharge(owner);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
-        float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
+        if (cap == null) return;
 
-        for (int i = charge < SPEED ? 0 : -SPEED; i <= SPEED; i++) {
-            ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
-            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-            Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
-                    .add(look.yRot(90.0F).scale(-forest.getBbWidth() * 1.5F))
-                    .add(look.scale(charge + i * forest.getBbWidth()));
-            forest.moveTo(spawn.x, spawn.y, spawn.z, yRot, xRot);
+        IAbilityData data = cap.getAbilityData();
 
-            if (charge != 0 && owner.level().getEntitiesOfClass(ForestWaveEntity.class, forest.getBoundingBox()).isEmpty())
-                continue;
+        Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ());
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
-            forest.setDamage(charge >= DELAY);
+        for (int i = -3; i < RANGE / SPEED; i++) {
+            int current = i * SPEED;
 
-            owner.level().addFreshEntity(forest);
+            data.delayTickEvent(() -> {
+                for (int j = 0; j < SPEED; j++) {
+                    float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
+                    float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
+
+                    ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
+
+                    Vec3 offset = spawn
+                            .subtract(owner.getUpVector(1.0F).scale(forest.getBbHeight()))
+                            .add(look.yRot(90.0F).scale(-forest.getBbWidth() * 1.5F))
+                            .add(look.scale((current + j) * forest.getBbWidth()));
+                    forest.moveTo(offset.x, offset.y, offset.z, yRot, xRot);
+                    owner.level().addFreshEntity(forest);
+                }
+            }, i + 3);
         }
 
-        for (int i = charge < SPEED ? 0 : -SPEED; i <= SPEED; i++) {
-            ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
-            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-            Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
-                    .add(look.yRot(90.0F).scale(forest.getBbWidth() * 1.5F))
-                    .add(look.scale(charge + i * forest.getBbWidth()));
-            forest.moveTo(spawn.x, spawn.y, spawn.z, yRot, xRot);
+        for (int i = -3; i < RANGE / SPEED; i++) {
+            int current = i * SPEED;
 
-            if (charge != 0 && owner.level().getEntitiesOfClass(ForestWaveEntity.class, forest.getBoundingBox()).isEmpty())
-                continue;
+            data.delayTickEvent(() -> {
+                for (int j = 0; j < SPEED; j++) {
+                    float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
+                    float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
 
-            forest.setDamage(charge >= DELAY);
+                    ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
 
-            owner.level().addFreshEntity(forest);
+                    Vec3 offset = spawn
+                            .subtract(owner.getUpVector(1.0F).scale(forest.getBbHeight()))
+                            .add(look.yRot(90.0F).scale(forest.getBbWidth() * 1.5F))
+                            .add(look.scale((current + j) * forest.getBbWidth()));
+                    forest.moveTo(offset.x, offset.y, offset.z, yRot, xRot);
+                    owner.level().addFreshEntity(forest);
+                }
+            }, i + 3);
         }
     }
 
@@ -98,11 +101,6 @@ public class ForestWave extends Ability implements IChanneled, IDurationable {
     @Override
     public int getCooldown() {
         return 5 * 20;
-    }
-
-    @Override
-    public int getDuration() {
-        return 5;
     }
 
     @Override
