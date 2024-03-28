@@ -46,8 +46,8 @@ public class MissionsScreen extends Screen {
 
     private final List<MissionCard> cards;
 
-    private ExtendedSlider missionGradesSlider;
-    private ExtendedSlider missionCardsSlider;
+    private ScrollableSlider missionGradesSlider;
+    private ScrollableSlider missionCardsSlider;
     private Button acceptButton;
 
     private MissionGrade grade;
@@ -57,11 +57,38 @@ public class MissionsScreen extends Screen {
     @Nullable
     private MissionCard selected;
 
+    private boolean initialized;
+
     public MissionsScreen() {
         super(GameNarrator.NO_TITLE);
 
         this.cards = new ArrayList<>();
         this.grade = MissionGrade.D;
+    }
+
+    public void refresh() {
+        if (this.minecraft == null || this.minecraft.level == null) return;
+
+        this.cards.clear();
+
+        IMissionData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION);
+
+        Set<Mission> missions = data.getMissions();
+
+        for (Mission mission : missions) {
+            this.cards.add(new MissionCard(this.minecraft, mission));
+        }
+
+
+        List<MissionCard> subset = new ArrayList<>(this.cards);
+        subset.removeIf(card -> card.getGrade() != this.grade);
+
+        int windowOffsetX = WINDOW_OFFSET_X;
+
+        int missionCardsOffsetX = windowOffsetX + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
+
+        this.missionCardsSlider.setMaxValue(Math.max(0, (subset.size() * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING) - MissionCard.OUTER_PADDING) -
+                (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X)));
     }
 
     private void setSelected(@Nullable MissionCard selected) {
@@ -157,6 +184,11 @@ public class MissionsScreen extends Screen {
     protected void init() {
         super.init();
 
+        if (!this.initialized) {
+            PacketHandler.sendToServer(new SearchForMissionsC2SPacket());
+            this.initialized = true;
+        }
+
         if (this.minecraft == null || this.minecraft.level == null) return;
 
         this.cards.clear();
@@ -165,10 +197,6 @@ public class MissionsScreen extends Screen {
 
         Set<Mission> missions = data.getMissions();
 
-        if (missions.isEmpty()) {
-            PacketHandler.sendToServer(new SearchForMissionsC2SPacket());
-        }
-
         for (Mission mission : missions) {
             this.cards.add(new MissionCard(this.minecraft, mission));
         }
@@ -176,8 +204,8 @@ public class MissionsScreen extends Screen {
         int windowOffsetX = WINDOW_OFFSET_X;
         int windowOffsetY = (this.height - WINDOW_HEIGHT) / 2;
 
-        int missionCardOffsetX = windowOffsetX + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
-        int missionCardOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
+        int missionCardsOffsetX = windowOffsetX + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
+        int missionCardsOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
 
         List<MissionCard> subset = new ArrayList<>(this.cards);
         subset.removeIf(card -> card.getGrade() != this.grade);
@@ -188,15 +216,17 @@ public class MissionsScreen extends Screen {
                 0, 0.1D, 0, false);
         this.addRenderableWidget(this.missionGradesSlider);
 
-        this.missionCardsSlider = new ScrollableSlider(missionCardOffsetX, missionCardOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING,
-                this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X, 8, Component.empty(), Component.empty(), 0.0D,
-                Math.max(0, (subset.size() * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING) - MissionCard.OUTER_PADDING) - (this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X)),
+        this.missionCardsSlider = new ScrollableSlider(missionCardsOffsetX, missionCardsOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING,
+                this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X, 8, Component.empty(), Component.empty(), 0.0D,
+                Math.max(0, (subset.size() * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING) - MissionCard.OUTER_PADDING) -
+                        (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X)),
                 0, 0.1D, 0, false);
         this.addRenderableWidget(this.missionCardsSlider);
 
         this.acceptButton = Button.builder(Component.translatable(String.format("gui.%s.missions.accept", JujutsuKaisen.MOD_ID)), pButton -> {
 
-        }).pos(missionCardOffsetX + (this.width - missionCardOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2, missionCardOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
+        }).pos(missionCardsOffsetX + (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2,
+                        missionCardsOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
                 .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT).build();
         this.addRenderableWidget(this.acceptButton);
     }

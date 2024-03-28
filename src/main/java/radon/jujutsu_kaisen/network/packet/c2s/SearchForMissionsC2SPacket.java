@@ -41,7 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class SearchForMissionsC2SPacket implements CustomPacketPayload {
-    private static final int SEARCH_RADIUS = 100;
+    private static final int SEARCH_RADIUS = 16;
 
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "search_for_missions_serverbound");
 
@@ -69,47 +69,57 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
             Optional<HolderSet.Named<Structure>> optional = sender.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION);
 
-            if (optional.isPresent()) {
-                for (Holder<Structure> holder : optional.get()) {
-                    for (StructurePlacement placement : sender.serverLevel().getChunkSource().getGeneratorState().getPlacementsForStructure(holder)) {
-                        if (placement instanceof ConcentricRingsStructurePlacement concentric) {
-                            List<ChunkPos> positions = sender.serverLevel().getChunkSource().getGeneratorState().getRingPositionsFor(concentric);
+            boolean dirty = false;
 
-                            if (positions == null) continue;
+            if (optional.isEmpty()) return;
 
-                            BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+            for (Holder<Structure> holder : optional.get()) {
+                for (StructurePlacement placement : sender.serverLevel().getChunkSource().getGeneratorState().getPlacementsForStructure(holder)) {
+                    if (placement instanceof ConcentricRingsStructurePlacement concentric) {
+                        List<ChunkPos> positions = sender.serverLevel().getChunkSource().getGeneratorState().getRingPositionsFor(concentric);
 
-                            for (ChunkPos chunk : positions) {
-                                pos.set(SectionPos.sectionToBlockCoord(chunk.x, 8), 32, SectionPos.sectionToBlockCoord(chunk.z, 8));
+                        if (positions == null) continue;
+
+                        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+
+                        for (ChunkPos chunk : positions) {
+                            pos.set(SectionPos.sectionToBlockCoord(chunk.x, 8), 32, SectionPos.sectionToBlockCoord(chunk.z, 8));
+
+                            if (!data.isRegistered(pos)) {
                                 data.register(pos);
-                                PacketHandler.broadcast(new SyncMissionDataS2CPacket(sender.level().dimension(), data.serializeNBT()));
+
+                                dirty = true;
                             }
-                        } else if (placement instanceof RandomSpreadStructurePlacement random) {
-                            int x = SectionPos.blockToSectionCoord(sender.getX());
-                            int z = SectionPos.blockToSectionCoord(sender.getZ());
+                        }
+                    } else if (placement instanceof RandomSpreadStructurePlacement random) {
+                        int x = SectionPos.blockToSectionCoord(sender.getX());
+                        int z = SectionPos.blockToSectionCoord(sender.getZ());
 
-                            for (int y = 0; y <= SEARCH_RADIUS; y++) {
-                                int i = random.spacing();
+                        for (int y = 0; y <= SEARCH_RADIUS; y++) {
+                            int i = random.spacing();
 
-                                for (int j = -z; j <= z; j++) {
-                                    boolean flag = j == -z || j == z;
+                            for (int j = -y; j <= y; j++) {
+                                boolean flag = j == -y || j == y;
 
-                                    for (int k = -z; k <= z; k++) {
-                                        if (flag || (k == -z || k == z)) {
-                                            int l = x + i * j;
-                                            int i1 = x + i * k;
-                                            ChunkPos chunk = random.getPotentialStructureChunk(sender.serverLevel().getChunkSource().getGeneratorState().getLevelSeed(), l, i1);
+                                for (int k = -y; k <= y; k++) {
+                                    if (flag || (k == -y || k == y)) {
+                                        int l = x + i * j;
+                                        int i1 = z + i * k;
+                                        ChunkPos chunk = random.getPotentialStructureChunk(sender.serverLevel().getChunkSource().getGeneratorState().getLevelSeed(), l, i1);
 
-                                            StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
+                                        StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
 
-                                            if (result != StructureCheckResult.START_NOT_PRESENT) {
-                                                ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
-                                                StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
+                                        if (result != StructureCheckResult.START_NOT_PRESENT) {
+                                            ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
+                                            StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
 
-                                                if (start != null && start.isValid() && (tryAddReference(sender.serverLevel().structureManager(), start))) {
-                                                    BlockPos pos = random.getLocatePos(start.getChunkPos());
+                                            if (start != null && start.isValid() && (tryAddReference(sender.serverLevel().structureManager(), start))) {
+                                                BlockPos pos = random.getLocatePos(start.getChunkPos());
+
+                                                if (!data.isRegistered(pos)) {
                                                     data.register(pos);
-                                                    PacketHandler.broadcast(new SyncMissionDataS2CPacket(sender.level().dimension(), data.serializeNBT()));
+
+                                                    dirty = true;
                                                 }
                                             }
                                         }
@@ -119,6 +129,10 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                         }
                     }
                 }
+            }
+
+            if (dirty) {
+                PacketHandler.broadcast(new SyncMissionDataS2CPacket(sender.level().dimension(), data.serializeNBT()));
             }
         });
     }
