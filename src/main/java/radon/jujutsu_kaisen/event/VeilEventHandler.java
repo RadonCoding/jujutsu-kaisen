@@ -28,7 +28,13 @@ public class VeilEventHandler {
             if (!(event.getLevel() instanceof ServerLevel level)) return;
 
             Explosion explosion = event.getExplosion();
-            LivingEntity instigator = explosion.getIndirectSourceEntity();
+
+            Entity direct = explosion.getDirectSourceEntity();
+            LivingEntity indirect = explosion.getIndirectSourceEntity();
+
+            Entity exploder = indirect == null ? direct : indirect;
+
+            if (exploder == null) return;
 
             Iterator<BlockPos> iter = explosion.getToBlow().iterator();
 
@@ -36,7 +42,7 @@ public class VeilEventHandler {
                 BlockPos pos = iter.next();
                 Vec3 center = pos.getCenter();
 
-                if (!VeilHandler.canDestroy(instigator, level, center.x, center.y, center.z)) {
+                if (!VeilHandler.canDestroy(exploder, level, center.x, center.y, center.z)) {
                     iter.remove();
                 }
             }
