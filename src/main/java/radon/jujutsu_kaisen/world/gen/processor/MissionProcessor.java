@@ -73,6 +73,9 @@ public class MissionProcessor extends StructureProcessor {
 
         if (!data.isRegistered(pPos)) data.register(pPos);
 
+        Mission mission = data.getMission(pPos);
+        mission.setFinalized(true);
+
         return super.finalizeProcessing(pServerLevel, pOffset, pPos, pOriginalBlockInfos, pProcessedBlockInfos, pSettings);
     }
 }
