@@ -72,7 +72,7 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
 
     @Override
     protected boolean isCustom() {
-        return true;
+        return false;
     }
 
     @Override
