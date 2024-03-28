@@ -54,19 +54,23 @@ public class MissionProcessor extends StructureProcessor {
 
             registerIfNotPresent(((ServerLevelAccessor) pLevel).getLevel(), pPos);
 
-            Mission mission = data.getMission(pPos);
-            mission.addSpawn(pPos);
+            BlockPos pos = pRelativeBlockInfo.pos();
 
-            return new StructureTemplate.StructureBlockInfo(pPos, Blocks.AIR.defaultBlockState(), null);
+            Mission mission = data.getMission(pos);
+            mission.addSpawn(pos);
+
+            return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER.get())) {
             IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
             registerIfNotPresent(((ServerLevelAccessor) pLevel).getLevel(), pPos);
 
-            Mission mission = data.getMission(pPos);
-            mission.addBoss(pPos);
+            BlockPos pos = pRelativeBlockInfo.pos();
 
-            return new StructureTemplate.StructureBlockInfo(pPos, Blocks.AIR.defaultBlockState(), null);
+            Mission mission = data.getMission(pos);
+            mission.addBoss(pos);
+
+            return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
         }
         return pRelativeBlockInfo;
     }
