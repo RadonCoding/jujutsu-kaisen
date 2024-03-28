@@ -673,9 +673,12 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void onBlackFlash() {
-        this.lastBlackFlashTime = this.owner.level().getGameTime();
+        // Second black flash restores output
+        if (this.isInZone()) {
+            this.burnout = 0;
+        }
 
-        this.burnout = 0;
+        this.lastBlackFlashTime = this.owner.level().getGameTime();
 
         if (this.owner instanceof ServerPlayer player) {
             PlayerUtil.giveAdvancement(player, "black_flash");
