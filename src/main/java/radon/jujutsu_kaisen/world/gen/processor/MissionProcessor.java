@@ -56,7 +56,7 @@ public class MissionProcessor extends StructureProcessor {
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
-            Mission mission = data.getMission(pos);
+            Mission mission = data.getMission(pPos);
             mission.addSpawn(pos);
 
             return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
@@ -67,7 +67,7 @@ public class MissionProcessor extends StructureProcessor {
 
             BlockPos pos = pRelativeBlockInfo.pos();
 
-            Mission mission = data.getMission(pos);
+            Mission mission = data.getMission(pPos);
             mission.addBoss(pos);
 
             return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
