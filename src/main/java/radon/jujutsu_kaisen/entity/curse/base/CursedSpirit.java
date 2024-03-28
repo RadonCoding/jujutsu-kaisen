@@ -8,12 +8,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
@@ -124,6 +126,12 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
         }
         this.goalSelector.addGoal(goal++, new ChantGoal<>(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+
+        this.goalSelector.addGoal(goal, new MoveThroughMissionGoal(this, 1.0D, false, 8));
+
+        if (GoalUtils.hasGroundPathNavigation(this)) {
+            this.goalSelector.addGoal(goal, new MoveThroughVillageGoal(this, 1.0D, false, 8, () -> true));
+        }
     }
 
     @Override

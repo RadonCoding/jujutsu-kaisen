@@ -175,29 +175,6 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
         return false;
     }
 
-    @Override
-    protected void registerGoals() {
-        int goal = 1;
-        int target = 1;
-
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
-
-        if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        }
-        this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, this.canFly()));
-
-        this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.MAX_HEALTH, 2 * 20.0D)
@@ -293,18 +270,5 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     public enum Variant {
         WHITE,
         BLACK
-    }
-
-    private class CustomLeapAtTargetGoal extends LeapAtTargetGoal {
-        public CustomLeapAtTargetGoal(Mob pMob, float pYd) {
-            super(pMob, pYd);
-        }
-
-        @Override
-        public void start() {
-            super.start();
-
-            DivineDogEntity.this.entityData.set(DATA_LEAP, LEAP_DURATION);
-        }
     }
 }
