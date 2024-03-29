@@ -154,8 +154,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (this.isRemoved()) return;
 
-        if (!this.isOwned(pos)) return;
-
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -204,7 +202,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         // We don't want to destroy the barrier of other domains :P
-        if (existing instanceof DomainBlockEntity be && !state.is(JJKBlocks.DOMAIN_AIR)) {
+        if (existing instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();
 
             if (identifier != null && ((ServerLevel) this.level()).getEntity(identifier) instanceof DomainExpansionEntity) {
