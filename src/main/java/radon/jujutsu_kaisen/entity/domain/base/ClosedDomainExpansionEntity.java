@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.IBarrier;
 import radon.jujutsu_kaisen.entity.base.IDomain;
+import radon.jujutsu_kaisen.entity.base.ISimpleDomain;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -315,7 +316,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
 
         for (IBarrier barrier : barriers) {
-            if (!(barrier instanceof IDomain domain)) continue;
+            if (!(barrier instanceof IDomain domain) || barrier instanceof ISimpleDomain) continue;
             if (domain == this) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
