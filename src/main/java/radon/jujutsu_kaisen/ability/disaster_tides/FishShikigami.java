@@ -23,8 +23,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class FishShikigami extends Ability {
     public static final double RANGE = 30.0D;
 
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && !target.isDeadOrDying() && this.getTarget(owner) == target;
@@ -35,7 +33,8 @@ public class FishShikigami extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
+    @Nullable
+    private LivingEntity getTarget(LivingEntity owner) {
         LivingEntity result = null;
 
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
@@ -80,8 +79,6 @@ public class FishShikigami extends Ability {
     public int getCooldown() {
         return 5 * 20;
     }
-
-
 
     @Override
     public MenuType getMenuType(LivingEntity owner) {

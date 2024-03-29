@@ -5,25 +5,25 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
+import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class KuchisakeOnnaAnswerC2SPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "kuchisake_onna_answer_serverbound");
+public class ScissorsAnswerC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "scissors_answer_serverbound");
 
     private final UUID identifier;
 
-    public KuchisakeOnnaAnswerC2SPacket(UUID identifier) {
+    public ScissorsAnswerC2SPacket(UUID identifier) {
         this.identifier = identifier;
     }
 
-    public KuchisakeOnnaAnswerC2SPacket(FriendlyByteBuf buf) {
+    public ScissorsAnswerC2SPacket(FriendlyByteBuf buf) {
         this(buf.readUUID());
     }
 
@@ -33,8 +33,8 @@ public class KuchisakeOnnaAnswerC2SPacket implements CustomPacketPayload {
 
             ServerLevel level = sender.serverLevel();
 
-            if (level.getEntity(this.identifier) instanceof KuchisakeOnnaEntity curse) {
-                curse.attack();
+            for (ScissorEntity scissor : level.getEntitiesOfClass(ScissorEntity.class, AABB.ofSize(sender.position(), 16.0D, 16.0D, 16.0D))) {
+                scissor.setActive(scissor.getTime());
             }
         });
     }

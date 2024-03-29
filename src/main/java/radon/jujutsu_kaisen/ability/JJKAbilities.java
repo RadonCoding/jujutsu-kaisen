@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.ability.ai.dino_curse.BlueFire;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
-import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
+import radon.jujutsu_kaisen.ability.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
@@ -54,6 +54,8 @@ public class JJKAbilities {
 
     public static DeferredHolder<Ability, SkyStrike> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
 
+    public static DeferredHolder<Ability, Scissors> SCISSORS = ABILITIES.register("scissors", Scissors::new);
+
     public static DeferredHolder<Ability, Dash> DASH = ABILITIES.register("dash", Dash::new);
     public static DeferredHolder<Ability, Punch> PUNCH = ABILITIES.register("punch", Punch::new);
     public static DeferredHolder<Ability, Slam> SLAM = ABILITIES.register("slam", Slam::new);
@@ -81,8 +83,11 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, VeilDeactivate> VEIL_DEACTIVATE = ABILITIES.register("veil_deactivate", VeilDeactivate::new);
 
     public static DeferredHolder<Ability, ShootPureLove> SHOOT_PURE_LOVE = ABILITIES.register("shoot_pure_love", ShootPureLove::new);
+
+    public static DeferredHolder<Ability, NueTotalityLightning> NUE_TOTALITY_LIGHTNING = ABILITIES.register("nue_totality_lightning", NueTotalityLightning::new);
+
     public static DeferredHolder<Ability, Water> WATER = ABILITIES.register("water", Water::new);
-    public static DeferredHolder<Ability, Scissors> SCISSORS = ABILITIES.register("scissors", Scissors::new);
+
     public static DeferredHolder<Ability, BlueFire> BLUE_FIRE = ABILITIES.register("blue_fire", BlueFire::new);
 
     public static DeferredHolder<Ability, Infinity> INFINITY = ABILITIES.register("infinity", Infinity::new);
@@ -159,7 +164,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, ShadowStorage> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
     public static DeferredHolder<Ability, ShadowTravel> SHADOW_TRAVEL = ABILITIES.register("shadow_travel", ShadowTravel::new);
     public static DeferredHolder<Ability, NueLightning> NUE_LIGHTNING = ABILITIES.register("nue_lightning", NueLightning::new);
-    public static DeferredHolder<Ability, NueTotalityLightning> NUE_TOTALITY_LIGHTNING = ABILITIES.register("nue_totality_lightning", NueTotalityLightning::new);
     public static DeferredHolder<Ability, PiercingWater> PIERCING_WATER = ABILITIES.register("piercing_water", PiercingWater::new);
     public static DeferredHolder<Ability, Wheel> WHEEL = ABILITIES.register("wheel", Wheel::new);
     public static DeferredHolder<Ability, GreatSerpentGrab> GREAT_SERPENT_GRAB = ABILITIES.register("great_serpent_grab", GreatSerpentGrab::new);

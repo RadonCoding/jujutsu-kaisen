@@ -1,37 +1,6 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"attack.snip": {
-			"animation_length": 0.25,
-			"bones": {
-				"scissor_half_1": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.1667": {
-							"vector": [-12.5, 0, 0]
-						},
-						"0.25": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"scissor_half_2": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.1667": {
-							"vector": [-15, 0, 0]
-						},
-						"0.25": {
-							"vector": [0, 0, 0]
-						}
-					}
-				}
-			}
-		},
 		"move.walk": {
 			"loop": true,
 			"animation_length": 1,
@@ -89,6 +58,37 @@
 							"vector": [-25, 0, 0]
 						},
 						"1.0": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"attack.swing": {
+			"animation_length": 0.25,
+			"bones": {
+				"scissor_half_1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.1667": {
+							"vector": [-12.5, 0, 0]
+						},
+						"0.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"scissor_half_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.1667": {
+							"vector": [-15, 0, 0]
+						},
+						"0.25": {
 							"vector": [0, 0, 0]
 						}
 					}

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -12,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -24,12 +27,13 @@ import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.base.IBarrier;
+import radon.jujutsu_kaisen.entity.base.ISimpleDomain;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class SimpleDomainEntity extends Entity {
+public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_ENLARGEMENT = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_MAX_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
@@ -64,6 +68,15 @@ public class SimpleDomainEntity extends Entity {
         this.setRadius(getRadius(owner));
         this.setMaxHealth(1.0F + data.getSkill(Skill.BARRIER));
         this.setHealth(this.getMaxHealth());
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        if (!this.level().isClientSide) {
+            VeilHandler.barrier(this.level().dimension(), this.getUUID());
+        }
     }
 
     public static float getRadius(LivingEntity owner) {
@@ -227,6 +240,7 @@ public class SimpleDomainEntity extends Entity {
         }
     }
 
+    @Override
     @Nullable
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
@@ -237,6 +251,34 @@ public class SimpleDomainEntity extends Entity {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean isInsideBarrier(BlockPos pos) {
+        return this.isBarrier(pos);
+    }
+
+    @Override
+    public boolean isBarrier(BlockPos pos) {
+        float radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        BlockPos relative = pos.subtract(center);
+        return relative.distSqr(Vec3i.ZERO) < radius * radius;
+    }
+
+    @Override
+    public AABB getBounds() {
+        return this.getBoundingBox();
+    }
+
+    @Override
+    public boolean hasSureHitEffect() {
+        return false;
+    }
+
+    @Override
+    public boolean checkSureHitEffect() {
+        return false;
     }
 
     @Override
@@ -281,5 +323,10 @@ public class SimpleDomainEntity extends Entity {
         if (owner != null) {
             this.setOwner(owner);
         }
+    }
+
+    @Override
+    public float getScale() {
+        return 1.0F + this.getEnlargement();
     }
 }

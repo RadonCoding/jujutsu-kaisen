@@ -57,7 +57,18 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class QuickDraw extends Ability implements IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target);
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        IAbilityData data = cap.getAbilityData();
+
+        if (data.hasToggled(this)) {
+            return HelperMethods.RANDOM.nextInt(20) != 0;
+        }
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
@@ -127,19 +138,16 @@ public class QuickDraw extends Ability implements IToggled {
 
         if (cap == null) return;
 
-        ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
+        ISorcererData data = cap.getSorcererData();
 
-        if (abilityData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-            SimpleDomainEntity domain = sorcererData.getSummonByClass(SimpleDomainEntity.class);
+        SimpleDomainEntity domain = data.getSummonByClass(SimpleDomainEntity.class);
 
-            if (domain == null) return;
+        if (domain == null) return;
 
-            for (LivingEntity entity : EntityUtil.getTouchableEntities(LivingEntity.class, owner.level(), owner, domain.getBoundingBox())) {
-                if (entity.distanceTo(domain) > domain.getRadius()) continue;
+        for (LivingEntity entity : EntityUtil.getTouchableEntities(LivingEntity.class, owner.level(), owner, domain.getBoundingBox())) {
+            if (entity.distanceTo(domain) > domain.getRadius()) continue;
 
-                attack(owner, entity);
-            }
+            attack(owner, entity);
         }
     }
 

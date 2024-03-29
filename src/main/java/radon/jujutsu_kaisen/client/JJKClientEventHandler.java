@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.Transfigur
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulSmallRenderer;
 import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
+import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.util.CuriosUtil;
@@ -115,15 +116,15 @@ public class JJKClientEventHandler {
         public static void onClientChat(ClientChatEvent event) {
             Minecraft mc = Minecraft.getInstance();
 
-            assert mc.level != null && mc.player != null;
+            if (mc.level == null || mc.player == null) return;
 
-            for (KuchisakeOnnaEntity curse : mc.level.getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(mc.player.position(),
-                    64.0D, 64.0D, 64.0D))) {
-                curse.getCurrent().ifPresent(identifier -> {
-                    event.setCanceled(true);
-                    mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getName().getString(), event.getMessage())));
-                    PacketHandler.sendToServer(new KuchisakeOnnaAnswerC2SPacket(curse.getUUID()));
-                });
+            for (ScissorEntity curse : mc.level.getEntitiesOfClass(ScissorEntity.class, AABB.ofSize(mc.player.position(),
+                    16.0D, 16.0D, 16.0D))) {
+                if (curse.getVictim() != mc.player) continue;
+
+                mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getName().getString(), event.getMessage())));
+                PacketHandler.sendToServer(new ScissorsAnswerC2SPacket(curse.getUUID()));
+                event.setCanceled(true);
             }
         }
     }
