@@ -2,13 +2,11 @@ package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -30,9 +28,9 @@ public interface IBarrier {
         return VeilHandler.isOwnedBy(level, pos, this);
     }
 
-    default boolean isOwnedByVeil(BlockPos pos) {
+    default boolean isOwnedByNonDomain(BlockPos pos) {
         if (!(this.level() instanceof ServerLevel level)) return false;
-        return VeilHandler.isOwnedByVeil(level, pos);
+        return VeilHandler.isOwnedNonDomain(level, pos);
     }
 
     boolean isInsideBarrier(BlockPos pos);

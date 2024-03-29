@@ -65,7 +65,7 @@ public class VeilHandler {
     public static boolean canSpawn(ServerLevel level, Mob mob, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
-        IBarrier owner = getOwner(level, target, true);
+        IBarrier owner = getOwner(level, target);
 
         if (owner instanceof IVeil veil) return veil.isAllowed(mob);
 
@@ -77,7 +77,7 @@ public class VeilHandler {
 
         if (level.getBlockState(target).is(JJKBlocks.VEIL_ROD)) return true;
 
-        IBarrier owner = getOwner(level, target, true);
+        IBarrier owner = getOwner(level, target);
 
         if (owner instanceof IVeil veil) return veil.canDamage(victim);
 
@@ -87,7 +87,7 @@ public class VeilHandler {
     public static boolean canDestroy(@Nullable Entity entity, ServerLevel level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
-        IBarrier owner = getOwner(level, target, true);
+        IBarrier owner = getOwner(level, target);
 
         if (owner instanceof IVeil veil) return veil.canDestroy(entity, target);
 
@@ -95,13 +95,12 @@ public class VeilHandler {
     }
 
     @Nullable
-    private static IBarrier getOwner(ServerLevel level, BlockPos target, boolean domains) {
+    private static IBarrier getOwner(ServerLevel level, BlockPos target) {
         IBarrier strongest = null;
 
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
                 if (!(level.getEntity(identifier) instanceof IBarrier current)) continue;
-                if (!domains && current instanceof IDomain) continue;
                 if (!current.isBarrier(target)) continue;
 
                 if (strongest == null) {
@@ -116,15 +115,15 @@ public class VeilHandler {
     }
 
     public static boolean isOwnedBy(ServerLevel level, BlockPos target, IBarrier barrier) {
-        return getOwner(level, target, true) == barrier;
+        return getOwner(level, target) == barrier;
     }
 
-    public static boolean isOwnedByVeil(ServerLevel level, BlockPos target) {
-        return getOwner(level, target, false) instanceof IVeil;
+    public static boolean isOwnedNonDomain(ServerLevel level, BlockPos target) {
+        return !(getOwner(level, target) instanceof IDomain);
     }
 
     public static boolean isInsideBarrier(ServerLevel level, BlockPos target) {
-        return getOwner(level, target, true) != null;
+        return getOwner(level, target) != null;
     }
 
     @SubscribeEvent
