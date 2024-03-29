@@ -125,6 +125,8 @@ public class JJKClientEventHandler {
                 mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getName().getString(), event.getMessage())));
                 PacketHandler.sendToServer(new ScissorsAnswerC2SPacket(curse.getUUID()));
                 event.setCanceled(true);
+
+                break;
             }
         }
     }
