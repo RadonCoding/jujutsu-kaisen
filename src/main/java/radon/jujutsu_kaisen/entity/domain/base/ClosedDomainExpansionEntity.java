@@ -154,7 +154,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (this.isRemoved()) return;
 
-        if (this.isOwnedByVeil(pos)) return;
+        if (this.isOwnedByNonDomain(pos)) return;
 
         LivingEntity owner = this.getOwner();
 
