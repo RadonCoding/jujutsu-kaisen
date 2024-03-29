@@ -32,13 +32,6 @@ public class DamageUtil {
             if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
         }
 
-        for (KuchisakeOnnaEntity curse : target.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),
-                KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
-            Optional<UUID> identifier = curse.getCurrent();
-            if (identifier.isEmpty()) continue;
-            if (identifier.get() == target.getUUID() && projectile.getOwner() == curse) return false;
-        }
-
         if (projectile instanceof JujutsuProjectile jujutsu) {
             return !jujutsu.isDomain();
         }

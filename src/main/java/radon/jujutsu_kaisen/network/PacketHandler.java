@@ -111,9 +111,9 @@ public class PacketHandler {
         registrar.play(SetTojiBountyC2SPacket.IDENTIFIER, SetTojiBountyC2SPacket::new, handler -> handler
                 .client(SetTojiBountyC2SPacket::handle)
                 .server(SetTojiBountyC2SPacket::handle));
-        registrar.play(KuchisakeOnnaAnswerC2SPacket.IDENTIFIER, KuchisakeOnnaAnswerC2SPacket::new, handler -> handler
-                .client(KuchisakeOnnaAnswerC2SPacket::handle)
-                .server(KuchisakeOnnaAnswerC2SPacket::handle));
+        registrar.play(ScissorsAnswerC2SPacket.IDENTIFIER, ScissorsAnswerC2SPacket::new, handler -> handler
+                .client(ScissorsAnswerC2SPacket::handle)
+                .server(ScissorsAnswerC2SPacket::handle));
         registrar.play(ShadowInventoryTakeC2SPacket.IDENTIFIER, ShadowInventoryTakeC2SPacket::new, handler -> handler
                 .client(ShadowInventoryTakeC2SPacket::handle)
                 .server(ShadowInventoryTakeC2SPacket::handle));

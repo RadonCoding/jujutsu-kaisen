@@ -31,6 +31,7 @@ public class JJKCursedTechniques {
 
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> SHOCKWAVE = CURSED_TECHNIQUES.register("shockwave", ShockwaveTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> SKY_STRIKE = CURSED_TECHNIQUES.register("sky_strike", SkyStrikeTechnique::new);
+    public static DeferredHolder<ICursedTechnique, ICursedTechnique> SCISSORS = CURSED_TECHNIQUES.register("scissors", ScissorsTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> CURSE_MANIPULATION = CURSED_TECHNIQUES.register("curse_manipulation", CurseManipulationTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> LIMITLESS = CURSED_TECHNIQUES.register("limitless", LimitlessTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> DISMANTLE_AND_CLEAVE = CURSED_TECHNIQUES.register("dismantle_and_cleave", DismantleAndCleaveTechnique::new);

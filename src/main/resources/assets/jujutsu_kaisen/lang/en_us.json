@@ -234,7 +234,12 @@
   "ability.jujutsu_kaisen.fail.throat": "Your throat is still damaged for %1$d seconds",
 
   "ability.jujutsu_kaisen.shockwave": "Shockwave",
+
   "ability.jujutsu_kaisen.sky_strike": "Sky Strike",
+
+  "ability.jujutsu_kaisen.scissors": "Scissors",
+  "ability.jujutsu_kaisen.scissors.enable": "Activated scissors",
+  "ability.jujutsu_kaisen.scissors.disable": "Deactivated scissors",
 
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.punch": "Punch",
@@ -492,6 +497,7 @@
 
   "cursed_technique.jujutsu_kaisen.shockwave": "Shockwave",
   "cursed_technique.jujutsu_kaisen.sky_strike": "Sky Strike",
+  "cursed_technique.jujutsu_kaisen.scissors": "Scissors",
   "cursed_technique.jujutsu_kaisen.curse_manipulation": "Curse Manipulation",
   "cursed_technique.jujutsu_kaisen.limitless": "Limitless",
   "cursed_technique.jujutsu_kaisen.dismantle_and_cleave": "Dismantle & Cleave",
@@ -566,7 +572,7 @@
   "chat.jujutsu_kaisen.bounty_success": "Successfully completed the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_fail": "Failed to complete the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_set": "Successfully set bounty on %1$s.",
-  "chat.jujutsu_kaisen.kuchisake_onna": "<%1$s> Am... Am I... pretty?",
+  "chat.jujutsu_kaisen.scissors": "<%1$s> Am i pretty?",
   "chat.jujutsu_kaisen.mimicry": "Copied cursed technique %1$s",
 
   "chat.jujutsu_kaisen.dont_move": "<%1$s> DON'T MOVE!",

@@ -60,7 +60,8 @@ public class GreatSerpentGrab extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
+    @Nullable
+    private LivingEntity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
             return target;
         }

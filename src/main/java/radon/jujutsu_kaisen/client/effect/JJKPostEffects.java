@@ -9,6 +9,6 @@ public class JJKPostEffects {
     public static List<PostEffect> EFFECTS = new ArrayList<>();
 
     static {
-        EFFECTS.add(new KuchisakeOnnaPostEffect());
+        EFFECTS.add(new ScissorPostEffect());
     }
 }

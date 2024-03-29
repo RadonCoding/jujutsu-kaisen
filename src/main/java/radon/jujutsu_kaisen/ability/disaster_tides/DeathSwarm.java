@@ -38,7 +38,8 @@ public class DeathSwarm extends Ability implements IDomainAttack {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
+    @Nullable
+    private LivingEntity getTarget(LivingEntity owner) {
         LivingEntity result = null;
 
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
