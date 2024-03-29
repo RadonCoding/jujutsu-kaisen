@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen;
 
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
@@ -13,11 +11,11 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.command.argument.JJKCommandArgumentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -28,7 +26,6 @@ import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.pact.JJKPacts;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.world.gen.feature.JJKFeatures;
-import radon.jujutsu_kaisen.world.gen.loot.JJKLootModifiers;
 import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
@@ -66,7 +63,6 @@ public class JujutsuKaisen {
         JJKSounds.SOUNDS.register(bus);
 
         JJKProcessors.PROCESSORS.register(bus);
-        JJKLootModifiers.LOOT_MODIFIERS.register(bus);
         JJKFeatures.FEATURES.register(bus);
 
         JJKCreativeTabs.CREATIVE_MODE_TABS.register(bus);
