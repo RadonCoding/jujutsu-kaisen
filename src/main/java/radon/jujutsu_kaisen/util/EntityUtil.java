@@ -3,12 +3,17 @@ package radon.jujutsu_kaisen.util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
@@ -27,6 +32,38 @@ import java.util.List;
 import java.util.UUID;
 
 public class EntityUtil {
+    public static float calculateDamage(DamageSource source, LivingEntity target) {
+        float damage = target.getMaxHealth();
+        float armor = (float) target.getArmorValue();
+        float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+        float f = 2.0F + toughness / 4.0F;
+        float f1 = Mth.clamp(armor - damage / f, armor * 0.2F, 20.0F);
+        damage /= 1.0F - f1 / 25.0F;
+
+        MobEffectInstance instance = target.getEffect(MobEffects.DAMAGE_RESISTANCE);
+
+        if (instance != null) {
+            int resistance = instance.getAmplifier();
+            int i = (resistance + 1) * 5;
+            int j = 25 - i;
+
+            if (j == 0) {
+                return damage;
+            } else {
+                float x = 25.0F / (float) j;
+                damage = damage * x;
+            }
+        }
+
+        int k = EnchantmentHelper.getDamageProtection(target.getArmorSlots(), source);
+
+        if (k > 0) {
+            float f2 = Mth.clamp(k, 0.0F, 20.0F);
+            damage /= 1.0F - f2 / 25.0F;
+        }
+        return damage;
+    }
+
     @Nullable
     public static LivingEntity getOwner(TamableAnimal tamable) {
         LivingEntity owner = tamable;

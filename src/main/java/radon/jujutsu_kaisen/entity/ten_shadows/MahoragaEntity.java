@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -198,7 +199,8 @@ public class MahoragaEntity extends TenShadowsSummon {
             if (data == null) return true;
 
             if (data.getType() == JujutsuType.CURSE) {
-                pEntity.hurt(this.damageSources().mobAttack(this), living.getMaxHealth());
+                DamageSource source = this.damageSources().mobAttack(this);
+                pEntity.hurt(source, EntityUtil.calculateDamage(source, living));
             }
         }
         return result;
