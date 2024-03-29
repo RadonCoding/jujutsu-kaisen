@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Die extends CursedSpeech {
@@ -31,38 +32,6 @@ public class Die extends CursedSpeech {
         return ActivationType.INSTANT;
     }
 
-    private static float calculateDamage(DamageSource source, LivingEntity target) {
-        float damage = target.getMaxHealth();
-        float armor = (float) target.getArmorValue();
-        float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
-        float f = 2.0F + toughness / 4.0F;
-        float f1 = Mth.clamp(armor - damage / f, armor * 0.2F, 20.0F);
-        damage /= 1.0F - f1 / 25.0F;
-
-        MobEffectInstance instance = target.getEffect(MobEffects.DAMAGE_RESISTANCE);
-
-        if (instance != null) {
-            int resistance = instance.getAmplifier();
-            int i = (resistance + 1) * 5;
-            int j = 25 - i;
-
-            if (j == 0) {
-                return damage;
-            } else {
-                float x = 25.0F / (float) j;
-                damage = damage * x;
-            }
-        }
-
-        int k = EnchantmentHelper.getDamageProtection(target.getArmorSlots(), source);
-
-        if (k > 0) {
-            float f2 = Mth.clamp(k, 0.0F, 20.0F);
-            damage /= 1.0F - f2 / 25.0F;
-        }
-        return damage;
-    }
-
     @Override
     public void run(LivingEntity owner) {
         super.run(owner);
@@ -74,7 +43,7 @@ public class Die extends CursedSpeech {
 
             if (owner.getMaxHealth() / living.getMaxHealth() >= 4) {
                 DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
-                living.hurt(source, calculateDamage(source, living));
+                living.hurt(source, EntityUtil.calculateDamage(source, living));
             } else {
                 living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner));
             }
