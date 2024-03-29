@@ -204,13 +204,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         // We don't want to destroy the barrier of other domains :P
-        /*if (existing instanceof DomainBlockEntity be) {
+        if (existing instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();
 
             if (identifier != null && ((ServerLevel) this.level()).getEntity(identifier) instanceof DomainExpansionEntity) {
                 if (block == JJKBlocks.DOMAIN_AIR.get()) return;
             }
-        }*/
+        }
 
         owner.level().removeBlockEntity(pos);
 
