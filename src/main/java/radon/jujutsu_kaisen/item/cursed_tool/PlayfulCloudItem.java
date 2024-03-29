@@ -5,6 +5,7 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.PlayfulCloudRenderer;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
@@ -36,7 +37,7 @@ public class PlayfulCloudItem extends CursedToolItem implements GeoItem {
             private PlayfulCloudRenderer renderer;
 
             @Override
-            public PlayfulCloudRenderer getCustomRenderer() {
+            public @NotNull PlayfulCloudRenderer getCustomRenderer() {
                 if (this.renderer == null) this.renderer = new PlayfulCloudRenderer();
                 return this.renderer;
             }

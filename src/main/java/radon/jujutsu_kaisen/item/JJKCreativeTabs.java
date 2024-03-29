@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, JujutsuKaisen.MOD_ID);
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register("main", () ->
             CreativeModeTab.builder().icon(() -> new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()))
                     .title(Component.translatable(String.format("creative_mode_tab.%s.main", JujutsuKaisen.MOD_ID)))
