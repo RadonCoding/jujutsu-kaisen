@@ -198,6 +198,8 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
 
             if (this.level() instanceof ServerLevel level) {
                 for (IBarrier barrier : VeilHandler.getBarriers(level, owner.blockPosition())) {
+                    if (barrier instanceof ISimpleDomain simple && simple == this) continue;
+
                     if (!barrier.checkSureHitEffect()) continue;
 
                     LivingEntity target = barrier.getOwner();
