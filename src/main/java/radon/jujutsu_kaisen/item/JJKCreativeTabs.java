@@ -12,7 +12,7 @@ public class JJKCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, JujutsuKaisen.MOD_ID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register("main", () ->
             CreativeModeTab.builder().icon(() -> new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()))
-                    .title(Component.translatable("creative_mode_tab.jujutsu_kaisen.main"))
+                    .title(Component.translatable(String.format("creative_mode_tab.%s.main", JujutsuKaisen.MOD_ID)))
                     .displayItems(((pParameters, pOutput) -> {
                         pOutput.accept(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get());
                         pOutput.accept(JJKItems.PLAYFUL_CLOUD.get());
