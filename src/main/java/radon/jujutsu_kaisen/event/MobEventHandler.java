@@ -86,7 +86,7 @@ public class MobEventHandler {
             }
         }
 
-        /*@SubscribeEvent
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -119,7 +119,7 @@ public class MobEventHandler {
                     event.setCanceled(true);
                 }
             }
-        }*/
+        }
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {

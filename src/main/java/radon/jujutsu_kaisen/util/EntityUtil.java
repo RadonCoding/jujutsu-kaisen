@@ -42,7 +42,8 @@ public class EntityUtil {
     public static <T extends Entity> List<T> getEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
         return getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
                 .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
-                .and(entity -> owner == null || entity != owner));
+                // Add entities if owner is null or the entity is not owner and the entity is not a tame owned by the owner
+                .and(entity -> owner == null || (entity != owner && (!(entity instanceof TamableAnimal tamable) || getOwner(tamable) != owner))));
     }
 
     public static <T extends Entity> List<T> getTouchableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
