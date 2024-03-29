@@ -119,8 +119,8 @@ public class VeilHandler {
         return getOwner(level, target, true) == barrier;
     }
 
-    public static boolean isOwnedByIgnoreDomains(ServerLevel level, BlockPos target, IBarrier barrier) {
-        return getOwner(level, target, false) == barrier;
+    public static boolean isOwnedByVeil(ServerLevel level, BlockPos target) {
+        return getOwner(level, target, false) instanceof IVeil;
     }
 
     public static boolean isInsideBarrier(ServerLevel level, BlockPos target) {
