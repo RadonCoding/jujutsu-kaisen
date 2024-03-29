@@ -204,7 +204,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         // We don't want to destroy the barrier of other domains :P
-        if (existing instanceof DomainBlockEntity be) {
+        if (existing instanceof DomainBlockEntity be && !state.is(JJKBlocks.DOMAIN_AIR)) {
             UUID identifier = be.getIdentifier();
 
             if (identifier != null && ((ServerLevel) this.level()).getEntity(identifier) instanceof DomainExpansionEntity) {
