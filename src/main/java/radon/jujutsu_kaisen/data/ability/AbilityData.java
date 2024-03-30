@@ -206,6 +206,11 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
+    public boolean hasActive(Ability ability) {
+        return this.hasToggled(ability) || this.isChanneling(ability);
+    }
+
+    @Override
     public void toggle(Ability ability) {
         if (!this.owner.level().isClientSide && this.owner instanceof Player) {
             if (ability.shouldLog(this.owner)) {

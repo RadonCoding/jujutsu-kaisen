@@ -43,9 +43,15 @@ public class MissionProcessor extends StructureProcessor {
     @Nullable
     @Override
     public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader pLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, StructureTemplate.@NotNull StructureBlockInfo pBlockInfo, StructureTemplate.@NotNull StructureBlockInfo pRelativeBlockInfo, @NotNull StructurePlaceSettings pSettings, @Nullable StructureTemplate template) {
-        if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER.get())) {
-            IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
+        IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
+        if (data.isRegistered(pPos)) {
+            Mission mission = data.getMission(pPos);
+
+            if (mission.isFinalized()) return pRelativeBlockInfo;
+        }
+
+        if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER.get())) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
@@ -58,8 +64,6 @@ public class MissionProcessor extends StructureProcessor {
 
             return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER.get())) {
-            IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
-
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),

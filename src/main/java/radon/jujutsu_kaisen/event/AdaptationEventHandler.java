@@ -73,7 +73,7 @@ public class AdaptationEventHandler {
                 if (attackerCap != null) {
                     IAbilityData attackerData = attackerCap.getAbilityData();
 
-                    if (attackerData.hasToggled(JJKAbilities.INFINITY.get())) {
+                    if (attackerData.hasActive(JJKAbilities.INFINITY.get())) {
                         victimTenShadowsData.tryAdapt(JJKAbilities.INFINITY.get());
                     }
                     if (attackerData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {

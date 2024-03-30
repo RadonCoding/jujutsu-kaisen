@@ -92,7 +92,7 @@ public class EntityUtil {
             if (entityCap != null) {
                 IAbilityData entityData = entityCap.getAbilityData();
 
-                if (entityData.hasToggled(JJKAbilities.INFINITY.get())) continue;
+                if (entityData.hasActive(JJKAbilities.INFINITY.get())) continue;
             }
             entities.add(entity);
         }

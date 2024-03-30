@@ -1,0 +1,15 @@
+{
+  "name": "jujutsu_kaisen:graveyard/start_pool_12",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "jujutsu_kaisen:graveyard_12",
+        "processors": "jujutsu_kaisen:mission_processors",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

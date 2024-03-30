@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.ability.base.IDurationable;
 import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
 import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.data.mission.Mission;
 
 import java.util.List;
 import java.util.Set;
@@ -116,6 +117,10 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
     Set<Trait> getTraits();
 
     void setTraits(Set<Trait> traits);
+
+    void setMission(@Nullable Mission mission);
+
+    @Nullable Mission getMission();
 
     void setType(JujutsuType type);
 
