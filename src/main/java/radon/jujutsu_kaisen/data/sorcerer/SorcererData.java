@@ -13,7 +13,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +37,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
+import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
@@ -89,6 +89,9 @@ public class SorcererData implements ISorcererData {
 
     private final Set<Trait> traits;
     private final Set<SummonData> summons;
+
+    @Nullable
+    private  Mission mission;
 
     private int fingers;
 
@@ -556,6 +559,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void setMission(@Nullable Mission mission) {
+        this.mission = mission;
+    }
+
+    @Override
+    public Mission getMission() {
+        return this.mission;
+    }
+
+    @Override
     public void setType(JujutsuType type) {
         this.type = type;
         ServerVisualHandler.sync(this.owner);
@@ -1015,6 +1028,10 @@ public class SorcererData implements ISorcererData {
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("fingers", this.fingers);
 
+        if (this.mission != null) {
+            nbt.put("mission", this.mission.serializeNBT());
+        }
+
         ListTag unlockedTag = new ListTag();
 
         for (Ability ability : this.unlocked) {
@@ -1072,6 +1089,10 @@ public class SorcererData implements ISorcererData {
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.fingers = nbt.getInt("fingers");
+
+        if (nbt.contains("mission")) {
+            this.mission = new Mission(nbt.getCompound("mission"));
+        }
 
         this.unlocked.clear();
 

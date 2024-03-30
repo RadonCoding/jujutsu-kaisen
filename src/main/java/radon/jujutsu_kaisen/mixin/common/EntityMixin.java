@@ -62,7 +62,7 @@ public abstract class EntityMixin {
 
             IAbilityData data = cap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasActive(JJKAbilities.INFINITY.get())) return;
 
             cir.setReturnValue(false);
         }

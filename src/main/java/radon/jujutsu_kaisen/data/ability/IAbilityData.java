@@ -21,6 +21,8 @@ public interface IAbilityData extends INBTSerializable<CompoundTag> {
 
     void attack(DamageSource source, LivingEntity target);
 
+    boolean hasActive(Ability ability);
+
     void toggle(Ability ability);
 
     boolean hasToggled(Ability ability);

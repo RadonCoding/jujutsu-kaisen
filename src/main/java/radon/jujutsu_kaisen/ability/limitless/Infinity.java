@@ -24,6 +24,7 @@ import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.IAttack;
 import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -44,7 +45,7 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.*;
 
-public class Infinity extends Ability implements IToggled, IDurationable, IAdditionalAdaptation {
+public class Infinity extends Ability implements IToggled, IChanneled, IDurationable, IAdditionalAdaptation {
     private static final double SLOWING_FACTOR = 0.0001D;
     private static final double RANGE = 3.0D;
 
@@ -60,7 +61,13 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return ActivationType.CHANNELED;
+
+        ISorcererData data = cap.getSorcererData();
+        
+        return data.hasTrait(Trait.SIX_EYES) ? ActivationType.TOGGLED : ActivationType.CHANNELED;
     }
 
     @Override
@@ -71,22 +78,6 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
     @Override
     public float getCost(LivingEntity owner) {
         return 0.4F;
-    }
-
-    @Override
-    public int getDuration() {
-        return 10 * 20;
-    }
-
-    @Override
-    public int getRealDuration(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return 0;
-
-        ISorcererData data = cap.getSorcererData();
-
-        return data.hasTrait(Trait.SIX_EYES) ? 0 : IDurationable.super.getRealDuration(owner);
     }
 
     @Override
@@ -103,7 +94,12 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
     public int getCooldown() {
         return 5 * 20;
     }
-    
+
+    @Override
+    public MenuType getMenuType(LivingEntity owner) {
+        return this.getActivationType(owner) == ActivationType.CHANNELED ? MenuType.MELEE : MenuType.RADIAL;
+    }
+
     @Override
     public boolean shouldLog(LivingEntity owner) {
         return true;
@@ -170,11 +166,11 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
                     continue;
                 }
 
-                IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (ownerCap == null) return;
+                if (cap == null) return;
 
-                IAbilityData ownerData = ownerCap.getAbilityData();
+                IAbilityData data = cap.getAbilityData();
 
                 if (target == null) {
                     iter.remove();
@@ -188,7 +184,7 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
                     float dz = (float) (start.z - end.z);
                     float distance = (float) Math.sqrt(dx * dx + dz * dz);
 
-                    if (ownerData.hasToggled(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
+                    if (data.hasActive(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
                         Vec3 original = nbt.getMovement();
                         target.setDeltaMovement(original.scale(Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR)));
                         target.hurtMarked = true;
@@ -273,7 +269,7 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
 
             IAbilityData data = cap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasActive(JJKAbilities.INFINITY.get())) return;
 
             Projectile projectile = event.getProjectile();
 
@@ -298,7 +294,7 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
 
             IAbilityData data = cap.getAbilityData();
 
-            if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!data.hasActive(JJKAbilities.INFINITY.get())) return;
 
             FrozenProjectileData storage = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
@@ -323,7 +319,7 @@ public class Infinity extends Ability implements IToggled, IDurationable, IAddit
 
             IAbilityData victimData = victimCap.getAbilityData();
 
-            if (!victimData.hasToggled(JJKAbilities.INFINITY.get())) return;
+            if (!victimData.hasActive(JJKAbilities.INFINITY.get())) return;
 
             DamageSource source = event.getSource();
 

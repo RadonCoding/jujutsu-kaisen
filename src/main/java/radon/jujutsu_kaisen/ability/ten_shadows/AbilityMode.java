@@ -50,7 +50,7 @@ public class AbilityMode extends Ability implements IToggled {
             IAbilityData targetAbilityData = targetCap.getAbilityData();
 
             if (ownerTenShadowsData.hasTamed(JJKEntities.MAHORAGA.get())) {
-                if (targetAbilityData.hasToggled(JJKAbilities.INFINITY.get())) {
+                if (targetAbilityData.hasActive(JJKAbilities.INFINITY.get())) {
                     return !ownerTenShadowsData.isAdaptedTo(JJKAbilities.INFINITY.get());
                 }
 
@@ -58,7 +58,7 @@ public class AbilityMode extends Ability implements IToggled {
                     return true;
                 }
             } else {
-                if (targetAbilityData.hasToggled(JJKAbilities.INFINITY.get())) {
+                if (targetAbilityData.hasActive(JJKAbilities.INFINITY.get())) {
                     return ownerTenShadowsData.isAdaptedTo(JJKAbilities.INFINITY.get());
                 }
 
