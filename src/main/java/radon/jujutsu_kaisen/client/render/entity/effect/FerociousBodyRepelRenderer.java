@@ -32,7 +32,7 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
 
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
-        Vec3 ownerPos = getPosition(owner, owner.getBbHeight() / 2.0F, partialTick).add(new Vec3(animatable.getOffset()));
+        Vec3 ownerPos = getEyePosition(owner, owner.getBbHeight() / 2.0F, partialTick).add(new Vec3(animatable.getOffset()));
         Vec3 projectilePos = getPosition(animatable, animatable.getBbHeight() / 2.0F, partialTick);
         Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
@@ -46,6 +46,13 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
         tail.setScaleZ(f0);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+    private static Vec3 getEyePosition(Entity entity, double yOffset, float pPartialTick) {
+        double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
+        double d1 = yOffset + entity.yOld + entity.getEyeHeight() + (entity.getY() - entity.yOld) * (double) pPartialTick;
+        double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
+        return new Vec3(d0, d1, d2);
     }
 
     private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {

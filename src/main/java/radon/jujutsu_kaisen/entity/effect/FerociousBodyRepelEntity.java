@@ -55,10 +55,9 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
         this.souls = souls;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter).add(xOffset, yOffset, zOffset);
-        Vec3 offset = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
-        EntityUtil.offset(this, look, offset);
+        EntityUtil.offset(this, look, new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
 
-        this.setOffset(offset.toVector3f());
+        this.setOffset(look.toVector3f());
 
         this.setDeltaMovement(look.scale(SPEED));
     }
