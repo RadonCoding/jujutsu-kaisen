@@ -31,9 +31,11 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(FerociousBodyRepelEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(FerociousBodyRepelEntity.class, EntityDataSerializers.INT);
 
     private static final double SPEED = 1.5D;
     private static final float DAMAGE = 5.0F;
+    private static final int MAX_VARIANTS = 4;
 
     private int souls;
 
@@ -41,6 +43,8 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
 
     public FerociousBodyRepelEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+
+        this.setVariant(this.random.nextInt(1, MAX_VARIANTS + 1));
     }
 
     public FerociousBodyRepelEntity(LivingEntity pShooter, int souls, float yaw, float pitch) {
@@ -59,6 +63,7 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_TIME, 0);
+        this.entityData.define(DATA_VARIANT, 0);
     }
 
     public int getTime() {
@@ -69,12 +74,21 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
         this.entityData.set(DATA_TIME, time);
     }
 
+    public int getVariant() {
+        return this.entityData.get(DATA_VARIANT);
+    }
+
+    public void setVariant(int variant) {
+        this.entityData.set(DATA_VARIANT, variant);
+    }
+
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("time", this.getTime());
-        pCompound.putInt("souls", this.getTime());
+        pCompound.putInt("variant", this.getVariant());
+        pCompound.putInt("souls", this.souls);
     }
 
     @Override
@@ -82,6 +96,7 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
         super.readAdditionalSaveData(pCompound);
 
         this.setTime(pCompound.getInt("time"));
+        this.setVariant(pCompound.getInt("variant"));
         this.souls = pCompound.getInt("souls");
     }
 
