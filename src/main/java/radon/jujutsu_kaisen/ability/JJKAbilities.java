@@ -148,6 +148,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, SoulDecimation> SOUL_DECIMATION = ABILITIES.register("soul_decimation", SoulDecimation::new);
     public static DeferredHolder<Ability, SoulReinforcement> SOUL_REINFORCEMENT = ABILITIES.register("soul_reinforcement", SoulReinforcement::new);
     public static DeferredHolder<Ability, SoulRestoration> SOUL_RESTORATION = ABILITIES.register("soul_restoration", SoulRestoration::new);
+    public static DeferredHolder<Ability, BodyRepel> BODY_REPEL = ABILITIES.register("body_repel", BodyRepel::new);
     public static DeferredHolder<Ability, ArmBlade> ARM_BLADE = ABILITIES.register("arm_blade", ArmBlade::new);
     public static DeferredHolder<Ability, Gun> GUN = ABILITIES.register("gun", Gun::new);
     public static DeferredHolder<Ability, HorseLegs> HORSE_LEGS = ABILITIES.register("horse_legs", HorseLegs::new);

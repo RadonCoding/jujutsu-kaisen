@@ -584,6 +584,11 @@ public class JJKEntities {
             EntityType.Builder.<ElectricBlastEntity>of(ElectricBlastEntity::new, MobCategory.MISC)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "electric_blast")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<BodyRepelEntity>> BODY_REPEL = ENTITIES.register("body_repel", () ->
+            EntityType.Builder.<BodyRepelEntity>of(BodyRepelEntity::new, MobCategory.MISC)
+                    .sized(1.3125F, 1.375F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "body_repel")
+                            .toString()));
 
     @SubscribeEvent
     public static void onSpawnPlacementsRegister(SpawnPlacementRegisterEvent event) {

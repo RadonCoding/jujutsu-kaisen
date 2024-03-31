@@ -20,7 +20,7 @@ public class SegmentRenderer<T extends JJKPartEntity<?> & GeoAnimatable> extends
     }
 
     @Override
-    public int getPackedOverlay(T animatable, float u) {
+    public int getPackedOverlay(T animatable, float u, float partialTick) {
         if (!(animatable.getParent() instanceof LivingEntity entity))
             return OverlayTexture.NO_OVERLAY;
 
