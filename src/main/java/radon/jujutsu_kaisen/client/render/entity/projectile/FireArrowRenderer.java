@@ -42,7 +42,7 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
         pPoseStack.mulPose(Axis.YN.rotationDegrees(yaw + 90.0F));
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
+        pPoseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
 
         pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
