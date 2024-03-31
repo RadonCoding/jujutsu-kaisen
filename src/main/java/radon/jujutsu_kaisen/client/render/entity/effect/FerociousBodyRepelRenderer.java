@@ -52,7 +52,7 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
     private static Vec3 getEyePosition(Entity entity, double yOffset, float pPartialTick) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(entity);
         double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = entity.yOld + entity.getEyeHeight() - yOffset + (entity.getY() - entity.yOld) * (double) pPartialTick;
+        double d1 = (entity.yOld + entity.getEyeHeight() + (entity.getY() - entity.yOld) * (double) pPartialTick)  - yOffset;
         double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
         return new Vec3(d0, d1, d2).add(look);
     }
