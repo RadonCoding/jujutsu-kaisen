@@ -1,0 +1,28 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.eel_grapple",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-9, 0, -11.23521], "size": [18, 22, 21], "uv": [0, 0]},
+						{"origin": [-9, 0, -11.23521], "size": [18, 22, 21], "inflate": 0.25, "uv": [0, 85]},
+						{"origin": [-5, 5, -19.03521], "size": [10, 6, 9], "pivot": [-2, 9, -9.23521], "rotation": [50, 0, 0], "uv": [81, 0]},
+						{"origin": [-8.5, 7, -18.33361], "size": [17, 10, 9], "pivot": [-0.5, 13, -1.33361], "rotation": [-22.5, 0, 0], "uv": [8, 51]},
+						{"origin": [-8.5, 4, -18.33361], "size": [17, 7, 7], "pivot": [-0.5, 9, -1.33361], "rotation": [25, 0, 0], "uv": [61, 63]}
+					]
+				}
+			]
+		}
+	]
+}

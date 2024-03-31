@@ -49,7 +49,6 @@ import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -353,7 +352,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
             event.registerEntityRenderer(JJKEntities.NYOI_STAFF.get(), NyoiStaffRenderer::new);
             event.registerEntityRenderer(JJKEntities.MIMICRY_KATANA.get(), MimicryKatanaRenderer::new);
-            event.registerEntityRenderer(JJKEntities.EMBER_INSECT_FLIGHT.get(), EmberInsectsFlightRenderer::new);
+            event.registerEntityRenderer(JJKEntities.EMBER_INSECT_FLIGHT.get(), EmberInsectFlightRenderer::new);
             event.registerEntityRenderer(JJKEntities.AIR_FRAME.get(), AirFrameRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_BEAM.get(), FireBeamRenderer::new);
             event.registerEntityRenderer(JJKEntities.FOREST_DASH.get(), ForestDashRenderer::new);
@@ -363,6 +362,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), TransfiguredSoulRenderer::new);
             event.registerEntityRenderer(JJKEntities.ELECTRIC_BLAST.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.BODY_REPEL.get(), BodyRepelRenderer::new);
 
             event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidBlockRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionBlockRenderer::new);

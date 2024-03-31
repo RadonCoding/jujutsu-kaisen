@@ -21,8 +21,8 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EmberInsectsFlightRenderer extends GeoEntityRenderer<EmberInsectFlightEntity> {
-    public EmberInsectsFlightRenderer(EntityRendererProvider.Context renderManager) {
+public class EmberInsectFlightRenderer extends GeoEntityRenderer<EmberInsectFlightEntity> {
+    public EmberInsectFlightRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect")));
     }
 
@@ -46,10 +46,6 @@ public class EmberInsectsFlightRenderer extends GeoEntityRenderer<EmberInsectFli
 
     @Override
     public void actuallyRender(PoseStack poseStack, EmberInsectFlightEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        LivingEntity owner = animatable.getOwner();
-
-        if (owner == null) return;
-
         poseStack.pushPose();
 
         if (!isReRender) {
