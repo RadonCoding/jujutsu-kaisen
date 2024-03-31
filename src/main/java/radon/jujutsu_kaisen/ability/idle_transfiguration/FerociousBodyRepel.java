@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.entity.effect.BodyRepelEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class BodyRepel extends Ability implements ICharged {
+public class FerociousBodyRepel extends Ability implements ICharged {
     private static final int MIN_SOULS = 2;
     private static final int MAX_SOULS = 10;
 
