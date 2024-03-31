@@ -34,7 +34,7 @@ public class BodyRepel extends Ability implements ICharged {
         if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(20) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(20) == 0;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override

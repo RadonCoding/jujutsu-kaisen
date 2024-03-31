@@ -589,6 +589,11 @@ public class JJKEntities {
                     .sized(1.3125F, 1.375F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "body_repel")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<FerociousBodyRepelEntity>> FEROCIOUS_BODY_REPEL = ENTITIES.register("ferocious_body_repel", () ->
+            EntityType.Builder.<FerociousBodyRepelEntity>of(FerociousBodyRepelEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "ferocious_body_repel")
+                            .toString()));
 
     @SubscribeEvent
     public static void onSpawnPlacementsRegister(SpawnPlacementRegisterEvent event) {
