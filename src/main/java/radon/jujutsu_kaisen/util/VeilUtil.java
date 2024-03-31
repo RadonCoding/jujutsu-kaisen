@@ -57,7 +57,7 @@ public class VeilUtil {
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public static boolean canDamage(List<Modifier> modifiers) {
