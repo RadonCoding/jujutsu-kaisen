@@ -363,6 +363,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), TransfiguredSoulRenderer::new);
             event.registerEntityRenderer(JJKEntities.ELECTRIC_BLAST.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.BODY_REPEL.get(), BodyRepelRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FEROCIOUS_BODY_REPEL.get(), FerociousBodyRepelRenderer::new);
 
             event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidBlockRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionBlockRenderer::new);

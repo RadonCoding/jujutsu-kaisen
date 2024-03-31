@@ -92,7 +92,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("time", this.getTime());
-        pCompound.putInt("souls", this.getTime());
+        pCompound.putInt("souls", this.souls);
     }
 
     @Override
