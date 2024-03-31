@@ -69,7 +69,7 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
-        if (data.getTransfiguredSouls() == 0) return false;
+        if (data.getTransfiguredSouls() < MIN_SOULS) return false;
 
         return super.isValid(owner);
     }
