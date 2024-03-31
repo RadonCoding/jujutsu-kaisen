@@ -12,10 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.effect.BodyRepelEntity;
 import radon.jujutsu_kaisen.entity.effect.FerociousBodyRepelEntity;
-import radon.jujutsu_kaisen.entity.projectile.EelGrappleProjectile;
-import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -33,7 +30,7 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
 
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
-        Vec3 ownerPos = getEyePosition(owner, animatable.getBbHeight() / 2.0F, partialTick);
+        Vec3 ownerPos = getEyePosition(owner, animatable.getBbHeight(), partialTick);
         Vec3 projectilePos = getPosition(animatable, animatable.getBbHeight() / 2.0F, partialTick);
         Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
@@ -52,14 +49,14 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
     private static Vec3 getEyePosition(Entity entity, double yOffset, float pPartialTick) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(entity);
         double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = (entity.yOld + entity.getEyeHeight() + (entity.getY() - entity.yOld) * (double) pPartialTick)  - yOffset;
+        double d1 = (entity.yOld + entity.getEyeHeight() + (entity.getY() - entity.yOld) * (double) pPartialTick) - yOffset;
         double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
         return new Vec3(d0, d1, d2).add(look);
     }
 
     private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {
         double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = yOffset + entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick;
+        double d1 = (entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick) - yOffset;
         double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
         return new Vec3(d0, d1, d2);
     }
