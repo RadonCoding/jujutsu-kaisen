@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.entity.effect.BodyRepelEntity;
 import radon.jujutsu_kaisen.entity.effect.FerociousBodyRepelEntity;
 import radon.jujutsu_kaisen.entity.projectile.EelGrappleProjectile;
 import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
@@ -49,10 +50,11 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
     }
 
     private static Vec3 getEyePosition(Entity entity, double yOffset, float pPartialTick) {
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(entity);
         double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
         double d1 = entity.yOld + entity.getEyeHeight() - yOffset + (entity.getY() - entity.yOld) * (double) pPartialTick;
         double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
-        return new Vec3(d0, d1, d2);
+        return new Vec3(d0, d1, d2).add(look);
     }
 
     private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {
