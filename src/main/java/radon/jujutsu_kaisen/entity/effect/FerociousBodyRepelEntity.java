@@ -31,7 +31,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(FerociousBodyRepelEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(FerociousBodyRepelEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Vector3f> DATA_OFFSET = SynchedEntityData.defineId(FerociousBodyRepelEntity.class, EntityDataSerializers.VECTOR3);
 
     private static final double SPEED = 1.5D;
     private static final float DAMAGE = 5.0F;
@@ -54,19 +53,17 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
 
         this.souls = souls;
 
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter).add(xOffset, yOffset, zOffset);
-        EntityUtil.offset(this, look, new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter);
+        Vec3 offset = look.add(xOffset, yOffset, zOffset);
+        EntityUtil.offset(this, offset, new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
 
-        this.setOffset(look.toVector3f());
-
-        this.setDeltaMovement(look.scale(SPEED));
+        this.setDeltaMovement(offset.scale(SPEED));
     }
 
     @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_VARIANT, 0);
-        this.entityData.define(DATA_OFFSET, Vec3.ZERO.toVector3f());
     }
 
     public int getTime() {
@@ -85,14 +82,6 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
         this.entityData.set(DATA_VARIANT, variant);
     }
 
-    public Vector3f getOffset() {
-        return this.entityData.get(DATA_OFFSET);
-    }
-
-    public void setOffset(Vector3f start) {
-        this.entityData.set(DATA_OFFSET, start);
-    }
-
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -100,11 +89,6 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
         pCompound.putInt("time", this.getTime());
         pCompound.putInt("variant", this.getVariant());
         pCompound.putInt("souls", this.souls);
-
-        Vector3f offset = this.getOffset();
-        pCompound.putFloat("offset_x", offset.x);
-        pCompound.putFloat("offset_y", offset.y);
-        pCompound.putFloat("offset_z", offset.z);
     }
 
     @Override
@@ -114,8 +98,6 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
         this.setTime(pCompound.getInt("time"));
         this.setVariant(pCompound.getInt("variant"));
         this.souls = pCompound.getInt("souls");
-
-        this.setOffset(new Vector3f(pCompound.getFloat("offset_x"), pCompound.getFloat("offset_y"), pCompound.getFloat("offset_z")));
     }
 
     @Override
