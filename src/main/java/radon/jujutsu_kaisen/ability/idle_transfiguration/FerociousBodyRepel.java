@@ -20,6 +20,9 @@ import radon.jujutsu_kaisen.entity.effect.FerociousBodyRepelEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class FerociousBodyRepel extends Ability implements ICharged {
+    private static final int MIN_SOULS = 2;
+    private static final int MAX_SOULS = 10;
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
@@ -48,7 +51,7 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
-        return Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 2));
+        return Math.max(MIN_SOULS, Math.min(MAX_SOULS, Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 2))));
     }
 
     @Override
@@ -67,7 +70,7 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
-        if (data.getTransfiguredSouls() == 0) return false;
+        if (data.getTransfiguredSouls() < MIN_SOULS) return false;
 
         return super.isValid(owner);
     }
