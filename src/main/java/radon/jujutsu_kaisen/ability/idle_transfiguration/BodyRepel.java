@@ -50,7 +50,7 @@ public class BodyRepel extends Ability implements ICharged {
 
         IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
-        return Math.max(MIN_SOULS, Math.min(MAX_SOULS, Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 5))));
+        return Math.max(MIN_SOULS, Math.min(MAX_SOULS, Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 2))));
     }
 
     @Override

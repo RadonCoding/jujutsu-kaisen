@@ -48,7 +48,7 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
-        return Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 5));
+        return Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 2));
     }
 
     @Override
