@@ -133,7 +133,8 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
             this.segments[i].tick();
 
             Entity leader = i == 0 ? this : this.segments[i - 1];
-            Vec3 follow = i == 0 ? leader.position().add(this.getDeltaMovement()) : leader.position();
+            Vec3 follow = i == 0 ? leader.position().add(0.0D, this.getBbHeight() - this.segments[i].getBbHeight(), 0.0D)
+                    .add(this.getDeltaMovement()) : leader.position();
 
             Vec3 diff = new Vec3(this.segments[i].getX() - follow.x, this.segments[i].getY() - follow.y, this.segments[i].getZ() - follow.z)
                     .normalize();
