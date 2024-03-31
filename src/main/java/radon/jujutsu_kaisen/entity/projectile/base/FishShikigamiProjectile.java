@@ -182,10 +182,10 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         if (this.isDomain()) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
-        
+            ISorcererData data = cap.getSorcererData();
+
             DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, null), DAMAGE * this.getPower());
         } else {
@@ -203,28 +203,28 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
             return;
         }
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
-                if (!owner.isAlive()) {
-                    this.discard();
-                } else {
-                    if (this.getTime() % 5 == 0) {
-                        owner.swing(InteractionHand.MAIN_HAND);
-                    }
-                    this.applyOffset();
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        if (this.getTime() < DELAY) {
+            if (!owner.isAlive()) {
+                this.discard();
+            } else {
+                if (this.getTime() % 5 == 0) {
+                    owner.swing(InteractionHand.MAIN_HAND);
                 }
-            } else if (this.getTime() >= DELAY) {
-                this.applyRotation();
+                this.applyOffset();
+            }
+        } else if (this.getTime() >= DELAY) {
+            this.applyRotation();
 
-                if (!this.level().isClientSide) {
-                    LivingEntity target = this.getTarget();
+            if (!this.level().isClientSide) {
+                LivingEntity target = this.getTarget();
 
-                    if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
-                        this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D)
-                                .subtract(this.position()).normalize().scale(SPEED));
-                    } else {
-                        this.discard();
-                    }
+                if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
+                    this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D)
+                            .subtract(this.position()).normalize().scale(SPEED));
+                } else {
+                    this.discard();
                 }
             }
         }
