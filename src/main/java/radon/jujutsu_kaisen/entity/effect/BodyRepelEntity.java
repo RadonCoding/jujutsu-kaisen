@@ -41,7 +41,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
     private static final float DAMAGE = 15.0F;
     private static final float EXPLOSIVE_POWER = 2.5F;
     private static final float MAX_EXPLOSION = 10.0F;
-    private static final int DURATION = 20;
+    private static final int DURATION = 3 * 20;
 
     private static final int MAX_SEGMENTS = 24;
 
