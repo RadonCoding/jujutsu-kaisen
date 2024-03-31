@@ -88,8 +88,17 @@ public class MissionProcessor extends StructureProcessor {
         if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                 HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
+        boolean finalized = true;
+
+        for (StructureTemplate.StructureBlockInfo info : pProcessedBlockInfos) {
+            if (!info.state().is(JJKBlocks.CURSE_SPAWNER) && !info.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) continue;
+
+            finalized = false;
+            break;
+        }
+
         Mission mission = data.getMission(pPos);
-        mission.setFinalized(true);
+        mission.setFinalized(finalized);
 
         return super.finalizeProcessing(pServerLevel, pOffset, pPos, pOriginalBlockInfos, pProcessedBlockInfos, pSettings);
     }
