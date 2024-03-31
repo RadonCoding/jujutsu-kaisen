@@ -35,6 +35,7 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     private static final double SPEED = 1.5D;
     private static final float DAMAGE = 5.0F;
     private static final int MAX_VARIANTS = 4;
+    private static final int DURATION = 20;
 
     private int souls;
 
@@ -110,6 +111,11 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
             this.discard();
         } else {
             super.tick();
+
+            if (this.getTime() >= DURATION) {
+                this.discard();
+                return;
+            }
 
             HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 
