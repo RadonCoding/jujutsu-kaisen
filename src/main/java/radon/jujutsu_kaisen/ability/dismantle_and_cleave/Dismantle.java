@@ -35,7 +35,7 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
         if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(20) != 0;
         }
-        return HelperMethods.RANDOM.nextInt(20) == 0;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override

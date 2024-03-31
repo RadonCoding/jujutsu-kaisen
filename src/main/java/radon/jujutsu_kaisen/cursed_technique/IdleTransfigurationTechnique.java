@@ -24,6 +24,7 @@ public class IdleTransfigurationTechnique implements ICursedTechnique {
         ABILITIES.add(JJKAbilities.SOUL_REINFORCEMENT.get());
         ABILITIES.add(JJKAbilities.SOUL_RESTORATION.get());
         ABILITIES.add(JJKAbilities.BODY_REPEL.get());
+        ABILITIES.add(JJKAbilities.FEROCIOUS_BODY_REPEL.get());
         ABILITIES.add(JJKAbilities.ARM_BLADE.get());
         ABILITIES.add(JJKAbilities.GUN.get());
         ABILITIES.add(JJKAbilities.HORSE_LEGS.get());

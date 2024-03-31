@@ -372,6 +372,7 @@
   "ability.jujutsu_kaisen.soul_reinforcement.disable": "Deactivated soul reinforcement",
   "ability.jujutsu_kaisen.soul_restoration": "Soul Restoration",
   "ability.jujutsu_kaisen.body_repel": "Body Repel",
+  "ability.jujutsu_kaisen.ferocious_body_repel": "Ferocious Body Repel",
   "ability.jujutsu_kaisen.arm_blade": "Arm Blade",
   "ability.jujutsu_kaisen.arm_blade.enable": "Activated arm blade",
   "ability.jujutsu_kaisen.arm_blade.disable": "Deactivated arm blade",
@@ -740,6 +741,7 @@
   "entity.jujutsu_kaisen.transfigured_soul": "Transfigured Soul",
   "entity.jujutsu_kaisen.electric_blast": "Electric Blast",
   "entity.jujutsu_kaisen.body_repel": "Body Repel",
+  "entity.jujutsu_kaisen.ferocious_body_repel": "Ferocious Body Repel",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",
