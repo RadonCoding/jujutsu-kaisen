@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -19,9 +20,6 @@ import radon.jujutsu_kaisen.entity.effect.FerociousBodyRepelEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class FerociousBodyRepel extends Ability implements ICharged {
-    private static final int MIN_SOULS = 2;
-    private static final int MAX_SOULS = 10;
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
@@ -50,7 +48,7 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
-        return Math.max(MIN_SOULS, Math.min(MAX_SOULS, Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 5))));
+        return Math.min(data.getTransfiguredSouls(), 1 + (this.getCharge(owner) / 5));
     }
 
     @Override
@@ -69,13 +67,15 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         IIdleTransfigurationData data = cap.getIdleTransfigurationData();
 
-        if (data.getTransfiguredSouls() < MIN_SOULS) return false;
+        if (data.getTransfiguredSouls() == 0) return false;
 
         return super.isValid(owner);
     }
 
     @Override
     public boolean onRelease(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         int souls = this.getSoulCost(owner);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -86,9 +86,9 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         data.useTransfiguredSouls(souls);
 
-        for (int i = 0; i < 32; i++) {
-            owner.level().addFreshEntity(new FerociousBodyRepelEntity(owner, souls, (HelperMethods.RANDOM.nextFloat() - 0.5F) * 10.0F,
-                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F));
+        for (int i = 0; i < souls; i++) {
+            owner.level().addFreshEntity(new FerociousBodyRepelEntity(owner, souls, (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F,
+                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 2.5F));
         }
         return true;
     }
