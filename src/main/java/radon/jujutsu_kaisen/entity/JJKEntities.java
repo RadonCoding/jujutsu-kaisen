@@ -404,7 +404,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<PiercingWaterEntity>> PIERCING_WATER = ENTITIES.register("piercing_water", () ->
             EntityType.Builder.<PiercingWaterEntity>of(PiercingWaterEntity::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piercing_water")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<JujutsuLightningEntity>> JUJUTSU_LIGHTNING = ENTITIES.register("jujutsu_lightning", () ->
@@ -413,7 +413,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<SkyStrikeEntity>> SKY_STRIKE = ENTITIES.register("sky_strike", () ->
             EntityType.Builder.<SkyStrikeEntity>of(SkyStrikeEntity::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sky_strike")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<MaximumUzumakiProjectile>> MAXIMUM_UZUMAKI = ENTITIES.register("maximum_uzumaki", () ->
@@ -448,7 +448,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<WaterTorrentEntity>> WATER_TORRENT = ENTITIES.register("water_torrent", () ->
             EntityType.Builder.<WaterTorrentEntity>of(WaterTorrentEntity::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "water_torrent")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<ForestSpikeEntity>> FOREST_SPIKE = ENTITIES.register("forest_spike", () ->
@@ -502,7 +502,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<BlackFlashEntity>> BLACk_FLASH = ENTITIES.register("black_flash", () ->
             EntityType.Builder.<BlackFlashEntity>of(BlackFlashEntity::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "black_flash")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<ForestRootsEntity>> FOREST_ROOTS = ENTITIES.register("forest_roots", () ->
@@ -547,7 +547,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<FireBeamEntity>> FIRE_BEAM = ENTITIES.register("fire_beam", () ->
             EntityType.Builder.<FireBeamEntity>of(FireBeamEntity::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_beam")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<ForestDashEntity>> FOREST_DASH = ENTITIES.register("forest_dash", () ->
