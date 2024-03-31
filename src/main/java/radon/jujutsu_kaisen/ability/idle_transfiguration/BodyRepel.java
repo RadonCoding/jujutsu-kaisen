@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -75,6 +76,8 @@ public class BodyRepel extends Ability implements ICharged {
 
     @Override
     public boolean onRelease(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         int souls = this.getSoulCost(owner);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
