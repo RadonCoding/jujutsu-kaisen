@@ -32,7 +32,7 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
 
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
-        Vec3 ownerPos = getEyePosition(owner, owner.getBbHeight() / 2.0F, partialTick).add(new Vec3(animatable.getOffset()));
+        Vec3 ownerPos = getEyePosition(owner, owner.getBbHeight() / 2.0F, partialTick);
         Vec3 projectilePos = getPosition(animatable, animatable.getBbHeight() / 2.0F, partialTick);
         Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
