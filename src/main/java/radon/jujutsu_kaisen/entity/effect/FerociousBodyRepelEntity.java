@@ -47,16 +47,14 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
         this.setVariant(this.random.nextInt(1, MAX_VARIANTS + 1));
     }
 
-    public FerociousBodyRepelEntity(LivingEntity pShooter, int souls, float yawOffset, float pitchOffset) {
+    public FerociousBodyRepelEntity(LivingEntity pShooter, int souls, double xOffset, double yOffset, double zOffset) {
         this(JJKEntities.FEROCIOUS_BODY_REPEL.get(), pShooter.level());
 
         this.setOwner(pShooter);
 
         this.souls = souls;
 
-        float yaw = RotationUtil.getTargetAdjustedYRot(pShooter);
-        float pitch = RotationUtil.getTargetAdjustedXRot(pShooter);
-        Vec3 look = RotationUtil.calculateViewVector(pitch + pitchOffset, yaw + yawOffset);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter).add(xOffset, yOffset, zOffset);
         EntityUtil.offset(this, look, new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
 
         this.setDeltaMovement(look.scale(SPEED));
