@@ -67,6 +67,7 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     protected void defineSynchedData() {
         this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_VARIANT, 0);
+        this.entityData.define(DATA_OFFSET, Vec3.ZERO.toVector3f());
     }
 
     public int getTime() {
