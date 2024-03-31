@@ -86,9 +86,9 @@ public class FerociousBodyRepel extends Ability implements ICharged {
 
         data.useTransfiguredSouls(souls);
 
-        for (int i = 0; i < souls; i++) {
-            owner.level().addFreshEntity(new FerociousBodyRepelEntity(owner, souls, (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F,
-                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 2.5F));
+        for (int i = 0; i < souls * 10; i++) {
+            owner.level().addFreshEntity(new FerociousBodyRepelEntity(owner, souls, (HelperMethods.RANDOM.nextFloat() - 0.5F) * 10.0F,
+                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F));
         }
         return true;
     }
