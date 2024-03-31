@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class FerociousBodyRepel extends Ability implements ICharged {
     private static final int MIN_SOULS = 2;
     private static final int MAX_SOULS = 10;
+    private static final float RADIUS = 0.5F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -90,8 +91,13 @@ public class FerociousBodyRepel extends Ability implements ICharged {
         data.useTransfiguredSouls(souls);
 
         for (int i = 0; i < souls * 10; i++) {
-            owner.level().addFreshEntity(new FerociousBodyRepelEntity(owner, souls, (HelperMethods.RANDOM.nextFloat() - 0.5F) * 30.0F,
-                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 30.0F));
+            double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
+            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+            double r = HelperMethods.RANDOM.nextDouble() * RADIUS * 0.75D;
+            double x = r * Math.sin(phi) * Math.cos(theta);
+            double y = r * Math.sin(phi) * Math.sin(theta);
+            double z = r * Math.cos(phi);
+            owner.level().addFreshEntity(new FerociousBodyRepelEntity(owner, souls, x, y, z));
         }
         return true;
     }
