@@ -45,13 +45,7 @@ public class MissionProcessor extends StructureProcessor {
     public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader pLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, StructureTemplate.@NotNull StructureBlockInfo pBlockInfo, StructureTemplate.@NotNull StructureBlockInfo pRelativeBlockInfo, @NotNull StructurePlaceSettings pSettings, @Nullable StructureTemplate template) {
         IMissionData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION);
 
-        if (data.isRegistered(pPos)) {
-            Mission mission = data.getMission(pPos);
-
-            if (mission.isFinalized()) return pRelativeBlockInfo;
-        }
-
-        if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER.get())) {
+        if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER)) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
@@ -63,7 +57,7 @@ public class MissionProcessor extends StructureProcessor {
             mission.addSpawn(pos);
 
             return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
-        } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER.get())) {
+        } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
@@ -87,18 +81,6 @@ public class MissionProcessor extends StructureProcessor {
 
         if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                 HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
-
-        boolean finalized = true;
-
-        for (StructureTemplate.StructureBlockInfo info : pProcessedBlockInfos) {
-            if (!info.state().is(JJKBlocks.CURSE_SPAWNER) && !info.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) continue;
-
-            finalized = false;
-            break;
-        }
-
-        Mission mission = data.getMission(pPos);
-        mission.setFinalized(finalized);
 
         return super.finalizeProcessing(pServerLevel, pOffset, pPos, pOriginalBlockInfos, pProcessedBlockInfos, pSettings);
     }

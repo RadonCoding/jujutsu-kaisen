@@ -51,7 +51,7 @@ public class MissionData implements IMissionData {
         if (!(this.level instanceof ServerLevel serverLevel)) return;
 
         for (Mission mission : this.missions) {
-            if (mission.isSpawned() || !mission.isFinalized()) continue;
+            if (mission.getSpawns().isEmpty() && mission.getBosses().isEmpty()) continue;
 
             List<EntityType<?>> spawns = new ArrayList<>();
             List<EntityType<?>> bosses = new ArrayList<>();
@@ -74,17 +74,16 @@ public class MissionData implements IMissionData {
             }
 
             if (!spawns.isEmpty()) {
-                for (BlockPos pos : mission.getSpawns()) {
+                for (BlockPos pos : new ArrayList<>(mission.getSpawns())) {
                     spawns.get(HelperMethods.RANDOM.nextInt(spawns.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
                 }
             }
 
             if (!bosses.isEmpty()) {
-                for (BlockPos pos : mission.getBosses()) {
+                for (BlockPos pos : new ArrayList<>(mission.getBosses())) {
                     bosses.get(HelperMethods.RANDOM.nextInt(bosses.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
                 }
             }
-            mission.setSpawned(true);
         }
     }
 
