@@ -85,7 +85,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     @Override
     public boolean isPersistenceRequired() {
-        return this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
+        return true;
     }
 
     @Override
