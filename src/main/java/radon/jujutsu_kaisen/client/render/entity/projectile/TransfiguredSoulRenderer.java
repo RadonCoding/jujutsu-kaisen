@@ -34,7 +34,7 @@ public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulPro
         float pitch = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
 
         pPoseStack.mulPose(Axis.YN.rotationDegrees(yaw + 90.0F));
-        pPoseStack.mulPose(Axis.ZN.rotationDegrees(135.0F - pitch));
+        pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - pitch));
 
         ItemStack stack = JJKItems.TRANSFIGURED_SOUL.get().getDefaultInstance();
 
