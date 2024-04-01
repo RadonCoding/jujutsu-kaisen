@@ -50,7 +50,7 @@ public class VeilDeactivate extends Ability {
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        if (!(RotationUtil.getLookAtHit(owner, VeilActivate.RANGE, CollisionContext.empty()) instanceof BlockHitResult blockHit)) return;
+        if (!(RotationUtil.getLookAtHit(owner, VeilActivate.RANGE) instanceof BlockHitResult blockHit)) return;
 
         BlockPos pos = blockHit.getBlockPos();
 
