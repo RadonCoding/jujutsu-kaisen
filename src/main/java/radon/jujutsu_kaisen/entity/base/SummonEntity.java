@@ -133,9 +133,9 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
     @Override
     public void aiStep() {
-        this.updateSwingTime();
-
         super.aiStep();
+
+        this.updateSwingTime();
     }
 
     @Override

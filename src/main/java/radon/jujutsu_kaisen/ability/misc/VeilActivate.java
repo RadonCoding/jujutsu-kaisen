@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VeilActivate extends Ability {
     public static final double RANGE = 16.0D;
-    private static final int RADIUS = 32;
+    private static final int RADIUS = 64;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

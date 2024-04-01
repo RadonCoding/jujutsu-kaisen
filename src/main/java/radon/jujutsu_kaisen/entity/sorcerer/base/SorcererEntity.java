@@ -99,9 +99,9 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     @Override
     public void aiStep() {
-        this.updateSwingTime();
-
         super.aiStep();
+
+        this.updateSwingTime();
     }
 
     @Override
