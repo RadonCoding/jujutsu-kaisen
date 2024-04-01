@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.IBarrier;
+import radon.jujutsu_kaisen.entity.base.IDomain;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -84,7 +85,9 @@ public abstract class DomainExpansion extends Ability implements IToggled {
                     owner.getHealth() / owner.getMaxHealth() < 0.8F : owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
             if (!result) {
-                for (IBarrier ignored : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+                for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
+                    if (!(barrier instanceof IDomain)) continue;
+
                     result = true;
                     break;
                 }
