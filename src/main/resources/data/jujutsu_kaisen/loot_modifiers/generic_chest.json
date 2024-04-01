@@ -1,5 +1,5 @@
 {
-  "type": "jujutsu_kaisen:add_table",
+  "type": "neoforge:add_table",
   "conditions": [
     {
       "condition": "minecraft:any_of",
