@@ -53,8 +53,8 @@ public class MissionData implements IMissionData {
         for (Mission mission : this.missions) {
             if (mission.getSpawns().isEmpty() && mission.getBosses().isEmpty()) continue;
 
-            List<EntityType<?>> spawns = new ArrayList<>();
-            List<EntityType<?>> bosses = new ArrayList<>();
+            List<EntityType<?>> spawnsPool = new ArrayList<>();
+            List<EntityType<?>> bossesPool = new ArrayList<>();
 
             for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
                 if (!type.is(JJKEntityTypeTags.SPAWNABLE_CURSE)) continue;
@@ -64,24 +64,30 @@ public class MissionData implements IMissionData {
                 int diff = mission.getGrade().toSorcererGrade().ordinal() - curse.getGrade().ordinal();
 
                 if (diff >= 1 && diff < 3) {
-                    bosses.add(type);
+                    bossesPool.add(type);
                     continue;
                 }
 
                 if (curse.getGrade().ordinal() > mission.getGrade().toSorcererGrade().ordinal()) continue;
 
-                spawns.add(type);
+                spawnsPool.add(type);
             }
 
-            if (!spawns.isEmpty()) {
-                for (BlockPos pos : new ArrayList<>(mission.getSpawns())) {
-                    spawns.get(HelperMethods.RANDOM.nextInt(spawns.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+            if (!spawnsPool.isEmpty()) {
+                Set<BlockPos> spawns = mission.getSpawns();
+
+                for (BlockPos pos : new ArrayList<>(spawns)) {
+                    spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+                    spawns.remove(pos);
                 }
             }
 
-            if (!bosses.isEmpty()) {
-                for (BlockPos pos : new ArrayList<>(mission.getBosses())) {
-                    bosses.get(HelperMethods.RANDOM.nextInt(bosses.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+            if (!bossesPool.isEmpty()) {
+                Set<BlockPos> bosses = mission.getSpawns();
+
+                for (BlockPos pos : new ArrayList<>(bosses)) {
+                    bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+                    bosses.remove(pos);
                 }
             }
         }
