@@ -3,12 +3,16 @@
     {
       "structure": "jujutsu_kaisen:hospital",
       "weight": 1
+    },
+    {
+      "structure": "jujutsu_kaisen:graveyard",
+      "weight": 1
     }
   ],
   "placement": {
     "type": "minecraft:random_spread",
     "salt": 109796940,
-    "spacing": 45,
-    "separation": 35
+    "separation": 8,
+    "spacing": 32
   }
 }
