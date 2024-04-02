@@ -74,7 +74,7 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
             if (!spawnsPool.isEmpty()) {
                 EntityType<?> type = spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size()));
 
-                if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
+                if (pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
                     type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
                 }
             }

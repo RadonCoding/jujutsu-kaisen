@@ -57,6 +57,8 @@ public class MissionProcessor extends StructureProcessor {
             CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, false);
+
+            return new StructureTemplate.StructureBlockInfo(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state(), nbt);
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
@@ -66,6 +68,8 @@ public class MissionProcessor extends StructureProcessor {
             CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, true);
+
+            return new StructureTemplate.StructureBlockInfo(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state(), nbt);
         }
         return pRelativeBlockInfo;
     }
