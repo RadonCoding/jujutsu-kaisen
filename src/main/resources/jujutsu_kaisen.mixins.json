@@ -26,6 +26,7 @@
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
     "common.MobMixin",
+    "common.StructureMixin",
     "common.StructureProcessorAccessor",
     "common.StructureTemplateMixin"
   ],

@@ -72,19 +72,4 @@ public class MissionProcessor extends StructureProcessor {
         }
         return pRelativeBlockInfo;
     }
-
-    @Override
-    public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, @NotNull List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
-        IMissionData data = pServerLevel.getLevel().getData(JJKAttachmentTypes.MISSION);
-
-        RandomSource random = RandomSource.create(Mth.getSeed(pPos));
-
-        if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
-                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
-
-        Mission mission = data.getMission(pPos);
-        mission.progress();
-
-        return super.finalizeProcessing(pServerLevel, pOffset, pPos, pOriginalBlockInfos, pProcessedBlockInfos, pSettings);
-    }
 }
