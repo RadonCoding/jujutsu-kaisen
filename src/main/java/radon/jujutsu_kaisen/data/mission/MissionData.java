@@ -51,7 +51,11 @@ public class MissionData implements IMissionData {
         if (!(this.level instanceof ServerLevel serverLevel)) return;
 
         for (Mission mission : this.missions) {
-            if (!mission.isFinalized() || mission.isSpawned()) continue;
+            if (mission.isSpawned()) continue;
+
+            StructureStart start = serverLevel.structureManager().getStructureWithPieceAt(mission.getPos(), JJKStructureTags.IS_MISSION);
+
+            if (mission.getProgress() < start.getPieces().size()) continue;
 
             List<EntityType<?>> spawnsPool = new ArrayList<>();
             List<EntityType<?>> bossesPool = new ArrayList<>();

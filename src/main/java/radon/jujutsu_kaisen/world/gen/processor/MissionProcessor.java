@@ -83,7 +83,7 @@ public class MissionProcessor extends StructureProcessor {
                 HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
         Mission mission = data.getMission(pPos);
-        mission.setFinalized(true);
+        mission.progress();
 
         return super.finalizeProcessing(pServerLevel, pOffset, pPos, pOriginalBlockInfos, pProcessedBlockInfos, pSettings);
     }
