@@ -25,7 +25,7 @@ import java.util.List;
 
 public class CurseSpawnerBlock extends Block {
     public static final BooleanProperty IS_BOSS = BooleanProperty.create("is_boss");
-    public static final LongProperty LOCATION = LongProperty.create("location", Long.MIN_VALUE, Long.MAX_VALUE);
+    public static final LongProperty LOCATION = LongProperty.create("location", 0, Long.MAX_VALUE);
 
     public CurseSpawnerBlock(Properties pProperties) {
         super(pProperties);
