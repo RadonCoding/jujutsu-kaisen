@@ -51,7 +51,7 @@ public class MissionData implements IMissionData {
         if (!(this.level instanceof ServerLevel serverLevel)) return;
 
         for (Mission mission : this.missions) {
-            if (mission.getSpawns().isEmpty() && mission.getBosses().isEmpty()) continue;
+            if (mission.isSpawned()) continue;
 
             List<EntityType<?>> spawnsPool = new ArrayList<>();
             List<EntityType<?>> bossesPool = new ArrayList<>();
@@ -74,30 +74,26 @@ public class MissionData implements IMissionData {
             }
 
             if (!spawnsPool.isEmpty()) {
-                Set<BlockPos> spawns = mission.getSpawns();
-
-                for (BlockPos pos : new ArrayList<>(spawns)) {
+                for (BlockPos pos : mission.getSpawns()) {
                     EntityType<?> type = spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size()));
 
                     if (!this.level.noCollision(type.getAABB(pos.getX() + 0.5D , pos.getY(), pos.getZ() + 0.5D))) continue;
 
                     type.spawn(serverLevel, pos, MobSpawnType.SPAWNER);
-                    spawns.remove(pos);
                 }
             }
 
             if (!bossesPool.isEmpty()) {
-                Set<BlockPos> bosses = mission.getBosses();
-
-                for (BlockPos pos : new ArrayList<>(bosses)) {
+                for (BlockPos pos : mission.getBosses()) {
                     EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
 
                     if (!this.level.noCollision(type.getAABB(pos.getX() + 0.5D , pos.getY(), pos.getZ() + 0.5D))) continue;
 
                     type.spawn(serverLevel, pos, MobSpawnType.SPAWNER);
-                    bosses.remove(pos);
                 }
             }
+
+            mission.setSpawned(true);
         }
     }
 

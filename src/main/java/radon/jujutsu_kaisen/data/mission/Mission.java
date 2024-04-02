@@ -20,6 +20,7 @@ public class Mission {
     private final MissionType type;
     private final MissionGrade grade;
     private final BlockPos pos;
+    private boolean spawned;
     private final Set<BlockPos> spawns;
     private final Set<BlockPos> bosses;
 
@@ -35,6 +36,7 @@ public class Mission {
         this.type = MissionType.values()[nbt.getInt("type")];
         this.grade = MissionGrade.values()[nbt.getInt("grade")];
         this.pos = NbtUtils.readBlockPos(nbt.getCompound("pos"));
+        this.spawned = nbt.getBoolean("spawned");
 
         this.spawns = new HashSet<>();
 
@@ -61,6 +63,10 @@ public class Mission {
         return this.pos;
     }
 
+    public boolean isSpawned() {
+        return this.spawned;
+    }
+
     public Set<BlockPos> getSpawns() {
         return this.spawns;
     }
@@ -77,11 +83,16 @@ public class Mission {
         this.bosses.add(pos);
     }
 
+    public void setSpawned(boolean spawned) {
+        this.spawned = spawned;
+    }
+
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("grade", this.grade.ordinal());
         nbt.put("pos", NbtUtils.writeBlockPos(this.pos));
+        nbt.putBoolean("spawned", this.spawned);
 
         ListTag spawnsTag = new ListTag();
 
