@@ -51,24 +51,14 @@ public class MissionProcessor extends StructureProcessor {
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
-            BlockPos pos = pRelativeBlockInfo.pos();
-
-            Mission mission = data.getMission(pPos);
-            mission.addSpawn(pos);
-
-            return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
+            ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
-            BlockPos pos = pRelativeBlockInfo.pos();
-
-            Mission mission = data.getMission(pPos);
-            mission.addBoss(pos);
-
-            return new StructureTemplate.StructureBlockInfo(pos, Blocks.AIR.defaultBlockState(), null);
+            ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
         }
         return pRelativeBlockInfo;
     }

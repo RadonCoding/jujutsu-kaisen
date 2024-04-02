@@ -15,6 +15,8 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
@@ -50,53 +52,7 @@ public class MissionData implements IMissionData {
 
     @Override
     public void tick() {
-        if (!(this.level instanceof ServerLevel serverLevel)) return;
 
-        for (Mission mission : this.missions) {
-            if (!mission.isFinalized() || mission.isSpawned()) continue;
-
-            List<EntityType<?>> spawnsPool = new ArrayList<>();
-            List<EntityType<?>> bossesPool = new ArrayList<>();
-
-            for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
-                if (!type.is(JJKEntityTypeTags.SPAWNABLE_CURSE)) continue;
-
-                if (!((type.create(this.level)) instanceof CursedSpirit curse)) continue;
-
-                int diff = mission.getGrade().toSorcererGrade().ordinal() - curse.getGrade().ordinal();
-
-                if (diff >= 1 && diff < 3) {
-                    bossesPool.add(type);
-                    continue;
-                }
-
-                if (curse.getGrade().ordinal() > mission.getGrade().toSorcererGrade().ordinal()) continue;
-
-                spawnsPool.add(type);
-            }
-
-            if (!spawnsPool.isEmpty()) {
-                for (BlockPos pos : mission.getSpawns()) {
-                    EntityType<?> type = spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size()));
-
-                    if (!this.level.noCollision(type.getAABB(pos.getX() + 0.5D , pos.getY(), pos.getZ() + 0.5D))) continue;
-
-                    type.spawn(serverLevel, pos, MobSpawnType.SPAWNER);
-                }
-            }
-
-            if (!bossesPool.isEmpty()) {
-                for (BlockPos pos : mission.getBosses()) {
-                    EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
-
-                    if (!this.level.noCollision(type.getAABB(pos.getX() + 0.5D , pos.getY(), pos.getZ() + 0.5D))) continue;
-
-                    type.spawn(serverLevel, pos, MobSpawnType.SPAWNER);
-                }
-            }
-
-            mission.setSpawned(true);
-        }
     }
 
     @Override
