@@ -76,29 +76,6 @@ public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onStructurePlace(StructurePlaceEvent event) {
-            Level level = event.getLevel();
-
-            Registry<Structure> registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
-
-            Holder.Reference<Structure> holder = registry.getHolder(registry.getId(event.getStructure())).orElseThrow();
-
-            if (!holder.is(JJKStructureTags.IS_MISSION)) return;
-
-            BlockPos pos = event.getPos();
-
-            RandomSource random = RandomSource.create(Mth.getSeed(pos));
-
-            IMissionData data = level.getData(JJKAttachmentTypes.MISSION);
-
-            if (!data.isRegistered(pos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
-                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
-
-            Mission mission = data.getMission(pos);
-            mission.setFinalized(true);
-        }
-
-        @SubscribeEvent
         public static void onPlayerInteractEntity(PlayerInteractEvent.EntityInteract event) {
             LivingEntity attacker = event.getEntity();
 
