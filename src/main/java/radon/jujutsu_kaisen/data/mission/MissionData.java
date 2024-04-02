@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class MissionData implements IMissionData {
     private final Set<Mission> missions;
@@ -43,7 +44,8 @@ public class MissionData implements IMissionData {
     public MissionData(Level level) {
         this.level = level;
 
-        this.missions = new LinkedHashSet<>();
+        // We gotta use copy on write for thread safety
+        this.missions = new CopyOnWriteArraySet<>();
     }
 
     @Override

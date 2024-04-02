@@ -48,6 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExplosionHandler {
+    // We gotta use copy on write for thread safety
     private static final List<ExplosionData> explosions = new CopyOnWriteArrayList<>();
 
     private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> pDropPositionArray, ItemStack pStack, BlockPos pPos) {
