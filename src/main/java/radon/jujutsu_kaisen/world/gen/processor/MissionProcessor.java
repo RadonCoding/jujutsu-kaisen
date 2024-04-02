@@ -57,7 +57,6 @@ public class MissionProcessor extends StructureProcessor {
             CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, false);
-            ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
@@ -67,8 +66,17 @@ public class MissionProcessor extends StructureProcessor {
             CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, true);
-            ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
         }
         return pRelativeBlockInfo;
+    }
+
+    @Override
+    public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(@NotNull ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
+        for (StructureTemplate.StructureBlockInfo info : pProcessedBlockInfos) {
+            if (!info.state().is(JJKBlocks.CURSE_SPAWNER) && !info.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) continue;
+
+            pServerLevel.scheduleTick(info.pos(), info.state().getBlock(), 0);
+        }
+        return pProcessedBlockInfos;
     }
 }
