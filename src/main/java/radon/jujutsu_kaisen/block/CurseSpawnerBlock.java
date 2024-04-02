@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CurseSpawnerBlock extends Block implements EntityBlock {
@@ -64,18 +65,38 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
         if (pState.getValue(IS_BOSS)) {
             if (!bossesPool.isEmpty()) {
-                EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
+                List<EntityType<?>> copy = new ArrayList<>(bossesPool);
 
-                if (pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D , pPos.getY(), pPos.getZ() + 0.5D))) {
+                Iterator<EntityType<?>> iter = copy.iterator();
+
+                while (iter.hasNext()) {
+                    EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
+
+                    if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
+                        iter.remove();
+                        continue;
+                    }
+
                     type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
+                    break;
                 }
             }
         } else {
             if (!spawnsPool.isEmpty()) {
-                EntityType<?> type = spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size()));
+                List<EntityType<?>> copy = new ArrayList<>(spawnsPool);
 
-                if (pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
+                Iterator<EntityType<?>> iter = copy.iterator();
+
+                while (iter.hasNext()) {
+                    EntityType<?> type = spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size()));
+
+                    if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
+                        iter.remove();
+                        continue;
+                    }
+
                     type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
+                    break;
                 }
             }
         }
