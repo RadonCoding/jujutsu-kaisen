@@ -83,4 +83,9 @@ public class JJKBlockEntities {
             BlockEntityType.Builder.of(MissionBlockEntity::new,
                             JJKBlocks.MISSION.get())
                     .build(null));
+    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<CurseSpawnerBlockEntity>> CURSE_SPAWNER = BLOCK_ENTITIES.register("curse_spawner", () ->
+            BlockEntityType.Builder.of(CurseSpawnerBlockEntity::new,
+                            JJKBlocks.CURSE_SPAWNER.get(),
+                            JJKBlocks.CURSE_BOSS_SPAWNER.get())
+                    .build(null));
 }

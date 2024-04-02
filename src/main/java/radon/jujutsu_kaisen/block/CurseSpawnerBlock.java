@@ -6,13 +6,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.block.property.LongProperty;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
+import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.IMissionData;
 import radon.jujutsu_kaisen.data.mission.Mission;
@@ -23,9 +26,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CurseSpawnerBlock extends Block {
+public class CurseSpawnerBlock extends Block implements EntityBlock {
     public static final BooleanProperty IS_BOSS = BooleanProperty.create("is_boss");
-    public static final LongProperty LOCATION = LongProperty.create("location", 0, Long.MAX_VALUE);
 
     public CurseSpawnerBlock(Properties pProperties) {
         super(pProperties);
@@ -35,7 +37,9 @@ public class CurseSpawnerBlock extends Block {
     public void tick(@NotNull BlockState pState, @NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
         IMissionData data = pLevel.getData(JJKAttachmentTypes.MISSION);
 
-        Mission mission = data.getMission(BlockPos.of(pState.getValue(LOCATION)));
+        if (!(pLevel.getBlockEntity(pPos) instanceof CurseSpawnerBlockEntity be)) return;
+
+        Mission mission = data.getMission(be.getPos());
 
         List<EntityType<?>> spawnsPool = new ArrayList<>();
         List<EntityType<?>> bossesPool = new ArrayList<>();
@@ -78,6 +82,12 @@ public class CurseSpawnerBlock extends Block {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(IS_BOSS, LOCATION);
+        pBuilder.add(IS_BOSS);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        return JJKBlockEntities.CURSE_SPAWNER.get().create(pPos, pState);
     }
 }
