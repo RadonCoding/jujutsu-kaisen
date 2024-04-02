@@ -7,6 +7,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -78,6 +79,8 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
                 }
             }
         }
+
+        pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 11);
     }
 
     @Override

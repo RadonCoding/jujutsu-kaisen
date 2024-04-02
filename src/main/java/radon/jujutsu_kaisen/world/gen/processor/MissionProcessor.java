@@ -54,10 +54,7 @@ public class MissionProcessor extends StructureProcessor {
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
-            CompoundTag nbt = pRelativeBlockInfo.nbt();
-
-            if (nbt == null) return pRelativeBlockInfo;
-
+            CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, false);
             ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
@@ -67,10 +64,7 @@ public class MissionProcessor extends StructureProcessor {
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
-            CompoundTag nbt = pRelativeBlockInfo.nbt();
-
-            if (nbt == null) return pRelativeBlockInfo;
-
+            CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, true);
             ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
