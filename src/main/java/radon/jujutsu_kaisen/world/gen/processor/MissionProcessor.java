@@ -71,6 +71,7 @@ public class MissionProcessor extends StructureProcessor {
 
             if (nbt == null) return pRelativeBlockInfo;
 
+            nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, true);
             ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
         }
