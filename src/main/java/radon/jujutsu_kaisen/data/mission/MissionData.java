@@ -77,16 +77,24 @@ public class MissionData implements IMissionData {
                 Set<BlockPos> spawns = mission.getSpawns();
 
                 for (BlockPos pos : new ArrayList<>(spawns)) {
-                    spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+                    EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
+
+                    if (!this.level.noCollision(type.getAABB(pos.getX() + 0.5D , pos.getY(), pos.getZ() + 0.5D))) continue;
+
+                    type.spawn(serverLevel, pos, MobSpawnType.SPAWNER);
                     spawns.remove(pos);
                 }
             }
 
             if (!bossesPool.isEmpty()) {
-                Set<BlockPos> bosses = mission.getSpawns();
+                Set<BlockPos> bosses = mission.getBosses();
 
                 for (BlockPos pos : new ArrayList<>(bosses)) {
-                    bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size())).spawn(serverLevel, pos, MobSpawnType.SPAWNER);
+                    EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
+
+                    if (!this.level.noCollision(type.getAABB(pos.getX() + 0.5D , pos.getY(), pos.getZ() + 0.5D))) continue;
+
+                    type.spawn(serverLevel, pos, MobSpawnType.SPAWNER);
                     bosses.remove(pos);
                 }
             }

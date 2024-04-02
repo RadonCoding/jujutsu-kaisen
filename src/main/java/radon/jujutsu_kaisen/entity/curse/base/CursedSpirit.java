@@ -242,7 +242,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
         if (this.isTame()) {
             LivingEntity target = this.getTarget();
-            this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
+            this.setOrderedToSit(target != null && !target.isRemoved() && !target.isDeadOrDying());
         }
 
         if (!this.level().isClientSide) {
