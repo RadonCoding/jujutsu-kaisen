@@ -51,7 +51,7 @@ public class MissionData implements IMissionData {
         if (!(this.level instanceof ServerLevel serverLevel)) return;
 
         for (Mission mission : this.missions) {
-            if (mission.isSpawned()) continue;
+            if (!mission.isFinalized() || mission.isSpawned()) continue;
 
             List<EntityType<?>> spawnsPool = new ArrayList<>();
             List<EntityType<?>> bossesPool = new ArrayList<>();

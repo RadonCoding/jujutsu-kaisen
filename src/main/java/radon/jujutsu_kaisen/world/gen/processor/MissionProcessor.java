@@ -11,7 +11,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -28,7 +27,6 @@ import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionDataS2CPacket;
-import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
@@ -81,30 +79,12 @@ public class MissionProcessor extends StructureProcessor {
 
         RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
-        if (!data.isRegistered(pPos)) {
-            data.register(HelperMethods.randomEnum(MissionType.class, random),
-                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
+        if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
+                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
-            Mission mission = data.getMission(pPos);
+        Mission mission = data.getMission(pPos);
+        mission.setFinalized(true);
 
-            BoundingBox bounds = pSettings.getBoundingBox();
-
-            if (bounds == null) return pProcessedBlockInfos;
-
-            BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                BlockState state = pServerLevel.getBlockState(pos);
-
-                if (state.is(JJKBlocks.CURSE_SPAWNER)) {
-                    mission.addSpawn(pos);
-
-                    pServerLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                } else if (state.is(JJKBlocks.CURSE_BOSS_SPAWNER)) {
-                    mission.addBoss(pos);
-
-                    pServerLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                }
-            });
-        }
-        return pProcessedBlockInfos;
+        return super.finalizeProcessing(pServerLevel, pOffset, pPos, pOriginalBlockInfos, pProcessedBlockInfos, pSettings);
     }
 }
