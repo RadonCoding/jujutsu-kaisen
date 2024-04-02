@@ -18,6 +18,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.block.CurseSpawnerBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilRodBlock;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
@@ -51,12 +52,18 @@ public class MissionProcessor extends StructureProcessor {
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
+            pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, false);
+            pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.LOCATION, pPos.asLong());
+
             ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
         } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
+
+            pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, true);
+            pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.LOCATION, pPos.asLong());
 
             ((LevelAccessor) pLevel).scheduleTick(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state().getBlock(), 0);
         }
