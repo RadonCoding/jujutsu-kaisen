@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,11 +67,12 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
         if (pState.getValue(IS_BOSS)) {
             if (!bossesPool.isEmpty()) {
                 List<EntityType<?>> copy = new ArrayList<>(bossesPool);
+                Collections.shuffle(copy);
 
                 Iterator<EntityType<?>> iter = copy.iterator();
 
                 while (iter.hasNext()) {
-                    EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
+                    EntityType<?> type = iter.next();
 
                     if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
                         iter.remove();
@@ -84,11 +86,12 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
         } else {
             if (!spawnsPool.isEmpty()) {
                 List<EntityType<?>> copy = new ArrayList<>(spawnsPool);
+                Collections.shuffle(copy);
 
                 Iterator<EntityType<?>> iter = copy.iterator();
 
                 while (iter.hasNext()) {
-                    EntityType<?> type = spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size()));
+                    EntityType<?> type = iter.next();
 
                     if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
                         iter.remove();
