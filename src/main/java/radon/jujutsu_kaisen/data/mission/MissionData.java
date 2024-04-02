@@ -77,7 +77,7 @@ public class MissionData implements IMissionData {
                 Set<BlockPos> spawns = mission.getSpawns();
 
                 for (BlockPos pos : new ArrayList<>(spawns)) {
-                    EntityType<?> type = bossesPool.get(HelperMethods.RANDOM.nextInt(bossesPool.size()));
+                    EntityType<?> type = spawnsPool.get(HelperMethods.RANDOM.nextInt(spawnsPool.size()));
 
                     if (!this.level.noCollision(type.getAABB(pos.getX() + 0.5D , pos.getY(), pos.getZ() + 0.5D))) continue;
 
