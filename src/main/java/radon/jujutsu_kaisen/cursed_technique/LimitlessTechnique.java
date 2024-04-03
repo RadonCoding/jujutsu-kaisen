@@ -24,6 +24,7 @@ public class LimitlessTechnique implements ICursedTechnique {
         ABILITIES.add(JJKAbilities.BLUE_STILL.get());
         ABILITIES.add(JJKAbilities.BLUE_MOTION.get());
         ABILITIES.add(JJKAbilities.BLUE_FISTS.get());
+        ABILITIES.add(JJKAbilities.BLUE_PULL.get());
         ABILITIES.add(JJKAbilities.HOLLOW_PURPLE.get());
         ABILITIES.add(JJKAbilities.TELEPORT.get());
         ABILITIES.add(JJKAbilities.AZURE_GLIDE.get());
