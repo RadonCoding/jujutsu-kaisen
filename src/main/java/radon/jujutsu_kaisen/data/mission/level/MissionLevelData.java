@@ -49,6 +49,12 @@ public class MissionLevelData implements IMissionLevelData {
 
             if (!mission.isInitialized()) {
                 StructureStart structure = serverLevel.structureManager().getStructureWithPieceAt(mission.getPos(), JJKStructureTags.IS_MISSION);
+
+                if (!structure.isValid()) {
+                    missionsIter.remove();
+                    continue;
+                }
+
                 mission.setInitialized(this.level.getBlockStates(AABB.of(structure.getBoundingBox())).noneMatch(state -> state.getBlock() instanceof CurseSpawnerBlock));
                 continue;
             }

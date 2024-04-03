@@ -39,6 +39,7 @@ import java.util.Set;
 
 public class SearchForMissionsC2SPacket implements CustomPacketPayload {
     private static final int SEARCH_RADIUS = 16;
+    private static final int LIMIT = 16;
 
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "search_for_missions_serverbound");
 
@@ -66,13 +67,17 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
             Optional<HolderSet.Named<Structure>> optional = sender.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION);
 
-            boolean dirty = false;
+            int found = 0;
 
             if (optional.isEmpty()) return;
 
             // Locate structures that have not been registered yet, IMPORTANT: already known structures are skipped
             for (Holder<Structure> holder : optional.get()) {
+                if (found >= LIMIT) break;
+
                 for (StructurePlacement placement : sender.serverLevel().getChunkSource().getGeneratorState().getPlacementsForStructure(holder)) {
+                    if (found >= LIMIT) break;
+
                     if (placement instanceof ConcentricRingsStructurePlacement concentric) {
                         List<ChunkPos> positions = sender.serverLevel().getChunkSource().getGeneratorState().getRingPositionsFor(concentric);
 
@@ -90,7 +95,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                                     RandomSource random = RandomSource.create(Mth.getSeed(pos));
                                     data.register(HelperMethods.randomEnum(MissionType.class, random),
                                             HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
-                                    dirty = true;
+                                    found++;
                                 }
                             }
                         }
@@ -123,7 +128,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                                                     RandomSource random = RandomSource.create(Mth.getSeed(pos));
                                                     data.register(HelperMethods.randomEnum(MissionType.class, random),
                                                             HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
-                                                    dirty = true;
+                                                    found++;
                                                 }
                                             }
                                         }
@@ -135,7 +140,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                 }
             }
 
-            if (dirty) {
+            if (found > 0) {
                 PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), data.serializeNBT()));
             }
         });
