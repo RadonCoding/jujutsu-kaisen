@@ -31,6 +31,8 @@ import radon.jujutsu_kaisen.entity.VeilEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class VeilDeactivate extends Ability {
+    public static final double RANGE = 64.0D;
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
@@ -50,7 +52,7 @@ public class VeilDeactivate extends Ability {
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        if (!(RotationUtil.getLookAtHit(owner, VeilActivate.RANGE) instanceof BlockHitResult hit)) return;
+        if (!(RotationUtil.getLookAtHit(owner, RANGE) instanceof BlockHitResult hit)) return;
 
         BlockPos pos = hit.getBlockPos();
 
