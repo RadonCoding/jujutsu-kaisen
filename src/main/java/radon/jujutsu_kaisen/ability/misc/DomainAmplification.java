@@ -264,13 +264,12 @@ public class DomainAmplification extends Ability implements IToggled {
         @SubscribeEvent
         public static void onLevelTick(TickEvent.LevelTickEvent event) {
             if (event.phase == TickEvent.Phase.START) return;
+            if (!(event.level instanceof ServerLevel level)) return;
 
-            if (event.level instanceof ServerLevel level) {
-                DomainAmplificationData storage = level.getDataStorage().computeIfAbsent(DomainAmplificationData.FACTORY, DomainAmplificationData.IDENTIFIER);
-                storage.tick(level);
-            }
+            DomainAmplificationData storage = level.getDataStorage().computeIfAbsent(DomainAmplificationData.FACTORY, DomainAmplificationData.IDENTIFIER);
+            storage.tick(level);
         }
-        
+
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();

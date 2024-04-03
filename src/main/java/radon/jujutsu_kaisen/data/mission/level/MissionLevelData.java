@@ -7,14 +7,19 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
+import radon.jujutsu_kaisen.block.CurseSpawnerBlock;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
+import radon.jujutsu_kaisen.tags.JJKStructureTags;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -32,16 +37,27 @@ public class MissionLevelData implements IMissionLevelData {
 
     @Override
     public void tick() {
+        if (!(this.level instanceof ServerLevel serverLevel)) return;
+
         // Remove missions that dont't have any curses
         Iterator<Mission> missionsIter = this.missions.iterator();
 
+        boolean dirty = false;
+
         while (missionsIter.hasNext()) {
             Mission mission = missionsIter.next();
+
+            if (!mission.isInitialized()) {
+                StructureStart structure = serverLevel.structureManager().getStructureWithPieceAt(mission.getPos(), JJKStructureTags.IS_MISSION);
+                mission.setInitialized(this.level.getBlockStates(AABB.of(structure.getBoundingBox())).noneMatch(state -> state.getBlock() instanceof CurseSpawnerBlock));
+                continue;
+            }
 
             Set<UUID> curses = mission.getCurses();
 
             if (curses.isEmpty()) {
                 missionsIter.remove();
+                dirty = true;
                 continue;
             }
 
@@ -50,10 +66,14 @@ public class MissionLevelData implements IMissionLevelData {
             while (cursesIter.hasNext()) {
                 UUID identifier = cursesIter.next();
 
-                Entity curse = ((ServerLevel) this.level).getEntity(identifier);
+                Entity curse = serverLevel.getEntity(identifier);
 
                 if (curse == null) cursesIter.remove();
             }
+        }
+
+        if (dirty) {
+            PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
         }
     }
 

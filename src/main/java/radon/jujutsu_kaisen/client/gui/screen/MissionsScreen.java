@@ -266,6 +266,8 @@ public class MissionsScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        // If current accepted mission is not null render a text containing when the mission expires
+
         int windowOffsetX = WINDOW_OFFSET_X;
         int windowOffsetY = (this.height - WINDOW_HEIGHT) / 2;
 

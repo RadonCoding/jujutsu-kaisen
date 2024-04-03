@@ -44,6 +44,8 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
         Mission mission = data.getMission(be.getPos());
 
+        if (mission == null) return;
+
         List<EntityType<?>> spawnsPool = new ArrayList<>();
         List<EntityType<?>> bossesPool = new ArrayList<>();
 

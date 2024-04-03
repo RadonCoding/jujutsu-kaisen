@@ -25,6 +25,7 @@ public class MissionEntityData implements IMissionEntityData {
     @Override
     public void tick() {
         if (!(this.owner.level() instanceof ServerLevel level)) return;
+
         if (this.mission == null) return;
         if (this.owner.level().dimension() != this.mission.getDimension()) return;
 

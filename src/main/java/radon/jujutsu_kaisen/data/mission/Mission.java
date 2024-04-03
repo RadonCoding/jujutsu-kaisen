@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Mission {
+    private boolean initialized;
     private final ResourceKey<Level> dimension;
     private final MissionType type;
     private final MissionGrade grade;
@@ -39,6 +40,7 @@ public class Mission {
     }
 
     public Mission(CompoundTag nbt) {
+        this.initialized = nbt.getBoolean("initialized");
         this.dimension = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("dimension")));
         this.type = MissionType.values()[nbt.getInt("type")];
         this.grade = MissionGrade.values()[nbt.getInt("grade")];
@@ -49,6 +51,14 @@ public class Mission {
         for (Tag key : nbt.getList("curses", Tag.TAG_INT_ARRAY)) {
             this.curses.add(NbtUtils.loadUUID(key));
         }
+    }
+
+    public boolean isInitialized() {
+        return this.initialized;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
     }
 
     public ResourceKey<Level> getDimension() {
@@ -77,17 +87,18 @@ public class Mission {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
+        nbt.putBoolean("initialized", this.initialized);
         nbt.putString("dimension", this.dimension.location().toString());
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("grade", this.grade.ordinal());
         nbt.put("pos", NbtUtils.writeBlockPos(this.pos));
 
-        ListTag curses = new ListTag();
+        ListTag cursesTag = new ListTag();
 
         for (UUID identifier : this.curses) {
-            curses.add(NbtUtils.createUUID(identifier));
+            cursesTag.add(NbtUtils.createUUID(identifier));
         }
-        nbt.put("curses", curses);
+        nbt.put("curses", cursesTag);
 
         return nbt;
     }
