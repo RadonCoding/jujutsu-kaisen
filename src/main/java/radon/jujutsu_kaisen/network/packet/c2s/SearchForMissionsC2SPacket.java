@@ -46,7 +46,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
     }
 
-    public SearchForMissionsC2SPacket(FriendlyByteBuf buf) {
+    public SearchForMissionsC2SPacket(FriendlyByteBuf ignored) {
     }
 
     private static boolean tryAddReference(StructureManager pStructureManager, StructureStart pStructureStart) {
@@ -70,6 +70,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
             if (optional.isEmpty()) return;
 
+            // Locate structures that have not been registered yet, IMPORTANT: already known structures are skipped
             for (Holder<Structure> holder : optional.get()) {
                 for (StructurePlacement placement : sender.serverLevel().getChunkSource().getGeneratorState().getPlacementsForStructure(holder)) {
                     if (placement instanceof ConcentricRingsStructurePlacement concentric) {
@@ -82,11 +83,15 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                         for (ChunkPos chunk : positions) {
                             pos.set(SectionPos.sectionToBlockCoord(chunk.x, 8), 32, SectionPos.sectionToBlockCoord(chunk.z, 8));
 
-                            if (!data.isRegistered(pos)) {
-                                RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                                data.register(HelperMethods.randomEnum(MissionType.class, random),
-                                        HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
-                                dirty = true;
+                            StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
+
+                            if (result != StructureCheckResult.START_NOT_PRESENT) {
+                                if (!data.isRegistered(pos)) {
+                                    RandomSource random = RandomSource.create(Mth.getSeed(pos));
+                                    data.register(HelperMethods.randomEnum(MissionType.class, random),
+                                            HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
+                                    dirty = true;
+                                }
                             }
                         }
                     } else if (placement instanceof RandomSpreadStructurePlacement spread) {
@@ -111,7 +116,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                                             ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
                                             StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
 
-                                            if (start != null && start.isValid() && (tryAddReference(sender.serverLevel().structureManager(), start))) {
+                                            if (start != null && start.isValid() && tryAddReference(sender.serverLevel().structureManager(), start)) {
                                                 BlockPos pos = spread.getLocatePos(start.getChunkPos());
 
                                                 if (!data.isRegistered(pos)) {
