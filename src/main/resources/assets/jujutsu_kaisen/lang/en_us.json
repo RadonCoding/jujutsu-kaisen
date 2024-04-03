@@ -291,10 +291,11 @@
   "ability.jujutsu_kaisen.blue_fists": "Blue Fists",
   "ability.jujutsu_kaisen.blue_fists.enable": "Activated blue fists",
   "ability.jujutsu_kaisen.blue_fists.disable": "Deactivated blue fists",
-  "ability.jujutsu_kaisen.blue_pull": "Blue: Pull",
+  "ability.jujutsu_kaisen.telekinesis": "Telekinesis",
   "ability.jujutsu_kaisen.hollow_purple": "Hollow Purple",
   "ability.jujutsu_kaisen.maximum_hollow_purple": "Maximum Hollow Purple",
-  "ability.jujutsu_kaisen.teleport": "Teleport",
+  "ability.jujutsu_kaisen.teleport_self": "Teleport Self",
+  "ability.jujutsu_kaisen.teleport_others": "Teleport Others",
   "ability.jujutsu_kaisen.azure_glide": "Azure Glide",
   "ability.jujutsu_kaisen.unlimited_void": "Unlimited Void",
 

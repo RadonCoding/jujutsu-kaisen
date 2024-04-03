@@ -68,25 +68,25 @@ public class SwapOthers extends Ability {
 
         Entity first = this.getTarget(owner);
 
-        if (first != null) {
-            if (TARGETS.containsKey(owner.getUUID())) {
-                AbstractMap.SimpleEntry<UUID, Long> entry = TARGETS.get(owner.getUUID());
+        if (first == null) return;
 
-                if (owner.level().getGameTime() - entry.getValue() >= EXPIRATION) {
-                    TARGETS.put(owner.getUUID(), new AbstractMap.SimpleEntry<>(first.getUUID(), owner.level().getGameTime()));
-                    return;
-                }
+        if (TARGETS.containsKey(owner.getUUID())) {
+            AbstractMap.SimpleEntry<UUID, Long> entry = TARGETS.get(owner.getUUID());
 
-                Entity second = level.getEntity(entry.getKey());
-
-                if (second == null) return;
-
-                SwapSelf.swap(first, second);
-
-                TARGETS.remove(owner.getUUID());
-            } else {
-                TARGETS.put(owner.getUUID(), new AbstractMap.SimpleEntry<>(first.getUUID(), owner.level().getGameTime()));
+            if (owner.level().getGameTime() - entry.getValue() >= EXPIRATION) {
+                setTarget(owner, first);
+                return;
             }
+
+            Entity second = level.getEntity(entry.getKey());
+
+            if (second == null) return;
+
+            SwapSelf.swap(first, second);
+
+            TARGETS.remove(owner.getUUID());
+        } else {
+            setTarget(owner, first);
         }
     }
 
