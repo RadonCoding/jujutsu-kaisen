@@ -39,7 +39,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
 
-    public static final int MIN_LENGTH = 6;
+    public static final int MIN_LENGTH = 4;
     public static final int MAX_LENGTH = 12;
 
     private boolean instant;
@@ -100,7 +100,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     public int getScalar() {
-        return 6;
+        return 4;
     }
 
     @Override
