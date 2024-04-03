@@ -38,7 +38,7 @@ public class TeleportSelf extends Ability {
 
     public static @Nullable HitResult getTarget(LivingEntity owner) {
         HitResult hit = RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator());
-        if (hit.getType() == HitResult.Type.MISS) return null;
+        //if (hit.getType() == HitResult.Type.MISS) return null;
         if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN) return null;
         return hit;
     }
