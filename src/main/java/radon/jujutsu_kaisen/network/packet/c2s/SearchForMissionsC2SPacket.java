@@ -86,6 +86,8 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
                         for (ChunkPos chunk : positions) {
+                            if (found >= LIMIT) break;
+
                             pos.set(SectionPos.sectionToBlockCoord(chunk.x, 8), 32, SectionPos.sectionToBlockCoord(chunk.z, 8));
 
                             StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
@@ -104,12 +106,18 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                         int z = SectionPos.blockToSectionCoord(sender.getZ());
 
                         for (int y = 0; y <= SEARCH_RADIUS; y++) {
+                            if (found >= LIMIT) break;
+
                             int i = spread.spacing();
 
                             for (int j = -y; j <= y; j++) {
+                                if (found >= LIMIT) break;
+
                                 boolean flag = j == -y || j == y;
 
                                 for (int k = -y; k <= y; k++) {
+                                    if (found >= LIMIT) break;
+
                                     if (flag || (k == -y || k == y)) {
                                         int l = x + i * j;
                                         int i1 = z + i * k;
