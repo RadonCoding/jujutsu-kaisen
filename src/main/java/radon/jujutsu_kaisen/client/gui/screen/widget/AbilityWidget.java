@@ -221,14 +221,13 @@ public class AbilityWidget {
 
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
+        PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
+
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
-
-
-        PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
 
         if (!this.minecraft.player.getAbilities().instabuild) {
             data.useAbilityPoints(this.ability.getRealPointsCost(this.minecraft.player));

@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,10 +17,14 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ScrollableSlider;
 import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.AcceptMissionC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.SearchForMissionsC2SPacket;
 
 import java.util.*;
@@ -80,7 +85,7 @@ public class MissionsScreen extends Screen {
 
 
         List<MissionCard> subset = new ArrayList<>(this.cards);
-        subset.removeIf(card -> card.getGrade() != this.grade);
+        subset.removeIf(card -> card.getMission().getGrade() != this.grade);
 
         int windowOffsetX = WINDOW_OFFSET_X;
 
@@ -112,7 +117,7 @@ public class MissionsScreen extends Screen {
 
                 if (y > 0.0D && y < WINDOW_INSIDE_HEIGHT) {
                     List<MissionCard> missions = new ArrayList<>(this.cards);
-                    missions.removeIf(card -> card.getGrade() != this.grade);
+                    missions.removeIf(card -> card.getMission().getGrade() != this.grade);
 
                     for (int i = 0; i < missions.size(); i++) {
                         int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
@@ -162,7 +167,7 @@ public class MissionsScreen extends Screen {
 
         if (missionCardsRelativeY > 0.0D && missionCardsRelativeY < WINDOW_INSIDE_HEIGHT) {
             List<MissionCard> subset = new ArrayList<>(this.cards);
-            subset.removeIf(card -> card.getGrade() != this.grade);
+            subset.removeIf(card -> card.getMission().getGrade() != this.grade);
 
             for (int i = 0; i < subset.size(); i++) {
                 int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
@@ -192,9 +197,9 @@ public class MissionsScreen extends Screen {
 
         this.cards.clear();
 
-        IMissionLevelData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION_LEVEL);
+        IMissionLevelData levelData = this.minecraft.level.getData(JJKAttachmentTypes.MISSION_LEVEL);
 
-        Set<Mission> missions = data.getMissions();
+        Set<Mission> missions = levelData.getMissions();
 
         for (Mission mission : missions) {
             this.cards.add(new MissionCard(this.minecraft, mission));
@@ -207,7 +212,7 @@ public class MissionsScreen extends Screen {
         int missionCardsOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
 
         List<MissionCard> subset = new ArrayList<>(this.cards);
-        subset.removeIf(card -> card.getGrade() != this.grade);
+        subset.removeIf(card -> card.getMission().getGrade() != this.grade);
 
         this.missionGradesSlider = new VerticalSlider(windowOffsetX + WINDOW_INSIDE_X + WINDOW_INSIDE_WIDTH - 8, windowOffsetY + WINDOW_INSIDE_Y,
                 8, WINDOW_INSIDE_HEIGHT, Component.empty(), Component.empty(), 0.0D,
@@ -223,11 +228,35 @@ public class MissionsScreen extends Screen {
         this.addRenderableWidget(this.missionCardsSlider);
 
         this.acceptButton = Button.builder(Component.translatable(String.format("gui.%s.missions.accept", JujutsuKaisen.MOD_ID)), pButton -> {
+            if (this.minecraft.level == null || this.minecraft.player == null) return;
 
+            if (this.selected == null) return;
+
+            Mission mission = this.selected.getMission();
+
+            PacketHandler.sendToServer(new AcceptMissionC2SPacket(mission.getPos()));
+
+            IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap == null) return;
+
+            IMissionEntityData entityData = cap.getMissionData();
+
+            entityData.setMission(mission);
         }).pos(missionCardsOffsetX + (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2,
                         missionCardsOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
                 .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT).build();
         this.addRenderableWidget(this.acceptButton);
+
+        if (this.minecraft.player == null) return;
+
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        IMissionEntityData entityData = cap.getMissionData();
+
+        this.acceptButton.active = entityData.getMission() == null;
     }
 
     @Override
@@ -291,7 +320,7 @@ public class MissionsScreen extends Screen {
         graphics.enableScissor(offsetX, 0, this.width - MISSION_CARDS_OFFSET_X, this.height);
 
         List<MissionCard> subset = new ArrayList<>(this.cards);
-        subset.removeIf(card -> card.getGrade() != this.grade);
+        subset.removeIf(card -> card.getMission().getGrade() != this.grade);
 
         for (int i = 0; i < subset.size(); i++) {
             int insideX = offsetX - this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING)) + MissionCard.WINDOW_INSIDE_X;
@@ -312,7 +341,7 @@ public class MissionsScreen extends Screen {
 
         if (y > 0.0D && y < MissionCard.WINDOW_INSIDE_Y) {
             List<MissionCard> subset = new ArrayList<>(this.cards);
-            subset.removeIf(card -> card.getGrade() != this.grade);
+            subset.removeIf(card -> card.getMission().getGrade() != this.grade);
 
             for (int i = 0; i < subset.size(); i++) {
                 int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));

@@ -47,8 +47,8 @@ public class MissionCard {
         this.description = this.minecraft.font.split(this.mission.getType().getDescription(), WINDOW_INSIDE_WIDTH - (INNER_PADDING * 2));
     }
 
-    public MissionGrade getGrade() {
-        return this.mission.getGrade();
+    public Mission getMission() {
+        return this.mission;
     }
 
     public void scroll(double dragY) {

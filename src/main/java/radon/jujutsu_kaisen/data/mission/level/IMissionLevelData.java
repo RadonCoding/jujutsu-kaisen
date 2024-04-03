@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.data.mission.level;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
@@ -18,5 +19,8 @@ public interface IMissionLevelData extends INBTSerializable<CompoundTag> {
 
     boolean isRegistered(BlockPos pos);
 
+    @Nullable
     Mission getMission(BlockPos pos);
+
+    void removeMission(Mission mission);
 }

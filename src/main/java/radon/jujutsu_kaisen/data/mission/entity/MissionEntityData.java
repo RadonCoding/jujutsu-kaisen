@@ -1,11 +1,16 @@
 package radon.jujutsu_kaisen.data.mission.entity;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.data.mission.Mission;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
 public class MissionEntityData implements IMissionEntityData {
     @Nullable
@@ -18,8 +23,29 @@ public class MissionEntityData implements IMissionEntityData {
     }
 
     @Override
-    public void setMission(@Nullable Mission mission) {
-        this.mission = mission;
+    public void tick() {
+        if (!(this.owner.level() instanceof ServerLevel level)) return;
+        if (this.mission == null) return;
+        if (this.owner.level().dimension() != this.mission.getDimension()) return;
+
+        // If all the curses are dead then the mission is completed
+        Set<UUID> curses = this.mission.getCurses();
+
+        if (curses.isEmpty()) {
+            // Completed give player rewards or something
+            this.mission = null;
+            return;
+        }
+
+        Iterator<UUID> cursesIter = curses.iterator();
+
+        while (cursesIter.hasNext()) {
+            UUID identifier = cursesIter.next();
+
+            Entity curse = level.getEntity(identifier);
+
+            if (curse == null) cursesIter.remove();
+        }
     }
 
     @Override
@@ -28,8 +54,8 @@ public class MissionEntityData implements IMissionEntityData {
     }
 
     @Override
-    public void tick() {
-
+    public void setMission(@Nullable Mission mission) {
+        this.mission = mission;
     }
 
     @Override

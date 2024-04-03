@@ -103,12 +103,7 @@ public class TeleportOthers extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 25.0F;
-    }
-
-    @Override
-    public int getCooldown() {
-        return 5 * 20;
+        return 10.0F;
     }
 
     @Override

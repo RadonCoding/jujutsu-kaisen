@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.block.Block;
@@ -78,7 +79,12 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
                         continue;
                     }
 
-                    type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
+                    Entity curse = type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
+
+                    if (curse == null) continue;
+
+                    mission.addCurse(curse.getUUID());
+
                     break;
                 }
             }
@@ -97,7 +103,12 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
                         continue;
                     }
 
-                    type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
+                    Entity curse = type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
+
+                    if (curse == null) continue;
+
+                    mission.addCurse(curse.getUUID());
+
                     break;
                 }
             }

@@ -4,8 +4,11 @@ import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
@@ -24,18 +27,39 @@ public class MissionLevelData implements IMissionLevelData {
     public MissionLevelData(Level level) {
         this.level = level;
 
-        // We gotta use copy on write for thread safety
-        this.missions = new CopyOnWriteArraySet<>();
+        this.missions = new LinkedHashSet<>();
     }
 
     @Override
     public void tick() {
+        // Remove missions that dont't have any curses
+        Iterator<Mission> missionsIter = this.missions.iterator();
 
+        while (missionsIter.hasNext()) {
+            Mission mission = missionsIter.next();
+
+            Set<UUID> curses = mission.getCurses();
+
+            if (curses.isEmpty()) {
+                missionsIter.remove();
+                continue;
+            }
+
+            Iterator<UUID> cursesIter = curses.iterator();
+
+            while (cursesIter.hasNext()) {
+                UUID identifier = cursesIter.next();
+
+                Entity curse = ((ServerLevel) this.level).getEntity(identifier);
+
+                if (curse == null) cursesIter.remove();
+            }
+        }
     }
 
     @Override
     public void register(MissionType type, MissionGrade grade, BlockPos pos) {
-        this.missions.add(new Mission(type, grade, pos));
+        this.missions.add(new Mission(this.level.dimension(), type, grade, pos));
 
         PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
     }
@@ -53,12 +77,18 @@ public class MissionLevelData implements IMissionLevelData {
         return false;
     }
 
+    @Nullable
     @Override
     public Mission getMission(BlockPos pos) {
         for (Mission mission : this.missions) {
             if (mission.getPos().equals(pos)) return mission;
         }
         return null;
+    }
+
+    @Override
+    public void removeMission(Mission mission) {
+        this.missions.remove(mission);
     }
 
     @Override
