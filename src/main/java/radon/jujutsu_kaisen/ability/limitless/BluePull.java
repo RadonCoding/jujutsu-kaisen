@@ -59,12 +59,12 @@ public class BluePull extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        Entity target = this.getTarget(owner);
 
-        if (cap == null) return Status.FAILURE;
-
-        IAbilityData data = cap.getAbilityData();
-        return data.isCooldownDone(JJKAbilities.BLUE_MOTION.get()) ? super.isTriggerable(owner) : Status.FAILURE;
+        if (target == null) {
+            return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
     }
 
     @Override
