@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -25,20 +24,16 @@ import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.mission.IMissionData;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -67,7 +62,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            IMissionData data = sender.level().getData(JJKAttachmentTypes.MISSION);
+            IMissionLevelData data = sender.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
 
             Optional<HolderSet.Named<Structure>> optional = sender.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION);
 
@@ -136,7 +131,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
             }
 
             if (dirty) {
-                PacketHandler.broadcast(new SyncMissionDataS2CPacket(sender.level().dimension(), data.serializeNBT()));
+                PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), data.serializeNBT()));
             }
         });
     }

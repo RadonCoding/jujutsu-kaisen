@@ -52,6 +52,9 @@ public class PacketHandler {
         registrar.play(SyncSkillDataSC2Packet.IDENTIFIER, SyncSkillDataSC2Packet::new, handler -> handler
                 .client(SyncSkillDataSC2Packet::handle)
                 .server(SyncSkillDataSC2Packet::handle));
+        registrar.play(SyncMissionEntityDataS2CPacket.IDENTIFIER, SyncMissionEntityDataS2CPacket::new, handler -> handler
+                .client(SyncMissionEntityDataS2CPacket::handle)
+                .server(SyncMissionEntityDataS2CPacket::handle));
         registrar.play(CameraShakeS2CPacket.IDENTIFIER, CameraShakeS2CPacket::new, handler -> handler
                 .client(CameraShakeS2CPacket::handle)
                 .server(CameraShakeS2CPacket::handle));
@@ -82,9 +85,9 @@ public class PacketHandler {
         registrar.play(OpenMissionScreenS2CPacket.IDENTIFIER, OpenMissionScreenS2CPacket::new, handler -> handler
                 .client(OpenMissionScreenS2CPacket::handle)
                 .server(OpenMissionScreenS2CPacket::handle));
-        registrar.play(SyncMissionDataS2CPacket.IDENTIFIER, SyncMissionDataS2CPacket::new, handler -> handler
-                .client(SyncMissionDataS2CPacket::handle)
-                .server(SyncMissionDataS2CPacket::handle));
+        registrar.play(SyncMissionLevelDataS2CPacket.IDENTIFIER, SyncMissionLevelDataS2CPacket::new, handler -> handler
+                .client(SyncMissionLevelDataS2CPacket::handle)
+                .server(SyncMissionLevelDataS2CPacket::handle));
 
         // Serverbound packets
         registrar.play(TriggerAbilityC2SPacket.IDENTIFIER, TriggerAbilityC2SPacket::new, handler -> handler

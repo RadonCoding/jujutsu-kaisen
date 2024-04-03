@@ -18,11 +18,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.mission.IMissionData;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +37,7 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
     @Override
     public void tick(@NotNull BlockState pState, @NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
-        IMissionData data = pLevel.getData(JJKAttachmentTypes.MISSION);
+        IMissionLevelData data = pLevel.getData(JJKAttachmentTypes.MISSION_LEVEL);
 
         if (!(pLevel.getBlockEntity(pPos) instanceof CurseSpawnerBlockEntity be)) return;
 

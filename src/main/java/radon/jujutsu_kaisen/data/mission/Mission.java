@@ -17,7 +17,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Mission {
-    private boolean finalized;
     private final MissionType type;
     private final MissionGrade grade;
     private final BlockPos pos;
@@ -29,18 +28,9 @@ public class Mission {
     }
 
     public Mission(CompoundTag nbt) {
-        this.finalized = nbt.getBoolean("finalized");
         this.type = MissionType.values()[nbt.getInt("type")];
         this.grade = MissionGrade.values()[nbt.getInt("grade")];
         this.pos = NbtUtils.readBlockPos(nbt.getCompound("pos"));
-    }
-
-    public boolean isFinalized() {
-        return this.finalized;
-    }
-
-    public void setFinalized(boolean finalized) {
-        this.finalized = finalized;
     }
 
     public MissionType getType() {
@@ -57,7 +47,6 @@ public class Mission {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putBoolean("finalized", this.finalized);
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("grade", this.grade.ordinal());
         nbt.put("pos", NbtUtils.writeBlockPos(this.pos));

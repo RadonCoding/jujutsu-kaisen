@@ -27,9 +27,12 @@ import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationDataSer
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.mimicry.MimicryData;
 import radon.jujutsu_kaisen.data.mimicry.MimicryDataSerializer;
-import radon.jujutsu_kaisen.data.mission.IMissionData;
-import radon.jujutsu_kaisen.data.mission.MissionData;
-import radon.jujutsu_kaisen.data.mission.MissionDataSerializer;
+import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
+import radon.jujutsu_kaisen.data.mission.entity.MissionEntityData;
+import radon.jujutsu_kaisen.data.mission.entity.MissionEntityDataSerializer;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
+import radon.jujutsu_kaisen.data.mission.level.MissionLevelData;
+import radon.jujutsu_kaisen.data.mission.level.MissionLevelDataSerializer;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.projection_sorcery.ProjectionSorcereryDataSerializer;
 import radon.jujutsu_kaisen.data.projection_sorcery.ProjectionSorceryData;
@@ -71,6 +74,8 @@ public class JJKAttachmentTypes {
     public static final Supplier<AttachmentType<ISkillData>> SKILL = ATTACHMENT_TYPES.register("skill",
             AttachmentType.<ISkillData>builder(holder -> new SkillData()).serialize(new SkillDataSerializer()).copyOnDeath()::build);
 
-    public static final Supplier<AttachmentType<IMissionData>> MISSION = ATTACHMENT_TYPES.register("mission",
-            AttachmentType.<IMissionData>builder(holder -> new MissionData((Level) holder)).serialize(new MissionDataSerializer())::build);
+    public static final Supplier<AttachmentType<IMissionLevelData>> MISSION_LEVEL = ATTACHMENT_TYPES.register("mission_level",
+            AttachmentType.<IMissionLevelData>builder(holder -> new MissionLevelData((Level) holder)).serialize(new MissionLevelDataSerializer())::build);
+    public static final Supplier<AttachmentType<IMissionEntityData>> MISSION_ENTITY = ATTACHMENT_TYPES.register("mission_entity",
+            AttachmentType.<IMissionEntityData>builder(holder -> new MissionEntityData((LivingEntity) holder)).serialize(new MissionEntityDataSerializer()).copyOnDeath()::build);
 }

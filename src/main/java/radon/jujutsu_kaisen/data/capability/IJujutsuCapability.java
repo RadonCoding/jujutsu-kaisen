@@ -7,6 +7,7 @@ import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.cursed_speech.ICursedSpeechData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
+import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
@@ -34,4 +35,6 @@ public interface IJujutsuCapability {
     ICursedSpeechData getCursedSpeechData();
 
     ISkillData getSkillData();
+
+    IMissionEntityData getMissionData();
 }

@@ -13,20 +13,20 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.mission.IMissionData;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 
-public class SyncMissionDataS2CPacket implements CustomPacketPayload {
+public class SyncMissionLevelDataS2CPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "sync_mission_data_clientbound");
 
     private final ResourceKey<Level> dimension;
     private final CompoundTag nbt;
 
-    public SyncMissionDataS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt) {
+    public SyncMissionLevelDataS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt) {
         this.dimension = dimension;
         this.nbt = nbt;
     }
 
-    public SyncMissionDataS2CPacket(FriendlyByteBuf buf) {
+    public SyncMissionLevelDataS2CPacket(FriendlyByteBuf buf) {
         this(buf.readResourceKey(Registries.DIMENSION), buf.readNbt());
     }
 
@@ -38,7 +38,7 @@ public class SyncMissionDataS2CPacket implements CustomPacketPayload {
 
             if (player.level().dimension() != this.dimension) return;
 
-            IMissionData data = player.level().getData(JJKAttachmentTypes.MISSION);
+            IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
             data.deserializeNBT(this.nbt);
 
             ClientWrapper.refreshMissions();

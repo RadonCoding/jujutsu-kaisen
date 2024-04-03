@@ -90,9 +90,6 @@ public class SorcererData implements ISorcererData {
     private final Set<Trait> traits;
     private final Set<SummonData> summons;
 
-    @Nullable
-    private  Mission mission;
-
     private int fingers;
 
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
@@ -559,16 +556,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setMission(@Nullable Mission mission) {
-        this.mission = mission;
-    }
-
-    @Override
-    public Mission getMission() {
-        return this.mission;
-    }
-
-    @Override
     public void setType(JujutsuType type) {
         this.type = type;
         ServerVisualHandler.sync(this.owner);
@@ -1028,10 +1015,6 @@ public class SorcererData implements ISorcererData {
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("fingers", this.fingers);
 
-        if (this.mission != null) {
-            nbt.put("mission", this.mission.serializeNBT());
-        }
-
         ListTag unlockedTag = new ListTag();
 
         for (Ability ability : this.unlocked) {
@@ -1089,10 +1072,6 @@ public class SorcererData implements ISorcererData {
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.fingers = nbt.getInt("fingers");
-
-        if (nbt.contains("mission")) {
-            this.mission = new Mission(nbt.getCompound("mission"));
-        }
 
         this.unlocked.clear();
 

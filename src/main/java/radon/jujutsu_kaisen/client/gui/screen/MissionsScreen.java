@@ -10,14 +10,13 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ScrollableSlider;
 import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.mission.IMissionData;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -71,7 +70,7 @@ public class MissionsScreen extends Screen {
 
         this.cards.clear();
 
-        IMissionData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION);
+        IMissionLevelData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION_LEVEL);
 
         Set<Mission> missions = data.getMissions();
 
@@ -193,7 +192,7 @@ public class MissionsScreen extends Screen {
 
         this.cards.clear();
 
-        IMissionData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION);
+        IMissionLevelData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION_LEVEL);
 
         Set<Mission> missions = data.getMissions();
 

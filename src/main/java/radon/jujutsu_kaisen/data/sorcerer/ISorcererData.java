@@ -118,10 +118,6 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void setTraits(Set<Trait> traits);
 
-    void setMission(@Nullable Mission mission);
-
-    @Nullable Mission getMission();
-
     void setType(JujutsuType type);
 
     JujutsuType getType();

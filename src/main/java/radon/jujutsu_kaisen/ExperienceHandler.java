@@ -151,20 +151,20 @@ public class ExperienceHandler {
             return targetUUID;
         }
 
-        private static float calculateStrength(LivingEntity entity) {
-            float strength = entity.getMaxHealth() * 0.1F;
+        private static float calculateStrength(LivingEntity target) {
+            float strength = target.getMaxHealth() * 0.1F;
 
-            AttributeMap attributes = entity.getAttributes();
+            AttributeMap attributes = target.getAttributes();
 
             if (attributes.hasAttribute(Attributes.ARMOR_TOUGHNESS)) {
-                float armor = (float) entity.getArmorValue();
-                float toughness = (float) entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+                float armor = (float) target.getArmorValue();
+                float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
                 float f = 2.0F + toughness / 4.0F;
                 float f1 = Mth.clamp(armor - strength / f, armor * 0.2F, 20.0F);
                 strength /= 1.0F - f1 / 25.0F;
             }
 
-            MobEffectInstance instance = entity.getEffect(MobEffects.DAMAGE_RESISTANCE);
+            MobEffectInstance instance = target.getEffect(MobEffects.DAMAGE_RESISTANCE);
 
             if (instance != null) {
                 int resistance = instance.getAmplifier();
@@ -179,30 +179,25 @@ public class ExperienceHandler {
                 }
             }
 
-            int k = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), entity.damageSources().generic());
+            int k = EnchantmentHelper.getDamageProtection(target.getArmorSlots(), target.damageSources().generic());
 
             if (k > 0) {
                 float f2 = Mth.clamp(k, 0.0F, 20.0F);
                 strength /= 1.0F - f2 / 25.0F;
             }
 
-            if (attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) {
-                strength += (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
-            }
-            if (attributes.hasAttribute(Attributes.MOVEMENT_SPEED)) {
-                strength += (float) entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
-            }
-
-            if (entity instanceof PackCursedSpirit pack) {
+            if (target instanceof PackCursedSpirit pack) {
                 strength += pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);
             }
 
-            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
+                // Increase from target's experience
                 ISorcererData data = cap.getSorcererData();
                 strength += data.getExperience() * 0.01F;
 
+                // Increase if the target can heal
                 if (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get())) {
                     strength *= 1.25F;
                 }
@@ -215,11 +210,11 @@ public class ExperienceHandler {
             if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
             if (this.damageDealtByOwner == 0.0F) return;
 
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return;
+            if (ownerCap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
+            ISorcererData ownerData = ownerCap.getSorcererData();
 
             float experience = calculateStrength(target)
                     * (this.damageDealtByOwner / this.totalDamageDealt)
@@ -227,14 +222,14 @@ public class ExperienceHandler {
 
             if (experience < 0.1F) return;
 
-            if (data.addExperience(experience)) {
+            if (ownerData.addExperience(experience)) {
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), experience));
                 }
             }
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerData.serializeNBT()), player);
             }
         }
 
