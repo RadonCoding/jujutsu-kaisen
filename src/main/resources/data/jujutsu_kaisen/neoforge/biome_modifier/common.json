@@ -2,12 +2,10 @@
   "type": "neoforge:add_spawn_costs",
   "biomes": "#minecraft:is_overworld",
   "entity_types": [
-    "jujutsu_kaisen:jogo",
-    "jujutsu_kaisen:dagon",
-    "jujutsu_kaisen:hanami"
+    "jujutsu_kaisen:window"
   ],
   "spawn_cost": {
-    "charge": 1.28,
+    "charge": 0.16,
     "energy_budget": 0.01
   }
 }

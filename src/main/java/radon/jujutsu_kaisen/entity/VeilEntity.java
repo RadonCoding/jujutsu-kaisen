@@ -276,9 +276,7 @@ public class VeilEntity extends Entity implements IVeil {
 
                         CompoundTag saved = null;
 
-                        if (existing instanceof VeilBlockEntity original) {
-                            state = original.getOriginal();
-                        } else if (existing != null) {
+                        if (existing != null) {
                             saved = existing.saveWithFullMetadata();
                         }
 
@@ -294,6 +292,58 @@ public class VeilEntity extends Entity implements IVeil {
                         if (this.level().getBlockEntity(pos) instanceof VeilBlockEntity be) {
                             be.create(this.getUUID(), this.ownerUUID, (radius * 2) - delay, radius, this.modifiers, state, saved);
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private void destroyBarrier() {
+        this.total = 0;
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
+
+        for (Modifier modifier : this.modifiers) {
+            if (modifier.getType() == Modifier.Type.COLOR) {
+                replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
+            } else if (modifier.getType() == Modifier.Type.TRANSPARENT) {
+                replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
+            }
+        }
+
+        int radius = this.getRadius();
+
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+
+        for (int y = radius; y >= -radius; y--) {
+            int delay = Math.abs(y - radius);
+
+            if (this.getTime() < delay) break;
+
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    double distance = Math.sqrt(x * x + y * y + z * z);
+
+                    if (distance < radius && distance >= radius - 1) {
+                        BlockPos pos = center.offset(x, y, z);
+
+                        if (!this.level().isInWorldBounds(pos)) continue;
+
+                        BlockState state = this.level().getBlockState(pos);
+
+                        if (state.is(Blocks.BEDROCK)) continue;
+
+                        if (!this.isOwned(pos)) continue;
+
+                        if (!(this.level().getBlockEntity(pos) instanceof VeilBlockEntity be)) continue;
+
+                        if (be.getParentUUID() == null || !be.getParentUUID().equals(this.getUUID())) continue;
+
+                        be.destroy();
                     }
                 }
             }
@@ -340,6 +390,13 @@ public class VeilEntity extends Entity implements IVeil {
         if (!this.level().isClientSide) {
             VeilHandler.barrier(this.level().dimension(), this.getUUID());
         }
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+
+        this.destroyBarrier();
     }
 
     @Override

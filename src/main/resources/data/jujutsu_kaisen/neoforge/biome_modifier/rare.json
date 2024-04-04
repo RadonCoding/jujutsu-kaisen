@@ -1,6 +1,6 @@
 {
   "type": "neoforge:add_spawn_costs",
-  "biomes": "#jujutsu_kaisen:has_structure/headquarters",
+  "biomes": "#minecraft:is_overworld",
   "entity_types": [
     "jujutsu_kaisen:satoru_gojo",
     "jujutsu_kaisen:yuta_okkotsu",
@@ -10,10 +10,15 @@
     "jujutsu_kaisen:suguru_geto",
     "jujutsu_kaisen:naoya_zenin",
     "jujutsu_kaisen:aoi_todo",
-    "jujutsu_kaisen:miwa_kasumi"
+    "jujutsu_kaisen:miwa_kasumi",
+
+    "jujutsu_kaisen:toji_fushiguro",
+    "jujutsu_kaisen:maki_zenin",
+
+    "jujutsu_kaisen:kuchisake_onna"
   ],
   "spawn_cost": {
-    "charge": 0.128,
+    "charge": 1.28,
     "energy_budget": 0.01
   }
 }

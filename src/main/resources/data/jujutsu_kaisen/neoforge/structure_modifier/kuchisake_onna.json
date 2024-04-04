@@ -1,6 +1,6 @@
 {
   "type": "neoforge:add_spawns",
-  "structures": "#jujutsu_kaisen:is_pyramid",
+  "structures": "#jujutsu_kaisen:has_structure/pyramid",
   "spawners": [
     {
       "type": "jujutsu_kaisen:kuchisake_onna",
