@@ -2,10 +2,11 @@
   "type": "neoforge:add_spawn_costs",
   "biomes": "#minecraft:is_overworld",
   "entity_types": [
-    "jujutsu_kaisen:dino_curse"
+    "jujutsu_kaisen:dino_curse",
+    "jujutsu_kaisen:ko_guy"
   ],
   "spawn_cost": {
-    "charge": 0.16,
+    "charge": 0.64,
     "energy_budget": 0.01
   }
 }
