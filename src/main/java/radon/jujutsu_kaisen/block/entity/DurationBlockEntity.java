@@ -12,8 +12,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.block.entity.base.ITemporaryBlock;
 
-public class DurationBlockEntity extends BlockEntity {
+public class DurationBlockEntity extends BlockEntity implements ITemporaryBlock {
     private boolean initialized;
     private int duration;
 
@@ -46,7 +47,9 @@ public class DurationBlockEntity extends BlockEntity {
         }
     }
 
-    public @Nullable BlockState getOriginal() {
+    @Nullable
+    @Override
+    public BlockState getOriginal() {
         if (this.original == null && this.deferred != null && this.level != null) {
             this.original = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), this.deferred);
             this.deferred = null;

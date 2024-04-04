@@ -13,11 +13,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.block.entity.base.ITemporaryBlock;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
 
-public class DomainBlockEntity extends BlockEntity {
+public class DomainBlockEntity extends BlockEntity implements ITemporaryBlock {
     private boolean initialized;
     private UUID identifier;
 
@@ -78,7 +79,9 @@ public class DomainBlockEntity extends BlockEntity {
         return this.identifier;
     }
 
-    public @Nullable BlockState getOriginal() {
+    @Nullable
+    @Override
+    public BlockState getOriginal() {
         if (this.level == null) return this.original;
 
         if (this.original == null && this.deferred != null) {

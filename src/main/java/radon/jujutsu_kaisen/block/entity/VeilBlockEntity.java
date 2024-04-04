@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.block.entity.base.ITemporaryBlock;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class VeilBlockEntity extends BlockEntity {
+public class VeilBlockEntity extends BlockEntity implements ITemporaryBlock {
     private boolean initialized;
 
     @Nullable
@@ -106,7 +107,9 @@ public class VeilBlockEntity extends BlockEntity {
         }
     }
 
-    public @Nullable BlockState getOriginal() {
+    @Nullable
+    @Override
+    public BlockState getOriginal() {
         if (this.level == null) return this.original;
 
         if (this.original == null && this.deferred != null) {
@@ -118,9 +121,9 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, List<Modifier> modifiers, BlockState original, CompoundTag saved) {
+        this.initialized = true;
         this.parentUUID = parentUUID;
         this.ownerUUID = ownerUUID;
-        this.initialized = true;
         this.death = delay;
         this.size = size;
         this.modifiers = modifiers;
