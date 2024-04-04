@@ -124,13 +124,13 @@ public class JJKEventHandler {
             if (source.getEntity() instanceof LivingEntity attacker) {
                 IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (cap == null) return;
+                if (cap != null) {
+                    ISorcererData data = cap.getSorcererData();
 
-                ISorcererData data = cap.getSorcererData();
-
-                if (data != null && data.hasTrait(Trait.PERFECT_BODY)) {
-                    if (DamageUtil.isMelee(source)) {
-                        event.setAmount(event.getAmount() * 2.0F);
+                    if (data.hasTrait(Trait.PERFECT_BODY)) {
+                        if (DamageUtil.isMelee(source)) {
+                            event.setAmount(event.getAmount() * 2.0F);
+                        }
                     }
                 }
             }
