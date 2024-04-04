@@ -9,7 +9,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -25,13 +24,10 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
-import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
-import radon.jujutsu_kaisen.block.entity.base.ITemporaryBlock;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.base.IBarrier;
 import radon.jujutsu_kaisen.entity.base.IVeil;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
@@ -277,19 +273,19 @@ public class VeilEntity extends Entity implements IVeil {
 
                         CompoundTag saved = null;
 
-                        if (existing instanceof ITemporaryBlock tmp) {
-                            state = tmp.getOriginal();
-                        } else if (existing != null) {
+                        if (existing != null) {
                             saved = existing.saveWithFullMetadata();
                         }
 
-                        if (!(existing instanceof VeilBlockEntity)) {
+                        if (existing instanceof VeilBlockEntity be) {
+                            this.total++;
+
+                            if (be.getParentUUID() != null && be.getParentUUID().equals(this.getUUID())) continue;
+                        } else {
                             if (!this.charge(owner)) continue;
 
                             if (this.level().setBlock(pos, replacement,
                                     Block.UPDATE_CLIENTS)) this.total++;
-                        } else {
-                            this.total++;
                         }
 
                         if (this.level().getBlockEntity(pos) instanceof VeilBlockEntity be) {

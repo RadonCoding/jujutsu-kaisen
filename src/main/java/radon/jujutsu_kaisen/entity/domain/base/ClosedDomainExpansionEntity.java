@@ -165,9 +165,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         CompoundTag saved = null;
 
-        if (existing instanceof ITemporaryBlock tmp) {
-            state = tmp.getOriginal();
-        } else if (existing != null) {
+        if (existing != null) {
             saved = existing.saveWithFullMetadata();
         }
 

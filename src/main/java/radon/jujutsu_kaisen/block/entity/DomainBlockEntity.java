@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -13,12 +12,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.block.entity.base.ITemporaryBlock;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
 
-public class DomainBlockEntity extends BlockEntity implements ITemporaryBlock {
+public class DomainBlockEntity extends BlockEntity {
     private boolean initialized;
     private UUID identifier;
 
@@ -75,12 +73,12 @@ public class DomainBlockEntity extends BlockEntity implements ITemporaryBlock {
         }
     }
 
-    public @Nullable UUID getIdentifier() {
+    @Nullable
+    public UUID getIdentifier() {
         return this.identifier;
     }
 
     @Nullable
-    @Override
     public BlockState getOriginal() {
         if (this.level == null) return this.original;
 

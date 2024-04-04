@@ -5,26 +5,17 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.block.entity.base.ITemporaryBlock;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.VeilEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
-import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 import radon.jujutsu_kaisen.util.VeilUtil;
 
 import javax.annotation.Nullable;
@@ -32,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class VeilBlockEntity extends BlockEntity implements ITemporaryBlock {
+public class VeilBlockEntity extends BlockEntity {
     private boolean initialized;
 
     @Nullable
@@ -108,7 +99,6 @@ public class VeilBlockEntity extends BlockEntity implements ITemporaryBlock {
     }
 
     @Nullable
-    @Override
     public BlockState getOriginal() {
         if (this.level == null) return this.original;
 
@@ -198,10 +188,10 @@ public class VeilBlockEntity extends BlockEntity implements ITemporaryBlock {
             this.size = pTag.getInt("size");
             this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
             this.deferred = pTag.getCompound("original");
-        }
 
-        if (pTag.contains("saved")) {
-            this.saved = pTag.getCompound("saved");
+            if (pTag.contains("saved")) {
+                this.saved = pTag.getCompound("saved");
+            }
         }
 
         if (this.level != null) {
