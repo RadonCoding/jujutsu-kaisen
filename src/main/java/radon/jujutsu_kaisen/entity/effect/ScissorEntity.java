@@ -46,6 +46,7 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
     private static final float DAMAGE = 20.0F;
     private static final int CUT_DURATION = 5;
     private static final int DELAY = 20;
+    private static final int DURATION = 5 * 20;
     private static final double SPEED = 2.5D;
     private static final double RANGE = 3.0D;
 
@@ -193,7 +194,7 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
         this.setRot((float) Math.toDegrees(yaw), (float) Math.toDegrees(pitch));
 
         if (!this.isActive()) {
-            if (Math.sqrt(victim.distanceToSqr(this.start)) > RANGE) {
+            if (this.getTime() == DURATION || Math.sqrt(victim.distanceToSqr(this.start)) > RANGE) {
                 this.setActive(this.getTime());
             } else {
                 return;
