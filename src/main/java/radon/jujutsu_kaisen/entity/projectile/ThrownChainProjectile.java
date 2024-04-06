@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
@@ -162,7 +164,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.inGroundTime > DURATION)) {
             this.discard();
         } else {
-            if (!(owner instanceof LivingEntity living)) return;
+            if (owner == null) return;
 
             if (this.released) {
                 super.tick();
@@ -172,52 +174,59 @@ public class ThrownChainProjectile extends AbstractArrow {
                 }
 
                 if (this.dealtDamage && this.pulled != null) {
-                    if (this.pulled == living) {
-                        living.setDeltaMovement(this.position().subtract(living.position()).normalize());
+                    if (this.pulled == owner) {
+                        owner.setDeltaMovement(this.position().subtract(owner.position()).normalize());
 
-                        if (living.distanceTo(this) <= 1.0D) {
+                        if (owner.distanceTo(this) <= 1.0D) {
                             this.discard();
                             return;
                         }
                     } else {
                         this.setPos(this.pulled.position().add(0.0D, this.pulled.getBbHeight() / 2.0F, 0.0D));
 
-                        this.pulled.setDeltaMovement(living.position().subtract(this.pulled.position()).normalize());
+                        this.pulled.setDeltaMovement(owner.position().subtract(this.pulled.position()).normalize());
 
-                        if (this.pulled.distanceTo(living) <= 1.0D) {
+                        if (this.pulled.distanceTo(owner) <= 1.0D) {
                             this.discard();
                             return;
                         }
                     }
                     this.pulled.hurtMarked = true;
                 }
-            } else {
-                double angle = Math.toRadians(this.getTime() * this.getTime());
-                double radius = 2.0D;
-                float yaw = (float) Math.toRadians(living.getYRot());
-                float pitch = (float) Math.toRadians(90.0F);
+                return;
+            }
 
-                Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)
-                        .xRot(pitch).yRot(-yaw);
-                Vec3 position = living.position().add(RotationUtil.getTargetAdjustedLookAngle(living)).add(offset);
+            float angle = (float) Math.toRadians(this.getTime() * this.getTime());
+            double radius = 2.0D;
+            float yaw = (float) Math.toRadians(owner.getYRot());
+            float pitch = (float) Math.toRadians(90.0F);
 
-                if (living.isUsingItem()) {
-                    this.setPos(position.x, position.y, position.z);
-                    this.setRot((float) Math.toDegrees(Math.atan2(offset.x, offset.z)),
-                            -(float) Math.toDegrees(Math.asin(offset.y / offset.length())));
+            Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)
+                    .xRot(pitch).yRot(-yaw);
+
+            if (!(owner instanceof LivingEntity living)) return;
+
+            Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() * 0.35F, 0.0D)
+                    .add(RotationUtil.calculateViewVector(0.0F, living.yBodyRot).yRot(90.0F).scale(-0.45D)
+                            .add(offset));
+
+            if (living.isUsingItem()) {
+                if (!this.level().isClientSide) {
+                    this.moveTo(pos.x, pos.y, pos.z, owner.getYRot() - 90.0F, (float) Math.toDegrees(angle));
 
                     if (this.random.nextInt(5) == 0) {
                         this.playSound(SoundEvents.CHAIN_PLACE);
                     }
-                } else {
-                    Vec3 spawn = new Vec3(living.getX(), living.getEyeY() - (this.getBbHeight() / 2.0F), living.getZ())
-                            .add(RotationUtil.getTargetAdjustedLookAngle(living));
-                    this.setPos(spawn.x, spawn.y, spawn.z);
-                    this.setRot(-RotationUtil.getTargetAdjustedYRot(living), RotationUtil.getTargetAdjustedXRot(living));
-
-                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(living).scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(position).length()));
-                    this.released = true;
                 }
+            } else {
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+
+                this.setDeltaMovement(look.scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(this.position()).length()));
+
+                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                        .add(look));
+
+                this.released = true;
             }
         }
     }
