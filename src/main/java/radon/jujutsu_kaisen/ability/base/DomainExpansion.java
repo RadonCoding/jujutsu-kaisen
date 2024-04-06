@@ -81,7 +81,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
                 }
             }
 
-            boolean result = owner.onGround() && sorcererData.getType() == JujutsuType.CURSE || sorcererData.isUnlocked(JJKAbilities.RCT1.get()) ?
+            boolean result = owner.onGround() && sorcererData.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(owner) ?
                     owner.getHealth() / owner.getMaxHealth() < 0.8F : owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
             if (!result) {

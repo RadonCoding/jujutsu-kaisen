@@ -27,7 +27,8 @@ public class DismantleNet extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
         return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 
@@ -59,8 +60,8 @@ public class DismantleNet extends Ability {
 
                 Vec3 position = center.add(xAxis.scale(xOffset)).add(yAxis.scale(yOffset));
 
-                DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size, false);
-                DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size, false);
+                DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size);
+                DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size);
 
                 horizontal.setDeltaMovement(look.scale(Dismantle.SPEED));
                 vertical.setDeltaMovement(look.scale(Dismantle.SPEED));

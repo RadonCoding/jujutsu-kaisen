@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.ability.base.IAttack;
 import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -28,7 +29,8 @@ public class ForestWave extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
@@ -60,10 +62,15 @@ public class ForestWave extends Ability {
                     float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
                     float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
 
+                    Vec3 forward = RotationUtil.calculateViewVector(owner.getXRot(), owner.getYRot());
+                    Vec3 up = RotationUtil.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot());
+
+                    Vec3 side = forward.cross(up);
+
                     ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
 
                     Vec3 offset = spawn
-                            .add(look.yRot(90.0F).scale(-forest.getBbWidth() * 2.0F))
+                            .add(side.scale(-forest.getBbWidth() * 2.0F))
                             .add(look.scale((current + j) * forest.getBbWidth()));
                     forest.moveTo(offset.x, offset.y, offset.z, yRot, xRot);
                     owner.level().addFreshEntity(forest);
@@ -79,10 +86,14 @@ public class ForestWave extends Ability {
                     float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
                     float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
 
+                    Vec3 forward = RotationUtil.calculateViewVector(owner.getXRot(), owner.getYRot());
+                    Vec3 up = RotationUtil.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot());
+
+                    Vec3 side = forward.cross(up);
                     ForestWaveEntity forest = new ForestWaveEntity(owner, this.getOutput(owner));
 
                     Vec3 offset = spawn
-                            .add(look.yRot(90.0F).scale(forest.getBbWidth() * 2.0F))
+                            .add(side.scale(forest.getBbWidth() * 2.0F))
                             .add(look.scale((current + j) * forest.getBbWidth()));
                     forest.moveTo(offset.x, offset.y, offset.z, yRot, xRot);
                     owner.level().addFreshEntity(forest);

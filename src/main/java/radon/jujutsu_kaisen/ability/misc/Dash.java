@@ -14,7 +14,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -29,7 +34,13 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class Dash extends Ability {
+    private static final List<UUID> JUMPED = new ArrayList<>();
+
     public static final double RANGE = 32.0D;
     private static final float DASH = 1.5F;
     private static final float MAX_DASH = 4.0F;
@@ -51,7 +62,8 @@ public class Dash extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
         return HelperMethods.RANDOM.nextInt(10) == 0 && owner.distanceTo(target) <= getRange(owner);
     }
 
@@ -62,10 +74,16 @@ public class Dash extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        if (!canDash(owner)) {
+        if (!canDash(owner) && !canAirJump(owner)) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
+    }
+
+    private static boolean canAirJump(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STUN.get())) return false;
+        
+        return JJKAbilities.AIR_JUMP.get().isUnlocked(owner) && (!JUMPED.contains(owner.getUUID()) || owner.getXRot() >= 15.0F);
     }
 
     private static boolean canDash(LivingEntity owner) {
@@ -96,7 +114,7 @@ public class Dash extends Ability {
                 break;
             }
         }
-        return collision || owner.getXRot() >= 15.0F;
+        return collision;
     }
 
     private static float getRange(LivingEntity owner) {
@@ -106,16 +124,12 @@ public class Dash extends Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        if (data == null) return 0.0F;
-
         return (float) (RANGE * (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 2.0F : 1.0F));
     }
 
     @Override
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
-
-        if (!canDash(owner)) return;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -178,6 +192,10 @@ public class Dash extends Ability {
             Vec3 speed = look.add(x, y, z).reverse();
             level.sendParticles(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, 0, speed.x, speed.y, speed.z, 1.0D);
         }
+
+        if (!canDash(owner) && canAirJump(owner)) {
+            JUMPED.add(owner.getUUID());
+        }
     }
 
     @Override
@@ -214,5 +232,18 @@ public class Dash extends Ability {
     @Override
     public MenuType getMenuType(LivingEntity owner) {
         return MenuType.NONE;
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+            LivingEntity entity = event.getEntity();
+
+            if (!JUMPED.contains(entity.getUUID())) return;
+            if (!entity.onGround()) return;
+
+            JUMPED.remove(entity.getUUID());
+        }
     }
 }

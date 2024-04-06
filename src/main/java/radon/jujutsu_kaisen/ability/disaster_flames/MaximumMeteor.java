@@ -30,7 +30,8 @@ import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 public class MaximumMeteor extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -50,7 +51,7 @@ public class MaximumMeteor extends Ability {
                 }
             }
         }
-        return (sorcererData.getType() == JujutsuType.CURSE || sorcererData.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
+        return (sorcererData.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(owner) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
                 owner.getHealth() / owner.getMaxHealth() < 0.4F);
     }
 

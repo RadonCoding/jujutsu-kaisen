@@ -198,7 +198,7 @@ public class ExperienceHandler {
                 strength += data.getExperience() * 0.01F;
 
                 // Increase if the target can heal
-                if (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get())) {
+                if (data.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(target)) {
                     strength *= 1.25F;
                 }
             }

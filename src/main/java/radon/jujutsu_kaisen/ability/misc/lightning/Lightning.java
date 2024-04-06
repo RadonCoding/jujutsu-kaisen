@@ -32,7 +32,8 @@ public class Lightning extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
         if (owner.distanceTo(target) > LightningEntity.RANGE) return false;
         return HelperMethods.RANDOM.nextInt(20) == 0;
     }

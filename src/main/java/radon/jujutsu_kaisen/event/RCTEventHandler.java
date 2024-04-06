@@ -32,7 +32,7 @@ public class RCTEventHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            if (data.isUnlocked(JJKAbilities.RCT1.get())) return false;
+            if (JJKAbilities.RCT1.get().isUnlocked(entity)) return false;
             if (entity instanceof TamableAnimal tamable && tamable.isTame()) return false;
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) return false;
             if (data.getType() != JujutsuType.SORCERER) return false;

@@ -29,6 +29,7 @@ public class ServerConfig {
     public final ModConfigSpec.BooleanValue destruction;
     public final ModConfigSpec.ConfigValue<List<? extends String>> chants;
     public final ModConfigSpec.DoubleValue forceFeedHealthRequirement;
+    public final ModConfigSpec.BooleanValue realisticShikigami;
 
     public final ModConfigSpec.IntValue minimumVeilSize;
     public final ModConfigSpec.IntValue maximumVeilSize;
@@ -51,12 +52,11 @@ public class ServerConfig {
     public final ModConfigSpec.IntValue rct2Cost;
     public final ModConfigSpec.IntValue rct3Cost;
     public final ModConfigSpec.IntValue outputRCTCost;
-    public final ModConfigSpec.IntValue maximumCopiedTechniques;
-    public final ModConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
-
-    public final ModConfigSpec.BooleanValue realisticShikigami;
     public final ModConfigSpec.IntValue abilityModeCost;
     public final ModConfigSpec.IntValue airFrameCost;
+    public final ModConfigSpec.IntValue airJumpCost;
+    public final ModConfigSpec.IntValue maximumCopiedTechniques;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
 
     public final ModConfigSpec.IntValue cursedEnergyNatureRarity;
     public final ModConfigSpec.IntValue curseRarity;
@@ -134,6 +134,8 @@ public class ServerConfig {
                 );
         this.forceFeedHealthRequirement = builder.comment("The percentage of health someone has to be at to be able to force feed them cursed objects")
                 .defineInRange("forceFeedHealthRequirement", 0.25F, 0.0F, 1.0F);
+        this.realisticShikigami = builder.comment("When enabled shikigami will die permanently")
+                .define("realisticShikigami", true);
         builder.pop();
 
         builder.comment("Veils").push("veils");
@@ -179,6 +181,12 @@ public class ServerConfig {
                 .defineInRange("domainAmplificationCost", 100, 1, 10000);
         this.zeroPointTwoSecondDomainExpansionCost = builder.comment("The amount of points 0.2s domain expasnion costs to unlock")
                 .defineInRange("zeroPointTwoSecondDomainExpansionCost", 100, 1, 10000);
+        this.abilityModeCost = builder.comment("The amount of points ability mode costs to unlock")
+                .defineInRange("abilityModeCost", 300, 1, 10000);
+        this.airFrameCost = builder.comment("The amount of points air frame costs to unlock")
+                .defineInRange("airFrameCost", 300, 1, 10000);
+        this.airJumpCost = builder.comment("The amount of points air jump costs to unlock")
+                .defineInRange("airJumpCost", 50, 1, 10000);
         this.rct2Cost = builder.comment("The amount of points tier 2 RCT costs to unlock")
                 .defineInRange("rct2Cost", 100, 1, 10000);
         this.rct3Cost = builder.comment("The amount of points tier 3 RCT costs to unlock")
@@ -204,15 +212,6 @@ public class ServerConfig {
                         ),
                         ignored -> true
                 );
-        builder.pop();
-
-        builder.comment("Ten Shadows").push("ten_shadows");
-        this.realisticShikigami = builder.comment("When enabled shikigami will die permanently")
-                .define("realisticShikigami", true);
-        this.abilityModeCost = builder.comment("The amount of points ability mode costs to unlock")
-                .defineInRange("abilityModeCost", 300, 1, 10000);
-        this.airFrameCost = builder.comment("The amount of points air frame costs to unlock")
-                .defineInRange("airFrameCost", 300, 1, 10000);
         builder.pop();
 
         builder.comment("Rarity").push("rarity");

@@ -45,15 +45,10 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
             return true;
         }
 
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData data = cap.getSorcererData();
-
-        return data.isUnlocked(JJKAbilities.QUICK_DRAW.get()) && owner.distanceTo(target) <= SimpleDomainEntity.getRadius(owner);
+        return JJKAbilities.QUICK_DRAW.get().isUnlocked(owner) && owner.distanceTo(target) <= SimpleDomainEntity.getRadius(owner);
     }
 
     @Override

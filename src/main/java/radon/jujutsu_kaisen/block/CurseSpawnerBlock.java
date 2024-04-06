@@ -68,16 +68,10 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
         if (pState.getValue(IS_BOSS)) {
             if (!bossesPool.isEmpty()) {
-                List<EntityType<?>> copy = new ArrayList<>(bossesPool);
-                Collections.shuffle(copy);
+                Collections.shuffle(bossesPool);
 
-                Iterator<EntityType<?>> iter = copy.iterator();
-
-                while (iter.hasNext()) {
-                    EntityType<?> type = iter.next();
-
+                for (EntityType<?> type : bossesPool) {
                     if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
-                        iter.remove();
                         continue;
                     }
 
@@ -92,16 +86,10 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
             }
         } else {
             if (!spawnsPool.isEmpty()) {
-                List<EntityType<?>> copy = new ArrayList<>(spawnsPool);
-                Collections.shuffle(copy);
+                Collections.shuffle(spawnsPool);
 
-                Iterator<EntityType<?>> iter = copy.iterator();
-
-                while (iter.hasNext()) {
-                    EntityType<?> type = iter.next();
-
+                for (EntityType<?> type : spawnsPool) {
                     if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
-                        iter.remove();
                         continue;
                     }
 

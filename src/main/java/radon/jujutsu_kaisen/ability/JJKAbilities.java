@@ -57,6 +57,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Scissors> SCISSORS = ABILITIES.register("scissors", Scissors::new);
 
     public static DeferredHolder<Ability, Dash> DASH = ABILITIES.register("dash", Dash::new);
+    public static DeferredHolder<Ability, AirJump> AIR_JUMP = ABILITIES.register("air_jump", AirJump::new);
     public static DeferredHolder<Ability, Punch> PUNCH = ABILITIES.register("punch", Punch::new);
     public static DeferredHolder<Ability, Slam> SLAM = ABILITIES.register("slam", Slam::new);
     public static DeferredHolder<Ability, Barrage> BARRAGE = ABILITIES.register("barrage", Barrage::new);

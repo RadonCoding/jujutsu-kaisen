@@ -63,6 +63,10 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.setRoll(roll);
     }
 
+    public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
+        this(owner, power, roll, pos, length, true);
+    }
+
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean destroy) {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
@@ -166,8 +170,8 @@ public class DismantleProjectile extends JujutsuProjectile {
         float pitch = this.getXRot();
         float roll = this.getRoll();
 
-        Vec3 forward = this.calculateViewVector(pitch, 180.0F - yaw);
-        Vec3 up = this.calculateViewVector(pitch - 90.0F, 180.0F - yaw);
+        Vec3 forward = this.calculateViewVector(pitch, yaw);
+        Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
 
         Quaternionf quaternion = new Quaternionf().rotateAxis((float) Math.toRadians(-roll), (float) forward.x, (float) forward.y, (float) forward.z);
         Vec3 side = new Vec3(quaternion.transform(forward.cross(up).toVector3f()));
@@ -196,20 +200,12 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 if (!this.destroy) continue;
 
-                BlockState state = this.level().getBlockState(current);
+                if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, current)) continue;
 
-                if (HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, current)) {
-                    boolean destroyed;
+                boolean destroyed = this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
 
-                    if (state.getFluidState().isEmpty()) {
-                        destroyed = this.level().destroyBlock(current, false);
-                    } else {
-                        destroyed = this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
-                    }
-
-                    if (destroyed) {
-                        this.destroyed++;
-                    }
+                if (destroyed) {
+                    this.destroyed++;
                 }
             }
         }

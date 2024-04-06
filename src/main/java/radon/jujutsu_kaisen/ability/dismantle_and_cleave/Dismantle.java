@@ -24,7 +24,8 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -50,7 +51,8 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
 
             if (owner.level().isClientSide) return;
 
-            DismantleProjectile dismantle = new DismantleProjectile(owner, this.getOutput(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
+            DismantleProjectile dismantle = new DismantleProjectile(owner, this.getOutput(owner),
+                    (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
             dismantle.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
             owner.level().addFreshEntity(dismantle);
 

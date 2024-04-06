@@ -18,7 +18,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class FireArrow extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
         return HelperMethods.RANDOM.nextInt(20) == 0;
     }
 

@@ -40,7 +40,8 @@ public class SwapSelf extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
         return this.getTarget(owner) == target && HelperMethods.RANDOM.nextInt(20) == 0;
     }
 

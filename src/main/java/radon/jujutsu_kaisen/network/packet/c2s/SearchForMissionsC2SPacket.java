@@ -67,9 +67,9 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
             Optional<HolderSet.Named<Structure>> optional = sender.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION);
 
-            int found = 0;
-
             if (optional.isEmpty()) return;
+
+            int found = 0;
 
             // Locate structures that have not been registered yet, IMPORTANT: already known structures are skipped
             for (Holder<Structure> holder : optional.get()) {
@@ -89,6 +89,8 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                             if (found >= LIMIT) break;
 
                             pos.set(SectionPos.sectionToBlockCoord(chunk.x, 8), 32, SectionPos.sectionToBlockCoord(chunk.z, 8));
+
+                            if (sender.serverLevel().isLoaded(pos)) continue;
 
                             StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
 
@@ -121,6 +123,9 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                                     if (flag || (k == -y || k == y)) {
                                         int l = x + i * j;
                                         int i1 = z + i * k;
+
+                                        if (sender.serverLevel().isLoaded(BlockPos.containing(l, 0, i1))) continue;
+
                                         ChunkPos chunk = spread.getPotentialStructureChunk(sender.serverLevel().getChunkSource().getGeneratorState().getLevelSeed(), l, i1);
 
                                         StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);

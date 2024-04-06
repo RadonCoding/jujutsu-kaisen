@@ -42,7 +42,8 @@ public class WorldSlash extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
 
         if (owner instanceof MahoragaEntity) return HelperMethods.RANDOM.nextInt(20) == 0;
 
@@ -52,7 +53,7 @@ public class WorldSlash extends Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        return data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
+        return data.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(owner) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
                 owner.getHealth() / owner.getMaxHealth() < 0.8F || target.getHealth() > owner.getHealth() * 2;
     }
 
@@ -149,7 +150,7 @@ public class WorldSlash extends Ability {
 
                 ISorcererData data = cap.getSorcererData();
 
-                if (data.isUnlocked(JJKAbilities.WORLD_SLASH.get())) continue;
+                if (JJKAbilities.WORLD_SLASH.get().isUnlocked(owner)) continue;
 
                 data.unlock(JJKAbilities.WORLD_SLASH.get());
 

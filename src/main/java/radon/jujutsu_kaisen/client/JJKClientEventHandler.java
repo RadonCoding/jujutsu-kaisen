@@ -17,6 +17,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
@@ -107,6 +108,10 @@ public class JJKClientEventHandler {
                 if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
                         CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
                     PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
+                }
+
+                if (mc.options.keyJump.consumeClick()) {
+                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.AIR_JUMP.getId()));
                 }
             }
         }

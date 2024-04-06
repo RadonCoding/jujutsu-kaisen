@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.data.mission.entity;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,13 +27,14 @@ public class MissionEntityData implements IMissionEntityData {
     public void tick() {
         if (!(this.owner.level() instanceof ServerLevel level)) return;
 
-        if (this.mission == null) return;
-        if (this.owner.level().dimension() != this.mission.getDimension()) return;
+        if (this.mission == null || this.owner.level().dimension() != this.mission.getDimension()) return;
 
         // If all the curses are dead then the mission is completed
         Set<UUID> curses = this.mission.getCurses();
 
         if (curses.isEmpty()) {
+            this.owner.sendSystemMessage(Component.literal("Completed mission!"));
+
             // Completed give player rewards or something
             this.mission = null;
             return;

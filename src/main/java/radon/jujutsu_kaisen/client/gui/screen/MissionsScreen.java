@@ -74,15 +74,19 @@ public class MissionsScreen extends Screen {
     public void tick() {
         super.tick();
 
-        if (this.minecraft == null || this.minecraft.player == null) return;
+        this.acceptButton.active = this.selected != null && !this.hasMission();
+    }
+
+    private boolean hasMission() {
+        if (this.minecraft == null || this.minecraft.player == null) return false;
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+        if (cap == null) return false;
 
-        IMissionEntityData entityData = cap.getMissionData();
+        IMissionEntityData data = cap.getMissionData();
 
-        this.acceptButton.active = this.selected != null && entityData.getMission() == null;
+        return data.getMission() != null;
     }
 
     public void refresh() {
@@ -167,25 +171,27 @@ public class MissionsScreen extends Screen {
             }
         }
 
-        int missionCardsOffsetX = WINDOW_OFFSET_X + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
-        int missionCardsOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
+        if (!this.hasMission()) {
+            int missionCardsOffsetX = WINDOW_OFFSET_X + WINDOW_WIDTH + MISSION_CARDS_OFFSET_X;
+            int missionCardsOffsetY = (this.height - MissionCard.WINDOW_HEIGHT) / 2;
 
-        double missionCardsRelativeX = pMouseX - missionCardsOffsetX - MissionCard.WINDOW_INSIDE_X;
-        double missionCardsRelativeY = pMouseY - missionCardsOffsetY - MissionCard.WINDOW_INSIDE_Y;
+            double missionCardsRelativeX = pMouseX - missionCardsOffsetX - MissionCard.WINDOW_INSIDE_X;
+            double missionCardsRelativeY = pMouseY - missionCardsOffsetY - MissionCard.WINDOW_INSIDE_Y;
 
-        if (missionCardsRelativeY > 0.0D && missionCardsRelativeY < WINDOW_INSIDE_HEIGHT) {
-            List<MissionCard> subset = new ArrayList<>(this.cards);
-            subset.removeIf(card -> card.getMission().getGrade() != this.grade);
+            if (missionCardsRelativeY > 0.0D && missionCardsRelativeY < WINDOW_INSIDE_HEIGHT) {
+                List<MissionCard> subset = new ArrayList<>(this.cards);
+                subset.removeIf(card -> card.getMission().getGrade() != this.grade);
 
-            for (int i = 0; i < subset.size(); i++) {
-                int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
+                for (int i = 0; i < subset.size(); i++) {
+                    int insideX = -this.missionCardsSlider.getValueInt() + (i * (MissionCard.WINDOW_WIDTH + MissionCard.OUTER_PADDING));
 
-                double relativeX = missionCardsRelativeX - insideX;
+                    double relativeX = missionCardsRelativeX - insideX;
 
-                if (relativeX > 0.0D && relativeX < MissionCard.WINDOW_INSIDE_WIDTH) {
-                    this.selected = this.selected == subset.get(i) ? null : subset.get(i);
-                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    return true;
+                    if (relativeX > 0.0D && relativeX < MissionCard.WINDOW_INSIDE_WIDTH) {
+                        this.selected = this.selected == subset.get(i) ? null : subset.get(i);
+                        this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                        return true;
+                    }
                 }
             }
         }
@@ -252,7 +258,8 @@ public class MissionsScreen extends Screen {
 
             entityData.setMission(mission);
 
-            this.cards.removeIf(card -> card.getMission() == mission);
+            this.cards.remove(this.selected);
+            this.selected = null;
         }).pos(missionCardsOffsetX + (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2,
                         missionCardsOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
                 .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT).build();
@@ -319,6 +326,8 @@ public class MissionsScreen extends Screen {
     }
 
     private void renderMissionCards(GuiGraphics graphics, int offsetX, int offsetY) {
+        if (this.minecraft == null || this.minecraft.player == null) return;
+
         graphics.enableScissor(offsetX, 0, this.width - MISSION_CARDS_OFFSET_X, this.height);
 
         List<MissionCard> subset = new ArrayList<>(this.cards);
