@@ -50,8 +50,6 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
         pPoseStack.mulPose(Axis.YN.rotationDegrees(yaw - 90.0F));
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - pitch));
 
-        pPoseStack.translate(0.15F, 0.0F, 0.0F);
-
         ItemStack stack = pEntity.getStack();
 
         BakedModel model = this.itemRenderer.getModel(stack, null, null, pEntity.getId());

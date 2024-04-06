@@ -196,31 +196,34 @@ public class ThrownChainProjectile extends AbstractArrow {
                 return;
             }
 
-            float angle = (float) Math.toRadians(this.getTime() * this.getTime());
+            float angle = (float) Math.toRadians(this.getTime() * 10.0F);
             double radius = 2.0D;
             float yaw = (float) Math.toRadians(owner.getYRot());
             float pitch = (float) Math.toRadians(90.0F);
 
-            Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)
-                    .xRot(pitch).yRot(-yaw);
+            double x = Math.cos(angle) * radius;
+            double z = Math.sin(angle) * radius * Math.cos(angle);
+
+            Vec3 offset = new Vec3(x, 0.0D, z).xRot(pitch).yRot(-yaw);
 
             if (!(owner instanceof LivingEntity living)) return;
 
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() * 0.35F, 0.0D)
-                    .add(RotationUtil.calculateViewVector(0.0F, living.yBodyRot).yRot(90.0F).scale(-0.45D)
-                            .add(offset));
+                    .add(look)
+                    .add(RotationUtil.calculateViewVector(0.0F, living.yBodyRot).yRot(90.0F).scale(-0.45D))
+                    .add(offset);
 
             if (living.isUsingItem()) {
                 if (!this.level().isClientSide) {
-                    this.moveTo(pos.x, pos.y, pos.z, owner.getYRot() - 90.0F, (float) Math.toDegrees(angle));
+                    this.setPos(pos.x, pos.y, pos.z);
+                    this.setRot(owner.getYRot() - 90.0F, Mth.wrapDegrees((float) (Mth.atan2(z, x) * 180.0F / Mth.PI)));
 
                     if (this.random.nextInt(5) == 0) {
                         this.playSound(SoundEvents.CHAIN_PLACE);
                     }
                 }
             } else {
-                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-
                 this.setDeltaMovement(look.scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(pos).length()));
 
                 EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
