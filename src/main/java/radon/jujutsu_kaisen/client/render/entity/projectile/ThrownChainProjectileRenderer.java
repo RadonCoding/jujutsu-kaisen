@@ -82,7 +82,7 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
             pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
         } else {
             yaw = Mth.lerp(pPartialTick, owner.yBodyRotO, owner.yBodyRot) - 90.0F;
-            pitch = 360.0F - ((float) Math.atan2(relative.z, relative.x) * (180.0F / Mth.PI));
+            pitch = 360.0F - (((float) Math.atan2(relative.z, relative.x) * (180.0F / Mth.PI)));
         }
 
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw + 90.0F));
