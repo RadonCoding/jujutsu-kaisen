@@ -10,6 +10,13 @@
           0,
           1
         ]
+      },
+      "firstperson_righthand": {
+        "rotation": [
+          -18,
+          0,
+          0
+        ]
       }
     }
   },
