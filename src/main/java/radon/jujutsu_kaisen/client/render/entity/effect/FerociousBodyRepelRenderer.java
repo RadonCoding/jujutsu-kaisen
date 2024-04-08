@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.effect.FerociousBodyRepelEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -31,7 +32,7 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
         Vec3 ownerPos = getEyePosition(owner, animatable.getBbHeight(), partialTick);
-        Vec3 projectilePos = getPosition(animatable, animatable.getBbHeight() / 2.0F, partialTick);
+        Vec3 projectilePos = EntityUtil.getPosition(animatable, animatable.getBbHeight() / 2.0F, partialTick);
         Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
         relative = relative.normalize();
@@ -48,17 +49,11 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
 
     private static Vec3 getEyePosition(Entity entity, double yOffset, float pPartialTick) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(entity);
-        double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = (entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick) + entity.getEyeHeight() - yOffset;
-        double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
-        return new Vec3(d0, d1, d2).add(look);
-    }
-
-    private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {
-        double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = (entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick) - yOffset;
-        double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
-        return new Vec3(d0, d1, d2);
+        return new Vec3(
+                Mth.lerp(pPartialTick, entity.xOld, entity.getX()),
+                Mth.lerp(pPartialTick, entity.yOld, entity.getY()) + entity.getEyeHeight() - yOffset,
+                Mth.lerp(pPartialTick, entity.zOld, entity.getZ())
+        ).add(look);
     }
 
     @Override

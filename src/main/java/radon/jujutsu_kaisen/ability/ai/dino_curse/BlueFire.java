@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.ai.dino_curse;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -128,8 +129,8 @@ public class BlueFire extends Ability implements IChanneled, IDurationable {
 
         Vec3 spawn = calculateSpawnPos(owner);
 
-        float yaw = (float) ((RotationUtil.getTargetAdjustedYRot(spawn, owner) + 90.0F) * Math.PI / 180.0F);
-        float pitch = (float) (-RotationUtil.getTargetAdjustedXRot(spawn, owner) * Math.PI / 180.0F);
+        float yaw = (RotationUtil.getTargetAdjustedYRot(spawn, owner) + 90.0F) * Mth.PI / 180.0F;
+        float pitch = -RotationUtil.getTargetAdjustedXRot(spawn, owner) * Mth.PI / 180.0F;
 
         double endPosX = spawn.x + RANGE * Math.cos(yaw) * Math.cos(pitch);
         double endPosY = spawn.y + RANGE * Math.sin(pitch);

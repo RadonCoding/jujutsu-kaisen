@@ -14,6 +14,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -21,14 +22,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.visual.visual.BlueFistsVisual;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/chain_link.png");
 
-    private static final float SCALE = 1.5F;
+    private static final float SCALE = 0.75F;
 
     private final ItemRenderer itemRenderer;
 
@@ -40,36 +45,66 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
 
     @Override
     public void render(@NotNull ThrownChainProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        if (!(pEntity.getOwner() instanceof LivingEntity owner)) return;
+
+        Vec3 ownerPos = BlueFistsVisual.getArmPos(owner, HumanoidArm.RIGHT)
+                // This is to position the chain on the model
+                .add(RotationUtil.calculateViewVector(0.0F, owner.yBodyRot).scale(0.28125D))
+                // This is to center the chain texture thingy
+                .add(RotationUtil.calculateViewVector(0.0F, owner.yBodyRot - 90.0F).scale(0.0625D / 2.0F));
+
+        if (!pEntity.isReleased()) {
+            Vec3 displacement = ownerPos
+                    .subtract(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D)
+                    .subtract(EntityUtil.getPosition(pEntity, pPartialTick));
+            pPoseStack.translate(displacement.x, displacement.y, displacement.z);
+        }
+
+        Vec3 relative = pEntity.calculateOffset(pEntity.getTime() + pPartialTick);
+        Vec3 offset = relative
+                .xRot(90.0F * (Mth.PI / 180.0F))
+                .yRot(-(float) Mth.lerp(pPartialTick, owner.yBodyRotO, owner.yBodyRot) * (Mth.PI / 180.0F));
+
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * SCALE / 1.25F, 0.0F);
+
+        if (!pEntity.isReleased()) {
+            pPoseStack.translate(-offset.x, -offset.y, -offset.z);
+        }
+
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * (1.0F / SCALE), 0.0F);
         pPoseStack.scale(SCALE, SCALE, SCALE);
 
-        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
-        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+        float yaw;
+        float pitch;
 
-        pPoseStack.mulPose(Axis.YN.rotationDegrees(yaw - 90.0F));
+        if (pEntity.isReleased()) {
+            yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+            pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+        } else {
+            yaw = Mth.lerp(pPartialTick, owner.yBodyRotO, owner.yBodyRot) - 90.0F;
+            pitch = 360.0F - ((float) Math.atan2(relative.z, relative.x) * (180.0F / Mth.PI));
+        }
+
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw + 90.0F));
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - pitch));
 
         ItemStack stack = pEntity.getStack();
 
         BakedModel model = this.itemRenderer.getModel(stack, null, null, pEntity.getId());
-        this.itemRenderer.render(stack, ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, model);
+        this.itemRenderer.render(stack, ItemDisplayContext.GUI, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, model);
         pPoseStack.popPose();
 
-        if (!(pEntity.getOwner() instanceof LivingEntity owner)) return;
-
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
-        Vec3 ownerPos = getPosition(owner, owner.getBbHeight() * 0.35F, pPartialTick)
-                .add(RotationUtil.calculateViewVector(0.0F, owner.yBodyRot).yRot(90.0F).scale(-0.45D));
-        Vec3 projectilePos = getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick);
-        Vec3 relative = ownerPos.subtract(projectilePos);
-        float f0 = (float) relative.length();
-        relative = relative.normalize();
-        float f1 = (float) Math.acos(relative.y);
-        float f2 = (float) Math.atan2(relative.z, relative.x);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(((Mth.PI / 2.0F) - f2) * (180.0F / Mth.PI)));
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(f1 * (180.0F / Mth.PI)));
+        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F * (1.0F / SCALE), 0.0F);
+
+        Vec3 projectilePos = pEntity.isReleased() ? EntityUtil.getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick) : ownerPos.add(offset);
+
+        Vec3 direction = ownerPos.subtract(projectilePos);
+        float f0 = (float) direction.length();
+        direction = direction.normalize();
+
+        Quaternionf rotation = new Quaternionf().rotateTo(new Vector3f(0, 1, 0), direction.toVector3f());
+        pPoseStack.mulPose(rotation);
 
         float f3 = -1.0F;
         int j = 255;
@@ -92,7 +127,6 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
         PoseStack.Pose pose = pPoseStack.last();
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
-        pPoseStack.pushPose();
         vertex(consumer, matrix4f, matrix3f, f4, f0, f5, j, k, l, 0.4999F, f13, pPackedLight);
         vertex(consumer, matrix4f, matrix3f, f4, 0.0F, f5, j, k, l, 0.4999F, f12, pPackedLight);
         vertex(consumer, matrix4f, matrix3f, f6, 0.0F, f7, j, k, l, 0.0F, f12, pPackedLight);
@@ -102,7 +136,6 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
         vertex(consumer, matrix4f, matrix3f, f8, 0.0F, f9, j, k, l, 0.4999F, f14, pPackedLight);
         vertex(consumer, matrix4f, matrix3f, f10, 0.0F, f11, j, k, l, 0.0F, f14, pPackedLight);
         vertex(consumer, matrix4f, matrix3f, f10, f0, f11, j, k, l, 0.0F, f15, pPackedLight);
-        pPoseStack.popPose();
         pPoseStack.popPose();
     }
 
@@ -114,13 +147,6 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
                 .uv2(packedLight)
                 .normal(matrix3f, 0.0F, 1.0F, 0.0F)
                 .endVertex();
-    }
-
-    private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {
-        double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = yOffset + entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick;
-        double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
-        return new Vec3(d0, d1, d2);
     }
 
     @Override

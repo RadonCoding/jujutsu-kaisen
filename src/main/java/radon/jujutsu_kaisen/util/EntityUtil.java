@@ -32,6 +32,18 @@ import java.util.List;
 import java.util.UUID;
 
 public class EntityUtil {
+    public static Vec3 getPosition(Entity entity, float partialTicks) {
+        return getPosition(entity, 0.0F, partialTicks);
+    }
+
+    public static Vec3 getPosition(Entity entity, double yOffset, float partialTicks) {
+        return new Vec3(
+                Mth.lerp(partialTicks, entity.xOld, entity.getX()),
+                Mth.lerp(partialTicks, entity.yOld, entity.getY()) + yOffset,
+                Mth.lerp(partialTicks, entity.zOld, entity.getZ())
+        );
+    }
+
     public static float calculateDamage(DamageSource source, LivingEntity target) {
         float damage = target.getMaxHealth();
         float armor = (float) target.getArmorValue();

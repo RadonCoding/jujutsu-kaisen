@@ -39,22 +39,6 @@ public class IdleTransfigurationVisual implements IVisual {
     private static final float RADIUS = 1.5F;
     private static final float PARTICLE_SIZE = RADIUS * 0.2F;
 
-    private static Vec3 rotateRoll(Vec3 pos, float roll) {
-        float f = Mth.cos(roll);
-        float f1 = Mth.sin(roll);
-        double d0 = pos.x * (double) f - pos.y * (double) f1;
-        double d1 = pos.y * (double) f + pos.x * (double) f1;
-        double d2 = pos.z;
-        return new Vec3(d0, d1, d2);
-    }
-
-    private static Vec3 transform3rdPerson(Vec3 pos, Vec3 angles, LivingEntity entity, HumanoidArm arm, float partialTicks) {
-        return rotateRoll(pos, (float) angles.z).xRot((float) -angles.x).yRot((float) -angles.y)
-                .add(0.0586F * (arm == HumanoidArm.RIGHT ? -6.0F : 6.0F), 1.3F - (entity.isShiftKeyDown() ? 0.3F : 0.0F), -0.05F)
-                .yRot(-Mth.lerp(partialTicks, entity.yBodyRotO, entity.yBodyRot) * (float) (Math.PI / 180.0D))
-                .add(Mth.lerp(partialTicks, entity.xOld, entity.getX()), Mth.lerp(partialTicks, entity.yOld, entity.getY()), Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
-    }
-
     @Override
     public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
         return client.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get());
@@ -62,20 +46,11 @@ public class IdleTransfigurationVisual implements IVisual {
 
     @Override
     public void tick(LivingEntity entity, ClientVisualHandler.ClientData client) {
-        Minecraft mc = Minecraft.getInstance();
+        Vec3 right = BlueFistsVisual.getArmPos(entity, HumanoidArm.RIGHT).add(0.0D, PARTICLE_SIZE / 2.0F, 0.0D);
+        spawn(entity.level(), right, ParticleColors.getCursedEnergyColor(entity));
 
-        EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
-        EntityRenderer<?> renderer = dispatcher.getRenderer(entity);
-
-        if (renderer instanceof LivingEntityRenderer<?, ?> living && living.getModel() instanceof HumanoidModel<?> humanoid) {
-            Vec3 right = transform3rdPerson(new Vec3(0.0D, -0.7D + (PARTICLE_SIZE / 2.0F), 0.0D),
-                    new Vec3(humanoid.rightArm.xRot, humanoid.rightArm.yRot, humanoid.rightArm.zRot), entity, HumanoidArm.RIGHT, mc.getPartialTick());
-            spawn(entity.level(), right, ParticleColors.getCursedEnergyColor(entity));
-
-            Vec3 left = transform3rdPerson(new Vec3(0.0D, -0.7D + (PARTICLE_SIZE / 2.0F), 0.0D),
-                    new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, HumanoidArm.LEFT, mc.getPartialTick());
-            spawn(entity.level(), left, ParticleColors.getCursedEnergyColor(entity));
-        }
+        Vec3 left = BlueFistsVisual.getArmPos(entity, HumanoidArm.LEFT).add(0.0D, PARTICLE_SIZE / 2.0F, 0.0D);
+        spawn(entity.level(), left, ParticleColors.getCursedEnergyColor(entity));
     }
 
     private static void spawn(Level level, Vec3 pos, Vector3f color) {

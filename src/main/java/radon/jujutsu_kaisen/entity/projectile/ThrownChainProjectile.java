@@ -29,10 +29,10 @@ import javax.annotation.Nullable;
 public class ThrownChainProjectile extends AbstractArrow {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Boolean> DATA_RELEASED = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.BOOLEAN);
 
     private static final int DURATION = 2 * 20;
 
-    private boolean released;
     private boolean dealtDamage;
 
     private Entity pulled;
@@ -46,9 +46,8 @@ public class ThrownChainProjectile extends AbstractArrow {
     public ThrownChainProjectile(LivingEntity pShooter, ItemStack stack) {
         super(JJKEntities.THROWN_CHAIN.get(), pShooter, pShooter.level(), stack);
 
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(RotationUtil.getTargetAdjustedLookAngle(pShooter));
-        this.setPos(spawn.x, spawn.y, spawn.z);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter);
+        this.setPos(new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
 
         this.entityData.set(DATA_ITEM, stack);
     }
@@ -59,6 +58,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
+        this.entityData.define(DATA_RELEASED, false);
     }
 
     public int getTime() {
@@ -69,12 +69,20 @@ public class ThrownChainProjectile extends AbstractArrow {
         this.entityData.set(DATA_TIME, time);
     }
 
+    public boolean isReleased() {
+        return this.entityData.get(DATA_RELEASED);
+    }
+
+    public void setReleased(boolean released) {
+        this.entityData.set(DATA_RELEASED, released);
+    }
+
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("time", this.getTime());
-        pCompound.putBoolean("released", this.released);
+        pCompound.putBoolean("released", this.isReleased());
         pCompound.putBoolean("dealt_damage", this.dealtDamage);
     }
 
@@ -83,7 +91,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         super.readAdditionalSaveData(pCompound);
 
         this.setTime(pCompound.getInt("time"));
-        this.released = pCompound.getBoolean("released");
+        this.setReleased(pCompound.getBoolean("released"));
         this.dealtDamage = pCompound.getBoolean("dealt_damage");
     }
 
@@ -155,6 +163,20 @@ public class ThrownChainProjectile extends AbstractArrow {
         this.spawnAtLocation(this.getStack(), 0.1F);
     }
 
+    public Vec3 calculateOffset(float time) {
+        Entity owner = this.getOwner();
+
+        if (owner == null) return this.position();
+
+        float angle = (float) Math.toRadians(time * time * 0.5F);
+        double radius = 2.0D;
+
+        double x = Math.cos(angle) * radius;
+        double z = Math.sin(angle) * radius;
+
+        return new Vec3(x, 0.0D, z);
+    }
+
     @Override
     public void tick() {
         this.setTime(this.getTime() + 1);
@@ -166,7 +188,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         } else {
             if (owner == null) return;
 
-            if (this.released) {
+            if (this.isReleased()) {
                 super.tick();
 
                 if (this.inGroundTime > 4) {
@@ -196,40 +218,28 @@ public class ThrownChainProjectile extends AbstractArrow {
                 return;
             }
 
-            float angle = (float) Math.toRadians(this.getTime() * 10.0F);
-            double radius = 2.0D;
-            float yaw = (float) Math.toRadians(owner.getYRot());
             float pitch = (float) Math.toRadians(90.0F);
 
-            double x = Math.cos(angle) * radius;
-            double z = Math.sin(angle) * radius * Math.cos(angle);
-
-            Vec3 offset = new Vec3(x, 0.0D, z).xRot(pitch).yRot(-yaw);
+            Vec3 current = this.calculateOffset(this.getTime()).xRot(pitch).yRot(-(float) Math.toRadians(owner.getYRot()));
+            Vec3 previous = this.calculateOffset(this.getTime() - 1).xRot(pitch).yRot(-(float) Math.toRadians(owner.yRotO));
 
             if (!(owner instanceof LivingEntity living)) return;
 
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-            Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() * 0.35F, 0.0D)
-                    .add(look)
-                    .add(RotationUtil.calculateViewVector(0.0F, living.yBodyRot).yRot(90.0F).scale(-0.45D))
-                    .add(offset);
 
             if (living.isUsingItem()) {
-                if (!this.level().isClientSide) {
-                    this.setPos(pos.x, pos.y, pos.z);
-                    this.setRot(owner.getYRot() - 90.0F, Mth.wrapDegrees((float) (Mth.atan2(z, x) * 180.0F / Mth.PI)));
+                this.setPos(new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
 
-                    if (this.random.nextInt(5) == 0) {
-                        this.playSound(SoundEvents.CHAIN_PLACE);
-                    }
+                if (this.random.nextInt(5) == 0) {
+                    this.playSound(SoundEvents.CHAIN_PLACE);
                 }
             } else {
-                this.setDeltaMovement(look.scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(pos).length()));
+                this.setDeltaMovement(look.scale(previous.subtract(current).length()));
 
                 EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                         .add(look));
 
-                this.released = true;
+                this.setReleased(true);
             }
         }
     }

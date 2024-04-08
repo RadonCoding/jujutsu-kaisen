@@ -389,7 +389,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<ThrownChainProjectile>> THROWN_CHAIN = ENTITIES.register("throw_chain", () ->
             EntityType.Builder.<ThrownChainProjectile>of(ThrownChainProjectile::new, MobCategory.MISC)
-                    .sized(1.0F, 1.0F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "throw_chain")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<ScissorEntity>> SCISSOR = ENTITIES.register("scissor", () ->

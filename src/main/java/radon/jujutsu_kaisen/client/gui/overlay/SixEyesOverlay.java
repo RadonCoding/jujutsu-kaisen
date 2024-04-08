@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -43,8 +44,8 @@ public class SixEyesOverlay {
         List<Component> lines = new ArrayList<>();
 
         if (client.technique != null) {
-            Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
-                    client.technique.getName());
+            Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_techniques", JujutsuKaisen.MOD_ID),
+                    String.join(", ", client.techniques.stream().map(technique -> technique.getName().getString()).toList()));
             lines.add(techniqueText);
         }
 

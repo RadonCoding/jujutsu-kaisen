@@ -19,6 +19,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/toad_tongue.png");
@@ -33,8 +34,8 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
-        Vec3 ownerPos = getPosition(owner, owner.getEyeHeight() - 0.1D, pPartialTick);
-        Vec3 projectilePos = getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick);
+        Vec3 ownerPos = EntityUtil.getPosition(owner, owner.getEyeHeight() - 0.1D, pPartialTick);
+        Vec3 projectilePos = EntityUtil.getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick);
         Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
         relative = relative.normalize();
@@ -88,13 +89,6 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
                 .uv2(packedLight)
                 .normal(matrix3f, 0.0F, 1.0F, 0.0F)
                 .endVertex();
-    }
-
-    private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {
-        double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = yOffset + entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick;
-        double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
-        return new Vec3(d0, d1, d2);
     }
 
     @Override
