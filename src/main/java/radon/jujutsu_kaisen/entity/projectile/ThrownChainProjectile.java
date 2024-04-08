@@ -168,7 +168,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         if (owner == null) return this.position();
 
-        float angle = (float) Math.toRadians(time * time * 0.5F);
+        float angle = (float) Math.toRadians(/*time * time * 0.5F*/ time * 5);
         double radius = 2.0D;
 
         double x = Math.cos(angle) * radius;
