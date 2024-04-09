@@ -236,8 +236,12 @@ public class ThrownChainProjectile extends AbstractArrow {
             } else {
                 this.setDeltaMovement(look.scale(previous.subtract(current).length()));
 
-                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                        .add(look));
+               this.setPos(new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+                double d0 = look.horizontalDistance();
+                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / Mth.PI)));
+                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / Mth.PI)));
+                this.yRotO = this.getYRot();
+                this.xRotO = this.getXRot();
 
                 this.setReleased(true);
             }
