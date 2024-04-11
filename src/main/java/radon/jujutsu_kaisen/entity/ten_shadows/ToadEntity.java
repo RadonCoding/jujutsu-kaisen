@@ -186,6 +186,7 @@ public class ToadEntity extends TenShadowsSummon {
             this.original = true;
 
             for (int i = 0; i < COUNT; i++) {
+                @SuppressWarnings("unchecked")
                 ToadEntity entity = new ToadEntity((EntityType<? extends TamableAnimal>) this.getType(), this, owner);
                 entity.setPos(this.position());
                 this.level().addFreshEntity(entity);

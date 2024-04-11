@@ -5,6 +5,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +32,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.UUID;
 
 public class MimicryKatanaEntity extends Entity {
-    private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(MimicryKatanaEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Variant> DATA_VARIANT = SynchedEntityData.defineId(MimicryKatanaEntity.class, EntityDataSerializer.simpleEnum(Variant.class));
     private static final EntityDataAccessor<String> DATA_TECHNIQUE = SynchedEntityData.defineId(MimicryKatanaEntity.class, EntityDataSerializers.STRING);
 
     @Nullable
@@ -55,7 +56,7 @@ public class MimicryKatanaEntity extends Entity {
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(DATA_VARIANT, Variant.BLACK.ordinal());
+        this.entityData.define(DATA_VARIANT, Variant.BLACK);
         this.entityData.define(DATA_TECHNIQUE, "");
     }
 
@@ -103,11 +104,11 @@ public class MimicryKatanaEntity extends Entity {
     }
 
     private Variant getVariant() {
-        return Variant.values()[this.entityData.get(DATA_VARIANT)];
+        return this.entityData.get(DATA_VARIANT);
     }
 
     private void setVariant(Variant variant) {
-        this.entityData.set(DATA_VARIANT, variant.ordinal());
+        this.entityData.set(DATA_VARIANT, variant);
     }
 
     public ICursedTechnique getTechnique() {
