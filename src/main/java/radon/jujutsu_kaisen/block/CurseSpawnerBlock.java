@@ -54,7 +54,7 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
             if (!((type.create(pLevel)) instanceof CursedSpirit curse)) continue;
 
-            int diff = mission.getGrade().toSorcererGrade().ordinal() - curse.getGrade().ordinal();
+            int diff = curse.getGrade().ordinal() - mission.getGrade().toSorcererGrade().ordinal();
 
             if (diff >= 1 && diff < 3) {
                 bossesPool.add(type);
@@ -66,44 +66,25 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
             spawnsPool.add(type);
         }
 
-        if (pState.getValue(IS_BOSS)) {
-            if (!bossesPool.isEmpty()) {
-                Collections.shuffle(bossesPool);
+        List<EntityType<?>> pool = pState.getValue(IS_BOSS) && !bossesPool.isEmpty() ? bossesPool : spawnsPool;
 
-                for (EntityType<?> type : bossesPool) {
-                    if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
-                        continue;
-                    }
+        if (!pool.isEmpty()) {
+            Collections.shuffle(pool);
 
-                    Entity curse = type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
-
-                    if (curse == null) continue;
-
-                    mission.addCurse(curse.getUUID());
-
-                    break;
+            for (EntityType<?> type : pool) {
+                if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
+                    continue;
                 }
-            }
-        } else {
-            if (!spawnsPool.isEmpty()) {
-                Collections.shuffle(spawnsPool);
 
-                for (EntityType<?> type : spawnsPool) {
-                    if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
-                        continue;
-                    }
+                Entity curse = type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
 
-                    Entity curse = type.spawn(pLevel, pPos, MobSpawnType.SPAWNER);
+                if (curse == null) continue;
 
-                    if (curse == null) continue;
+                mission.addCurse(curse.getUUID());
 
-                    mission.addCurse(curse.getUUID());
-
-                    break;
-                }
+                break;
             }
         }
-
         pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 11);
     }
 

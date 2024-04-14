@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class SearchForMissionsC2SPacket implements CustomPacketPayload {
-    private static final int SEARCH_RADIUS = 16;
+    private static final int SEARCH_RADIUS = 8;
     private static final int LIMIT = 16;
 
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "search_for_missions_serverbound");

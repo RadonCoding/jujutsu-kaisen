@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 
 import java.util.Set;
+import java.util.UUID;
 
 public interface IMissionLevelData extends INBTSerializable<CompoundTag> {
     void tick();
@@ -22,5 +23,7 @@ public interface IMissionLevelData extends INBTSerializable<CompoundTag> {
     @Nullable
     Mission getMission(BlockPos pos);
 
-    void removeMission(Mission mission);
+    boolean isTaken(Mission mission);
+
+    void setTaken(Mission mission, UUID identifier);
 }

@@ -1,7 +1,11 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.ParticleOptions;
@@ -11,6 +15,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 
 import java.util.Locale;
 
@@ -49,7 +55,7 @@ public class CursedEnergyParticle extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return JJKParticleRenderTypes.GLOW;
+        return  JJKParticleRenderTypes.GLOW;
     }
 
     public record CursedEnergyParticleOptions(Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {

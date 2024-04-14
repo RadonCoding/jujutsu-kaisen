@@ -11,8 +11,6 @@ import radon.jujutsu_kaisen.data.mission.MissionType;
 import java.util.Set;
 
 public interface IMissionEntityData extends INBTSerializable<CompoundTag> {
-    void tick();
-
     void setMission(@Nullable Mission mission);
 
     @Nullable Mission getMission();

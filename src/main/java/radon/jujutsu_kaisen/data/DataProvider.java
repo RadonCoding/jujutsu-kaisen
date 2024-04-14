@@ -44,7 +44,6 @@ public class DataProvider {
         cap.getIdleTransfigurationData().tick();
         cap.getMimicryData().tick();
         cap.getCursedSpeechData().tick();
-        cap.getMissionData().tick();
     }
 
     @SubscribeEvent
@@ -115,7 +114,7 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT()), player);
 
         IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT()));
+        PacketHandler.sendToClient(new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT()), player);
     }
 
     @SubscribeEvent
@@ -140,7 +139,7 @@ public class DataProvider {
         PacketHandler.sendToClient(new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT()), player);
 
         IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT()));
+        PacketHandler.sendToClient(new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT()), player);
     }
 
     @SubscribeEvent

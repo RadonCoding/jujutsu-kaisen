@@ -99,6 +99,8 @@ public class MissionsScreen extends Screen {
         Set<Mission> missions = data.getMissions();
 
         for (Mission mission : missions) {
+            if (data.isTaken(mission)) continue;
+
             MissionCard card = new MissionCard(this.minecraft, mission);
 
             this.cards.add(card);
@@ -222,6 +224,8 @@ public class MissionsScreen extends Screen {
         Set<Mission> missions = levelData.getMissions();
 
         for (Mission mission : missions) {
+            if (levelData.isTaken(mission)) continue;
+
             this.cards.add(new MissionCard(this.minecraft, mission));
         }
 

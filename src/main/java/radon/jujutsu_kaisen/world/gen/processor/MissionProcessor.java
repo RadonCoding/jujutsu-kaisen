@@ -39,7 +39,7 @@ public class MissionProcessor extends StructureProcessor {
     public StructureTemplate.StructureBlockInfo process(@NotNull LevelReader pLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, StructureTemplate.@NotNull StructureBlockInfo pBlockInfo, StructureTemplate.@NotNull StructureBlockInfo pRelativeBlockInfo, @NotNull StructurePlaceSettings pSettings, @Nullable StructureTemplate template) {
         IMissionLevelData data = ((ServerLevelAccessor) pLevel).getLevel().getData(JJKAttachmentTypes.MISSION_LEVEL);
 
-        if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_SPAWNER)) {
+        if (pRelativeBlockInfo.state().getBlock() instanceof CurseSpawnerBlock) {
             RandomSource random = RandomSource.create(Mth.getSeed(pPos));
 
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
@@ -47,18 +47,7 @@ public class MissionProcessor extends StructureProcessor {
 
             CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
-            pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, false);
-
-            return new StructureTemplate.StructureBlockInfo(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state(), nbt);
-        } else if (pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) {
-            RandomSource random = RandomSource.create(Mth.getSeed(pPos));
-
-            if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
-                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
-
-            CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
-            nbt.put("pos", NbtUtils.writeBlockPos(pPos));
-            pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, true);
+            pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER));
 
             return new StructureTemplate.StructureBlockInfo(pRelativeBlockInfo.pos(), pRelativeBlockInfo.state(), nbt);
         }

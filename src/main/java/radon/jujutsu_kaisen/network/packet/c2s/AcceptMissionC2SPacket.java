@@ -53,9 +53,11 @@ public class AcceptMissionC2SPacket implements CustomPacketPayload {
 
             if (mission == null) return;
 
+            if (levelData.isTaken(mission)) return;
+
             entityData.setMission(mission);
 
-            levelData.removeMission(mission);
+            levelData.setTaken(mission, sender.getUUID());
 
             PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), levelData.serializeNBT()));
 

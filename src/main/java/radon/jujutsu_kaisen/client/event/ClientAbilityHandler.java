@@ -219,12 +219,12 @@ public class ClientAbilityHandler {
                     }
                 }
 
-                if (JJKKeys.INCREASE_OUTPUT.isDown()) {
+                if (JJKKeys.INCREASE_OUTPUT.consumeClick()) {
                     PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.INCREASE));
                     data.increaseOutput();
                 }
 
-                if (JJKKeys.DECREASE_OUTPUT.isDown()) {
+                if (JJKKeys.DECREASE_OUTPUT.consumeClick()) {
                     PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.DECREASE));
                     data.decreaseOutput();
                 }
