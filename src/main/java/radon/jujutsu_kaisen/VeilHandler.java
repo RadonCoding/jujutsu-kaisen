@@ -75,17 +75,17 @@ public class VeilHandler {
     public static boolean canDamage(Entity attacker, LivingEntity victim, ServerLevel level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
 
-        if (level.getBlockState(target).is(JJKBlocks.VEIL_ROD)) return true;
-
         IBarrier owner = getOwner(level, target);
 
-        if (owner instanceof IVeil veil) return veil.canDamage(victim);
+        if (owner instanceof IVeil veil && veil.isAllowed(attacker) && veil.isAllowed(victim)) return veil.canDamage(victim);
 
         return true;
     }
 
     public static boolean canDestroy(@Nullable Entity entity, ServerLevel level, double x, double y, double z) {
         BlockPos target = BlockPos.containing(x, y, z);
+
+        if (level.getBlockState(target).is(JJKBlocks.VEIL_ROD)) return true;
 
         IBarrier owner = getOwner(level, target);
 
