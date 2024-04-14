@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.item;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.item.JetBlackShadowSwordRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -24,7 +25,7 @@ public class JetBlackShadowSwordItem extends SwordItem implements GeoItem {
             private JetBlackShadowSwordRenderer renderer;
 
             @Override
-            public JetBlackShadowSwordRenderer getCustomRenderer() {
+            public @NotNull JetBlackShadowSwordRenderer getCustomRenderer() {
                 if (this.renderer == null) this.renderer = new JetBlackShadowSwordRenderer();
                 return this.renderer;
             }

@@ -88,75 +88,75 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
-        if (this.entity != null) {
-            PoseStack stack = new PoseStack();
+        if (this.entity == null) return;
 
-            float yRot = this.entity.getYRot();
-            float yRotO = this.entity.yRotO;
+        PoseStack stack = new PoseStack();
 
-            float yHeadRot = 0.0F;
-            float yHeadRotO = 0.0F;
-            float yBodyRot = 0.0F;
-            float yBodyRotO = 0.0F;
+        float yRot = this.entity.getYRot();
+        float yRotO = this.entity.yRotO;
 
-            boolean invisible = this.entity.isInvisible();
+        float yHeadRot = 0.0F;
+        float yHeadRotO = 0.0F;
+        float yBodyRot = 0.0F;
+        float yBodyRotO = 0.0F;
 
-            MixinData.isFakeRender = true;
+        boolean invisible = this.entity.isInvisible();
 
-            MixinData.isCustomWalkAnimation = true;
-            MixinData.walkAnimationPosition = this.position;
-            MixinData.walkAnimationSpeed = this.speed;
+        MixinData.isFakeRender = true;
 
-            this.entity.setInvisible(false);
+        MixinData.isCustomWalkAnimation = true;
+        MixinData.walkAnimationPosition = this.position;
+        MixinData.walkAnimationSpeed = this.speed;
 
-            if (this.entity instanceof LivingEntity living) {
-                yHeadRot = living.yHeadRot;
-                yHeadRotO = living.yHeadRotO;
+        this.entity.setInvisible(false);
 
-                living.yHeadRot = this.yHeadRot;
-                living.yHeadRotO = this.yHeadRot0;
+        if (this.entity instanceof LivingEntity living) {
+            yHeadRot = living.yHeadRot;
+            yHeadRotO = living.yHeadRotO;
 
-                yBodyRot = living.yHeadRot;
-                yBodyRotO = living.yHeadRotO;
+            living.yHeadRot = this.yHeadRot;
+            living.yHeadRotO = this.yHeadRot0;
 
-                living.yBodyRot = this.yBodyRot;
-                living.yBodyRotO = this.yBodyRotO;
-            }
+            yBodyRot = living.yHeadRot;
+            yBodyRotO = living.yHeadRotO;
 
-            this.entity.setYRot(this.yRot);
-            this.entity.yRotO = this.yRot0;
-
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-
-            EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-            EntityRenderer<? super Entity> renderer = manager.getRenderer(this.entity);
-
-            MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-            Vec3 offset = renderer.getRenderOffset(this.entity, pPartialTicks);
-            stack.translate((this.x - pRenderInfo.getPosition().x) + offset.x, (this.y - pRenderInfo.getPosition().y) + offset.y, (this.z - pRenderInfo.getPosition().z) + offset.z);
-            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
-            buffer.getBuffer(RenderType.translucent());
-            buffer.endBatch();
-
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-            this.entity.yRotO = yRotO;
-            this.entity.setYRot(yRot);
-
-            if (this.entity instanceof LivingEntity living) {
-                living.yBodyRotO = yBodyRotO;
-                living.yBodyRot = yBodyRot;
-
-                living.yHeadRotO = yHeadRotO;
-                living.yHeadRot = yHeadRot;
-            }
-
-            this.entity.setInvisible(invisible);
-
-            MixinData.isCustomWalkAnimation = false;
-
-            MixinData.isFakeRender = false;
+            living.yBodyRot = this.yBodyRot;
+            living.yBodyRotO = this.yBodyRotO;
         }
+
+        this.entity.setYRot(this.yRot);
+        this.entity.yRotO = this.yRot0;
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+
+        EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
+        EntityRenderer<? super Entity> renderer = manager.getRenderer(this.entity);
+
+        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        Vec3 offset = renderer.getRenderOffset(this.entity, pPartialTicks);
+        stack.translate((this.x - pRenderInfo.getPosition().x) + offset.x, (this.y - pRenderInfo.getPosition().y) + offset.y, (this.z - pRenderInfo.getPosition().z) + offset.z);
+        renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
+        buffer.getBuffer(RenderType.translucent());
+        buffer.endBatch();
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        this.entity.yRotO = yRotO;
+        this.entity.setYRot(yRot);
+
+        if (this.entity instanceof LivingEntity living) {
+            living.yBodyRotO = yBodyRotO;
+            living.yBodyRot = yBodyRot;
+
+            living.yHeadRotO = yHeadRotO;
+            living.yHeadRot = yHeadRot;
+        }
+
+        this.entity.setInvisible(invisible);
+
+        MixinData.isCustomWalkAnimation = false;
+
+        MixinData.isFakeRender = false;
     }
 
     public record MirageParticleOptions(int entityId) implements ParticleOptions {

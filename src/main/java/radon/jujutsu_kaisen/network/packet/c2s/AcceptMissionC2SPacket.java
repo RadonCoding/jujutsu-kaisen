@@ -5,6 +5,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -56,6 +58,11 @@ public class AcceptMissionC2SPacket implements CustomPacketPayload {
             levelData.removeMission(mission);
 
             PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), levelData.serializeNBT()));
+
+            Vec3 pos = this.pos.getCenter();
+            sender.teleportTo(pos.x, pos.y, pos.z);
+
+            //PacketHandler.sendToClient(new FadeScreenTransitionS2CPacket(20), sender);
         });
     }
 

@@ -94,14 +94,20 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
                             StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
 
-                            if (result != StructureCheckResult.START_NOT_PRESENT) {
-                                if (!data.isRegistered(pos)) {
-                                    RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                                    data.register(HelperMethods.randomEnum(MissionType.class, random),
-                                            HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
-                                    found++;
-                                }
-                            }
+                            if (result == StructureCheckResult.START_NOT_PRESENT) continue;
+
+                            ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
+                            StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
+
+                            if (start == null) continue;
+
+                            if (data.isRegistered(pos)) continue;
+
+                            RandomSource random = RandomSource.create(Mth.getSeed(pos));
+                            data.register(HelperMethods.randomEnum(MissionType.class, random),
+                                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
+                                    new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
+                            found++;
                         }
                     } else if (placement instanceof RandomSpreadStructurePlacement spread) {
                         int x = SectionPos.blockToSectionCoord(sender.getX());
@@ -130,21 +136,22 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
                                         StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), true);
 
-                                        if (result != StructureCheckResult.START_NOT_PRESENT) {
-                                            ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
-                                            StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
+                                        if (result == StructureCheckResult.START_NOT_PRESENT) continue;
 
-                                            if (start != null && start.isValid() && tryAddReference(sender.serverLevel().structureManager(), start)) {
-                                                BlockPos pos = spread.getLocatePos(start.getChunkPos());
+                                        ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
+                                        StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
 
-                                                if (!data.isRegistered(pos)) {
-                                                    RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                                                    data.register(HelperMethods.randomEnum(MissionType.class, random),
-                                                            HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pos);
-                                                    found++;
-                                                }
-                                            }
-                                        }
+                                        if (start == null || !start.isValid() || !tryAddReference(sender.serverLevel().structureManager(), start)) continue;
+
+                                        BlockPos pos = spread.getLocatePos(start.getChunkPos());
+
+                                        if (data.isRegistered(pos)) continue;
+
+                                        RandomSource random = RandomSource.create(Mth.getSeed(pos));
+                                        data.register(HelperMethods.randomEnum(MissionType.class, random),
+                                                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
+                                                new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
+                                        found++;
                                     }
                                 }
                             }

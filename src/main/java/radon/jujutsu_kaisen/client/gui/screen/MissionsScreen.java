@@ -99,7 +99,13 @@ public class MissionsScreen extends Screen {
         Set<Mission> missions = data.getMissions();
 
         for (Mission mission : missions) {
-            this.cards.add(new MissionCard(this.minecraft, mission));
+            MissionCard card = new MissionCard(this.minecraft, mission);
+
+            this.cards.add(card);
+
+            if (this.selected == null) continue;
+
+            if (this.selected.getMission().equals(mission)) this.selected = card;
         }
 
         List<MissionCard> subset = new ArrayList<>(this.cards);
@@ -178,7 +184,7 @@ public class MissionsScreen extends Screen {
             double missionCardsRelativeX = pMouseX - missionCardsOffsetX - MissionCard.WINDOW_INSIDE_X;
             double missionCardsRelativeY = pMouseY - missionCardsOffsetY - MissionCard.WINDOW_INSIDE_Y;
 
-            if (missionCardsRelativeY > 0.0D && missionCardsRelativeY < WINDOW_INSIDE_HEIGHT) {
+            if (missionCardsRelativeY > 0.0D && missionCardsRelativeY < MissionCard.WINDOW_INSIDE_HEIGHT) {
                 List<MissionCard> subset = new ArrayList<>(this.cards);
                 subset.removeIf(card -> card.getMission().getGrade() != this.grade);
 
@@ -258,8 +264,7 @@ public class MissionsScreen extends Screen {
 
             entityData.setMission(mission);
 
-            this.cards.remove(this.selected);
-            this.selected = null;
+            this.onClose();
         }).pos(missionCardsOffsetX + (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2,
                         missionCardsOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
                 .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT).build();

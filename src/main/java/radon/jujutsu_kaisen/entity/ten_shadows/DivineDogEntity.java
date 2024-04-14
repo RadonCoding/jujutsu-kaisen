@@ -1,9 +1,7 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
-import com.google.errorprone.annotations.Var;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
@@ -39,7 +37,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public abstract class DivineDogEntity extends TenShadowsSummon implements PlayerRideable {
-    private static final EntityDataAccessor<Variant> DATA_VARIANT = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializer.simpleEnum(Variant.class));
+    private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_RITUAL = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
@@ -103,7 +101,7 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     }
 
     protected void setVariant(Variant variant) {
-        this.entityData.set(DATA_VARIANT, variant);
+        this.entityData.set(DATA_VARIANT, variant.ordinal());
     }
 
     public int getRitual() {
@@ -183,7 +181,7 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_VARIANT, Variant.WHITE);
+        this.entityData.define(DATA_VARIANT, Variant.WHITE.ordinal());
         this.entityData.define(DATA_RITUAL, 0);
     }
 
@@ -191,7 +189,7 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("variant", this.getVariant().ordinal());
+        pCompound.putInt("variant", this.entityData.get(DATA_VARIANT));
         pCompound.putInt("ritual", this.getRitual());
     }
 
@@ -199,8 +197,8 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.setVariant(Variant.values()[pCompound.getInt("variant")]);
-        this.setRitual(pCompound.getInt("ritual"));
+        this.entityData.set(DATA_VARIANT, pCompound.getInt("variant"));
+        this.entityData.set(DATA_RITUAL, pCompound.getInt("ritual"));
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<DivineDogEntity> animationState) {
@@ -226,7 +224,7 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     }
 
     public Variant getVariant() {
-        return this.entityData.get(DATA_VARIANT);
+        return Variant.values()[this.entityData.get(DATA_VARIANT)];
     }
 
     @Override

@@ -4,9 +4,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.PlayerRideable;
+import net.minecraft.world.entity.*;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -16,7 +15,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class RainbowDragonSegmentEntity extends JJKPartEntity<RainbowDragonEntity> implements GeoEntity, PlayerRideable {
+public class RainbowDragonSegmentEntity extends JJKPartEntity<RainbowDragonEntity> implements GeoEntity, PlayerRideable, Attackable {
     private static final EntityDataAccessor<Integer> DATA_INDEX = SynchedEntityData.defineId(RainbowDragonSegmentEntity.class, EntityDataSerializers.INT);
 
     public static final ResourceLocation RENDERER = new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon_segment");
@@ -83,5 +82,11 @@ public class RainbowDragonSegmentEntity extends JJKPartEntity<RainbowDragonEntit
     @Override
     public float getStepHeight() {
         return 2.0F;
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getLastAttacker() {
+        return this.getParent().getLastAttacker();
     }
 }

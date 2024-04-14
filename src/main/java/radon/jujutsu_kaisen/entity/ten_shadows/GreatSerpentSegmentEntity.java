@@ -1,8 +1,11 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Attackable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -12,7 +15,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class GreatSerpentSegmentEntity extends JJKPartEntity<GreatSerpentEntity> implements GeoEntity {
+public class GreatSerpentSegmentEntity extends JJKPartEntity<GreatSerpentEntity> implements GeoEntity, Attackable {
     public static final ResourceLocation RENDERER = new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent_segment");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -64,5 +67,11 @@ public class GreatSerpentSegmentEntity extends JJKPartEntity<GreatSerpentEntity>
     @Override
     public float getStepHeight() {
         return 2.0F;
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getLastAttacker() {
+        return this.getParent().getLastAttacker();
     }
 }

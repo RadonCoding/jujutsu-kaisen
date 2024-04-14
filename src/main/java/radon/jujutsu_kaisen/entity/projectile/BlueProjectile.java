@@ -125,7 +125,7 @@ public class BlueProjectile extends JujutsuProjectile {
             for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
                 if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
 
-                if (entity instanceof LivingEntity) {
+                if (entity instanceof Attackable) {
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
                 } else if (entity instanceof AbstractArrow || entity instanceof FallingBlockEntity) {
                     entity.discard();

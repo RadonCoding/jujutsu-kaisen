@@ -1,12 +1,15 @@
 package radon.jujutsu_kaisen.data.mission.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.data.mission.Mission;
+import radon.jujutsu_kaisen.tags.JJKStructureTags;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -29,6 +32,9 @@ public class MissionEntityData implements IMissionEntityData {
 
         if (this.mission == null || this.owner.level().dimension() != this.mission.getDimension()) return;
 
+        BlockPos pos = this.mission.getPos();
+
+        if (!level.hasChunk(pos.getX(), pos.getZ())) return;
         // If all the curses are dead then the mission is completed
         Set<UUID> curses = this.mission.getCurses();
 

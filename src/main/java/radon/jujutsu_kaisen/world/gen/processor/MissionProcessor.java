@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.CurseSpawnerBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
