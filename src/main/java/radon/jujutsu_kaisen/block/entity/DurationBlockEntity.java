@@ -11,8 +11,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
+import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
 
-public class DurationBlockEntity extends BlockEntity {
+public class DurationBlockEntity extends TemporaryBlockEntity {
     private boolean initialized;
     private int duration;
 
@@ -31,28 +33,8 @@ public class DurationBlockEntity extends BlockEntity {
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DurationBlockEntity pBlockEntity) {
         if (--pBlockEntity.duration <= 0) {
-            BlockState original = pBlockEntity.getOriginal();
-
-            if (original != null) {
-                if (original.isAir()) {
-                    pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
-                } else {
-                    pLevel.setBlockAndUpdate(pPos, original);
-                }
-            } else {
-                pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
-            }
+            pBlockEntity.destroy();
         }
-    }
-
-    @Nullable
-    public BlockState getOriginal() {
-        if (this.original == null && this.deferred != null && this.level != null) {
-            this.original = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), this.deferred);
-            this.deferred = null;
-            this.setChanged();
-        }
-        return this.original;
     }
 
     public void setDuration(int duration) {
@@ -63,7 +45,7 @@ public class DurationBlockEntity extends BlockEntity {
     public void create(int duration, BlockState state) {
         this.initialized = true;
         this.duration = duration;
-        this.original = state;
+        this.setOriginal(state);
         this.setChanged();
     }
 

@@ -29,7 +29,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class OutputRCT extends Ability {
-    public static final float RANGE = 5.0F;
+    public static final double RANGE = 5.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {

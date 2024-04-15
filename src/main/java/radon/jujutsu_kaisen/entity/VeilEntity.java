@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
+import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -286,6 +287,11 @@ public class VeilEntity extends Entity implements IVeil {
 
                             if (this.level().setBlock(pos, replacement,
                                     Block.UPDATE_CLIENTS)) this.total++;
+                        }
+
+                        if (existing instanceof ITemporaryBlockEntity tmp) {
+                            state = tmp.getOriginal();
+                            saved = tmp.getSaved();
                         }
 
                         if (this.level().getBlockEntity(pos) instanceof VeilBlockEntity be) {

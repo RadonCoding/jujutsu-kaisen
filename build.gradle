@@ -58,6 +58,7 @@ dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
+    runtimeOnly "curse.maven:spark-361579:5243943"
 }
 
 tasks.withType(ProcessResources).configureEach {

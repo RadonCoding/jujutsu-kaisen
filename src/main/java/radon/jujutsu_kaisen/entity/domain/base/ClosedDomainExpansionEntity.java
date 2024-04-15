@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -206,7 +207,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             }
         }
 
-        owner.level().removeBlockEntity(pos);
+        if (existing instanceof ITemporaryBlockEntity tmp) {
+            state = tmp.getOriginal();
+            saved = tmp.getSaved();
+        }
 
         boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
                 Block.UPDATE_CLIENTS);

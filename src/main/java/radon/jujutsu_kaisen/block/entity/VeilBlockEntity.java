@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
+import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
 import radon.jujutsu_kaisen.entity.VeilEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class VeilBlockEntity extends BlockEntity {
+public class VeilBlockEntity extends TemporaryBlockEntity {
     private boolean initialized;
 
     @Nullable
@@ -98,8 +100,8 @@ public class VeilBlockEntity extends BlockEntity {
         }
     }
 
-    @Nullable
-    public BlockState getOriginal() {
+    @Override
+    public @Nullable BlockState getOriginal() {
         if (this.level == null) return this.original;
 
         if (this.original == null && this.deferred != null) {
@@ -110,15 +112,20 @@ public class VeilBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, List<Modifier> modifiers, BlockState original, CompoundTag saved) {
+    @Override
+    public @Nullable CompoundTag getSaved() {
+        return this.saved;
+    }
+
+    public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, List<Modifier> modifiers, BlockState state, CompoundTag saved) {
         this.initialized = true;
         this.parentUUID = parentUUID;
         this.ownerUUID = ownerUUID;
         this.death = delay;
         this.size = size;
         this.modifiers = modifiers;
-        this.original = original;
-        this.saved = saved;
+        this.setOriginal(state);
+        this.setSaved(saved);
         this.setChanged();
     }
 
