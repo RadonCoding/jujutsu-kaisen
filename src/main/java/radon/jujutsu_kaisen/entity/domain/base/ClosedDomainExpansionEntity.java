@@ -195,7 +195,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (existing instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();
 
-            if (identifier != null && ((ServerLevel) this.level()).getEntity(identifier) instanceof DomainExpansionEntity) {
+            if (identifier != null) {
+                if (identifier.equals(this.getUUID())) {
+                    if (distance >= radius - 1) this.total++;
+
+                    return;
+                }
+
                 if (block == JJKBlocks.DOMAIN_AIR.get()) return;
             }
         }

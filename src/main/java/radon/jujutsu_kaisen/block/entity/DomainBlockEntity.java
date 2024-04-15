@@ -43,6 +43,8 @@ public class DomainBlockEntity extends BlockEntity {
             pBlockEntity.death--;
         }
 
+        System.out.println(pBlockEntity.death);
+
         if (pBlockEntity.death <= 0) {
             pBlockEntity.destroy();
         }
@@ -56,7 +58,6 @@ public class DomainBlockEntity extends BlockEntity {
         if (original != null) {
             if (original.isAir()) {
                 this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
 
