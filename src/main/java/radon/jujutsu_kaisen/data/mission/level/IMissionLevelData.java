@@ -16,6 +16,8 @@ public interface IMissionLevelData extends INBTSerializable<CompoundTag> {
 
     void register(MissionType type, MissionGrade grade, BlockPos pos);
 
+    void register(Mission mission);
+
     Set<Mission> getMissions();
 
     boolean isRegistered(BlockPos pos);

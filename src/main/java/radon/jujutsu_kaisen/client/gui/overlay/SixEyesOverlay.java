@@ -21,7 +21,7 @@ public class SixEyesOverlay {
     public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
 
-        assert mc.level != null && mc.player != null;
+        if (mc.level == null || mc.player == null) return;
 
         IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

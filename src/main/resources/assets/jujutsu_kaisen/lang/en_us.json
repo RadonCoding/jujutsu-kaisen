@@ -21,6 +21,8 @@
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.experience": "Experience: %1$f",
 
+  "gui.jujutsu_kaisen.mission_overlay.remaining": "Remaining curses: %1$d/%2$d",
+
   "gui.jujutsu_kaisen.stats": "Stats",
 
   "gui.jujutsu_kaisen.stats.grade": "Grade: %1$s",

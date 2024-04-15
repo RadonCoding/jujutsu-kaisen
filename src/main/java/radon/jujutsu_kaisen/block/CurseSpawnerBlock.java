@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -22,6 +23,8 @@ import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 
 import java.util.ArrayList;
@@ -82,9 +85,12 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
                 mission.addCurse(curse.getUUID());
 
+                PacketHandler.broadcast(new SyncMissionS2CPacket(mission.getDimension(), mission.serializeNBT()));
+
                 break;
             }
         }
+
         pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 11);
     }
 

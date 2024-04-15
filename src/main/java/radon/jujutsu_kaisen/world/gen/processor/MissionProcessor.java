@@ -45,6 +45,12 @@ public class MissionProcessor extends StructureProcessor {
             if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
 
+            Mission mission = data.getMission(pPos);
+
+            if (mission == null) return pRelativeBlockInfo;
+
+            mission.addSpawn(pRelativeBlockInfo.pos());
+
             CompoundTag nbt = pRelativeBlockInfo.nbt() == null ? new CompoundTag() : pRelativeBlockInfo.nbt();
             nbt.put("pos", NbtUtils.writeBlockPos(pPos));
             pRelativeBlockInfo.state().setValue(CurseSpawnerBlock.IS_BOSS, pRelativeBlockInfo.state().is(JJKBlocks.CURSE_BOSS_SPAWNER));
@@ -57,7 +63,7 @@ public class MissionProcessor extends StructureProcessor {
     @Override
     public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(@NotNull ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
         for (StructureTemplate.StructureBlockInfo info : pProcessedBlockInfos) {
-            if (!info.state().is(JJKBlocks.CURSE_SPAWNER) && !info.state().is(JJKBlocks.CURSE_BOSS_SPAWNER)) continue;
+            if (!(info.state().getBlock() instanceof CurseSpawnerBlock)) continue;
 
             pServerLevel.scheduleTick(info.pos(), info.state().getBlock(), 0);
         }

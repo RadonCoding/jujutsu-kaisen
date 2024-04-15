@@ -178,6 +178,7 @@ public class JJKClientEventHandler {
             event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_overlay"), CursedEnergyOverlay.OVERLAY);
             event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "six_eyes_overlay"), SixEyesOverlay.OVERLAY);
             event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "screen_flash_overlay"), ScreenFlashOverlay.OVERLAY);
+            event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "mission_overlay"), MissionOverlay.OVERLAY);
         }
 
         @SubscribeEvent

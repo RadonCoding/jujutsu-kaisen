@@ -88,6 +88,9 @@ public class PacketHandler {
         registrar.play(SyncMissionLevelDataS2CPacket.IDENTIFIER, SyncMissionLevelDataS2CPacket::new, handler -> handler
                 .client(SyncMissionLevelDataS2CPacket::handle)
                 .server(SyncMissionLevelDataS2CPacket::handle));
+        registrar.play(SyncMissionS2CPacket.IDENTIFIER, SyncMissionS2CPacket::new, handler -> handler
+                .client(SyncMissionS2CPacket::handle)
+                .server(SyncMissionS2CPacket::handle));
 
         // Serverbound packets
         registrar.play(TriggerAbilityC2SPacket.IDENTIFIER, TriggerAbilityC2SPacket::new, handler -> handler

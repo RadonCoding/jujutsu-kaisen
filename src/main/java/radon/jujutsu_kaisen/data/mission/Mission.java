@@ -24,12 +24,13 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Mission {
-    private boolean initialized;
     private final ResourceKey<Level> dimension;
     private final MissionType type;
     private final MissionGrade grade;
     private final BlockPos pos;
     private final Set<UUID> curses;
+    private final Set<BlockPos> spawns;
+    private int total;
 
     public Mission(ResourceKey<Level> dimension, MissionType type, MissionGrade grade, BlockPos pos) {
         this.dimension = dimension;
@@ -37,10 +38,10 @@ public class Mission {
         this.grade = grade;
         this.pos = pos;
         this.curses = new HashSet<>();
+        this.spawns = new HashSet<>();
     }
 
     public Mission(CompoundTag nbt) {
-        this.initialized = nbt.getBoolean("initialized");
         this.dimension = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("dimension")));
         this.type = MissionType.values()[nbt.getInt("type")];
         this.grade = MissionGrade.values()[nbt.getInt("grade")];
@@ -51,14 +52,14 @@ public class Mission {
         for (Tag key : nbt.getList("curses", Tag.TAG_INT_ARRAY)) {
             this.curses.add(NbtUtils.loadUUID(key));
         }
-    }
 
-    public boolean isInitialized() {
-        return this.initialized;
-    }
+        this.spawns = new HashSet<>();
 
-    public void setInitialized(boolean initialized) {
-        this.initialized = initialized;
+        for (Tag key : nbt.getList("spawns", Tag.TAG_COMPOUND)) {
+            this.spawns.add(NbtUtils.readBlockPos((CompoundTag) key));
+        }
+
+        this.total = nbt.getInt("total");
     }
 
     public ResourceKey<Level> getDimension() {
@@ -83,11 +84,24 @@ public class Mission {
 
     public void addCurse(UUID identifier) {
         this.curses.add(identifier);
+
+        this.total = Math.max(this.total, this.curses.size());
+    }
+
+    public Set<BlockPos> getSpawns() {
+        return this.spawns;
+    }
+
+    public void addSpawn(BlockPos pos) {
+        this.spawns.add(pos);
+    }
+
+    public int getTotal() {
+        return this.total;
     }
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putBoolean("initialized", this.initialized);
         nbt.putString("dimension", this.dimension.location().toString());
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("grade", this.grade.ordinal());
@@ -99,6 +113,15 @@ public class Mission {
             cursesTag.add(NbtUtils.createUUID(identifier));
         }
         nbt.put("curses", cursesTag);
+
+        ListTag spawnsTag = new ListTag();
+
+        for (BlockPos pos : this.spawns) {
+            spawnsTag.add(NbtUtils.writeBlockPos(pos));
+        }
+        nbt.put("spawns", spawnsTag);
+
+        nbt.putInt("total", this.total);
 
         return nbt;
     }

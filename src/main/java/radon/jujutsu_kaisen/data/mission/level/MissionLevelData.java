@@ -7,7 +7,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
@@ -15,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.block.CurseSpawnerBlock;
+import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.mission.Mission;
@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 
@@ -44,33 +45,18 @@ public class MissionLevelData implements IMissionLevelData {
     public void tick() {
         if (!(this.level instanceof ServerLevel serverLevel)) return;
 
-        // Remove missions that dont't have any curses
-        Iterator<Mission> missionsIter = this.missions.iterator();
+        Set<Mission> remove = new HashSet<>();
 
-        boolean dirty = false;
+        for (Mission mission : new LinkedHashSet<>(this.missions)) {
+            Set<BlockPos> spawns = mission.getSpawns();
+            spawns.removeIf(pos -> !(this.level.getBlockEntity(pos) instanceof CurseSpawnerBlockEntity));
 
-        while (missionsIter.hasNext()) {
-            Mission mission = missionsIter.next();
-
-            if (!mission.isInitialized()) {
-                StructureStart structure = serverLevel.structureManager().getStructureWithPieceAt(mission.getPos(), JJKStructureTags.IS_MISSION);
-
-                if (!structure.isValid()) {
-                    missionsIter.remove();
-                    continue;
-                }
-
-                mission.setInitialized(structure.getPieces().stream()
-                        .allMatch(piece -> this.level.getBlockStates(AABB.of(piece.getBoundingBox()))
-                                .noneMatch(state -> state.getBlock() instanceof CurseSpawnerBlock)));
-                continue;
-            }
+            if (!spawns.isEmpty()) continue;
 
             Set<UUID> curses = mission.getCurses();
 
             if (curses.isEmpty()) {
-                missionsIter.remove();
-                dirty = true;
+                remove.add(mission);
                 continue;
             }
 
@@ -81,11 +67,18 @@ public class MissionLevelData implements IMissionLevelData {
 
                 Entity curse = serverLevel.getEntity(identifier);
 
-                if (curse == null || curse.isRemoved() || !curse.isAlive()) cursesIter.remove();
+                if (curse == null || curse.isRemoved() || !curse.isAlive()) {
+                    cursesIter.remove();
+
+                    PacketHandler.broadcast(new SyncMissionS2CPacket(this.level.dimension(), mission.serializeNBT()));
+                }
             }
         }
 
-        if (dirty) {
+        // Remove missions that need to be removed
+        this.missions.removeAll(remove);
+
+        if (!remove.isEmpty()) {
             Iterator<Map.Entry<Mission, UUID>> iter = this.taken.entrySet().iterator();
 
             // Find missions that were removed
@@ -118,9 +111,17 @@ public class MissionLevelData implements IMissionLevelData {
 
     @Override
     public void register(MissionType type, MissionGrade grade, BlockPos pos) {
-        this.missions.add(new Mission(this.level.dimension(), type, grade, pos));
+        this.register(new Mission(this.level.dimension(), type, grade, pos));
+    }
 
-        PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
+    @Override
+    public void register(Mission mission) {
+        this.missions.remove(mission);
+        this.missions.add(mission);
+
+        if (!this.level.isClientSide) {
+            PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
+        }
     }
 
     @Override
