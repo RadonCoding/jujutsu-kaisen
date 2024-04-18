@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
+package radon.jujutsu_kaisen.ability.shrine;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;

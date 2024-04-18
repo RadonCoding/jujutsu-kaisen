@@ -23,23 +23,19 @@ import radon.jujutsu_kaisen.client.effect.base.PostEffect;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-    @Shadow @Final private RenderBuffers renderBuffers;
-
-    @Shadow @Final private Minecraft minecraft;
-
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;bindWrite(Z)V", shift = At.Shift.BEFORE))
     private void afterRenderPostEffects(CallbackInfo ci) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.player != null) {
-            Window window = mc.getWindow();
+        if (mc.player == null) return;
 
-            for (PostEffect effect : JJKPostEffects.EFFECTS) {
-                if (effect.shouldRender(mc.player)) {
-                    effect.resize(window.getWidth(), window.getHeight());
-                    effect.render(mc.getFrameTime());
-                }
-            }
+        Window window = mc.getWindow();
+
+        for (PostEffect effect : JJKPostEffects.EFFECTS) {
+            if (!effect.shouldRender(mc.player)) continue;
+
+            effect.resize(window.getWidth(), window.getHeight());
+            effect.render(mc.getFrameTime());
         }
     }
 }

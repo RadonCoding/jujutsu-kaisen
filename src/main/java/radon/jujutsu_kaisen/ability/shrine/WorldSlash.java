@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
+package radon.jujutsu_kaisen.ability.shrine;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -13,22 +13,13 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -66,7 +57,7 @@ public class WorldSlash extends Ability {
 
             ISorcererData data = cap.getSorcererData();
 
-            if (!data.hasActiveTechnique(JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get())) return false;
+            if (!data.hasActiveTechnique(JJKCursedTechniques.SHRINE.get())) return false;
         }
         return super.isValid(owner);
     }

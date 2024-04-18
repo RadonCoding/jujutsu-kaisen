@@ -3,26 +3,14 @@ package radon.jujutsu_kaisen.cursed_technique;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 
 import javax.annotation.Nullable;
-import java.util.Set;
 
 public class JJKCursedTechniques {
     public static ResourceKey<Registry<ICursedTechnique>> CURSED_TECHNIQUE_KEY = ResourceKey.createRegistryKey(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_technique"));
@@ -34,7 +22,7 @@ public class JJKCursedTechniques {
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> SCISSORS = CURSED_TECHNIQUES.register("scissors", ScissorsTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> CURSE_MANIPULATION = CURSED_TECHNIQUES.register("curse_manipulation", CurseManipulationTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> LIMITLESS = CURSED_TECHNIQUES.register("limitless", LimitlessTechnique::new);
-    public static DeferredHolder<ICursedTechnique, ICursedTechnique> DISMANTLE_AND_CLEAVE = CURSED_TECHNIQUES.register("dismantle_and_cleave", DismantleAndCleaveTechnique::new);
+    public static DeferredHolder<ICursedTechnique, ICursedTechnique> SHRINE = CURSED_TECHNIQUES.register("shrine", Shrine::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> CURSED_SPEECH = CURSED_TECHNIQUES.register("cursed_speech", CursedSpeechTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> MIMICRY = CURSED_TECHNIQUES.register("mimicry", MimicryTechnique::new);
     public static DeferredHolder<ICursedTechnique, ICursedTechnique> DISASTER_FLAMES = CURSED_TECHNIQUES.register("disaster_flames", DisasterFlamesTechnique::new);

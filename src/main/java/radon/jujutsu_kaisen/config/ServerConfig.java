@@ -199,7 +199,7 @@ public class ServerConfig {
                 .defineList("unlockableTechniques", () -> List.of(
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.CURSE_MANIPULATION.get()).toString(),
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.LIMITLESS.get()).toString(),
-                                JJKCursedTechniques.getKey(JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.SHRINE.get()).toString(),
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.CURSED_SPEECH.get()).toString(),
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.MIMICRY.get()).toString(),
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.DISASTER_FLAMES.get()).toString(),

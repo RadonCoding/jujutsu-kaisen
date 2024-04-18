@@ -24,7 +24,7 @@ import radon.jujutsu_kaisen.ability.cursed_speech.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
+import radon.jujutsu_kaisen.ability.shrine.*;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;

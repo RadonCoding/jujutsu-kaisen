@@ -1,28 +1,17 @@
-package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
+package radon.jujutsu_kaisen.ability.shrine;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
 import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
