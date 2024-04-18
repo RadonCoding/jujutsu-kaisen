@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -79,6 +80,8 @@ public class SukunaFingerItem extends CursedObjectItem {
                     if (eaten > 0) {
                         data.addFingers(eaten);
                         pStack.shrink(eaten);
+
+                        data.addAdditional(JJKCursedTechniques.SHRINE.get());
 
                         if (eaten >= 10) {
                             AbilityHandler.trigger(pEntityLiving, JJKAbilities.SWITCH.get(), true);
