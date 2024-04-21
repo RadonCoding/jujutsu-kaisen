@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -12,6 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.client.effect.JJKPostEffects;
+import radon.jujutsu_kaisen.client.effect.PostEffectHandler;
 import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 
 public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleExplosion> {
@@ -22,11 +28,11 @@ public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleEx
     }
 
     @Override
-    public void render(HollowPurpleExplosion pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(@NotNull HollowPurpleExplosion pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         float f0 = ((float) pEntity.getTime() + pPartialTick) / HollowPurpleExplosion.DURATION;
         float f1 = Math.min(f0 > 0.8F ? (f0 - 0.8F) / 0.2F : 0.0F, 1.0F);
         RandomSource random = RandomSource.create(432L);
-        VertexConsumer consumer = pBuffer.getBuffer(RenderType.lightning());
+        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.lightning());
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);

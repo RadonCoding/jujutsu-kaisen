@@ -29,10 +29,10 @@ public class UnlimitedVoidHandler {
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.player != null) {
-            if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
-                mc.gui.setOverlayMessage(Component.literal(generateRandomSGAText(HelperMethods.RANDOM.nextInt(20, 100))), false);
-            }
-        }
+        if (mc.player == null) return;
+
+        if (!mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return;
+
+        mc.gui.setOverlayMessage(Component.literal(generateRandomSGAText(HelperMethods.RANDOM.nextInt(20, 100))), false);
     }
 }

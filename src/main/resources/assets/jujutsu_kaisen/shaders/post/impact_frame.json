@@ -1,0 +1,48 @@
+{
+  "targets": [
+    "final",
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "jujutsu_kaisen:color_overlay",
+      "intarget": "final",
+      "outtarget": "swap",
+      "uniforms": [
+        {
+          "name": "Color",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "jujutsu_kaisen:color_overlay",
+      "intarget": "minecraft:main",
+      "outtarget": "final",
+      "uniforms": [
+        {
+          "name": "Color",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "final",
+      "outtarget": "minecraft:main"
+    },
+    {
+      "name": "blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

@@ -13,9 +13,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
+@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class SkyHandler {
     private static final ResourceLocation UNLIMITED_VOID = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/unlimited_void.png");
     private static final ResourceLocation SELF_EMDOBIMENT_OF_PERFECTION = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/self_embodiment_of_perfection.png");
@@ -233,7 +238,10 @@ public class SkyHandler {
         return authenticMutualLoveBuffer;
     }
 
-    public static void renderSky(PoseStack poseStack, Matrix4f projection, Camera camera, float partialTicks) {
+    @SubscribeEvent
+    public static void onRenderLevelStage(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) return;
+
         Minecraft mc = Minecraft.getInstance();
         Window window = mc.getWindow();
         int ww = window.getWidth();
@@ -262,7 +270,7 @@ public class SkyHandler {
 
         unlimitedVoidTarget.bindWrite(true);
 
-        renderUnlimitedVoid(poseStack, projection);
+        renderUnlimitedVoid(event.getPoseStack(), event.getProjectionMatrix());
 
         unlimitedVoidTarget.unbindRead();
         unlimitedVoidTarget.unbindWrite();
@@ -276,7 +284,8 @@ public class SkyHandler {
 
         selfEmbodimentOfPerfectionTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, camera, partialTicks, SELF_EMDOBIMENT_OF_PERFECTION, getSelfEmbodimentOfPerfectionBuffer());
+        renderBasicSky(event.getPoseStack(), event.getProjectionMatrix(), event.getCamera(), event.getPartialTick(),
+                SELF_EMDOBIMENT_OF_PERFECTION, getSelfEmbodimentOfPerfectionBuffer());
 
         selfEmbodimentOfPerfectionTarget.unbindRead();
         selfEmbodimentOfPerfectionTarget.unbindWrite();
@@ -290,7 +299,8 @@ public class SkyHandler {
 
         horizonOfTheCaptivatingSkandhaTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, camera, partialTicks, HORIZON_OF_THE_CAPTIVATING_SKANDHA, getHorizonOfTheCaptivatingSkandhaBuffer());
+        renderBasicSky(event.getPoseStack(), event.getProjectionMatrix(), event.getCamera(), event.getPartialTick(),
+                HORIZON_OF_THE_CAPTIVATING_SKANDHA, getHorizonOfTheCaptivatingSkandhaBuffer());
 
         horizonOfTheCaptivatingSkandhaTarget.unbindRead();
         horizonOfTheCaptivatingSkandhaTarget.unbindWrite();
@@ -304,7 +314,8 @@ public class SkyHandler {
 
         shiningSeaOfFlowersTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, camera, partialTicks, SHINING_SEA_OF_FLOWERS, getShiningSeaOfFlowersBuffer());
+        renderBasicSky(event.getPoseStack(), event.getProjectionMatrix(), event.getCamera(), event.getPartialTick(),
+                SHINING_SEA_OF_FLOWERS, getShiningSeaOfFlowersBuffer());
 
         shiningSeaOfFlowersTarget.unbindRead();
         shiningSeaOfFlowersTarget.unbindWrite();
@@ -318,7 +329,8 @@ public class SkyHandler {
 
         authenticMutualLoveTarget.bindWrite(true);
 
-        renderBasicSky(poseStack, projection, camera, partialTicks, AUTHENTIC_MUTUAL_LOVE, getAuthenticMutualLoveBuffer());
+        renderBasicSky(event.getPoseStack(), event.getProjectionMatrix(), event.getCamera(), event.getPartialTick(),
+                AUTHENTIC_MUTUAL_LOVE, getAuthenticMutualLoveBuffer());
 
         mc.gameRenderer.setRenderBlockOutline(true);
         current.bindWrite(true);

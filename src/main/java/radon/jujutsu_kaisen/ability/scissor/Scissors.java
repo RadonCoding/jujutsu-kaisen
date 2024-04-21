@@ -56,13 +56,13 @@ public class Scissors extends Ability {
     public void run(LivingEntity owner) {
         List<LivingEntity> targets = this.getTargets(owner);
 
-        for (LivingEntity entity : targets) {
+        for (LivingEntity target : targets) {
             for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
-                ScissorEntity scissor = new ScissorEntity(owner, this.getOutput(owner), entity);
+                ScissorEntity scissor = new ScissorEntity(owner, this.getOutput(owner), target);
                 owner.level().addFreshEntity(scissor);
             }
 
-            if (entity instanceof ServerPlayer player) {
+            if (target instanceof ServerPlayer player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.scissors", JujutsuKaisen.MOD_ID), owner.getName()));
             }
         }

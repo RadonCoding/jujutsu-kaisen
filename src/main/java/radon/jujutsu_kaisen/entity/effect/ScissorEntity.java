@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -8,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -187,11 +189,7 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
             return;
         }
 
-        Vec3 direction = victim.position().subtract(this.position()).normalize();
-
-        double pitch = Math.asin(direction.y);
-        double yaw = Math.atan2(direction.x, direction.z);
-        this.setRot((float) Math.toDegrees(yaw), (float) Math.toDegrees(pitch));
+        this.lookAt(EntityAnchorArgument.Anchor.FEET, victim.position());
 
         if (!this.isActive()) {
             if (this.getTime() == DURATION || Math.sqrt(victim.distanceToSqr(this.start)) > RANGE) {

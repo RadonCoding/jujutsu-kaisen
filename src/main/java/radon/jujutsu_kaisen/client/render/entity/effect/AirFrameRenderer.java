@@ -76,7 +76,6 @@ public class AirFrameRenderer extends EntityRenderer<AirFrameEntity> {
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
 
         pPoseStack.popPose();
     }

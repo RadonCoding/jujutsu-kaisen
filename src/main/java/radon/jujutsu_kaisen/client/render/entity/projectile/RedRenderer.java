@@ -87,7 +87,6 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
     }
 
     private void renderLight(RedProjectile pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {

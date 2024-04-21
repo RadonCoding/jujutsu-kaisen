@@ -120,8 +120,6 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             stack.translate((this.x - pRenderInfo.getPosition().x) + offset.x, (this.y - pRenderInfo.getPosition().y) + offset.y, (this.z - pRenderInfo.getPosition().z) + offset.z);
             renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
 
-            buffer.getBuffer(RenderType.translucent());
-
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
             this.entity.yBodyRotO = yBodyRotO;

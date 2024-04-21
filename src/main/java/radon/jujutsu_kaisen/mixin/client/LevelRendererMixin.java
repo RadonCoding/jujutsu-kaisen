@@ -1,24 +1,12 @@
 package radon.jujutsu_kaisen.mixin.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.entity.PartEntity;
-import org.joml.Matrix4f;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.client.SkyHandler;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 
 import java.util.ArrayList;
