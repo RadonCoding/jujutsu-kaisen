@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.data.idle_transfiguration;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class IdleTransfigurationData implements IIdleTransfigurationData {
@@ -32,14 +34,14 @@ public class IdleTransfigurationData implements IIdleTransfigurationData {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("transfigured_souls", this.transfiguredSouls);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
         this.transfiguredSouls = nbt.getInt("transfigured_souls");
     }
 }

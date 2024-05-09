@@ -14,14 +14,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDurationable;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -143,7 +138,7 @@ public class BlueFire extends Ability implements IChanneled, IDurationable {
             Vec3 offset = collision.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE,
                     (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE,
                     (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE);
-            ((ServerLevel) owner.level()).sendParticles(new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.BLUE_FIRE,
+            ((ServerLevel) owner.level()).sendParticles(new TravelParticle.Options(offset.toVector3f(), ParticleColors.BLUE_FIRE,
                             SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F, 0.5F, true, (int) spawn.distanceTo(collision)),
                     spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
                     spawn.y + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
@@ -156,7 +151,7 @@ public class BlueFire extends Ability implements IChanneled, IDurationable {
         for (Entity entity : entities) {
             if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) continue;
 
-            entity.setSecondsOnFire(5);
+            entity.setRemainingFireTicks(5 * 20);
         }
 
         double radius = SCALE * 2.0F;

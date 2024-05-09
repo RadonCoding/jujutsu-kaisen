@@ -7,30 +7,18 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.curse_manipulation.EnhanceCurse;
-import radon.jujutsu_kaisen.ability.curse_manipulation.MiniUzumaki;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.data.chant.IChantData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ChantListWidget;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.AddChantC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.RemoveChantC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -168,7 +156,7 @@ public class ChantTab extends JJKTab {
 
             IChantData data = cap.getChantData();
 
-            PacketHandler.sendToServer(new AddChantC2SPacket(JJKAbilities.getKey(this.ability.get()), text));
+            PacketDistributor.sendToServer(new AddChantC2SPacket(this.ability.get(), text));
             data.addChant(this.ability.get(), text);
 
             this.chants.refreshList();
@@ -184,7 +172,7 @@ public class ChantTab extends JJKTab {
 
             IChantData data = cap.getChantData();
 
-            PacketHandler.sendToServer(new RemoveChantC2SPacket(JJKAbilities.getKey(this.ability.get()), this.chant.get()));
+            PacketDistributor.sendToServer(new RemoveChantC2SPacket(this.ability.get(), this.chant.get()));
             data.removeChant(this.ability.get(), this.chant.get());
 
             this.chants.refreshList();

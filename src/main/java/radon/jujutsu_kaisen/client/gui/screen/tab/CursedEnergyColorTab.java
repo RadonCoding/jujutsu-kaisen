@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.client.gui.screen.tab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
@@ -11,11 +10,10 @@ import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
 
 public class CursedEnergyColorTab extends JJKTab {
@@ -47,7 +45,7 @@ if (cap == null) return;
 
 ISorcererData data = cap.getSorcererData();
 
-                PacketHandler.sendToServer(new SetCursedEnergyColorC2SPacket(color));
+                PacketDistributor.sendToServer(new SetCursedEnergyColorC2SPacket(color));
                 data.setCursedEnergyColor(color);
             }
             this.oldR = r;

@@ -1,13 +1,14 @@
 package radon.jujutsu_kaisen.world.gen.processor;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKProcessors {
-    public static final DeferredRegister<StructureProcessorType<?>> PROCESSORS = DeferredRegister.create(BuiltInRegistries.STRUCTURE_PROCESSOR, JujutsuKaisen.MOD_ID);
+    public static final DeferredRegister<StructureProcessorType<?>> PROCESSORS = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, JujutsuKaisen.MOD_ID);
 
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<CursedToolItemFrameProcessor>> CURSED_TOOL_ITEM_FRAME_PROCESSOR = PROCESSORS.register("cursed_tool_item_frame_processor",
             () -> () -> CursedToolItemFrameProcessor.CODEC);

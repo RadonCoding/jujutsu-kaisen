@@ -24,20 +24,19 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 import java.util.UUID;
 
@@ -69,7 +68,7 @@ public class ToadEntity extends TenShadowsSummon {
     public ToadEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean tame, boolean ritual) {
         this(type, owner.level());
 
-        this.setTame(tame);
+        this.setTame(tame, false);
         this.setOwner(owner);
 
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
@@ -265,11 +264,11 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_RITUAL, 0);
-        this.entityData.define(DATA_CAN_SHOOT, true);
+        pBuilder.define(DATA_RITUAL, 0);
+        pBuilder.define(DATA_CAN_SHOOT, true);
     }
 
     @Override

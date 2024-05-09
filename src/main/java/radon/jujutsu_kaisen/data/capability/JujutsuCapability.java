@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.data.capability;
 
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.contract.IContractData;

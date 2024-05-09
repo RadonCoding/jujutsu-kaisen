@@ -2,11 +2,11 @@ package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.world.item.Tier;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
+import radon.jujutsu_kaisen.item.CursedToolItem;
 
 public class SlaughterDemonItem extends CursedToolItem {
-    public SlaughterDemonItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    public SlaughterDemonItem(Tier pTier, Properties pProperties) {
+        super(pTier, pProperties);
     }
 
     @Override

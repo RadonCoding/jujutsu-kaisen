@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.OpenMissionScreenS2CPacket;
 
 import java.util.*;
@@ -31,7 +32,7 @@ public class MissionBlockEntity extends BlockEntity {
         for (Player player : players) {
             if (pBlockEntity.active.contains(player.getUUID())) continue;
 
-            PacketHandler.sendToClient(new OpenMissionScreenS2CPacket(), (ServerPlayer) player);
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new OpenMissionScreenS2CPacket());
             pBlockEntity.active.add(player.getUUID());
         }
 

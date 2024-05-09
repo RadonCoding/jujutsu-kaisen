@@ -12,39 +12,29 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class MahoragaEntity extends TenShadowsSummon {
@@ -72,7 +62,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     public MahoragaEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.MAHORAGA.get(), owner.level());
 
-        this.setTame(tame);
+        this.setTame(tame, false);
         this.setOwner(owner);
 
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
@@ -83,7 +73,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
     @Override
@@ -94,11 +84,6 @@ public class MahoragaEntity extends TenShadowsSummon {
     @Override
     public boolean isNoAi() {
         return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isNoAi();
-    }
-
-    @Override
-    protected float ridingOffset(@NotNull Entity pEntity) {
-        return this.getBbHeight() - 0.35F;
     }
 
     @Override
@@ -131,23 +116,19 @@ public class MahoragaEntity extends TenShadowsSummon {
         return false;
     }
 
-    @Override
-    public float getStepHeight() {
-        return 2.0F;
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 5 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D);
+                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D)
+                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_SLASH, 0);
-        this.entityData.define(DATA_BATTLE, false);
+        pBuilder.define(DATA_SLASH, 0);
+        pBuilder.define(DATA_BATTLE, false);
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<MahoragaEntity> animationState) {
@@ -230,7 +211,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
                         Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                         ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                        this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+                        this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER, 1.0F, 1.0F);
                     }
                 }
             }

@@ -1,30 +1,21 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDurationable;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +75,8 @@ public class AbilityOverlay {
         return index;
     }
 
-    private static void renderScroll(ExtendedGui gui, GuiGraphics graphics, int width, int height, int index) {
-        Minecraft mc = gui.getMinecraft();
+    private static void renderScroll(GuiGraphics graphics, int index) {
+        Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null) return;
 
@@ -125,6 +116,9 @@ public class AbilityOverlay {
             }
         }
 
+        int width = mc.getWindow().getWidth();
+        int height = mc.getWindow().getHeight();
+
         int x = width - 20 - offset;
         int y = height - 20 - (lines.size() * mc.font.lineHeight + 2);
 
@@ -134,7 +128,7 @@ public class AbilityOverlay {
             if (i >= aboveStart && i <= aboveEnd || i >= belowStart && i <= belowEnd) {
                 color = (0x80 << 24) | color;
             }
-            graphics.drawString(gui.getFont(), lines.get(i), x, y, color);
+            graphics.drawString(mc.font, lines.get(i), x, y, color);
             y += mc.font.lineHeight;
         }
     }
@@ -176,8 +170,8 @@ public class AbilityOverlay {
         }
     }
 
-    private static void renderToggle(ExtendedGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
-        Minecraft mc = gui.getMinecraft();
+    private static void renderToggle(GuiGraphics graphics, Ability ability) {
+        Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null) return;
 
@@ -193,17 +187,20 @@ public class AbilityOverlay {
             }
         }
 
+        int width = mc.getWindow().getWidth();
+        int height = mc.getWindow().getHeight();
+
         int x = width - 20 - offset;
         int y = height - 20 - (lines.size() * mc.font.lineHeight + 2);
 
         for (Component line : lines) {
-            graphics.drawString(gui.getFont(), line, x, y, 16777215);
+            graphics.drawString(mc.font, line, x, y, 16777215);
             y += mc.font.lineHeight;
         }
     }
 
-    public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
-        Minecraft mc = gui.getMinecraft();
+    public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
+        Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null) return;
 
@@ -214,7 +211,7 @@ public class AbilityOverlay {
             abilities.removeIf(ability -> ability.getMenuType(mc.player) != MenuType.MELEE);
 
             if (!abilities.isEmpty()) {
-                renderScroll(gui, graphics, width, height, getIndex());
+                renderScroll(pGuiGraphics, getIndex());
             }
         } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE) {
             Ability selected = MeleeScreen.getSelected();
@@ -224,7 +221,7 @@ public class AbilityOverlay {
             if (!selected.isValid(mc.player) || !JJKAbilities.getAbilities(mc.player).contains(selected)) {
                 return;
             }
-            renderToggle(gui, graphics, width, height, selected);
+            renderToggle(pGuiGraphics, selected);
         }
     };
 }

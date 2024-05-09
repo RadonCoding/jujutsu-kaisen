@@ -6,26 +6,18 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.ServerChatEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
 import java.util.*;
@@ -73,25 +65,25 @@ public class ServerChantHandler {
             MESSAGES.get(owner.getUUID()).add(word);
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new AddChantS2CPacket(word), player);
+                PacketDistributor.sendToPlayer(player, new AddChantS2CPacket(word));
             }
             TIMERS.put(owner.getUUID(), CLEAR_INTERVAL);
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
-                        ability.getName().copy(), ChantHandler.getOutput(owner, ability) * 100), false), player);
+                PacketDistributor.sendToPlayer(player, new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
+                        ability.getName().copy(), ChantHandler.getOutput(owner, ability) * 100), false));
             }
 
             if (sorcererData.hasTrait(Trait.PERFECT_BODY)) {
-                PacketHandler.broadcast(new SyncMouthS2CPacket(owner.getUUID()));
+                PacketDistributor.sendToAllPlayers(new SyncMouthS2CPacket(owner.getUUID()));
             }
         }
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onServerTick(TickEvent.ServerTickEvent event) {
+        public static void onServerTickPre(ServerTickEvent.Pre event) {
             Iterator<Map.Entry<UUID, Integer>> iter = TIMERS.entrySet().iterator();
 
             while (iter.hasNext()) {
@@ -130,7 +122,7 @@ public class ServerChantHandler {
                     iter.remove();
 
                     if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new ClearChantsS2CPacket(), player);
+                        PacketDistributor.sendToPlayer(player, new ClearChantsS2CPacket());
                     }
                 }
             }
@@ -145,7 +137,7 @@ public class ServerChantHandler {
                 MESSAGES.remove(owner.getUUID());
 
                 if (event.getEntity() instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new ClearChantsS2CPacket(), player);
+                    PacketDistributor.sendToPlayer(player, new ClearChantsS2CPacket());
                 }
             }
         }

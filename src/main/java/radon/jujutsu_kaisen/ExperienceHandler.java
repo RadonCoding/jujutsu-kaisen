@@ -17,22 +17,22 @@ import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import net.neoforged.fml.common.EventBusSubscriber;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.entity.ten_shadows.TenShadowsSummon;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class ExperienceHandler {
     private static final Map<UUID, CopyOnWriteArraySet<BattleData>> battles = new HashMap<>();
 
@@ -106,7 +106,7 @@ public class ExperienceHandler {
             if (entity instanceof ServerPlayer player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience_penalty", JujutsuKaisen.MOD_ID), penalty));
 
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(data.serializeNBT(player.registryAccess())));
             }
         }
 
@@ -229,7 +229,7 @@ public class ExperienceHandler {
             }
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerData.serializeNBT()), player);
+                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(ownerData.serializeNBT(player.registryAccess())));
             }
         }
 

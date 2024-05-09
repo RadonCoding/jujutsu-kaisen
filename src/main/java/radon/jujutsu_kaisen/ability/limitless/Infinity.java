@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -9,42 +9,34 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAdditionalAdaptation;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.IAdditionalAdaptation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
@@ -126,7 +118,7 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
             this.frozen = new HashMap<>();
         }
 
-        public FrozenProjectileData(CompoundTag nbt) {
+        public FrozenProjectileData(CompoundTag nbt, HolderLookup.Provider registries) {
             this();
 
             ListTag frozenTag = nbt.getList("frozen", Tag.TAG_COMPOUND);
@@ -138,11 +130,11 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
         }
 
         @Override
-        public @NotNull CompoundTag save(CompoundTag pCompoundTag) {
+        public @NotNull CompoundTag save(CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
             ListTag frozenTag = new ListTag();
             frozenTag.addAll(this.frozen.values());
-            pCompoundTag.put("frozen", frozenTag);
-            return pCompoundTag;
+            pTag.put("frozen", frozenTag);
+            return pTag;
         }
 
         public void add(LivingEntity source, Entity target) {
@@ -250,16 +242,14 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
         }
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLevelTick(TickEvent.LevelTickEvent event) {
-            if (event.phase == TickEvent.Phase.START) return;
+        public static void onLevelTickPre(LevelTickEvent.Pre event) {
+            if (!(event.getLevel() instanceof ServerLevel level)) return;
 
-            if (event.level instanceof ServerLevel level) {
-                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
-                data.tick(level);
-            }
+            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
+            data.tick(level);
         }
 
         @SubscribeEvent
@@ -288,8 +278,8 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
         }
 
         @SubscribeEvent
-        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            LivingEntity owner = event.getEntity();
+        public static void onEntityTickPre(EntityTickEvent.Pre event) {
+            if (!(event.getEntity() instanceof LivingEntity owner)) return;
 
             if (!(owner.level() instanceof ServerLevel level)) return;
 

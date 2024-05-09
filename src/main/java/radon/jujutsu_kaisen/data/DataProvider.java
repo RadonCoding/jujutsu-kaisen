@@ -2,14 +2,12 @@ package radon.jujutsu_kaisen.data;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -17,16 +15,17 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class DataProvider {
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity owner = event.getEntity();
+    public static void onEntityTickPre(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity owner)) return;
 
         if (owner.isDeadOrDying()) return;
 
@@ -47,10 +46,8 @@ public class DataProvider {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) return;
-
-        IMissionLevelData data = event.level.getData(JJKAttachmentTypes.MISSION_LEVEL);
+    public static void onLevelTickPre(LevelTickEvent.Pre event) {
+        IMissionLevelData data = event.getLevel().getData(JJKAttachmentTypes.MISSION_LEVEL);
         data.tick();
     }
 
@@ -84,10 +81,10 @@ public class DataProvider {
             projectionSorceryData.resetSpeedStacks();
 
             if (clone instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
-                PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(abilityData.serializeNBT()), player);
-                PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(tenShadowsData.serializeNBT()), player);
-                PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(projectionSorceryData.serializeNBT()), player);
+                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
+                PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(abilityData.serializeNBT(player.registryAccess())));
+                PacketDistributor.sendToPlayer(player, new SyncTenShadowsDataS2CPacket(tenShadowsData.serializeNBT(player.registryAccess())));
+                PacketDistributor.sendToPlayer(player, new SyncProjectionSorceryDataS2CPacket(projectionSorceryData.serializeNBT(player.registryAccess())));
             }
         }
     }
@@ -100,21 +97,21 @@ public class DataProvider {
 
         if (cap == null) return;
 
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT()), player);
+        PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncChantDataS2CPacket(cap.getChantData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncContractDataS2CPacket(cap.getContractData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT(player.registryAccess())));
 
         IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketHandler.sendToClient(new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT()), player);
+        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT(player.registryAccess())));
     }
 
     @SubscribeEvent
@@ -125,21 +122,21 @@ public class DataProvider {
 
         if (cap == null) return;
 
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT()), player);
+        PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncChantDataS2CPacket(cap.getChantData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncContractDataS2CPacket(cap.getContractData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT(player.registryAccess())));
 
         IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketHandler.sendToClient(new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT()), player);
+        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT(player.registryAccess())));
     }
 
     @SubscribeEvent
@@ -150,17 +147,17 @@ public class DataProvider {
 
         if (cap == null) return;
 
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncChantDataS2CPacket(cap.getChantData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncContractDataS2CPacket(cap.getContractData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT()), player);
-        PacketHandler.sendToClient(new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT()), player);
+        PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(cap.getSorcererData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(cap.getAbilityData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncChantDataS2CPacket(cap.getChantData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncContractDataS2CPacket(cap.getContractData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncTenShadowsDataS2CPacket(cap.getTenShadowsData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncCurseManipulationDataS2CPacket(cap.getCurseManipulationData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncProjectionSorceryDataS2CPacket(cap.getProjectionSorceryData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncIdleTransfigurationDataS2CPacket(cap.getIdleTransfigurationData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncMimicryDataS2CPacket(cap.getMimicryData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncCursedSpeechDataS2CPacket(cap.getCursedSpeechData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT(player.registryAccess())));
+        PacketDistributor.sendToPlayer(player, new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT(player.registryAccess())));
     }
 }

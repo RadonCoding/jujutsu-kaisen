@@ -6,50 +6,32 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.client.particle.LightningParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
-import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -133,7 +115,7 @@ public class QuickDraw extends Ability implements IToggled {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
+        owner.addEffect(new MobEffectInstance(JJKEffects.STUN, 2, 0, false, false, false));
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -198,7 +180,7 @@ public class QuickDraw extends Ability implements IToggled {
         return false;
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
@@ -234,14 +216,7 @@ public class QuickDraw extends Ability implements IToggled {
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 
-            stack.hurtAndBreak(blocked, victim, entity -> {
-                entity.broadcastBreakEvent(InteractionHand.MAIN_HAND);
-
-                if (victim instanceof Player player) {
-                    EventHooks.onPlayerDestroyItem(player, stack, InteractionHand.MAIN_HAND);
-                }
-                entity.stopUsingItem();
-            });
+            stack.hurtAndBreak(blocked, victim, EquipmentSlot.MAINHAND);
 
             event.setCanceled(true);
         }
@@ -276,14 +251,7 @@ public class QuickDraw extends Ability implements IToggled {
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 
-            stack.hurtAndBreak(blocked, victim, entity -> {
-                entity.broadcastBreakEvent(InteractionHand.MAIN_HAND);
-
-                if (victim instanceof Player player) {
-                    EventHooks.onPlayerDestroyItem(player, stack, InteractionHand.MAIN_HAND);
-                }
-                entity.stopUsingItem();
-            });
+            stack.hurtAndBreak(blocked, victim, EquipmentSlot.MAINHAND);
 
             float reduced = amount - blocked;
 

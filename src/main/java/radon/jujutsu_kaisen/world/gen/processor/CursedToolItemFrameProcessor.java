@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.world.gen.processor;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
+import radon.jujutsu_kaisen.item.CursedToolItem;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -27,7 +28,7 @@ import java.util.*;
 
 
 public class CursedToolItemFrameProcessor extends StructureProcessor {
-    public static final Codec<CursedToolItemFrameProcessor> CODEC = Codec.unit(CursedToolItemFrameProcessor::new);
+    public static final MapCodec<CursedToolItemFrameProcessor> CODEC = MapCodec.unit(CursedToolItemFrameProcessor::new);
 
     @Override
     protected @NotNull StructureProcessorType<?> getType() {
@@ -59,7 +60,7 @@ public class CursedToolItemFrameProcessor extends StructureProcessor {
             if (entity.get() instanceof ItemFrame frame) {
                 RandomSource random = RandomSource.create(Mth.getSeed(seedPos));
                 frame.setItem(getRandomCursedTool(random), false);
-                return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT());
+                return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT(world.registryAccess()));
             }
         }
         return super.processEntity(world, seedPos, rawEntityInfo, entityInfo, placementSettings, template);

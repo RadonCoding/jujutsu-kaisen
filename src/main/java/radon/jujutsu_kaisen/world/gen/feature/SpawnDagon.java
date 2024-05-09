@@ -11,8 +11,7 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.world.gen.feature.JJKFeatures;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 public class SpawnDagon extends Feature<NoneFeatureConfiguration> {
     public SpawnDagon(Codec<NoneFeatureConfiguration> pCodec) {

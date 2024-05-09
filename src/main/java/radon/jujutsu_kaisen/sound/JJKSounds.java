@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.sound;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -9,7 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKSounds {
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, JujutsuKaisen.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, JujutsuKaisen.MOD_ID);
 
     public static final DeferredHolder<SoundEvent, SoundEvent> SLASH = SOUNDS.register("slash", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "slash")));

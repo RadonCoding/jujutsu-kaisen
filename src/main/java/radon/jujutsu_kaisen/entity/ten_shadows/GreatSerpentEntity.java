@@ -9,24 +9,22 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
-import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 public class GreatSerpentEntity extends TenShadowsSummon {
     private static final EntityDataAccessor<Boolean> DATA_GRABBING = SynchedEntityData.defineId(GreatSerpentEntity.class, EntityDataSerializers.BOOLEAN);
@@ -55,7 +53,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     public GreatSerpentEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.GREAT_SERPENT.get(), owner.level());
 
-        this.setTame(tame);
+        this.setTame(tame, false);
         this.setOwner(owner);
 
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
@@ -66,14 +64,14 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_GRABBING, false);
+        pBuilder.define(DATA_GRABBING, false);
     }
 
     private boolean isGrabbing() {
@@ -150,12 +148,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     @Override
-    public float getStepHeight() {
-        return 2.0F;
-    }
-
-    @Override
-    public @Nullable PartEntity<?>[] getParts() {
+    public PartEntity<?> @NotNull [] getParts() {
         return this.segments;
     }
 
@@ -250,7 +243,8 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
+                .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D)
+                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     @Override

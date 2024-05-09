@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.item.veil;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,8 +30,8 @@ public class VeilRodItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pContext, pTooltip, pFlag);
 
         List<Component> modifiers = new ArrayList<>();
         modifiers.add(CommonComponents.EMPTY);
@@ -49,15 +51,18 @@ public class VeilRodItem extends BlockItem {
     }
 
     public static List<Modifier> getModifiers(ItemStack stack) {
-        CompoundTag nbt = stack.getOrCreateTag();
-        return ModifierUtils.getModifiers(nbt.getCompound(BLOCK_ENTITY_TAG));
+        CustomData data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+
+        if (data.isEmpty()) return List.of();
+
+        return ModifierUtils.getModifiers(data.copyTag());
     }
 
     public static void setModifier(ItemStack stack, int index, Modifier modifier) {
-        CompoundTag nbt = stack.getOrCreateTag();
-        CompoundTag tag = nbt.getCompound(BLOCK_ENTITY_TAG);
-        ModifierUtils.setModifier(tag, index, modifier);
-        nbt.put(BLOCK_ENTITY_TAG, tag);
+        CustomData data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+        CompoundTag nbt = data.isEmpty() ? new CompoundTag() : data.copyTag();
+        ModifierUtils.setModifier(nbt, index, modifier);
+        stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
     }
 
     @Override

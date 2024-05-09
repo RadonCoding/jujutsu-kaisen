@@ -4,6 +4,7 @@
   "gui.jujutsu_kaisen.ability.right_click": "Right-click to remove techniques",
 
   "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$d%%",
+  "gui.jujutsu_kaisen.cursed_energy_overlay.output_boost": "Output boost: %1$d%%",
   "gui.jujutsu_kaisen.cursed_energy_overlay.experience": "Experience: %1$d",
   "gui.jujutsu_kaisen.cursed_energy_overlay.transfigured_souls": "Transfigured souls: %1$d",
   "gui.jujutsu_kaisen.cursed_energy_overlay.cooldown": "%1$s cooldown: %2$fs",
@@ -312,7 +313,7 @@
   "ability.jujutsu_kaisen.cleave.enable": "Activated cleave",
   "ability.jujutsu_kaisen.cleave.disable": "Deactivated cleave",
   "ability.jujutsu_kaisen.spiderweb": "Spiderweb",
-  "ability.jujutsu_kaisen.fire_arrow": "Open ■",
+  "ability.jujutsu_kaisen.furnace_open": "Furnace Open",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 
   "ability.jujutsu_kaisen.rika": "Rika",

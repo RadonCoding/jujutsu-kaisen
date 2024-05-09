@@ -15,15 +15,15 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
+import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IControllableFlyingRide {
     private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
@@ -124,11 +124,6 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, ICo
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
-    }
-
-    @Override
-    protected float ridingOffset(@NotNull Entity pEntity) {
-        return this.getBbHeight();
     }
 
     @Override

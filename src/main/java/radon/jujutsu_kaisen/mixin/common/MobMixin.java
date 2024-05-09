@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 
 @Mixin(Mob.class)
 public class MobMixin {
@@ -17,7 +17,7 @@ public class MobMixin {
 
     @Inject(method = "serverAiStep", at = @At("HEAD"), cancellable = true)
     public void serverAiStep(CallbackInfo ci) {
-        if (((LivingEntity) (Object) this).hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+        if (((LivingEntity) (Object) this).hasEffect(JJKEffects.UNLIMITED_VOID)) {
             ci.cancel();
         }
     }

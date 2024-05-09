@@ -4,23 +4,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.IImbuement;
+import radon.jujutsu_kaisen.ability.IImbuement;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -97,7 +88,7 @@ public class DisasterFlames extends Ability implements IImbuement {
 
         if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()),
                 DAMAGE * this.getOutput(owner) * Math.max(0.1F, (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE))))) {
-            target.setSecondsOnFire(5);
+            target.setRemainingFireTicks(5 * 20);
         }
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -119,7 +110,7 @@ public class DisasterFlames extends Ability implements IImbuement {
                     double offsetY = y + speed.y;
                     double offsetZ = z + speed.z;
 
-                    ((ServerLevel) target.level()).sendParticles(new FireParticle.FireParticleOptions(target.getBbWidth(), true, 20),
+                    ((ServerLevel) target.level()).sendParticles(new FireParticle.Options(target.getBbWidth(), true, 20),
                             offsetX, offsetY, offsetZ, 0, speed.x, speed.y, speed.z, 1.0D);
                 }
             }, i * 2);

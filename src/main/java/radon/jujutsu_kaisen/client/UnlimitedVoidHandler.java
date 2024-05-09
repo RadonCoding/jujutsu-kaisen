@@ -3,15 +3,14 @@ package radon.jujutsu_kaisen.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class UnlimitedVoidHandler {
     private static final String[] SYMBOLS = {"⍑", "ʖ", "ᓵ", "╎", "ᒷ", "⍊", "⍋", "ᒲ", "リ", "ᔑ", "ꖎ", "ᒣ", "ᓭ", "ᘉ", "⨅", "╎⨅", "ᓵ⍑", "⍙", "ᔑ⨅", "ꖌ", "⍜", "⍀", "∷", "⨇", "ᒲ⍑", "ꖇ", "㇣", "˥", "˩", "˧˥˧", "ʢ", "ʖ̇ ", "˩˥ ", "ʖ̬ ", "ʖ̥"};
 
@@ -26,12 +25,12 @@ public class UnlimitedVoidHandler {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientTickPre(ClientTickEvent.Pre event) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null) return;
 
-        if (!mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return;
+        if (!mc.player.hasEffect(JJKEffects.UNLIMITED_VOID)) return;
 
         mc.gui.setOverlayMessage(Component.literal(generateRandomSGAText(HelperMethods.RANDOM.nextInt(20, 100))), false);
     }

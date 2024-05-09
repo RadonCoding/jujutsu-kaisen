@@ -5,10 +5,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.item.KatanaRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -16,8 +17,8 @@ import java.util.function.Consumer;
 public class KatanaItem extends SwordItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public KatanaItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    public KatanaItem(Tier pTier, Properties pProperties) {
+        super(pTier, pProperties);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class KatanaItem extends SwordItem implements GeoItem {
             private KatanaRenderer renderer;
 
             @Override
-            public KatanaRenderer getCustomRenderer() {
+            public @NotNull KatanaRenderer getCustomRenderer() {
                 if (this.renderer == null) this.renderer = new KatanaRenderer();
                 return this.renderer;
             }

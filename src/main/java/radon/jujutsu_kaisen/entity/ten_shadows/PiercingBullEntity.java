@@ -9,25 +9,24 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 public class PiercingBullEntity extends TenShadowsSummon {
     private static final float DAMAGE = 5.0F;
@@ -45,7 +44,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
     public PiercingBullEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.PIERCING_BULL.get(), owner.level());
 
-        this.setTame(tame);
+        this.setTame(tame, false);
         this.setOwner(owner);
 
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
@@ -56,7 +55,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
     @Override
@@ -121,7 +120,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
 
             ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
+            this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS,
                     4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
             if (entity == target) {
@@ -134,7 +133,8 @@ public class PiercingBullEntity extends TenShadowsSummon {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.33D)
-                .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
+                .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D)
+                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<PiercingBullEntity> animationState) {
@@ -167,10 +167,5 @@ public class PiercingBullEntity extends TenShadowsSummon {
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.PIERCING_BULL.get();
-    }
-
-    @Override
-    public float getStepHeight() {
-        return 2.0F;
     }
 }

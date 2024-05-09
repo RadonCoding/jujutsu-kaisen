@@ -22,8 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 import java.util.UUID;
 
@@ -98,7 +97,7 @@ public class NyoiStaffEntity extends Entity {
             double y = this.getY() + this.random.nextDouble() * (this.getBbHeight());
             double z = this.getZ() + (this.random.nextDouble() - 0.5D) * (this.getBbWidth() * 1.25F);
             double speed = (this.getBbHeight() * 0.1F) * this.random.nextDouble();
-            this.level().addParticle(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), this.getBbWidth() * 0.5F,
+            this.level().addParticle(new CursedEnergyParticle.Options(ParticleColors.getCursedEnergyColor(owner), this.getBbWidth() * 0.5F,
                     0.2F, 16), x, y, z, 0.0D, speed, 0.0D);
         }
 
@@ -106,15 +105,15 @@ public class NyoiStaffEntity extends Entity {
             double x = this.getX() + (this.random.nextDouble() - 0.5D) * (this.getBbWidth() * 2);
             double y = this.getY() + this.random.nextDouble() * (this.getBbHeight() * 1.25F);
             double z = this.getZ() + (this.random.nextDouble() - 0.5D) * (this.getBbWidth() * 2);
-            this.level().addParticle(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
+            this.level().addParticle(new LightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_ITEM_STACK, ItemStack.EMPTY);
-        this.entityData.define(DATA_CHARGED, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_ITEM_STACK, ItemStack.EMPTY);
+        pBuilder.define(DATA_CHARGED, false);
     }
 
     public void setOwner(@Nullable LivingEntity pOwner) {
@@ -141,7 +140,7 @@ public class NyoiStaffEntity extends Entity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.put("item", this.getItem().save(new CompoundTag()));
+        pCompound.put("item", this.getItem().save(this.registryAccess()));
         pCompound.putBoolean("charged", this.isCharged());
     }
 
@@ -150,7 +149,7 @@ public class NyoiStaffEntity extends Entity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.setItem(ItemStack.of(pCompound.getCompound("item")));
+        this.setItem(ItemStack.parse(this.registryAccess(), pCompound.getCompound("item")).orElseThrow());
         this.setCharged(pCompound.getBoolean("charged"));
     }
 

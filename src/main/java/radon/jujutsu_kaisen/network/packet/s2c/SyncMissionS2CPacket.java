@@ -1,41 +1,35 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 
-import java.util.UUID;
+public record SyncMissionS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<SyncMissionS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "sync_mission_clientbound"));
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, SyncMissionS2CPacket> STREAM_CODEC = StreamCodec.composite(
+            ResourceKey.streamCodec(Registries.DIMENSION),
+            SyncMissionS2CPacket::dimension,
+            ByteBufCodecs.COMPOUND_TAG,
+            SyncMissionS2CPacket::nbt,
+            SyncMissionS2CPacket::new
+    );
 
-public class SyncMissionS2CPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "sync_mission_clientbound");
-
-    private final ResourceKey<Level> dimension;
-    private final CompoundTag nbt;
-
-    public SyncMissionS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt) {
-        this.dimension = dimension;
-        this.nbt = nbt;
-    }
-
-    public SyncMissionS2CPacket(FriendlyByteBuf buf) {
-        this(buf.readResourceKey(Registries.DIMENSION), buf.readNbt());
-    }
-
-    public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().execute(() -> {
+    public void handle(IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             Player player = ClientWrapper.getPlayer();
 
             if (player == null) return;
@@ -51,13 +45,7 @@ public class SyncMissionS2CPacket implements CustomPacketPayload {
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeResourceKey(this.dimension);
-        pBuffer.writeNbt(this.nbt);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return IDENTIFIER;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

@@ -4,10 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +42,7 @@ public class Mission {
         this.dimension = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("dimension")));
         this.type = MissionType.values()[nbt.getInt("type")];
         this.grade = MissionGrade.values()[nbt.getInt("grade")];
-        this.pos = NbtUtils.readBlockPos(nbt.getCompound("pos"));
+        this.pos = NbtUtils.readBlockPos(nbt, "pos").orElseThrow();
 
         this.curses = new HashSet<>();
 
@@ -55,8 +52,9 @@ public class Mission {
 
         this.spawns = new HashSet<>();
 
-        for (Tag key : nbt.getList("spawns", Tag.TAG_COMPOUND)) {
-            this.spawns.add(NbtUtils.readBlockPos((CompoundTag) key));
+        for (Tag tag : nbt.getList("spawns", Tag.TAG_INT_ARRAY)) {
+            int[] data = ((IntArrayTag) tag).getAsIntArray();
+            this.spawns.add(new BlockPos(data[0], data[1], data[2]));
         }
 
         this.total = nbt.getInt("total");

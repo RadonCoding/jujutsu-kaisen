@@ -1,52 +1,27 @@
 package radon.jujutsu_kaisen.item;
 
-import net.minecraft.util.LazyLoadedValue;
-import net.minecraft.world.item.Tier;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.common.SimpleTier;
+import radon.jujutsu_kaisen.tags.JJKBlockTags;
 
-import java.util.function.Supplier;
-
-public enum JJKTiers implements Tier {
-    CURSED_TOOL(5, 2031, 0.0F, 0.0F, 0, () -> Ingredient.EMPTY);
-
-    private final int level;
-    private final int uses;
-    private final float speed;
-    private final float damage;
-    private final int enchantmentValue;
-    private final LazyLoadedValue<Ingredient> repairIngredient;
-
-    JJKTiers(int pLevel, int pUses, float pSpeed, float pDamage, int pEnchantmentValue, Supplier<Ingredient> pRepairIngredient) {
-        this.level = pLevel;
-        this.uses = pUses;
-        this.speed = pSpeed;
-        this.damage = pDamage;
-        this.enchantmentValue = pEnchantmentValue;
-        this.repairIngredient = new LazyLoadedValue<>(pRepairIngredient);
-    }
-
-    public int getUses() {
-        return this.uses;
-    }
-
-    public float getSpeed() {
-        return this.speed;
-    }
-
-    public float getAttackDamageBonus() {
-        return this.damage;
-    }
-
-    public int getLevel() {
-        return this.level;
-    }
-
-    public int getEnchantmentValue() {
-        return this.enchantmentValue;
-    }
-
-    public @NotNull Ingredient getRepairIngredient() {
-        return this.repairIngredient.get();
-    }
+public class JJKTiers {
+    public static SimpleTier GRADE_4 = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 301, 5.0F, 1.5F, 0,
+            () -> Ingredient.EMPTY);
+    public static SimpleTier GRADE_3 = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 401, 6.0F, 2.0F, 0,
+            () -> Ingredient.EMPTY);
+    public static SimpleTier SEMI_GRADE_2 = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 501, 7.0F, 2.5F, 0,
+            () -> Ingredient.EMPTY);
+    public static SimpleTier GRADE_2 = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 601, 8.0F, 3.0F, 0,
+            () -> Ingredient.EMPTY);
+    public static SimpleTier SEMI_GRADE_1 = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 701, 9.0F, 3.5F, 0,
+            () -> Ingredient.EMPTY);
+    public static SimpleTier GRADE_1 = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 801, 10.0F, 4.0F, 0,
+            () -> Ingredient.EMPTY);
+    public static SimpleTier SPECIAL_GRADE_1 = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 3001, 11.0F, 4.5F, 0,
+            () -> Ingredient.EMPTY);
+    public static SimpleTier SPECIAL_GRADE = new SimpleTier(JJKBlockTags.INCORRECT_FOR_CURSED_TOOL, 6001, 13.0F, 5.0F, 0,
+            () -> Ingredient.EMPTY);
 }

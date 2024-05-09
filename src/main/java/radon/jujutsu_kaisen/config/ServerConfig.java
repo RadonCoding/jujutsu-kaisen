@@ -2,8 +2,8 @@ package radon.jujutsu_kaisen.config;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -181,7 +181,7 @@ public class ServerConfig {
                 .defineInRange("domainAmplificationCost", 100, 1, 10000);
         this.zeroPointTwoSecondDomainExpansionCost = builder.comment("The amount of points 0.2s domain expasnion costs to unlock")
                 .defineInRange("zeroPointTwoSecondDomainExpansionCost", 100, 1, 10000);
-        this.abilityModeCost = builder.comment("The amount of points ability mode costs to unlock")
+        this.abilityModeCost = builder.comment("The amount of points technique mode costs to unlock")
                 .defineInRange("abilityModeCost", 300, 1, 10000);
         this.airFrameCost = builder.comment("The amount of points air frame costs to unlock")
                 .defineInRange("airFrameCost", 300, 1, 10000);
@@ -230,7 +230,7 @@ public class ServerConfig {
         builder.comment("Skills").push("skills");
         this.maximumSkillLevel = builder.comment("Maximum level you can upgrade a skill to")
                 .defineInRange("maximumSkillLevel", 1000, 1, 1000000);
-        this.abilityPointInterval = builder.comment("For every X experience you'll gain 1 ability points")
+        this.abilityPointInterval = builder.comment("For every X experience you'll gain 1 technique points")
                 .defineInRange("abilityPointInterval", 20.0D, 1.0D, 1000000.0D);
         this.skillPointInterval = builder.comment("For every X experience you'll gain 1 skill points")
                 .defineInRange("skillPointInterval", 40.0D, 1.0D, 1000000.0D);

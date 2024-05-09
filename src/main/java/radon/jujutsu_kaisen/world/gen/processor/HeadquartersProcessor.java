@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.world.gen.processor;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -14,7 +15,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilRodBlock;
 
 public class HeadquartersProcessor extends StructureProcessor {
-    public static final Codec<HeadquartersProcessor> CODEC = Codec.unit(HeadquartersProcessor::new);
+    public static final MapCodec<HeadquartersProcessor> CODEC = MapCodec.unit(HeadquartersProcessor::new);
 
     @Override
     protected @NotNull StructureProcessorType<?> getType() {

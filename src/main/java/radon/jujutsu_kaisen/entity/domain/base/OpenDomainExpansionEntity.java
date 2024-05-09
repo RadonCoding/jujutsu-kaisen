@@ -14,15 +14,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.IBarrier;
-import radon.jujutsu_kaisen.entity.base.IDomain;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.IBarrier;
+import radon.jujutsu_kaisen.entity.IDomain;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -50,8 +50,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     public AABB getBounds() {
         int width = this.getWidth();
         int height = this.getHeight();
-        return new AABB(this.getX() - width, this.getY() - ((double) height / 2), this.getZ() - width,
-                this.getX() + width, this.getY() + ((double) height / 2), this.getZ() + width);
+        return new AABB(this.getX() - width, this.getY() - height, this.getZ() - width,
+                this.getX() + width, this.getY() + height, this.getZ() + width);
     }
 
     @Override
@@ -60,7 +60,9 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         int height = this.getHeight();
         BlockPos center = this.blockPosition();
         BlockPos relative = pos.subtract(center);
-        return relative.getY() > -height / 2 && relative.distSqr(Vec3i.ZERO) < width * width;
+        return Math.abs(relative.getX()) <= width &&
+                Math.abs(relative.getY()) <= height &&
+                Math.abs(relative.getZ()) <= width;
     }
 
     @Override
@@ -82,11 +84,11 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_WIDTH, 0);
-        this.entityData.define(DATA_HEIGHT, 0);
+        pBuilder.define(DATA_WIDTH, 0);
+        pBuilder.define(DATA_HEIGHT, 0);
     }
 
     @Override
@@ -113,7 +115,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    this.ability.onHitBlock(this, owner, entity.blockPosition());
+                    this.ability.onHitBlock(this, owner, entity.blockPosition(), false);
                     continue;
                 }
             }
@@ -154,7 +156,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         data.setBurnout(DomainExpansion.BURNOUT);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(data.serializeNBT(player.registryAccess())));
         }
     }
 

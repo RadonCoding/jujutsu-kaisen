@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 public class JJKFeatures {
-    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(BuiltInRegistries.FEATURE, JujutsuKaisen.MOD_ID);
+    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(Registries.FEATURE, JujutsuKaisen.MOD_ID);
 
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> SPAWN_JOGO = FEATURES.register("spawn_jogo",
             () -> new SpawnJogo(NoneFeatureConfiguration.CODEC));
@@ -24,7 +24,7 @@ public class JJKFeatures {
 
     public static boolean isFarEnoughFromSpawn(LevelAccessor level, BlockPos pos) {
         LevelData data = level.getLevelData();
-        BlockPos relative = new BlockPos(data.getXSpawn(), pos.getY(), data.getYSpawn());
+        BlockPos relative = new BlockPos(data.getSpawnPos().getX(), pos.getY(), data.getSpawnPos().getZ());
         return !relative.closerThan(pos, ConfigHolder.SERVER.minimumSpawnDangerDistance.get());
     }
 }

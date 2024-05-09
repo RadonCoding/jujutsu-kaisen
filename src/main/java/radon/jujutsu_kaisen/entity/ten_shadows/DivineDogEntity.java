@@ -10,31 +10,19 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 public abstract class DivineDogEntity extends TenShadowsSummon implements PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
@@ -52,7 +40,7 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual) {
         super(type, owner.level());
 
-        this.setTame(true);
+        this.setTame(true, false);
         this.setOwner(owner);
 
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
@@ -162,11 +150,6 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     }
 
     @Override
-    public float getStepHeight() {
-        return 1.0F;
-    }
-
-    @Override
     protected boolean shouldToggleOnDeath() {
         return false;
     }
@@ -174,15 +157,16 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.MAX_HEALTH, 2 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 2.0D);
+                .add(Attributes.ATTACK_DAMAGE, 2.0D)
+                .add(Attributes.STEP_HEIGHT, 1.0F);
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_VARIANT, Variant.WHITE.ordinal());
-        this.entityData.define(DATA_RITUAL, 0);
+        pBuilder.define(DATA_VARIANT, Variant.WHITE.ordinal());
+        pBuilder.define(DATA_RITUAL, 0);
     }
 
     @Override

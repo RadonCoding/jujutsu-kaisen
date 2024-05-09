@@ -29,12 +29,12 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.base.IVeil;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
@@ -83,9 +83,9 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
-        this.entityData.define(DATA_RADIUS, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_TIME, 0);
+        pBuilder.define(DATA_RADIUS, 0);
     }
 
     public int getTime() {
@@ -215,7 +215,7 @@ public class VeilEntity extends Entity implements IVeil {
             data.useEnergy(cost);
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(data.serializeNBT(player.registryAccess())));
             }
         }
         return true;
@@ -346,7 +346,7 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+    public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
         int radius = this.getRadius() * 2;
         return EntityDimensions.fixed(radius, radius);
     }

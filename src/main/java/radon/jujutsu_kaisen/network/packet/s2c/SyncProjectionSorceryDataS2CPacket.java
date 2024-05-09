@@ -1,34 +1,30 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
-public class SyncProjectionSorceryDataS2CPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "sync_projection_sorcery_data_clientbound");
+public record SyncProjectionSorceryDataS2CPacket(CompoundTag nbt) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<SyncProjectionSorceryDataS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "sync_projection_sorcery_data_clientbound"));
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, SyncProjectionSorceryDataS2CPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.COMPOUND_TAG,
+            SyncProjectionSorceryDataS2CPacket::nbt,
+            SyncProjectionSorceryDataS2CPacket::new
+    );
 
-    private final CompoundTag nbt;
-
-    public SyncProjectionSorceryDataS2CPacket(CompoundTag nbt) {
-        this.nbt = nbt;
-    }
-
-    public SyncProjectionSorceryDataS2CPacket(FriendlyByteBuf buf) {
-        this(buf.readNbt());
-    }
-
-    public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().execute(() -> {
+    public void handle(IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             Player player = ClientWrapper.getPlayer();
 
             if (player == null) return;
@@ -38,17 +34,12 @@ public class SyncProjectionSorceryDataS2CPacket implements CustomPacketPayload {
             if (cap == null) return;
 
             IProjectionSorceryData data = cap.getProjectionSorceryData();
-            data.deserializeNBT(this.nbt);
+            data.deserializeNBT(player.registryAccess(), this.nbt);
         });
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeNbt(this.nbt);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return IDENTIFIER;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

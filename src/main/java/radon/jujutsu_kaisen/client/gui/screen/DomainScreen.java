@@ -1,25 +1,15 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.JJKKeys;
-import radon.jujutsu_kaisen.client.event.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 
 import java.util.ArrayList;
@@ -56,9 +46,9 @@ public class DomainScreen extends RadialScreen {
 
         if (data.hasToggled(ability) || data.isChanneling(ability)) {
             AbilityHandler.untrigger(this.minecraft.player, ability);
-            PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+            PacketDistributor.sendToServer(new UntriggerAbilityC2SPacket(ability));
         } else {
-            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+            PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(ability));
         }
     }
 

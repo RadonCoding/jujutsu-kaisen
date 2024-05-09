@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.menu.AltarMenu;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 
 public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/container/altar.png");

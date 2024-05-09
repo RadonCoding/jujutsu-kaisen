@@ -24,12 +24,12 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 
 import java.util.function.Supplier;
 
 public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock {
-    public ChimeraShadowGardenBlock(Supplier<? extends FlowingFluid> pFluid, Properties pProperties) {
+    public ChimeraShadowGardenBlock(FlowingFluid pFluid, Properties pProperties) {
         super(pFluid, pProperties);
     }
 

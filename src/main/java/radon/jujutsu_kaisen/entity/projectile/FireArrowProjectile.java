@@ -15,11 +15,11 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.BetterSmokeParticle;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -59,7 +59,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (entity == owner) return;
 
-        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());
+        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FURNACE_OPEN.get()), DAMAGE * this.getPower());
     }
 
     @Override
@@ -97,11 +97,11 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
                 switch (j) {
                     case 0:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.Options(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.Options(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }
@@ -129,11 +129,11 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
                 switch (j) {
                     case 0:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.Options(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.Options(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }
@@ -142,7 +142,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             ExplosionHandler.spawn(this.level().dimension(), location, this.getExplosionRadius(), 2 * 20, this.getPower() * 0.1F,
-                    owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), true);
+                    owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FURNACE_OPEN.get()), true);
         }
         this.discard();
     }

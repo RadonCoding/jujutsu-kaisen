@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.data.cursed_speech;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 
 public class CursedSpeechData implements ICursedSpeechData {
     private int throatDamage;
@@ -28,14 +30,14 @@ public class CursedSpeechData implements ICursedSpeechData {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("throat_damage", this.throatDamage);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
         nbt.putInt("throat_damage", this.throatDamage);
     }
 }

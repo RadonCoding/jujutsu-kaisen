@@ -1,15 +1,12 @@
 package radon.jujutsu_kaisen.client.gui.screen.base;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -20,19 +17,14 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.cursed_speech.base.ICursedSpeech;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.cursed_speech.ICursedSpeech;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
-import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
@@ -40,12 +32,11 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,12 +155,12 @@ public abstract class RadialScreen extends Screen {
 
             if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (item.type == DisplayItem.Type.COPIED) {
-                    PacketHandler.sendToServer(new UncopyC2SPacket(item.copied));
+                    PacketDistributor.sendToServer(new UncopyC2SPacket(item.copied));
                     mimicryData.uncopy(item.copied);
 
                     this.init();
                 } else if (item.type == DisplayItem.Type.ADDITIONAL) {
-                    PacketHandler.sendToServer(new RemoveAdditionalC2SPacket(item.additional));
+                    PacketDistributor.sendToServer(new RemoveAdditionalC2SPacket(item.additional));
                     sorcererData.removeAdditional(item.additional);
 
                     this.init();
@@ -179,50 +170,39 @@ public abstract class RadialScreen extends Screen {
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
-    private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
-        Quaternionf quaternionf = (new Quaternionf()).rotateZ(Mth.PI);
-        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(angleYComponent * 20.0F * (Mth.PI / 180.0F));
+    public static void renderEntityInInventoryFollowsAngle(
+            GuiGraphics graphics,
+            int x,
+            int y,
+            int scale,
+            float yOffset,
+            float angleXComponent,
+            float angleYComponent,
+            LivingEntity p_275689_
+    ) {
+        Quaternionf quaternionf = new Quaternionf().rotateZ((float) Math.PI);
+        Quaternionf quaternionf1 = new Quaternionf().rotateX(angleYComponent * 20.0F * (float) (Math.PI / 180.0));
         quaternionf.mul(quaternionf1);
-
-        if (pEntity instanceof LivingEntity living) {
-            living.yBodyRot = 180.0F + angleXComponent * 20.0F;
-        }
-        pEntity.setYRot(180.0F + angleXComponent * 40.0F);
-        pEntity.setXRot(-angleYComponent * 20.0F);
-
-        if (pEntity instanceof LivingEntity living) {
-            living.yHeadRot = pEntity.getYRot();
-            living.yHeadRotO = pEntity.getYRot();
-        }
-        renderEntityInInventory(pPoseStack, pX, pY, pScale, quaternionf, quaternionf1, pEntity);
-    }
-
-    private static void renderEntityInInventory(PoseStack pPoseStack, int pX, int pY, int pScale, Quaternionf p_275229_, @Nullable Quaternionf pCameraOrientation, Entity pEntity) {
-        PoseStack posestack = RenderSystem.getModelViewStack();
-        posestack.pushPose();
-        posestack.translate(0.0D, 0.0D, 1000.0D);
-        RenderSystem.applyModelViewMatrix();
-        pPoseStack.pushPose();
-        pPoseStack.translate(pX, pY, -950.0D);
-        pPoseStack.mulPoseMatrix((new Matrix4f()).scaling((float) pScale, (float) pScale, (float) (-pScale)));
-        pPoseStack.mulPose(p_275229_);
-        Lighting.setupForEntityInInventory();
-        EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-
-        if (pCameraOrientation != null) {
-            pCameraOrientation.conjugate();
-            dispatcher.overrideCameraOrientation(pCameraOrientation);
-        }
-        dispatcher.setRenderShadow(false);
-        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.runAsFancy(() ->
-                dispatcher.render(pEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, pPoseStack, buffer, 15728880));
-        buffer.endBatch();
-        dispatcher.setRenderShadow(true);
-        pPoseStack.popPose();
-        Lighting.setupFor3DItems();
-        posestack.popPose();
-        RenderSystem.applyModelViewMatrix();
+        float f4 = p_275689_.yBodyRot;
+        float f5 = p_275689_.getYRot();
+        float f6 = p_275689_.getXRot();
+        float f7 = p_275689_.yHeadRotO;
+        float f8 = p_275689_.yHeadRot;
+        p_275689_.yBodyRot = 180.0F + angleXComponent * 20.0F;
+        p_275689_.setYRot(180.0F + angleXComponent * 40.0F);
+        p_275689_.setXRot(-angleYComponent * 20.0F);
+        p_275689_.yHeadRot = p_275689_.getYRot();
+        p_275689_.yHeadRotO = p_275689_.getYRot();
+        float f9 = p_275689_.getScale();
+        Vector3f vector3f = new Vector3f(0.0F, p_275689_.getBbHeight() / 2.0F + yOffset * f9, 0.0F);
+        float f10 = (float)scale / f9;
+        InventoryScreen.renderEntityInInventory(graphics, x, y, f10, vector3f, quaternionf, quaternionf1, p_275689_);
+        p_275689_.yBodyRot = f4;
+        p_275689_.setYRot(f5);
+        p_275689_.setXRot(f6);
+        p_275689_.yHeadRotO = f7;
+        p_275689_.yHeadRot = f8;
+        graphics.disableScissor();
     }
 
     protected boolean isActive(DisplayItem item) {
@@ -383,36 +363,30 @@ public abstract class RadialScreen extends Screen {
                 int scale = 0;
 
                 if (item.type == DisplayItem.Type.CURSE) {
-                    Entity tmp = CurseManipulationUtil.createCurse(this.minecraft.player, item.curse.getKey());
+                    if (!(CurseManipulationUtil.createCurse(this.minecraft.player, item.curse.getKey()) instanceof LivingEntity curse)) continue;
 
-                    if (tmp == null) continue;
-
-                    height = tmp.getBbHeight();
-                    scale = (int) Math.max(3.0F, 10.0F - tmp.getBbHeight());
-                    renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, tmp);
+                    height = curse.getBbHeight();
+                    scale = (int) Math.max(3.0F, 10.0F - curse.getBbHeight());
+                    renderEntityInInventoryFollowsAngle(pGuiGraphics, posX, (int) (posY + (height * scale / 2.0F)), scale, 0.0F, -1.0F, -0.5F, curse);
                 } else {
                     List<EntityType<?>> types = ((Summon<?>) item.ability).getTypes();
 
                     float width = 0.0F;
 
                     for (EntityType<?> type : types) {
-                        Entity tmp = type.create(this.minecraft.level);
+                        if (!(type.create(this.minecraft.level) instanceof LivingEntity entity)) continue;
 
-                        if (tmp == null) continue;
-
-                        width = Math.max(width, tmp.getBbWidth());
-                        height = Math.max(height, tmp.getBbHeight());
-                        scale = Math.max(scale, (int) Math.max(3.0F, 10.0F - tmp.getBbHeight()));
+                        width = Math.max(width, entity.getBbWidth());
+                        height = Math.max(height, entity.getBbHeight());
+                        scale = Math.max(scale, (int) Math.max(3.0F, 10.0F - entity.getBbHeight()));
                     }
 
                     float offset = -((width / 2) * scale) * (types.size() - 1);
 
                     for (EntityType<?> type : types) {
-                        Entity tmp = type.create(this.minecraft.level);
+                        if (!(type.create(this.minecraft.level) instanceof LivingEntity entity)) continue;
 
-                        if (tmp == null) continue;
-
-                        renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), Math.round(posX + offset), (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, tmp);
+                        renderEntityInInventoryFollowsAngle(pGuiGraphics, Math.round(posX + offset), (int) (posY + (height * scale / 2.0F)), scale, 0.0F, -1.0F, -0.5F, entity);
 
                         offset += width * scale;
                     }

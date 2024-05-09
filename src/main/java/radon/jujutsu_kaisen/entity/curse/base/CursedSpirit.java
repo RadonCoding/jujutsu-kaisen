@@ -22,16 +22,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
-import radon.jujutsu_kaisen.entity.base.ICommandable;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.ICommandable;
+import radon.jujutsu_kaisen.entity.ISorcerer;
+import radon.jujutsu_kaisen.entity.SummonEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
@@ -46,7 +46,7 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     protected CursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
 
-        this.setTame(false);
+        this.setTame(false, false);
     }
 
     @Override
@@ -69,10 +69,10 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_HIDING, false);
+        pBuilder.define(DATA_HIDING, false);
     }
 
     public boolean isHiding() {

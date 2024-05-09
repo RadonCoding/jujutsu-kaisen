@@ -16,9 +16,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import net.neoforged.fml.common.EventBusSubscriber;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
@@ -29,7 +28,7 @@ import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.Polymorphi
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulSmallRenderer;
-import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
+import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
@@ -50,29 +49,31 @@ import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 public class JJKClientEventHandler {
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onPlayerMouseClick(InputEvent.MouseButton.Pre event) {
+        public static void onMouseInputPre(InputEvent.MouseButton.Pre event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
+
+            if (event.getButton() == InputConstants.MOUSE_BUTTON_LEFT) {
+                ImpactFrameHandler.impact(RotationUtil.getLookAtHit(mc.player, 64.0D).getLocation(), 5, 64.0F);
+            }
 
             if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (mc.options.keyShift.isDown()) {
                     if (RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
                         if (hit.getEntity() instanceof LivingEntity target) {
-                            PacketHandler.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
+                            PacketDistributor.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
                         }
                     }
                 }
@@ -91,23 +92,30 @@ public class JJKClientEventHandler {
 
                     if (mc.player.getVehicle() instanceof IControllableFlyingRide listener) {
                         listener.setJump(down);
-                        PacketHandler.sendToServer(new JumpInputListenerC2SPacket(down));
+                        PacketDistributor.sendToServer(new JumpInputListenerC2SPacket(down));
                     } else if (mc.player.getFirstPassenger() instanceof IControllableFlyingRide listener) {
                         listener.setJump(down);
-                        PacketHandler.sendToServer(new JumpInputListenerC2SPacket(down));
+                        PacketDistributor.sendToServer(new JumpInputListenerC2SPacket(down));
                     }
                 }
             }
 
             if (event.getAction() == InputConstants.PRESS) {
-                if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
-                        CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
-                    PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
-                }
-
                 if (mc.options.keyJump.consumeClick()) {
-                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.AIR_JUMP.getId()));
+                    PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.AIR_JUMP.get()));
                 }
+            }
+        }
+
+        @SubscribeEvent
+        public static void onClientTick(ClientTickEvent event) {
+            Minecraft mc = Minecraft.getInstance();
+
+            if (mc.player == null) return;
+
+            if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
+                    CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
+                PacketDistributor.sendToServer(new OpenInventoryCurseC2SPacket());
             }
         }
 
@@ -122,7 +130,7 @@ public class JJKClientEventHandler {
                 if (curse.getVictim() != mc.player) continue;
 
                 mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getName().getString(), event.getMessage())));
-                PacketHandler.sendToServer(new ScissorsAnswerC2SPacket(curse.getUUID()));
+                PacketDistributor.sendToServer(new ScissorsAnswerC2SPacket(curse.getUUID()));
                 event.setCanceled(true);
 
                 break;
@@ -130,7 +138,7 @@ public class JJKClientEventHandler {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ModEvents {
         @SubscribeEvent
         public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
@@ -168,7 +176,7 @@ public class JJKClientEventHandler {
         }
 
         @SubscribeEvent
-        public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
+        public static void onRegisterGuiOverlays(RegisterGuiLayersEvent event) {
             event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "ability_overlay"), AbilityOverlay.OVERLAY);
             event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_overlay"), CursedEnergyOverlay.OVERLAY);
             event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "six_eyes_overlay"), SixEyesOverlay.OVERLAY);
@@ -387,11 +395,6 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.EMITTING_LIGHTNING.get(), EmittingLightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.FIRE.get(), FireParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SMOKE.get(), BetterSmokeParticle.Provider::new);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
-            JJKShaders.onRegisterShaders(event);
         }
     }
 }

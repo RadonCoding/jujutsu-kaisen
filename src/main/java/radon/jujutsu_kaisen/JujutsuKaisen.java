@@ -1,29 +1,27 @@
 package radon.jujutsu_kaisen;
 
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.command.argument.JJKCommandArgumentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
-import radon.jujutsu_kaisen.item.JJKCreativeTabs;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
+import radon.jujutsu_kaisen.tab.JJKCreativeTabs;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.pact.JJKPacts;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -36,10 +34,9 @@ import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 public class JujutsuKaisen {
     public static final String MOD_ID = "jujutsu_kaisen";
 
-    public JujutsuKaisen(IEventBus bus) {
-        ModLoadingContext ctx = ModLoadingContext.get();
-        ctx.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
-        ctx.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
+    public JujutsuKaisen(IEventBus bus, ModContainer container) {
+        container.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
+        container.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
 
         JJKAbilities.ABILITIES.register(bus);
         JJKCursedTechniques.CURSED_TECHNIQUES.register(bus);
@@ -47,7 +44,6 @@ public class JujutsuKaisen {
         JJKPacts.PACTS.register(bus);
 
         JJKEntities.ENTITIES.register(bus);
-        JJKEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
 
         JJKParticles.PARTICLES.register(bus);
 
@@ -62,6 +58,7 @@ public class JujutsuKaisen {
         JJKEffects.EFFECTS.register(bus);
 
         JJKItems.ITEMS.register(bus);
+        JJKDataComponentTypes.DATA_COMPONENT_TYPES.register(bus);
 
         JJKSounds.SOUNDS.register(bus);
 

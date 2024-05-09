@@ -65,28 +65,27 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
         PoseStack.Pose pose = pPoseStack.last();
         Matrix4f matrix4f = pose.pose();
-        Matrix3f matrix3f = pose.normal();
         pPoseStack.pushPose();
-        vertex(consumer, matrix4f, matrix3f, f4, f0, f5, j, k, l, 0.4999F, f13, pPackedLight);
-        vertex(consumer, matrix4f, matrix3f, f4, 0.0F, f5, j, k, l, 0.4999F, f12, pPackedLight);
-        vertex(consumer, matrix4f, matrix3f, f6, 0.0F, f7, j, k, l, 0.0F, f12, pPackedLight);
-        vertex(consumer, matrix4f, matrix3f, f6, f0, f7, j, k, l, 0.0F, f13, pPackedLight);
+        vertex(matrix4f, pose, consumer, f4, f0, f5, j, k, l, 0.4999F, f13, pPackedLight);
+        vertex(matrix4f, pose, consumer, f4, 0.0F, f5, j, k, l, 0.4999F, f12, pPackedLight);
+        vertex(matrix4f, pose, consumer, f6, 0.0F, f7, j, k, l, 0.0F, f12, pPackedLight);
+        vertex(matrix4f, pose, consumer, f6, f0, f7, j, k, l, 0.0F, f13, pPackedLight);
 
-        vertex(consumer, matrix4f, matrix3f, f8, f0, f9, j, k, l, 0.4999F, f15, pPackedLight);
-        vertex(consumer, matrix4f, matrix3f, f8, 0.0F, f9, j, k, l, 0.4999F, f14, pPackedLight);
-        vertex(consumer, matrix4f, matrix3f, f10, 0.0F, f11, j, k, l, 0.0F, f14, pPackedLight);
-        vertex(consumer, matrix4f, matrix3f, f10, f0, f11, j, k, l, 0.0F, f15, pPackedLight);
+        vertex(matrix4f, pose, consumer, f8, f0, f9, j, k, l, 0.4999F, f15, pPackedLight);
+        vertex(matrix4f, pose, consumer, f8, 0.0F, f9, j, k, l, 0.4999F, f14, pPackedLight);
+        vertex(matrix4f, pose, consumer, f10, 0.0F, f11, j, k, l, 0.0F, f14, pPackedLight);
+        vertex(matrix4f, pose, consumer, f10, f0, f11, j, k, l, 0.0F, f15, pPackedLight);
         pPoseStack.popPose();
         pPoseStack.popPose();
     }
 
-    private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f, float x, float y, float z, int r, int g, int b, float u, float v, int packedLight) {
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, int r, int g, int b, float u, float v, int packedLight) {
         consumer.vertex(matrix4f, x, y, z)
                 .color(r, g, b, 255)
                 .uv(u, v)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(packedLight)
-                .normal(matrix3f, 0.0F, 1.0F, 0.0F)
+                .normal(pose, 0.0F, 1.0F, 0.0F)
                 .endVertex();
     }
 

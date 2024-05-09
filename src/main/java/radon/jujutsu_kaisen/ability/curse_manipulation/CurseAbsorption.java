@@ -8,18 +8,12 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -27,7 +21,8 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
@@ -124,9 +119,9 @@ public class CurseAbsorption extends Ability implements IToggled {
         ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
 
         if (victim instanceof Player player) {
-            CursedSpiritOrbItem.setAbsorbed(stack, new AbsorbedCurse(victim.getName(), victim.getType(), victimData.serializeNBT(), player.getGameProfile()));
+            stack.set(JJKDataComponentTypes.ABSORBED_CURSE, new AbsorbedCurse(victim.getName(), victim.getType(), victimData.serializeNBT(victim.registryAccess()), player.getGameProfile()));
         } else {
-            CursedSpiritOrbItem.setAbsorbed(stack, new AbsorbedCurse(victim.getName(), victim.getType(), victimData.serializeNBT()));
+            stack.set(JJKDataComponentTypes.ABSORBED_CURSE, new AbsorbedCurse(victim.getName(), victim.getType(), victimData.serializeNBT(victim.registryAccess())));
         }
 
         if (attacker instanceof Player player) {
@@ -143,7 +138,7 @@ public class CurseAbsorption extends Ability implements IToggled {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {

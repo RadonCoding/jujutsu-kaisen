@@ -16,21 +16,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayInfo;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.tab.AbilityTab;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.UnlockAbilityC2SPacket;
 
 import javax.annotation.Nullable;
@@ -72,9 +65,9 @@ public class AbilityWidget {
         MutableComponent component = Component.empty();
 
         if (cost > 0) {
-            component.append(Component.translatable(String.format("gui.%s.ability.cost", JujutsuKaisen.MOD_ID), cost));
+            component.append(Component.translatable(String.format("gui.%s.technique.cost", JujutsuKaisen.MOD_ID), cost));
         } else {
-            component.append(Component.translatable(String.format("gui.%s.ability.locked", JujutsuKaisen.MOD_ID), cost));
+            component.append(Component.translatable(String.format("gui.%s.technique.locked", JujutsuKaisen.MOD_ID), cost));
         }
         this.description = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component.copy(), Style.EMPTY), l));
 
@@ -221,7 +214,7 @@ public class AbilityWidget {
 
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
-        PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
+        PacketDistributor.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

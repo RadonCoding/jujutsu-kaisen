@@ -43,10 +43,10 @@ public class JujutsuProjectile extends Projectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
-        this.entityData.define(DATA_POWER, 0.0F);
-        this.entityData.define(DATA_DOMAIN, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_TIME, 0);
+        pBuilder.define(DATA_POWER, 0.0F);
+        pBuilder.define(DATA_DOMAIN, false);
     }
 
     public int getTime() {

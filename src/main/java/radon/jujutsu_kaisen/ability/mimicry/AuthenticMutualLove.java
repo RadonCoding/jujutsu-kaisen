@@ -6,14 +6,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.AuthenticMutualLoveEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 
 import java.util.List;
 
@@ -32,21 +32,19 @@ public class AuthenticMutualLove extends DomainExpansion implements DomainExpans
     }
 
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
+    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
         ICursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
         if (!(technique.getDomain() instanceof DomainExpansion copied)) return;
 
-        copied.onHitBlock(domain, owner, pos);
+        copied.onHitBlock(domain, owner, pos, instant);
     }
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        int radius = Math.round(this.getRadius(owner));
-
-        AuthenticMutualLoveEntity domain = new AuthenticMutualLoveEntity(owner, this, radius);
+        AuthenticMutualLoveEntity domain = new AuthenticMutualLoveEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
         return domain;
@@ -62,7 +60,7 @@ public class AuthenticMutualLove extends DomainExpansion implements DomainExpans
         return List.of(JJKBlocks.AUTHENTIC_MUTUAL_LOVE_ONE.get(), JJKBlocks.AUTHENTIC_MUTUAL_LOVE_TWO.get(), JJKBlocks.AUTHENTIC_MUTUAL_LOVE_THREE.get());
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onItemStackedOnOther(ItemStackedOnOtherEvent event) {

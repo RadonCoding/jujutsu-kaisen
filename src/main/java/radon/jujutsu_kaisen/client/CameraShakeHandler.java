@@ -2,15 +2,15 @@ package radon.jujutsu_kaisen.client;
 
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class CameraShakeHandler {
     @Nullable
     private static ShakeEvent current;
@@ -27,10 +27,7 @@ public class CameraShakeHandler {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.type != TickEvent.Type.CLIENT) return;
-        if (event.phase == TickEvent.Phase.START) return;
-
+    public static void onClientTickPre(ClientTickEvent.Pre event) {
         if (current == null) return;
 
         current.duration--;

@@ -7,13 +7,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.PostChain;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.effect.base.PostEffect;
 
 // Credit: https://github.com/M-Marvin/MCMOD-HoloStructures-V2/blob/main-1.20.4/HoloStructures-1.20/src/main/java/de/m_marvin/holostruct/client/rendering/posteffect/PostEffectUtil.java
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class PostEffectHandler {
     private static final int BUFFER_BUILDER_CAPACITY = 786432;
     private static final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(BUFFER_BUILDER_CAPACITY));
@@ -23,8 +23,9 @@ public class PostEffectHandler {
     }
 
     public static void preparePostEffect(PostChain chain) {
-        chain.resize(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
-        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+        Minecraft mc = Minecraft.getInstance();
+        chain.resize(mc.getWindow().getWidth(), mc.getWindow().getHeight());
+        mc.getMainRenderTarget().bindWrite(true);
     }
 
     public static void clearFramebuffer(RenderTarget target) {

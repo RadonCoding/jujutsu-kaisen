@@ -15,13 +15,13 @@ import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 public class WormCurseEntity extends CursedSpirit {
     private static final EntityDataAccessor<Boolean> DATA_GRABBING = SynchedEntityData.defineId(WormCurseEntity.class, EntityDataSerializers.BOOLEAN);
@@ -48,10 +48,10 @@ public class WormCurseEntity extends CursedSpirit {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_GRABBING, false);
+        pBuilder.define(DATA_GRABBING, false);
     }
 
     private boolean isGrabbing() {
@@ -120,11 +120,6 @@ public class WormCurseEntity extends CursedSpirit {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Bite", this::bitePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Grab", this::grabPredicate));
-    }
-
-    @Override
-    public float getStepHeight() {
-        return 2.0F;
     }
 
     @Override

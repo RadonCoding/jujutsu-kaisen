@@ -19,13 +19,12 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
@@ -62,9 +61,9 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
-        this.entityData.define(DATA_VARIANT, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_TIME, 0);
+        pBuilder.define(DATA_VARIANT, 0);
     }
 
     public int getTime() {

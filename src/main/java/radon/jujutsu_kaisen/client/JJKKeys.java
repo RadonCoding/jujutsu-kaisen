@@ -5,7 +5,7 @@ import net.minecraft.client.KeyMapping;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKKeys {
-    public static String KEY_CATEGORY_JUJUTSU_KAISEN = String.format("key.category.%s", JujutsuKaisen.MOD_ID);
+    public static String KEY_CATEGORY_JUJUTSU_KAISEN = String.format("ability.category.%s", JujutsuKaisen.MOD_ID);
     public static KeyMapping ACTIVATE_MELEE_MENU = createKeyMapping("activate_melee_menu",
             InputConstants.KEY_LALT);
     public static KeyMapping MELEE_MENU_UP = createKeyMapping("melee_menu_up",
@@ -34,6 +34,6 @@ public class JJKKeys {
             InputConstants.KEY_DOWN);
 
     private static KeyMapping createKeyMapping(String name, int keyCode) {
-        return new KeyMapping(String.format("key.%s.%s", JujutsuKaisen.MOD_ID, name), keyCode, KEY_CATEGORY_JUJUTSU_KAISEN);
+        return new KeyMapping(String.format("ability.%s.%s", JujutsuKaisen.MOD_ID, name), keyCode, KEY_CATEGORY_JUJUTSU_KAISEN);
     }
 }

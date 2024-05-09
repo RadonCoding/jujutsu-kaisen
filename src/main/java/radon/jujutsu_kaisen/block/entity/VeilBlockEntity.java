@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -13,7 +14,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
 import radon.jujutsu_kaisen.entity.VeilEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
@@ -91,7 +91,7 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
                     BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
 
                     if (be != null) {
-                        be.load(this.saved);
+                        be.loadWithComponents(this.saved, this.level.registryAccess());
                     }
                 }
             }
@@ -135,10 +135,10 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider pRegistries) {
+        return this.saveWithoutMetadata(pRegistries);
     }
-
+    
     private void markUpdated() {
         this.setChanged();
 
@@ -148,8 +148,8 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
 
         pTag.putBoolean("initialized", this.initialized);
 
@@ -178,8 +178,8 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
 
         this.initialized = pTag.getBoolean("initialized");
 

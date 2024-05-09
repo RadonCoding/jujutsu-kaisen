@@ -5,8 +5,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -14,31 +14,22 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import radon.jujutsu_kaisen.entity.IRightClickInputListener;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 import java.util.List;
 
@@ -55,6 +46,11 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
 
     public DinoCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     @Override
@@ -93,15 +89,10 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     }
 
     @Override
-    protected float ridingOffset(@NotNull Entity pEntity) {
-        return this.getBbHeight();
-    }
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_SHOOTING, false);
+        pBuilder.define(DATA_SHOOTING, false);
     }
 
     private boolean isShooting() {
@@ -160,11 +151,6 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
             f1 *= 0.25F;
         }
         return new Vec3(f, 0.0D, f1);
-    }
-
-    @Override
-    public float getStepHeight() {
-        return 2.0F;
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<DinoCurseEntity> animationState) {

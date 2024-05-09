@@ -7,6 +7,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
 
 public class ServerVisualHandler {
@@ -22,6 +23,6 @@ public class ServerVisualHandler {
 
         ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(), sorcererData.getActiveTechniques(), sorcererData.getTechnique(), sorcererData.getType(),
                 sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
-        PacketHandler.broadcast(new SyncVisualDataS2CPacket(entity.getUUID(), client.serializeNBT()));
+        PacketDistributor.sendToAllPlayers(new SyncVisualDataS2CPacket(entity.getUUID(), client.serializeNBT()));
     }
 }

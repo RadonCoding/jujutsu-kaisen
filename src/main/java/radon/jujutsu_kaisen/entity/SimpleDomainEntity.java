@@ -18,7 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -26,8 +26,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.base.IBarrier;
-import radon.jujutsu_kaisen.entity.base.ISimpleDomain;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -48,7 +47,7 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     @Nullable
     private LivingEntity cachedOwner;
 
-    protected SimpleDomainEntity(EntityType<?> pType, Level pLevel) {
+    public SimpleDomainEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
@@ -151,11 +150,11 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_RADIUS, 0.0F);
-        this.entityData.define(DATA_ENLARGEMENT, 0.0F);
-        this.entityData.define(DATA_MAX_HEALTH, 0.0F);
-        this.entityData.define(DATA_HEALTH, 0.0F);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_RADIUS, 0.0F);
+        pBuilder.define(DATA_ENLARGEMENT, 0.0F);
+        pBuilder.define(DATA_MAX_HEALTH, 0.0F);
+        pBuilder.define(DATA_HEALTH, 0.0F);
     }
 
     @Override
@@ -219,7 +218,7 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
 
             float factor = this.getHealth() / this.getMaxHealth();
 
-            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, 1.0F,
+            ParticleOptions particle = new VaporParticle.Options(ParticleColors.SIMPLE_DOMAIN, 1.0F,
                     1.0F, true, 1);
 
             double circumference = Math.PI * 2.0D * factor;

@@ -7,37 +7,27 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.domain.ChimeraShadowGardenEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.ten_shadows.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChimeraShadowGarden extends DomainExpansion implements DomainExpansion.IClosedDomain {
-    @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-
-    }
-
-    @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-
-    }
-
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -46,9 +36,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
         ISorcererData data = cap.getSorcererData();
 
-        int radius = Math.round(this.getRadius(owner));
-
-        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
         ChimeraShadowGardenEntity center = new ChimeraShadowGardenEntity(domain);
@@ -86,7 +74,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
         return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {

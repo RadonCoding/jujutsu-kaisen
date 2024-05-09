@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.fluid;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -10,7 +11,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 
 public class JJKFluids {
-    public static DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(BuiltInRegistries.FLUID, JujutsuKaisen.MOD_ID);
+    public static DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, JujutsuKaisen.MOD_ID);
 
     public static final DeferredHolder<Fluid, FlowingFluid> CHIMERA_SHADOW_GARDEN_SOURCE = FLUIDS.register("chimera_shadow_garden_source",
             () -> new ChimeraShadowGardenFluid.Source(JJKFluids.CHIMERA_SHADOW_GARDEN_PROPERTIES));

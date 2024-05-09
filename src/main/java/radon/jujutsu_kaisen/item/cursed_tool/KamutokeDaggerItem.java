@@ -1,9 +1,14 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -21,21 +26,24 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.particle.LightningParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.KamutokeDaggerRenderer;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.item.CursedToolItem;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -43,7 +51,6 @@ import java.util.function.Consumer;
 public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     public static final double RANGE = 30.0D;
     private static final int COUNT = 16;
-    public static final float MELEE_COST = 10.0F;
     private static final float RANGE_COST = 500.0F;
     public static final float MELEE_DAMAGE = 5.0F;
     private static final float RANGE_DAMAGE = 15.0F;
@@ -52,8 +59,36 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public KamutokeDaggerItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    public KamutokeDaggerItem(Tier pTier, Properties pProperties) {
+        super(pTier, pProperties);
+    }
+
+    @Override
+    public boolean doPreHurtEffects(ItemStack stack, DamageSource source, LivingEntity attacker, LivingEntity victim, float amount) {
+        IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ISorcererData data = cap.getSorcererData();
+
+        if (!victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * data.getAbilityOutput())) return false;
+
+        if (victim.isDeadOrDying()) return true;
+
+        victim.addEffect(new MobEffectInstance(JJKEffects.STUN, KamutokeDaggerItem.STUN, 0, false, false, false));
+
+        attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
+                SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+
+        for (int i = 0; i < 32; i++) {
+            double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+            double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+            double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+            ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.Options(ParticleColors.getCursedEnergyColorBright(attacker), 0.5F, 1),
+                    victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
+                    0, 0.0D, 0.0D, 0.0D, 0.0D);
+        }
+        return false;
     }
 
     @Override
@@ -124,7 +159,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         float f = this.getPowerForTime(i);
 
         if (pLivingEntity instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), RANGE_COST * f, RANGE_COST), false), player);
+            PacketDistributor.sendToPlayer(player, new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), RANGE_COST * f, RANGE_COST), false));
         }
     }
 

@@ -10,9 +10,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.effect.JJKPostEffects;
 import radon.jujutsu_kaisen.client.effect.PostEffectHandler;
@@ -20,7 +20,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ImpactFrameHandler {
     @Nullable
     private static ImpactFrame current;
@@ -30,10 +30,7 @@ public class ImpactFrameHandler {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.type != TickEvent.Type.CLIENT) return;
-        if (event.phase == TickEvent.Phase.START) return;
-
+    public static void onClientTickPre(ClientTickEvent.Pre event) {
         if (current == null) return;
 
         current.age++;

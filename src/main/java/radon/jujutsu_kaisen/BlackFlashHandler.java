@@ -5,27 +5,23 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.damage.JJKDamageTypeTags;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -34,7 +30,7 @@ import radon.jujutsu_kaisen.util.SorcererUtil;
 import java.util.*;
 
 public class BlackFlashHandler {
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         private static final int CLEAR_INTERVAL = 5 * 20;
 
@@ -42,7 +38,7 @@ public class BlackFlashHandler {
         private static final Map<UUID, Integer> COMBOS = new HashMap<>();
 
         @SubscribeEvent
-        public static void onServerTick(TickEvent.ServerTickEvent event) {
+        public static void onServerTickPre(ServerTickEvent event) {
             Iterator<Map.Entry<UUID, Integer>> iter = TIMERS.entrySet().iterator();
 
             while (iter.hasNext()) {
@@ -118,7 +114,7 @@ public class BlackFlashHandler {
             sorcererData.onBlackFlash();
 
             if (attacker instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(sorcererData.serializeNBT()), player);
+                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(victim.registryAccess())));
             }
 
             event.setAmount((float) Math.pow(event.getAmount(), 2.5D));

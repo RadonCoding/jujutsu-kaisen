@@ -1,86 +1,73 @@
 package radon.jujutsu_kaisen.client.particle;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
+import java.util.function.Function;
+
 public class JJKParticles {
-    public static DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE,
+    public static DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(Registries.PARTICLE_TYPE,
             JujutsuKaisen.MOD_ID);
 
     public static DeferredHolder<ParticleType<?>, SimpleParticleType> BLACK_FLASH = PARTICLES.register("black_flash", () ->
             new SimpleParticleType(true));
-    public static DeferredHolder<ParticleType<?>, ParticleType<LightningParticle.LightningParticleOptions>> LIGHTNING = PARTICLES.register("lightning", () ->
-            new ParticleType<>(false, LightningParticle.LightningParticleOptions.DESERIALIZER) {
-                @Override
-                public @NotNull Codec<LightningParticle.LightningParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<TravelParticle.TravelParticleOptions>> TRAVEL = PARTICLES.register("travel", () ->
-            new ParticleType<>(false, TravelParticle.TravelParticleOptions.DESERIALIZER) {
-                @Override
-                public @NotNull Codec<TravelParticle.TravelParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<VaporParticle.VaporParticleOptions>> VAPOR = PARTICLES.register("vapor", () ->
-            new ParticleType<>(false, VaporParticle.VaporParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<VaporParticle.VaporParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<CursedEnergyParticle.CursedEnergyParticleOptions>> CURSED_ENERGY = PARTICLES.register("cursed_energy", () ->
-            new ParticleType<>(false, CursedEnergyParticle.CursedEnergyParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<CursedEnergyParticle.CursedEnergyParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<MirageParticle.MirageParticleOptions>> MIRAGE = PARTICLES.register("mirage", () ->
-            new ParticleType<>(false, MirageParticle.MirageParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<MirageParticle.MirageParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<ProjectionParticle.ProjectionParticleOptions>> PROJECTION = PARTICLES.register("projection", () ->
-            new ParticleType<>(false, ProjectionParticle.ProjectionParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<ProjectionParticle.ProjectionParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<EmittingLightningParticle.EmittingLightningParticleOptions>> EMITTING_LIGHTNING = PARTICLES.register("emitting_lightning", () ->
-            new ParticleType<>(false, EmittingLightningParticle.EmittingLightningParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<EmittingLightningParticle.EmittingLightningParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<FireParticle.FireParticleOptions>> FIRE = PARTICLES.register("fire", () ->
-            new ParticleType<>(false, FireParticle.FireParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<FireParticle.FireParticleOptions> codec() {
-                    return null;
-                }
-            });
-    public static DeferredHolder<ParticleType<?>, ParticleType<BetterSmokeParticle.BetterSmokeParticleOptions>> SMOKE = PARTICLES.register("smoke", () ->
-            new ParticleType<>(false, BetterSmokeParticle.BetterSmokeParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<BetterSmokeParticle.BetterSmokeParticleOptions> codec() {
-                    return null;
-                }
-            });
+    public static DeferredHolder<ParticleType<?>, ParticleType<LightningParticle.Options>> LIGHTNING = register("lightning", false,
+            type -> LightningParticle.Options.CODEC,
+            type -> LightningParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<TravelParticle.Options>> TRAVEL = register("travel", false,
+            type -> TravelParticle.Options.CODEC,
+            type -> TravelParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<VaporParticle.Options>> VAPOR = register("vapor", false,
+            type -> VaporParticle.Options.CODEC,
+            type -> VaporParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<CursedEnergyParticle.Options>> CURSED_ENERGY = register("cursed_energy", false,
+            type -> CursedEnergyParticle.Options.CODEC,
+            type -> CursedEnergyParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<MirageParticle.Options>> MIRAGE = register("mirage", false,
+            type -> MirageParticle.Options.CODEC,
+            type -> MirageParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<ProjectionParticle.Options>> PROJECTION = register("projection", false,
+            type -> ProjectionParticle.Options.CODEC,
+            type -> ProjectionParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<EmittingLightningParticle.Options>> EMITTING_LIGHTNING = register("emitting_lightning", false,
+            type -> EmittingLightningParticle.Options.CODEC,
+            type -> EmittingLightningParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<FireParticle.Options>> FIRE = register("fire", false,
+            type -> FireParticle.Options.CODEC, type -> FireParticle.Options.STREAM_CODEC);
+    public static DeferredHolder<ParticleType<?>, ParticleType<BetterSmokeParticle.Options>> SMOKE = register("smoke", false,
+            type -> BetterSmokeParticle.Options.CODEC, type -> BetterSmokeParticle.Options.STREAM_CODEC);
     public static DeferredHolder<ParticleType<?>,SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
     public static DeferredHolder<ParticleType<?>,SimpleParticleType> SLASH = PARTICLES.register("slash", () ->
             new SimpleParticleType(true));
+
+    private static <T extends ParticleOptions> DeferredHolder<ParticleType<?>, ParticleType<T>> register(
+            String pName,
+            boolean pOverrideLimiter,
+            final Function<ParticleType<T>, MapCodec<T>> pCodecGetter,
+            final Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> pStreamCodecGetter
+    ) {
+        return PARTICLES.register(pName, () -> new ParticleType<T>(pOverrideLimiter) {
+            @Override
+            public @NotNull MapCodec<T> codec() {
+                return pCodecGetter.apply(this);
+            }
+
+            @Override
+            public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
+                return pStreamCodecGetter.apply(this);
+            }
+        });
+    }
 }

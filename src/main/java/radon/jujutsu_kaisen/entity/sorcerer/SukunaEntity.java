@@ -1,17 +1,22 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -20,23 +25,22 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.ten_shadows.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.*;
@@ -45,7 +49,8 @@ public class SukunaEntity extends SorcererEntity {
     private static final int TAMING_CHANCE = 10 * 20;
 
     private static final EntityDataAccessor<String> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
+    private static final EntityDataAccessor<Optional<GameProfile>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class,
+            EntityDataSerializer.forValueType(ByteBufCodecs.optional(ByteBufCodecs.GAME_PROFILE)));
 
     @Nullable
     private UUID ownerUUID;
@@ -133,12 +138,11 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     public Optional<GameProfile> getPlayer() {
-        Optional<CompoundTag> player = this.entityData.get(DATA_PLAYER);
-        return player.map(NbtUtils::readGameProfile);
+        return this.entityData.get(DATA_PLAYER);
     }
 
     public void setPlayer(GameProfile profile) {
-        this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), profile)));
+        this.entityData.set(DATA_PLAYER, Optional.of(profile));
     }
 
     public GameType getOriginal(ServerPlayer player) {
@@ -146,11 +150,11 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_ENTITY, "");
-        this.entityData.define(DATA_PLAYER, Optional.empty());
+        pBuilder.define(DATA_ENTITY, "");
+        pBuilder.define(DATA_PLAYER, Optional.empty());
     }
 
     @Override
@@ -179,11 +183,6 @@ public class SukunaEntity extends SorcererEntity {
                 owner.discard();
             }
         }
-    }
-
-    @Override
-    public boolean isPersistenceRequired() {
-        return true;
     }
 
     @Override
@@ -225,7 +224,9 @@ public class SukunaEntity extends SorcererEntity {
         }
 
         pCompound.putString("entity", BuiltInRegistries.ENTITY_TYPE.getKey(this.getEntity()).toString());
-        this.getPlayer().ifPresent(player -> pCompound.put("player", NbtUtils.writeGameProfile(new CompoundTag(), player)));
+
+        this.getPlayer().ifPresent(player -> pCompound.put("player", ExtraCodecs.GAME_PROFILE.encode(player,
+                this.registryAccess().createSerializationContext(NbtOps.INSTANCE), new CompoundTag()).getOrThrow()));
     }
 
     @Override
@@ -246,7 +247,8 @@ public class SukunaEntity extends SorcererEntity {
         this.entityData.set(DATA_ENTITY, pCompound.getString("entity"));
 
         if (pCompound.contains("player")) {
-            this.setPlayer(NbtUtils.readGameProfile(pCompound.getCompound("player")));
+            this.setPlayer(ExtraCodecs.GAME_PROFILE.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE),
+                    pCompound.getCompound("player")).getOrThrow());
         }
     }
 

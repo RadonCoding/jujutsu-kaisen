@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.projectile.TransfiguredSoulProjectile;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 
 public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulProjectile> {
     private final ItemRenderer itemRenderer;

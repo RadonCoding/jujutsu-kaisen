@@ -3,15 +3,8 @@ package radon.jujutsu_kaisen.data.ten_shadows;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 
 public class Adaptation {
     private final ResourceLocation key;
@@ -32,8 +25,8 @@ public class Adaptation {
     public Adaptation(CompoundTag nbt) {
         this.key = new ResourceLocation(nbt.getString("name"));
 
-        if (nbt.contains("ability")) {
-            this.ability = JJKAbilities.getValue(new ResourceLocation(nbt.getString("ability")));
+        if (nbt.contains("technique")) {
+            this.ability = JJKAbilities.getValue(new ResourceLocation(nbt.getString("technique")));
         }
     }
 
@@ -48,19 +41,17 @@ public class Adaptation {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putString("key", this.key.toString());
+        nbt.putString("ability", this.key.toString());
 
         if (this.ability != null) {
-            nbt.putString("ability", JJKAbilities.getKey(this.ability).toString());
+            nbt.putString("technique", JJKAbilities.getKey(this.ability).toString());
         }
         return nbt;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Adaptation other)) {
-            return false;
-        }
+        if (!(obj instanceof Adaptation other)) return false;
 
         if (this.ability != null && other.ability != null) {
             Ability.Classification first = this.ability.getClassification();

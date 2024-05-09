@@ -15,21 +15,21 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
-import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
+import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -81,13 +81,13 @@ public class Dash extends Ability {
     }
 
     private static boolean canAirJump(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get())) return false;
+        if (owner.hasEffect(JJKEffects.STUN)) return false;
         
         return JJKAbilities.AIR_JUMP.get().isUnlocked(owner) && (!JUMPED.contains(owner.getUUID()) || owner.getXRot() >= 15.0F);
     }
 
     private static boolean canDash(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get())) return false;
+        if (owner.hasEffect(JJKEffects.STUN)) return false;
 
         boolean collision = false;
 
@@ -140,8 +140,8 @@ public class Dash extends Ability {
 
         if (projectionSorceryData.getSpeedStacks() > 0 || sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
-            owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
-            level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
+            owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY, 5, 0, false, false, false));
+            level.sendParticles(new MirageParticle.Options(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
@@ -234,11 +234,11 @@ public class Dash extends Ability {
         return MenuType.NONE;
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            LivingEntity entity = event.getEntity();
+        public static void onEntityTickPre(EntityTickEvent.Pre event) {
+            if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
             if (!JUMPED.contains(entity.getUUID())) return;
             if (!entity.onGround()) return;

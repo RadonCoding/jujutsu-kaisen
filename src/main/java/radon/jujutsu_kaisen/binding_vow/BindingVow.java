@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.binding_vow;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class BindingVow {
     public Component getName() {

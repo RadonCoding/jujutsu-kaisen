@@ -5,13 +5,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -53,7 +52,7 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     public void run(LivingEntity owner) {
         super.run(owner);
 
-        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 3 * 20, 0, false, false, false));
+        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY, 3 * 20, 0, false, false, false));
     }
 
     @Override

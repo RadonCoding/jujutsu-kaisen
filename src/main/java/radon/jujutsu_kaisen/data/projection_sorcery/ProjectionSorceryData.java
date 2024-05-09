@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.data.projection_sorcery;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -37,9 +38,9 @@ public class ProjectionSorceryData implements IProjectionSorceryData {
     public void tick() {
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
-                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                EntityUtil.applyModifier(this.owner, NeoForgeMod.STEP_HEIGHT.value(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                EntityUtil.applyModifier(this.owner, Attributes.STEP_HEIGHT, PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADD_VALUE);
 
                 if (this.owner.walkDist == this.owner.walkDistO) {
                     this.noMotionTime++;
@@ -53,7 +54,7 @@ public class ProjectionSorceryData implements IProjectionSorceryData {
             } else {
                 EntityUtil.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
                 EntityUtil.removeModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
-                EntityUtil.removeModifier(this.owner, NeoForgeMod.STEP_HEIGHT.value(), PROJECTION_STEP_HEIGHT_UUID);
+                EntityUtil.removeModifier(this.owner, Attributes.STEP_HEIGHT, PROJECTION_STEP_HEIGHT_UUID);
             }
         }
     }
@@ -95,12 +96,12 @@ public class ProjectionSorceryData implements IProjectionSorceryData {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         return new CompoundTag();
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
 
     }
 }

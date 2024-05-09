@@ -4,7 +4,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,21 +15,21 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.BetterSmokeParticle;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
@@ -103,11 +102,11 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
                 switch (j) {
                     case 0:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.Options(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.Options(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }
@@ -135,11 +134,11 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
                 switch (j) {
                     case 0:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.Options(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
-                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.Options(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }

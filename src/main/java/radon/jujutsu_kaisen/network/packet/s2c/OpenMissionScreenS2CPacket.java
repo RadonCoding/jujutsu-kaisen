@@ -1,34 +1,29 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
 public class OpenMissionScreenS2CPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "open_mission_screen_clientbound");
+    private static final OpenMissionScreenS2CPacket INSTANCE = new OpenMissionScreenS2CPacket();
 
-    public OpenMissionScreenS2CPacket() {
-    }
+    public static final CustomPacketPayload.Type<OpenMissionScreenS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "open_mission_screen_clientbound"));
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, OpenMissionScreenS2CPacket> STREAM_CODEC = StreamCodec.unit(
+            INSTANCE
+    );
 
-    public OpenMissionScreenS2CPacket(FriendlyByteBuf ignored) {
-    }
-
-
-    public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().execute(ClientWrapper::openMissions);
-    }
-
-    @Override
-    public void write(@NotNull FriendlyByteBuf pBuffer) {
-
+    public void handle(IPayloadContext ctx) {
+        ctx.enqueueWork(ClientWrapper::openMissions);
     }
 
     @Override
-    public @NotNull ResourceLocation id() {
-        return IDENTIFIER;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

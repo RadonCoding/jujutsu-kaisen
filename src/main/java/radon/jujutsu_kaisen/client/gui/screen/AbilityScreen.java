@@ -2,20 +2,12 @@ package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
@@ -23,12 +15,11 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.client.JJKKeys;
-import radon.jujutsu_kaisen.client.event.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 
 import java.util.*;
@@ -99,23 +90,23 @@ public class AbilityScreen extends RadialScreen {
 
                 if (abilityData.hasToggled(ability) || abilityData.isChanneling(ability)) {
                     AbilityHandler.untrigger(this.minecraft.player, ability);
-                    PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                    PacketDistributor.sendToServer(new UntriggerAbilityC2SPacket(ability));
                 } else {
-                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                    PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(ability));
                 }
             }
-            case CURSE -> PacketHandler.sendToServer(new CurseSummonC2SPacket(item.curse.getValue()));
+            case CURSE -> PacketDistributor.sendToServer(new CurseSummonC2SPacket(item.curse.getValue()));
             case COPIED -> {
                 mimicryData.setCurrentCopied(item.copied);
-                PacketHandler.sendToServer(new SetCopiedC2SPacket(item.copied));
+                PacketDistributor.sendToServer(new SetCopiedC2SPacket(item.copied));
             }
             case ABSORBED -> {
                 curseManipulationData.setCurrentAbsorbed(item.absorbed);
-                PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
+                PacketDistributor.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
             }
             case ADDITIONAL -> {
                 sorcererData.setCurrentAdditional(item.additional);
-                PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.additional));
+                PacketDistributor.sendToServer(new SetAdditionalC2SPacket(item.additional));
             }
         }
     }
@@ -140,7 +131,7 @@ public class AbilityScreen extends RadialScreen {
         int x = centerX;
         int y = centerY - RADIUS_OUT - this.font.lineHeight * 2;
 
-        pGuiGraphics.drawCenteredString(this.font, Component.translatable(String.format("gui.%s.ability.right_click", JujutsuKaisen.MOD_ID)), x, y, 0xFFFFFF);
+        pGuiGraphics.drawCenteredString(this.font, Component.translatable(String.format("gui.%s.technique.right_click", JujutsuKaisen.MOD_ID)), x, y, 0xFFFFFF);
     }
 
     @Override

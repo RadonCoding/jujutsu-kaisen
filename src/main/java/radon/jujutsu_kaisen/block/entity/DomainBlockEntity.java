@@ -1,20 +1,16 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 
 import java.util.UUID;
 
@@ -46,7 +42,7 @@ public class DomainBlockEntity extends TemporaryBlockEntity {
     public UUID getIdentifier() {
         return this.identifier;
     }
-    
+
     public void create(UUID identifier, int delay, BlockState state, CompoundTag saved) {
         this.initialized = true;
         this.identifier = identifier;
@@ -57,8 +53,8 @@ public class DomainBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
 
         pTag.putBoolean("initialized", this.initialized);
 
@@ -69,8 +65,8 @@ public class DomainBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
 
         this.initialized = pTag.getBoolean("initialized");
 

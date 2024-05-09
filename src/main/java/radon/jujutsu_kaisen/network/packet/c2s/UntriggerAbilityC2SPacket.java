@@ -1,55 +1,36 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
 
-public class UntriggerAbilityC2SPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "untrigger_ability_serverbound");
+public record UntriggerAbilityC2SPacket(Ability ability) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<UntriggerAbilityC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "untrigger_ability_serverbound"));
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, UntriggerAbilityC2SPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.registry(JJKAbilities.ABILITY_KEY),
+            UntriggerAbilityC2SPacket::ability,
+            UntriggerAbilityC2SPacket::new
+    );
 
-    private final ResourceLocation key;
+    public void handle(IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            if (!(ctx.player() instanceof ServerPlayer sender)) return;
 
-    public UntriggerAbilityC2SPacket(ResourceLocation key) {
-        this.key = key;
-    }
-
-    public UntriggerAbilityC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readResourceLocation());
-    }
-
-    public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().execute(() -> {
-            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
-
-            Ability ability = JJKAbilities.getValue(this.key);
-
-            if (ability == null) return;
-
-            AbilityHandler.untrigger(sender, ability);
+            AbilityHandler.untrigger(sender, this.ability);
         });
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeResourceLocation(this.key);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return IDENTIFIER;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

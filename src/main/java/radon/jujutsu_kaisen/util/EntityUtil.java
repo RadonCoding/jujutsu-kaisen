@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.util;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -15,15 +16,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.EntityGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.RCT1;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
@@ -185,29 +183,28 @@ public class EntityUtil {
         return null;
     }
 
-    public static boolean applyModifier(LivingEntity owner, Attribute attribute, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
-        AttributeInstance instance = owner.getAttribute(attribute);
+    public static boolean applyModifier(LivingEntity owner, Holder<Attribute> holder, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
+        AttributeInstance instance = owner.getAttribute(holder);
         AttributeModifier modifier = new AttributeModifier(identifier, name, amount, operation);
 
-        if (instance != null) {
-            AttributeModifier existing = instance.getModifier(identifier);
+        if (instance == null) return false;
+        AttributeModifier existing = instance.getModifier(identifier);
 
-            if (existing != null) {
-                if (existing.getAmount() != amount) {
-                    instance.removeModifier(identifier);
-                    instance.addTransientModifier(modifier);
-                    return true;
-                }
-            } else {
-                instance.addTransientModifier(modifier);
-                return true;
-            }
+        if (existing == null) {
+            instance.addTransientModifier(modifier);
+            return true;
         }
-        return false;
+
+        if (existing.amount() == amount) return false;
+
+        instance.removeModifier(identifier);
+        instance.addTransientModifier(modifier);
+
+        return true;
     }
 
-    public static void removeModifier(LivingEntity owner, Attribute attribute, UUID identifier) {
-        AttributeInstance instance = owner.getAttribute(attribute);
+    public static void removeModifier(LivingEntity owner, Holder<Attribute> holder, UUID identifier) {
+        AttributeInstance instance = owner.getAttribute(holder);
 
         if (instance != null) {
             instance.removeModifier(identifier);

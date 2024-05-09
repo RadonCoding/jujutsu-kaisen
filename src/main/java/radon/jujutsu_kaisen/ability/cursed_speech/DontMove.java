@@ -7,17 +7,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.cursed_speech.base.CursedSpeech;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.cursed_speech.util.CursedSpeechUtil;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DontMove extends CursedSpeech {
@@ -43,7 +35,7 @@ public class DontMove extends CursedSpeech {
         CursedSpeechUtil.attack(owner, entity -> {
             if (!(entity instanceof LivingEntity living)) return;
 
-            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(DURATION * this.getOutput(owner)), 1, false, false, false));
+            living.addEffect(new MobEffectInstance(JJKEffects.STUN, Math.round(DURATION * this.getOutput(owner)), 1, false, false, false));
 
             if (living instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));

@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSkillDataSC2Packet;
 import radon.jujutsu_kaisen.util.PlayerUtil;
 
@@ -36,7 +37,7 @@ public class ResetSkillsCommand {
         data.resetSkills();
 
         if (entity instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSkillDataSC2Packet(data.serializeNBT()), player);
+            PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(data.serializeNBT(player.registryAccess())));
         }
         return 1;
     }

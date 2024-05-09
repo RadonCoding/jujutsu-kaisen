@@ -7,13 +7,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.*;
-import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -61,8 +60,8 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
     }
 
     @Override
-    public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos) {
-        float power = this.getOutput(owner) * DomainExpansion.getStrength(owner, false);
+    public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos, boolean instant) {
+        float power = this.getOutput(owner);
 
         int length = HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, (DismantleProjectile.MAX_LENGTH + 1) * 2);
 

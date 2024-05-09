@@ -1,24 +1,17 @@
 package radon.jujutsu_kaisen.client.visual.visual;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.common.Mod;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
@@ -90,7 +83,7 @@ public class BlueFistsVisual implements IVisual {
             double y = pos.y + yOffset * (RADIUS * 0.1F);
             double z = pos.z + zOffset * (RADIUS * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.DARK_BLUE, PARTICLE_SIZE, 0.2F, true, 20),
+            level.addParticle(new TravelParticle.Options(pos.toVector3f(), ParticleColors.DARK_BLUE, PARTICLE_SIZE, 0.2F, true, 20),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -106,7 +99,7 @@ public class BlueFistsVisual implements IVisual {
             double y = pos.y + yOffset * (RADIUS * 0.5F * 0.1F);
             double z = pos.z + zOffset * (RADIUS * 0.5F * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.LIGHT_BLUE, PARTICLE_SIZE / 2.0F, 0.2F, true, 20),
+            level.addParticle(new TravelParticle.Options(pos.toVector3f(), ParticleColors.LIGHT_BLUE, PARTICLE_SIZE / 2.0F, 0.2F, true, 20),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }

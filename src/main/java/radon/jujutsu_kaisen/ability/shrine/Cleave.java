@@ -10,18 +10,18 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDomainAttack;
+import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -65,7 +65,7 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
         return Classification.SLASHING;
     }
 
-    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain, DamageSource source) {
+    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain, DamageSource source, boolean instant) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
@@ -102,7 +102,8 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
         }
 
         data.delayTickEvent(() -> {
-            float power = domain == null ? Ability.getOutput(JJKAbilities.CLEAVE.get(), owner) : Ability.getOutput(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
+            float power = domain == null ? Ability.getOutput(JJKAbilities.CLEAVE.get(), owner) : Ability.getOutput(JJKAbilities.CLEAVE.get(), owner) *
+                    (instant ? 0.5F : 1.0F);
 
             float damage = EntityUtil.calculateDamage(source, target);
             damage = Math.min(DAMAGE * power, damage);
@@ -116,14 +117,14 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
         }, 20);
     }
 
-    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
+    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain, boolean instant) {
         DamageSource source = getSource(owner, domain);
-        perform(owner, target, domain, source);
+        perform(owner, target, domain, source, instant);
     }
 
     @Override
-    public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {
-        perform(owner, target, domain);
+    public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain, boolean instant) {
+        perform(owner, target, domain, instant);
     }
 
     @Override
@@ -131,7 +132,7 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
         if (owner.level().isClientSide) return false;
         if (!DamageUtil.isMelee(source)) return false;
 
-        perform(owner, target, null);
+        perform(owner, target, null, false);
 
         return true;
     }

@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.PactListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.PlayerListWidget;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.QuestionCreatePactC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.QuestionRemovePactC2SPacket;
 import radon.jujutsu_kaisen.pact.JJKPacts;
@@ -134,7 +135,7 @@ public class PactTab extends JJKTab {
             IContractData data = cap.getContractData();
 
             this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request_create", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
-            PacketHandler.sendToServer(new QuestionCreatePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
+            PacketDistributor.sendToServer(new QuestionCreatePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
             data.createPactCreationRequest(this.player.get().getProfile().getId(), this.pact.get());
         }).size(40, 20).pos(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.create);
@@ -149,7 +150,7 @@ public class PactTab extends JJKTab {
             IContractData data = cap.getContractData();
 
             this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request_remove", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
-            PacketHandler.sendToServer(new QuestionRemovePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
+            PacketDistributor.sendToServer(new QuestionRemovePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
             data.createPactRemovalRequest(this.player.get().getProfile().getId(), this.pact.get());
         }).size(40, 20).pos(xOffset + 176, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.remove);

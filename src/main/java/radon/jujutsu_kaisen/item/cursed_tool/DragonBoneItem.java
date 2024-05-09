@@ -1,13 +1,13 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -18,18 +18,20 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.DragonBoneRenderer;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
+import radon.jujutsu_kaisen.item.CursedToolItem;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -38,35 +40,37 @@ import java.util.function.Consumer;
 public class DragonBoneItem extends CursedToolItem implements GeoItem {
     private static final float MAX_ENERGY = 100.0F;
     private static final double RANGE = 5.0D;
+    private static final float MAX_STEAL = 10.0F;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public DragonBoneItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    public DragonBoneItem(Tier pTier, Properties pProperties) {
+        super(pTier, pProperties);
+    }
+
+    @Override
+    public void doPostHurtEffects(ItemStack stack, DamageSource source, LivingEntity attacker, LivingEntity victim) {
+        IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
+
+        if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !abilityData.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())
+                && !abilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+
+        float stolen = Math.min(MAX_STEAL, sorcererData.getEnergy());
+
+        sorcererData.useEnergy(stolen);
+
+        stack.set(JJKDataComponentTypes.CURSED_ENERGY, Math.min(MAX_ENERGY,
+                stack.getOrDefault(JJKDataComponentTypes.CURSED_ENERGY, 0.0F) + stolen));
     }
 
     @Override
     public SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
-    }
-
-    public static float getEnergy(ItemStack stack) {
-        CompoundTag nbt = stack.getOrCreateTag();
-        return nbt.getFloat("energy");
-    }
-
-    public static void addEnergy(ItemStack stack, float energy) {
-        CompoundTag nbt = stack.getOrCreateTag();
-
-        if (nbt.contains("energy")) {
-            energy += nbt.getFloat("energy");
-        }
-        nbt.putFloat("energy", Math.min(MAX_ENERGY, energy));
-    }
-
-    public static void resetEnergy(ItemStack stack) {
-        CompoundTag nbt = stack.getOrCreateTag();
-        nbt.putFloat("energy", 0.0F);
     }
 
     @Override
@@ -78,7 +82,7 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
         ISorcererData data = cap.getSorcererData();
 
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        float charge = getEnergy(stack) / MAX_ENERGY;
+        float charge = stack.getOrDefault(JJKDataComponentTypes.CURSED_ENERGY, 0.0F) / MAX_ENERGY;
 
         if (charge == 0.0F) super.use(pLevel, pPlayer, pUsedHand);
 
@@ -90,22 +94,23 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
             if (pPlayer.level() instanceof ServerLevel level) {
                 level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             }
-            entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER, 1.0F, 1.0F);
 
-            entity.hurt(JJKDamageSources.jujutsuAttack(pPlayer, null), this.getDamage() * data.getAbilityOutput() * charge);
+            entity.hurt(JJKDamageSources.jujutsuAttack(pPlayer, null), this.getDamage(stack) * data.getAbilityOutput() * charge);
 
             pPlayer.swing(InteractionHand.MAIN_HAND);
 
-            resetEnergy(stack);
+            stack.remove(JJKDataComponentTypes.CURSED_ENERGY);
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pContext, pTooltipComponents, pIsAdvanced);
 
-        pTooltipComponents.add(Component.translatable(String.format("%s.energy", this.getDescriptionId()), (getEnergy(pStack) / MAX_ENERGY) * 100));
+        pTooltipComponents.add(Component.translatable(String.format("%s.energy", this.getDescriptionId()),
+                (pStack.getOrDefault(JJKDataComponentTypes.CURSED_ENERGY, 0.0F) / MAX_ENERGY) * 100));
     }
 
     @Override

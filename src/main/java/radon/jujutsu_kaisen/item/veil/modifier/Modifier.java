@@ -1,9 +1,12 @@
 package radon.jujutsu_kaisen.item.veil.modifier;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.NotNull;
 
-public class Modifier {
+public class Modifier{
     private final Modifier.Type type;
     private final Modifier.Action action;
 

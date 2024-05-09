@@ -1,43 +1,34 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.CameraShakeHandler;
 
-public class CameraShakeS2CPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "camera_shake_clientbound");
+public record CameraShakeS2CPacket(float intensity, float speed, int duration) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<CameraShakeS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "camera_shake_clientbound"));
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, CameraShakeS2CPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.FLOAT,
+            CameraShakeS2CPacket::intensity,
+            ByteBufCodecs.FLOAT,
+            CameraShakeS2CPacket::speed,
+            ByteBufCodecs.INT,
+            CameraShakeS2CPacket::duration,
+            CameraShakeS2CPacket::new
+    );
 
-    private final float intensity;
-    private final float speed;
-    private final int duration;
-
-    public CameraShakeS2CPacket(float intensity, float speed, int duration) {
-        this.intensity = intensity;
-        this.speed = speed;
-        this.duration = duration;
-    }
-
-    public CameraShakeS2CPacket(FriendlyByteBuf buf) {
-        this(buf.readFloat(), buf.readFloat(), buf.readInt());
-    }
-
-    public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().execute(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
+    public void handle(IPayloadContext ctx) {
+        ctx.enqueueWork(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeFloat(this.intensity);
-        pBuffer.writeFloat(this.speed);
-        pBuffer.writeInt(this.duration);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return IDENTIFIER;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

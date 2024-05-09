@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -50,8 +51,8 @@ public class DurationBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
 
         this.initialized = pTag.getBoolean("initialized");
 
@@ -62,8 +63,8 @@ public class DurationBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
 
         pTag.putBoolean("initialized", this.initialized);
 

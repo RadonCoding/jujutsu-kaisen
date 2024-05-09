@@ -5,18 +5,24 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -26,7 +32,7 @@ import radon.jujutsu_kaisen.client.MixinData;
 
 import java.util.Locale;
 
-public class MirageParticle<T extends MirageParticle.MirageParticleOptions> extends TextureSheetParticle {
+public class MirageParticle<T extends MirageParticle.Options> extends TextureSheetParticle {
     private final int entityId;
 
     @Nullable
@@ -157,37 +163,29 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
         MixinData.isFakeRender = false;
     }
 
-    public record MirageParticleOptions(int entityId) implements ParticleOptions {
-        public static Deserializer<MirageParticleOptions> DESERIALIZER = new Deserializer<>() {
-            public @NotNull MirageParticle.MirageParticleOptions fromCommand(@NotNull ParticleType<MirageParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-                return new MirageParticleOptions(reader.readInt());
-            }
-
-            public @NotNull MirageParticle.MirageParticleOptions fromNetwork(@NotNull ParticleType<MirageParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new MirageParticleOptions(buf.readInt());
-            }
-        };
+    public record Options(int entityId) implements ParticleOptions {
+        public static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec(
+                builder -> builder.group(
+                                Codec.INT.fieldOf("entityId").forGetter(options -> options.entityId)
+                        )
+                        .apply(builder, Options::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, Options> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.INT,
+                Options::entityId,
+                Options::new
+        );
 
         @Override
         public @NotNull ParticleType<?> getType() {
             return JJKParticles.MIRAGE.get();
         }
-
-        @Override
-        public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeInt(this.entityId);
-        }
-
-        @Override
-        public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.entityId);
-        }
     }
 
-    public static class Provider implements ParticleProvider<MirageParticleOptions> {
+    public static class Provider implements ParticleProvider<Options> {
         public Provider(SpriteSet ignored) {}
 
-        public Particle createParticle(@NotNull MirageParticle.MirageParticleOptions pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
+        public Particle createParticle(@NotNull MirageParticle.Options pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
             return new MirageParticle<>(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType);
         }

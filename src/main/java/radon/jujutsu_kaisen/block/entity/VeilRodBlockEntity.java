@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -53,8 +54,8 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
 
         if (this.ownerUUID != null) {
             pTag.putUUID("owner", this.ownerUUID);
@@ -67,8 +68,8 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
 
         if (pTag.contains("owner")) {
             this.ownerUUID = pTag.getUUID("owner");

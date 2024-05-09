@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.data.contract;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.binding_vow.BindingVow;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
@@ -160,7 +162,7 @@ public class ContractData implements IContractData {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
 
         ListTag acceptedPactsTag = new ListTag();
@@ -200,7 +202,7 @@ public class ContractData implements IContractData {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
         this.acceptedPacts.clear();
 
         for (Tag key : nbt.getList("accepted_pacts", Tag.TAG_COMPOUND)) {

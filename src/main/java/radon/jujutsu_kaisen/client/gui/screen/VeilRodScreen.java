@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.SetVeilSizeC2SPacket;
 
 public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
@@ -47,7 +48,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
         if (this.oldSize > 0) {
             if (newSize != this.oldSize) {
-                PacketHandler.sendToServer(new SetVeilSizeC2SPacket(newSize));
+                PacketDistributor.sendToServer(new SetVeilSizeC2SPacket(newSize));
             }
         }
         this.oldSize = newSize;

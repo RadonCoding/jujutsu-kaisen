@@ -13,8 +13,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
 
@@ -34,9 +32,8 @@ public abstract class PackCursedSpirit extends CursedSpirit {
 
     protected abstract PackCursedSpirit spawn();
 
-    @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull MobSpawnType pSpawnType, @Nullable SpawnGroupData pSpawnGroupData) {
         if (this.getLeader() == null) {
             int x = Mth.floor(this.getX());
             int y = Mth.floor(this.getY());
@@ -49,7 +46,7 @@ public abstract class PackCursedSpirit extends CursedSpirit {
                         z + Mth.nextFloat(this.random, this.getBbWidth(), this.getBbWidth() * 4) * Mth.nextInt(this.random, -1, 1)
                 );
 
-                if (NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(this.getType()), this.level(), pos, this.getType())
+                if (SpawnPlacements.getPlacementType(this.getType()).isSpawnPositionOk(this.level(), pos, this.getType())
                         && SpawnPlacements.checkSpawnRules(this.getType(), pLevel.getLevel(), MobSpawnType.REINFORCEMENT, pos, this.level().random)) {
                     PackCursedSpirit entity = this.spawn();
                     entity.moveTo(
@@ -63,7 +60,7 @@ public abstract class PackCursedSpirit extends CursedSpirit {
                 }
             }
         }
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+        return super.finalizeSpawn(pLevel, pDifficulty, pSpawnType, pSpawnGroupData);
     }
 
     @Override

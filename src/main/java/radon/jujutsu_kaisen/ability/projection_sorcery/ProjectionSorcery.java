@@ -19,28 +19,23 @@ import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDurationable;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.client.particle.ProjectionParticle;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -84,7 +79,7 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (owner.hasEffect(JJKEffects.STUN.get())) {
+        if (owner.hasEffect(JJKEffects.STUN)) {
             return Status.FAILURE;
         }
         return super.isStillUsable(owner);
@@ -149,7 +144,7 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
                 data.addFrame(middle, middleYaw);
 
                 if (owner instanceof ServerPlayer player) {
-                    ParticleUtil.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), false, middle.x, middle.y, middle.z,
+                    ParticleUtil.sendParticle(player, new ProjectionParticle.Options(owner.getId(), middleYaw), false, middle.x, middle.y, middle.z,
                             0.0D, 0.0D, 0.0D);
                 }
             }
@@ -159,7 +154,7 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
         data.addFrame(next, nextYaw);
 
         if (owner instanceof ServerPlayer player) {
-            ParticleUtil.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), false, next.x, next.y, next.z,
+            ParticleUtil.sendParticle(player, new ProjectionParticle.Options(owner.getId(), nextYaw), false, next.x, next.y, next.z,
                     0.0D, 0.0D, 0.0D);
         }
     }
@@ -220,12 +215,12 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
                     owner.level().addFreshEntity(new ProjectionFrameEntity(owner, owner, Ability.getOutput(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
 
                     if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);
+                        PacketDistributor.sendToPlayer(player, new ScreenFlashS2CPacket());
                     }
                     return;
                 }
                 if (owner.level() instanceof ServerLevel level) {
-                    level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
+                    level.sendParticles(new MirageParticle.Options(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                             0, 0.0D, 0.0D, 0.0D, 1.0D);
                 }
                 AABB bounds = owner.getBoundingBox().inflate(2.0D);
@@ -259,11 +254,11 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
         projectionSorceryData.addSpeedStack();
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(projectionSorceryData.serializeNBT()), player);
+            PacketDistributor.sendToPlayer(player, new SyncProjectionSorceryDataS2CPacket(projectionSorceryData.serializeNBT(player.registryAccess())));
         }
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
@@ -288,7 +283,7 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
 
             Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
             ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER, 1.0F, 1.0F);
 
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
 

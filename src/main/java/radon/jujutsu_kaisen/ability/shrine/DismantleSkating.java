@@ -3,8 +3,8 @@ package radon.jujutsu_kaisen.ability.shrine;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IToggled;
 
 public class DismantleSkating extends Ability implements IToggled {
     @Override

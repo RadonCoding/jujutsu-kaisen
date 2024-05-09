@@ -5,16 +5,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.data.mission.Mission;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 
 import java.util.List;
 import java.util.Set;
@@ -62,6 +54,8 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     float getOutput();
 
+    float getOutputBoost();
+
     float getAbilityOutput(Ability ability);
 
     float getAbilityOutput();
@@ -73,10 +67,6 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
     void setExperience(float experience);
 
     boolean addExperience(float amount);
-
-    float getDomainSize();
-
-    void setDomainSize(float domainSize);
 
     void addAdditional(ICursedTechnique technique);
 

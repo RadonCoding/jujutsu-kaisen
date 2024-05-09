@@ -3,24 +3,24 @@ package radon.jujutsu_kaisen.client.gui.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.joml.Vector3f;
-import radon.jujutsu_kaisen.ImbuementHandler;
+import radon.jujutsu_kaisen.imbuement.ImbuementHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.CuriosUtil;
@@ -33,8 +33,8 @@ public class CursedEnergyOverlay {
 
     private static final float SCALE = 0.6F;
 
-    public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
-        Minecraft mc = gui.getMinecraft();
+    public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
+        Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null) return;
 
@@ -46,12 +46,13 @@ public class CursedEnergyOverlay {
         IAbilityData abilityData = cap.getAbilityData();
         IIdleTransfigurationData idleTransfigurationData = cap.getIdleTransfigurationData();
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(SCALE, SCALE, SCALE);
+        pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().scale(SCALE, SCALE, SCALE);
 
         List<Component> above = new ArrayList<>();
 
         if (!sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
+            above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output_boost", JujutsuKaisen.MOD_ID), Math.round(sorcererData.getOutputBoost() * 100.0F)));
             above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(sorcererData.getOutput() * 100)));
         }
 
@@ -67,10 +68,10 @@ public class CursedEnergyOverlay {
         int aboveY = 26;
 
         for (Component line : above) {
-            graphics.drawString(gui.getFont(), line, Math.round(20 * (1.0F / SCALE)), Math.round(aboveY * (1.0F / SCALE)), 16777215);
+            pGuiGraphics.drawString(mc.font, line, Math.round(20 * (1.0F / SCALE)), Math.round(aboveY * (1.0F / SCALE)), 16777215);
             aboveY += mc.font.lineHeight - 1;
         }
-        graphics.pose().popPose();
+        pGuiGraphics.pose().popPose();
 
         if (sorcererData.getEnergy() > 0.0F) {
             RenderSystem.disableDepthTest();
@@ -80,21 +81,21 @@ public class CursedEnergyOverlay {
             Vector3f color = sorcererData.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(sorcererData.getCursedEnergyColor()).toVector3f();
             RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
 
-            graphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 10, 93, 18);
+            pGuiGraphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 10, 93, 18);
 
             float energyWidth = (sorcererData.getEnergy() / sorcererData.getMaxEnergy()) * 93.0F;
-            graphics.blit(TEXTURE, 20, aboveY + 1, 0, 10, (int) energyWidth, 8, 93, 18);
+            pGuiGraphics.blit(TEXTURE, 20, aboveY + 1, 0, 10, (int) energyWidth, 8, 93, 18);
 
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(SCALE, SCALE, SCALE);
+        pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().scale(SCALE, SCALE, SCALE);
 
         if (sorcererData.getEnergy() > 0.0F) {
-            graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", sorcererData.getEnergy(), sorcererData.getMaxEnergy()),
+            pGuiGraphics.drawString(mc.font, String.format("%.1f / %.1f", sorcererData.getEnergy(), sorcererData.getMaxEnergy()),
                     Math.round(23 * (1.0F / SCALE)), Math.round((aboveY + 3.0F) * (1.0F / SCALE)), 16777215);
             aboveY += 4;
         }
@@ -148,10 +149,10 @@ public class CursedEnergyOverlay {
         int belowY = aboveY + mc.font.lineHeight;
 
         for (Component line : below) {
-            graphics.drawString(gui.getFont(), line, Math.round(20 * (1.0F / SCALE)), Math.round(belowY * (1.0F / SCALE)), 16777215);
+            pGuiGraphics.drawString(mc.font, line, Math.round(20 * (1.0F / SCALE)), Math.round(belowY * (1.0F / SCALE)), 16777215);
             belowY += mc.font.lineHeight;
         }
 
-        graphics.pose().popPose();
+        pGuiGraphics.pose().popPose();
     };
 }

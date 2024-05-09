@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncContractDataS2CPacket;
 import radon.jujutsu_kaisen.pact.Pact;
 
@@ -52,8 +53,8 @@ public class PactRemovalAcceptCommand {
 
             dstData.removePactRemovalRequest(src.getUUID(), pact);
 
-            PacketHandler.sendToClient(new SyncContractDataS2CPacket(dstData.serializeNBT()), dst);
-            PacketHandler.sendToClient(new SyncContractDataS2CPacket(srcData.serializeNBT()), src);
+            PacketDistributor.sendToPlayer(dst, new SyncContractDataS2CPacket(dstData.serializeNBT(dst.registryAccess())));
+            PacketDistributor.sendToPlayer(src, new SyncContractDataS2CPacket(srcData.serializeNBT(src.registryAccess())));
 
             src.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_accept_remove", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), dst.getName()));
             dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_accept_remove", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), src.getName()));

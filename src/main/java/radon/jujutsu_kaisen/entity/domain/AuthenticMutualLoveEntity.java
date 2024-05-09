@@ -11,14 +11,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 
@@ -34,8 +33,8 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
         super(pType, pLevel);
     }
 
-    public AuthenticMutualLoveEntity(LivingEntity owner, DomainExpansion ability, int radius) {
-        super(JJKEntities.GENUINE_MUTUAL_LOVE.get(), owner, ability, radius);
+    public AuthenticMutualLoveEntity(LivingEntity owner, DomainExpansion ability) {
+        super(JJKEntities.GENUINE_MUTUAL_LOVE.get(), owner, ability);
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -49,7 +48,7 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         if (copied.isEmpty()) return;
 
-        int share = (radius * 2) / copied.size();
+        int share = (RADIUS * 2) / copied.size();
 
         List<ICursedTechnique> all = new ArrayList<>();
 
@@ -57,15 +56,15 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
             all.addAll(Collections.nCopies(share, technique));
         }
 
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius - 1, 0.0D));
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, RADIUS - 1, 0.0D));
 
         List<BlockPos> floor = new ArrayList<>();
 
-        for (int x = -radius; x <= radius; x++) {
-            for (int z = -radius; z <= radius; z++) {
+        for (int x = -RADIUS; x <= RADIUS; x++) {
+            for (int z = -RADIUS; z <= RADIUS; z++) {
                 double distance = Math.sqrt(x * x + z * z);
 
-                if (distance > radius) continue;
+                if (distance > RADIUS) continue;
 
                 BlockPos pos = center.offset(x, 0, z);
 
@@ -116,9 +115,9 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
             this.technique = JJKCursedTechniques.getValue(new ResourceLocation(pCompound.getString("technique")));
         }
 
-        for (Tag key : pCompound.getList("offsets", Tag.TAG_COMPOUND)) {
-            CompoundTag nbt = (CompoundTag) key;
-            this.offsets.put(NbtUtils.readBlockPos(nbt.getCompound("pos")), JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique"))));
+        for (Tag tag : pCompound.getList("offsets", Tag.TAG_COMPOUND)) {
+            CompoundTag nbt = (CompoundTag) tag;
+            this.offsets.put(NbtUtils.readBlockPos(nbt, "pos").orElseThrow(), JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique"))));
         }
     }
 

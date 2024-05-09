@@ -1,23 +1,18 @@
 package radon.jujutsu_kaisen.entity.effect;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ExplosionHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.EmittingLightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -54,7 +49,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+    public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
         float radius = this.getRadius();
         return EntityDimensions.fixed(radius, radius);
     }
@@ -87,7 +82,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         for (int i = 0; i < radius * 4; i++) {
-            this.level().addParticle(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner),
+            this.level().addParticle(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner),
                             radius * this.random.nextFloat(), 1), center.x, center.y, center.z,
                     0.0D, 0.0D, 0.0D);
         }
@@ -106,7 +101,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
 
             Vec3 offset = new Vec3(x, y, z);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.getCursedEnergyColorBright(owner),
+            this.level().addParticle(new TravelParticle.Options(offset.toVector3f(), ParticleColors.getCursedEnergyColorBright(owner),
                             radius * 0.1F, 1.0F, true, 5), true,
                     center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }

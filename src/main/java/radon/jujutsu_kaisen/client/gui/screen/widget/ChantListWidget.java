@@ -7,14 +7,13 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.ICharged;
+import radon.jujutsu_kaisen.ability.IDomainAttack;
+import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.IToggled;
 
 public class ChantListWidget extends JJKSelectionList<String, ChantListWidget.Entry> {
     public ChantListWidget(IBuilder<String, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y) {

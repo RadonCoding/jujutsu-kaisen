@@ -1,16 +1,19 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.contract.IContractData;
@@ -21,24 +24,19 @@ import radon.jujutsu_kaisen.pact.Pact;
 
 import java.util.UUID;
 
-public class QuestionCreatePactC2SPacket implements CustomPacketPayload {
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "question_create_pact_serverbound");
+public record QuestionCreatePactC2SPacket(UUID identifier, Pact pact) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<QuestionCreatePactC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "question_create_pact_serverbound"));
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, QuestionCreatePactC2SPacket> STREAM_CODEC = StreamCodec.composite(
+            UUIDUtil.STREAM_CODEC,
+            QuestionCreatePactC2SPacket::identifier,
+            ByteBufCodecs.registry(JJKPacts.PACT_KEY),
+            QuestionCreatePactC2SPacket::pact,
+            QuestionCreatePactC2SPacket::new
+    );
 
-    private final UUID identifier;
-    private final Pact pact;
-
-    public QuestionCreatePactC2SPacket(UUID identifier, Pact pact) {
-        this.identifier = identifier;
-        this.pact = pact;
-    }
-
-    public QuestionCreatePactC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readUUID(), JJKPacts.getValue(buf.readResourceLocation()));
-    }
-
-    public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().execute(() -> {
-            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
+    public void handle(IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            if (!(ctx.player() instanceof ServerPlayer sender)) return;
 
             IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -73,13 +71,7 @@ public class QuestionCreatePactC2SPacket implements CustomPacketPayload {
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeUUID(this.identifier);
-        pBuffer.writeResourceLocation(JJKPacts.getKey(this.pact));
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return IDENTIFIER;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

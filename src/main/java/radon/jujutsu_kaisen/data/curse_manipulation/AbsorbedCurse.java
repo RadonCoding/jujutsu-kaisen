@@ -1,14 +1,53 @@
 package radon.jujutsu_kaisen.data.curse_manipulation;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.data.ten_shadows.Adaptation;
+
+import java.util.Objects;
 
 public class AbsorbedCurse {
+    public static Codec<AbsorbedCurse> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ComponentSerialization.FLAT_CODEC.fieldOf("name").forGetter(AbsorbedCurse::getName),
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("type").forGetter(AbsorbedCurse::getType),
+            CompoundTag.CODEC.fieldOf("data").forGetter(AbsorbedCurse::getData),
+            ExtraCodecs.GAME_PROFILE.fieldOf("profile").forGetter(AbsorbedCurse::getProfile)
+    ).apply(instance, AbsorbedCurse::new));
+    public static StreamCodec<RegistryFriendlyByteBuf, AbsorbedCurse> STREAM_CODEC = StreamCodec.composite(
+            ComponentSerialization.STREAM_CODEC,
+            AbsorbedCurse::getName,
+            ByteBufCodecs.registry(Registries.ENTITY_TYPE),
+            AbsorbedCurse::getType,
+            ByteBufCodecs.COMPOUND_TAG,
+            AbsorbedCurse::getData,
+            ByteBufCodecs.GAME_PROFILE,
+            AbsorbedCurse::getProfile,
+            AbsorbedCurse::new
+    );
+
     private final Component name;
     private final EntityType<?> type;
     private final CompoundTag data;
@@ -28,16 +67,6 @@ public class AbsorbedCurse {
         this.profile = profile;
     }
 
-    public AbsorbedCurse(CompoundTag nbt) {
-        this.name = Component.Serializer.fromJson(nbt.getString("name"));
-        this.type = EntityType.byString(nbt.getString("type")).orElseThrow();
-        this.data = nbt.getCompound("data");
-
-        if (nbt.contains("profile")) {
-            this.profile = NbtUtils.readGameProfile(nbt.getCompound("profile"));
-        }
-    }
-
     public Component getName() {
         return this.name;
     }
@@ -55,15 +84,26 @@ public class AbsorbedCurse {
         return this.profile;
     }
 
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("name", Component.Serializer.toJson(this.name));
-        nbt.putString("type", EntityType.getKey(this.type).toString());
-        nbt.put("data", this.data);
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof AbsorbedCurse other)) return false;
+
+        return this.name == other.name && this.type == other.type && this.data.equals(other.data) &&
+                Objects.equals(this.profile, other.profile);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+
+        result = prime * result + this.name.hashCode();
+        result = prime * result + this.type.hashCode();
+        result = prime * result + this.data.hashCode();
 
         if (this.profile != null) {
-            nbt.put("profile", NbtUtils.writeGameProfile(new CompoundTag(), this.profile));
+            result = prime * result + this.profile.hashCode();
         }
-        return nbt;
+        return result;
     }
 }

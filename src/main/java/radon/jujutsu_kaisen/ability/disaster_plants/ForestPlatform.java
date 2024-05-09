@@ -5,14 +5,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.ICharged;
+import radon.jujutsu_kaisen.ability.IDomainAttack;
+import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -35,7 +35,7 @@ public class ForestPlatform extends Ability implements IToggled {
         IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(this)) {
-            return owner.getFeetBlockState().getCollisionShape(owner.level(), owner.blockPosition()).isEmpty() && HelperMethods.RANDOM.nextInt(5) != 0;
+            return owner.getBlockStateOn().getCollisionShape(owner.level(), owner.blockPosition()).isEmpty() && HelperMethods.RANDOM.nextInt(5) != 0;
         }
         return owner.fallDistance > 2.0F && !owner.isInFluidType();
     }

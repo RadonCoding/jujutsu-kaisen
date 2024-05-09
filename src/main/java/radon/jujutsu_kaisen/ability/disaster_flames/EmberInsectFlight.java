@@ -4,12 +4,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.EmberInsectFlightEntity;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class EmberInsectFlight extends Summon<EmberInsectFlightEntity> {
         IAbilityData data = cap.getAbilityData();
 
         if (data.hasToggled(this)) {
-            return owner.getFeetBlockState().getCollisionShape(owner.level(), owner.blockPosition()).isEmpty() && HelperMethods.RANDOM.nextInt(5) != 0;
+            return owner.getBlockStateOn().getCollisionShape(owner.level(), owner.blockPosition()).isEmpty() && HelperMethods.RANDOM.nextInt(5) != 0;
         }
         return owner.fallDistance > 2.0F && !owner.isInFluidType();
     }

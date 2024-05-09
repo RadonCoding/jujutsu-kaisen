@@ -1,22 +1,21 @@
 package radon.jujutsu_kaisen.client.particle;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SmokeParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
-
-import java.util.Locale;
 
 public class BetterSmokeParticle extends SmokeParticle {
-    protected BetterSmokeParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, BetterSmokeParticleOptions options, SpriteSet pSprites) {
+    protected BetterSmokeParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, Options options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ, 0.0D, 0.0D, 0.0D, options.scalar, pSprites);
 
         this.gravity = 0.0F;
@@ -34,35 +33,29 @@ public class BetterSmokeParticle extends SmokeParticle {
         this.speedUpWhenYMotionIsBlocked = false;
     }
 
-    public record BetterSmokeParticleOptions(float scalar, int lifetime) implements ParticleOptions {
-        public static Deserializer<BetterSmokeParticleOptions> DESERIALIZER = new Deserializer<>() {
-            public @NotNull BetterSmokeParticle.BetterSmokeParticleOptions fromCommand(@NotNull ParticleType<BetterSmokeParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-                return new BetterSmokeParticleOptions(reader.readFloat(), reader.readInt());
-            }
-
-            public @NotNull BetterSmokeParticle.BetterSmokeParticleOptions fromNetwork(@NotNull ParticleType<BetterSmokeParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new BetterSmokeParticleOptions(buf.readFloat(), buf.readInt());
-            }
-        };
+    public record Options(float scalar, int lifetime) implements ParticleOptions {
+        public static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec(
+                builder -> builder.group(
+                                Codec.FLOAT.fieldOf("scalar").forGetter(options -> options.scalar),
+                                Codec.INT.fieldOf("lifetime").forGetter(options -> options.lifetime)
+                        )
+                        .apply(builder, Options::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, Options> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.FLOAT,
+                Options::scalar,
+                ByteBufCodecs.INT,
+                Options::lifetime,
+                Options::new
+        );
 
         @Override
         public @NotNull ParticleType<?> getType() {
             return JJKParticles.SMOKE.get();
         }
-
-        @Override
-        public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeFloat(this.scalar);
-            buf.writeInt(this.lifetime);
-        }
-
-        @Override
-        public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.scalar, this.lifetime);
-        }
     }
 
-    public static class Provider implements ParticleProvider<BetterSmokeParticleOptions> {
+    public static class Provider implements ParticleProvider<Options> {
         private final SpriteSet sprites;
 
         public Provider(SpriteSet pSpriteSet) {
@@ -70,7 +63,7 @@ public class BetterSmokeParticle extends SmokeParticle {
         }
 
         @Override
-        public BetterSmokeParticle createParticle(@NotNull BetterSmokeParticle.BetterSmokeParticleOptions options, @NotNull ClientLevel level, double x, double y, double z,
+        public BetterSmokeParticle createParticle(@NotNull BetterSmokeParticle.Options options, @NotNull ClientLevel level, double x, double y, double z,
                                                   double xSpeed, double ySpeed, double zSpeed) {
             return new BetterSmokeParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, options, this.sprites);
         }

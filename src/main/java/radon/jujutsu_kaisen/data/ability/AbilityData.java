@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.data.ability;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -10,23 +11,17 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForge;
-import org.jetbrains.annotations.UnknownNullability;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.ICharged;
+import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.IToggled;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
 import javax.annotation.Nullable;
@@ -201,7 +196,7 @@ public class AbilityData implements IAbilityData {
         }
 
         if (this.owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncAbilityDataS2CPacket(this.serializeNBT()), player);
+            PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(this.serializeNBT(player.registryAccess())));
         }
     }
 
@@ -350,7 +345,7 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
 
         nbt.putInt("charge", this.charge);
@@ -398,7 +393,7 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
         this.charge = nbt.getInt("charge");
 
         this.toggled.clear();

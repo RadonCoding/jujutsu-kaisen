@@ -3,36 +3,33 @@ package radon.jujutsu_kaisen.client.particle;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.MixinData;
 
-import java.util.Locale;
-
-public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleOptions> extends TextureSheetParticle {
+public class ProjectionParticle<T extends ProjectionParticle.Options> extends TextureSheetParticle {
     private final int entityId;
     private final float yaw;
 
@@ -139,38 +136,32 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
         }
     }
 
-    public record ProjectionParticleOptions(int entityId, float yaw) implements ParticleOptions {
-        public static Deserializer<ProjectionParticleOptions> DESERIALIZER = new Deserializer<>() {
-            public @NotNull ProjectionParticle.ProjectionParticleOptions fromCommand(@NotNull ParticleType<ProjectionParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-                return new ProjectionParticleOptions(reader.readInt(), reader.readFloat());
-            }
-
-            public @NotNull ProjectionParticle.ProjectionParticleOptions fromNetwork(@NotNull ParticleType<ProjectionParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new ProjectionParticleOptions(buf.readInt(), buf.readFloat());
-            }
-        };
+    public record Options(int entityId, float yaw) implements ParticleOptions {
+        public static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec(
+                builder -> builder.group(
+                                Codec.INT.fieldOf("entityId").forGetter(options -> options.entityId),
+                                Codec.FLOAT.fieldOf("yaw").forGetter(options -> options.yaw)
+                        )
+                        .apply(builder, Options::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, Options> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.INT,
+                Options::entityId,
+                ByteBufCodecs.FLOAT,
+                Options::yaw,
+                Options::new
+        );
 
         @Override
         public @NotNull ParticleType<?> getType() {
             return JJKParticles.PROJECTION.get();
         }
-
-        @Override
-        public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeInt(this.entityId);
-            buf.writeFloat(this.yaw);
-        }
-
-        @Override
-        public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %d %f %f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.entityId, this.yaw);
-        }
     }
 
-    public static class Provider implements ParticleProvider<ProjectionParticleOptions> {
+    public static class Provider implements ParticleProvider<Options> {
         public Provider(SpriteSet ignored) {}
 
-        public Particle createParticle(@NotNull ProjectionParticle.ProjectionParticleOptions pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
+        public Particle createParticle(@NotNull ProjectionParticle.Options pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
             return new ProjectionParticle<>(pLevel, pX, pY, pZ, pType);
         }

@@ -2,9 +2,9 @@ package radon.jujutsu_kaisen.entity.domain;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.entity.DomainExpansionCenterEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 
 public class TimeCellMoonPalaceEntity extends DomainExpansionCenterEntity {
     public TimeCellMoonPalaceEntity(EntityType<?> pType, Level pLevel) {

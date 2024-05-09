@@ -13,16 +13,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_object.SukunaFingerItem;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class HeianSukunaEntity extends SukunaEntity {
         if (this.fingers < 20) return;
 
         ItemStack stack = new ItemStack(JJKItems.SUKUNA_FINGER.get());
-        SukunaFingerItem.setFull(stack, true);
+        stack.set(JJKDataComponentTypes.IS_FULL_SOUL, true);
         this.spawnAtLocation(stack);
     }
 
@@ -63,11 +64,11 @@ public class HeianSukunaEntity extends SukunaEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_IDLE, false);
-        this.entityData.define(DATA_BARRAGE, 0);
+        pBuilder.define(DATA_IDLE, false);
+        pBuilder.define(DATA_BARRAGE, 0);
     }
 
     @Override

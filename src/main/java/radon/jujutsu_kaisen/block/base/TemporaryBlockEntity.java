@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.base;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -28,7 +29,7 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
         this.original = original;
     }
 
-    public void setSaved(CompoundTag saved) {
+    public void setSaved(@Nullable CompoundTag saved) {
         this.saved = saved;
     }
 
@@ -47,7 +48,7 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
                     BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
 
                     if (be != null) {
-                        be.load(this.saved);
+                        be.loadWithComponents(this.saved, this.level.registryAccess());
                     }
                 }
             }
@@ -74,8 +75,8 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
 
         if (this.original != null) {
             pTag.put("original", NbtUtils.writeBlockState(this.original));
@@ -89,8 +90,8 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
 
         if (pTag.contains("original")) {
             this.deferred = pTag.getCompound("original");

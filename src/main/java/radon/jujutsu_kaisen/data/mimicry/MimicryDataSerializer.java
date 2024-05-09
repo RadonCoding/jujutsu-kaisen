@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.data.mimicry;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -8,16 +9,18 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.contract.ContractData;
 import radon.jujutsu_kaisen.data.contract.IContractData;
 
+import javax.annotation.Nullable;
+
 public class MimicryDataSerializer implements IAttachmentSerializer<CompoundTag, IMimicryData> {
     @Override
-    public @NotNull IMimicryData read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag) {
+    public @NotNull IMimicryData read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         IMimicryData data = new MimicryData((LivingEntity) holder);
-        data.deserializeNBT(tag);
+        data.deserializeNBT(provider, tag);
         return data;
     }
 
     @Override
-    public CompoundTag write(IMimicryData attachment) {
-        return attachment.serializeNBT();
+    public @Nullable CompoundTag write(@NotNull IMimicryData attachment, HolderLookup.@NotNull Provider provider) {
+        return attachment.serializeNBT(provider);
     }
 }

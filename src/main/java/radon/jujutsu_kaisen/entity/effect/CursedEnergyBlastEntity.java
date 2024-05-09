@@ -5,9 +5,9 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -53,7 +53,7 @@ public class CursedEnergyBlastEntity extends JujutsuProjectile {
         for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, this.getBoundingBox())) {
             if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CURSED_ENERGY_BLAST.get()), DAMAGE * this.getPower())) continue;
 
-            entity.setSecondsOnFire(5);
+            entity.setRemainingFireTicks(5 * 20);
         }
     }
 

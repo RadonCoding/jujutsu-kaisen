@@ -15,14 +15,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDurationable;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -139,7 +134,7 @@ public class Water extends Ability implements IChanneled, IDurationable {
         Vec3 end = new Vec3(endPosX, endPosY, endPosZ);
         Vec3 collision = this.getCollision(owner, spawn, end);
 
-        ParticleOptions particle = new TravelParticle.TravelParticleOptions(collision.toVector3f(), Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
+        ParticleOptions particle = new TravelParticle.Options(collision.toVector3f(), Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
                 0.5F, false, (int) spawn.distanceTo(collision) / 2);
 
         for (int i = 0; i < 32; i++) {

@@ -7,20 +7,19 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
-import radon.jujutsu_kaisen.entity.curse.BirdCurseEntity;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -36,7 +35,7 @@ public class CurseManipulationUtil {
 
         if (entity == null) return null;
 
-        entity.setTame(true);
+        entity.setTame(true, false);
         entity.setOwner(owner);
 
         GameProfile profile = curse.getProfile();
@@ -86,7 +85,7 @@ public class CurseManipulationUtil {
         IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
 
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || ownerAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return null;
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID) || ownerAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return null;
 
         List<AbsorbedCurse> curses = ownerCurseManipulationData.getCurses();
 
@@ -119,8 +118,8 @@ public class CurseManipulationUtil {
         }
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
-            PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerCurseManipulationData.serializeNBT()), player);
+            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT(player.registryAccess())));
+            PacketDistributor.sendToPlayer(player, new SyncCurseManipulationDataS2CPacket(ownerCurseManipulationData.serializeNBT(player.registryAccess())));
         }
 
         IJujutsuCapability curseCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -128,7 +127,7 @@ public class CurseManipulationUtil {
         if (curseCap == null) return null;
 
         ISorcererData curseData = curseCap.getSorcererData();
-        curseData.deserializeNBT(curse.getData());
+        curseData.deserializeNBT(entity.registryAccess(), curse.getData());
         
         return entity;
     }

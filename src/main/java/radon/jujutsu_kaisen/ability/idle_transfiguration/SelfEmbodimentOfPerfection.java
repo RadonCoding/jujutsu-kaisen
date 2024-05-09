@@ -3,25 +3,17 @@ package radon.jujutsu_kaisen.ability.idle_transfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.SelfEmbodimentOfPerfectionEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
@@ -43,21 +35,14 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
-        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(20 * 20 * getStrength(owner, instant)),
+        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL, Math.round(20 * 20 * (instant ? 0.5F : 1.0F)),
                 required, false, true, true);
         entity.addEffect(instance);
     }
 
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-
-    }
-
-    @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        int radius = Math.round(this.getRadius(owner));
-
-        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
         SelfEmbodimentOfPerfectionEntity center = new SelfEmbodimentOfPerfectionEntity(domain);

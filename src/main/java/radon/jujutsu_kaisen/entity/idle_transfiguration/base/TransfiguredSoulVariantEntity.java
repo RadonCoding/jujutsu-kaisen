@@ -34,10 +34,10 @@ public abstract class TransfiguredSoulVariantEntity extends TransfiguredSoulEnti
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_VARIANT, Variant.ONE.ordinal());
+        pBuilder.define(DATA_VARIANT, Variant.ONE.ordinal());
     }
 
     public Variant getVariant() {

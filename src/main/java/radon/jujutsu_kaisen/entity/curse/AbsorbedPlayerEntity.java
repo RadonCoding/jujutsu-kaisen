@@ -2,25 +2,28 @@ package radon.jujutsu_kaisen.entity.curse;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
-import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 
 import java.util.Optional;
 
 public class AbsorbedPlayerEntity extends CursedSpirit {
-    private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(AbsorbedPlayerEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
+    private static final EntityDataAccessor<Optional<GameProfile>> DATA_PLAYER = SynchedEntityData.defineId(AbsorbedPlayerEntity.class,
+            EntityDataSerializer.forValueType(ByteBufCodecs.optional(ByteBufCodecs.GAME_PROFILE)));
 
     public AbsorbedPlayerEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -31,35 +34,35 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
         return Component.literal(this.getPlayer().getName());
     }
 
-    public void setPlayer(GameProfile profile) {
-        this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), profile)));
+    public GameProfile getPlayer() {
+        return this.entityData.get(DATA_PLAYER).orElseThrow();
     }
 
-    public GameProfile getPlayer() {
-        return NbtUtils.readGameProfile(this.entityData.get(DATA_PLAYER).orElseThrow());
+    public void setPlayer(GameProfile profile) {
+        this.entityData.set(DATA_PLAYER, Optional.of(profile));
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_PLAYER, Optional.empty());
+        pBuilder.define(DATA_PLAYER, Optional.empty());
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        this.entityData.get(DATA_PLAYER).ifPresent(player -> pCompound.put("player", player));
+        pCompound.put("player", ExtraCodecs.GAME_PROFILE.encode(this.getPlayer(),
+                this.registryAccess().createSerializationContext(NbtOps.INSTANCE), new CompoundTag()).getOrThrow());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        if (pCompound.contains("player")) {
-            this.entityData.set(DATA_PLAYER, Optional.of(pCompound.getCompound("player")));
-        }
+        this.setPlayer(ExtraCodecs.GAME_PROFILE.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE),
+                pCompound.getCompound("player")).getOrThrow());
     }
 
     @Override

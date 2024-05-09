@@ -1,22 +1,14 @@
 package radon.jujutsu_kaisen.data.chant;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -119,7 +111,7 @@ public class ChantData implements IChantData {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
 
         ListTag chantsTag = new ListTag();
@@ -130,7 +122,7 @@ public class ChantData implements IChantData {
             if (key == null) continue;
 
             CompoundTag data = new CompoundTag();
-            data.putString("ability", key.toString());
+            data.putString("technique", key.toString());
 
             ListTag chants = new ListTag();
 
@@ -147,7 +139,7 @@ public class ChantData implements IChantData {
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         this.chants.clear();
 
         for (Tag key : nbt.getList("chants", Tag.TAG_COMPOUND)) {
@@ -158,7 +150,7 @@ public class ChantData implements IChantData {
             for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
                 chants.add(entry.getAsString());
             }
-            this.chants.put(JJKAbilities.getValue(new ResourceLocation(data.getString("ability"))), chants);
+            this.chants.put(JJKAbilities.getValue(new ResourceLocation(data.getString("technique"))), chants);
         }
     }
 }

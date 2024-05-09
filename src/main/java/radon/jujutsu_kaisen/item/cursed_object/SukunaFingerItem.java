@@ -3,22 +3,24 @@ package radon.jujutsu_kaisen.item.cursed_object;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
-import radon.jujutsu_kaisen.item.base.CursedObjectItem;
+import radon.jujutsu_kaisen.item.CursedObjectItem;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class SukunaFingerItem extends CursedObjectItem {
@@ -26,32 +28,14 @@ public class SukunaFingerItem extends CursedObjectItem {
         super(pProperties);
     }
 
-    public static boolean isFull(ItemStack stack) {
-        CompoundTag nbt = stack.getTag();
-
-        if (nbt == null) return false;
-
-        return nbt.getBoolean("full");
-    }
-
-    public static void setFull(ItemStack stack, boolean full) {
-        CompoundTag nbt = stack.getOrCreateTag();
-        nbt.putBoolean("full", full);
-    }
-
     @Override
     public boolean isFoil(@NotNull ItemStack pStack) {
-        return super.isFoil(pStack) || isFull(pStack);
+        return super.isFoil(pStack) || pStack.getOrDefault(JJKDataComponentTypes.IS_FULL_SOUL, false);
     }
 
     @Override
     public SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
-    }
-
-    @Override
-    public boolean canBeHurtBy(@NotNull DamageSource pDamageSource) {
-        return false;
     }
 
     @Override

@@ -20,8 +20,8 @@ public class EnchantmentHelperMixin {
 
         int i = cir.getReturnValue();
 
-        for(ItemStack itemstack : result) {
-            int j = EnchantmentHelper.getTagEnchantmentLevel(pEnchantment, itemstack);
+        for (ItemStack stack : result) {
+            int j = stack.getEnchantmentLevel(pEnchantment);
 
             if (j > i) {
                 i = j;

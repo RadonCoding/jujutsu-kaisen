@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.world.gen.processor;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.CurseSpawnerBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 public class MissionProcessor extends StructureProcessor {
-    public static final Codec<MissionProcessor> CODEC = Codec.unit(MissionProcessor::new);
+    public static final MapCodec<MissionProcessor> CODEC = MapCodec.unit(MissionProcessor::new);
 
     @Override
     protected @NotNull StructureProcessorType<?> getType() {

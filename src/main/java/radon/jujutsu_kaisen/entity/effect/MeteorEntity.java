@@ -21,12 +21,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ExplosionHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -77,10 +78,10 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_EXPLOSION_TIME, 0);
+        pBuilder.define(DATA_EXPLOSION_TIME, 0);
     }
 
     @Override
@@ -94,8 +95,9 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
-    protected float ridingOffset(@NotNull Entity pEntity) {
-        return this.getBbHeight() * 1.5F;
+    public @NotNull Vec3 getPassengerRidingPosition(@NotNull Entity pEntity) {
+        return super.getPassengerRidingPosition(pEntity)
+                .add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
     }
 
     @Override
@@ -253,7 +255,7 @@ public class MeteorEntity extends JujutsuProjectile {
             for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
                 if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ())) >= this.getSize()) continue;
                 if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower())) continue;
-                entity.setSecondsOnFire(10);
+                entity.setRemainingFireTicks(10 * 20);
             }
         }
     }
@@ -281,7 +283,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double y = center.y + yOffset;
             double z = center.z + zOffset;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.25F, true, 20),
+            this.level().addParticle(new TravelParticle.Options(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.25F, true, 20),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }

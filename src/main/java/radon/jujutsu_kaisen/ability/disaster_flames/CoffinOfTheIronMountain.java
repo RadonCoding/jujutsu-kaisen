@@ -6,11 +6,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.LavaRockProjectile;
 
 import java.util.List;
@@ -34,12 +34,12 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
         super.onHitEntity(domain, owner, entity, instant);
 
         if (instant || owner.level().getGameTime() % 20 == 0) {
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getOutput(owner) * getStrength(owner, false))) {
-                entity.setSecondsOnFire(15);
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getOutput(owner))) {
+                entity.setRemainingFireTicks(15 * 20);
             }
 
             if (owner.hasLineOfSight(entity)) {
-                LavaRockProjectile rock = new LavaRockProjectile(owner, this.getOutput(owner) * getStrength(owner, false), entity);
+                LavaRockProjectile rock = new LavaRockProjectile(owner, this.getOutput(owner), entity);
                 rock.setDomain(true);
                 owner.level().addFreshEntity(rock);
             }
@@ -47,15 +47,8 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
     }
 
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-
-    }
-
-    @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        int radius = Math.round(this.getRadius(owner));
-
-        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
         return domain;

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 
 @Mixin(MeleeAttackGoal.class)
 public class MeleeAttackGoalMixin {
@@ -19,14 +19,14 @@ public class MeleeAttackGoalMixin {
 
     @Inject(method = "canUse", at = @At("HEAD"), cancellable = true)
     public void canUse(CallbackInfoReturnable<Boolean> cir) {
-        MobEffectInstance instance = this.mob.getEffect(JJKEffects.STUN.get());
+        MobEffectInstance instance = this.mob.getEffect(JJKEffects.STUN);
 
         if (instance != null && instance.getAmplifier() > 0) cir.setReturnValue(false);
     }
 
     @Inject(method = "canContinueToUse", at = @At("HEAD"), cancellable = true)
     public void canContinueToUse(CallbackInfoReturnable<Boolean> cir) {
-        MobEffectInstance instance = this.mob.getEffect(JJKEffects.STUN.get());
+        MobEffectInstance instance = this.mob.getEffect(JJKEffects.STUN);
 
         if (instance != null && instance.getAmplifier() > 0) cir.setReturnValue(false);
     }

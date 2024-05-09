@@ -5,18 +5,24 @@ import net.minecraft.world.item.Tier;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.item.JetBlackShadowSwordRenderer;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class JetBlackShadowSwordItem extends SwordItem implements GeoItem {
+public class JetBlackShadowSwordItem extends CursedToolItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public JetBlackShadowSwordItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    public JetBlackShadowSwordItem(Tier pTier, Properties pProperties) {
+        super(pTier, pProperties);
+    }
+
+    @Override
+    public SorcererGrade getGrade() {
+        return SorcererGrade.GRADE_3;
     }
 
     @Override

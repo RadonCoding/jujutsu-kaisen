@@ -16,21 +16,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.shrine.MalevolentShrine;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements GeoEntity {
@@ -103,16 +103,16 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                                 if (!this.isAffected(pos)) continue;
 
-                                if (HelperMethods.isDestroyable((ServerLevel) this.level(), owner, owner, pos)) {
-                                    owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                            Block.UPDATE_CLIENTS);
+                                if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, owner, pos)) continue;
 
-                                    if (this.random.nextInt(10) == 0) {
-                                        owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
-                                                1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
-                                        ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
-                                                0.0D, 0.0D, 0.0D, 0.0D);
-                                    }
+                                owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                        Block.UPDATE_CLIENTS);
+
+                                if (this.random.nextInt(10) == 0) {
+                                    owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER,
+                                            1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
+                                    ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
+                                            0.0D, 0.0D, 0.0D, 0.0D);
                                 }
                             }
                         }
@@ -122,14 +122,13 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             this.first = false;
         }
 
-        int size = width * height / 8;
         AABB bounds = this.getBounds();
 
-        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
-            if (!this.isAffected(pos)) continue;
+        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+            if (!this.isAffected(pos)) return;
 
-            this.ability.onHitBlock(this, owner, pos);
-        }
+            this.ability.onHitBlock(this, owner, pos, false);
+        });
     }
 
     @Override
@@ -141,7 +140,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                 for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
                     if (!(entity instanceof ServerPlayer player)) continue;
 
-                    PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, 20), player);
+                    PacketDistributor.sendToPlayer(player, new CameraShakeS2CPacket(1.0F, 5.0F, 20));
                 }
             }
         }

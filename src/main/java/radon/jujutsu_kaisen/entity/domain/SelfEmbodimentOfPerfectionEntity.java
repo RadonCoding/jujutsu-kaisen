@@ -2,14 +2,14 @@ package radon.jujutsu_kaisen.entity.domain;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.entity.DomainExpansionCenterEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 public class SelfEmbodimentOfPerfectionEntity extends DomainExpansionCenterEntity {
     private static final RawAnimation ACTIVATE = RawAnimation.begin().thenPlay("misc.activate");

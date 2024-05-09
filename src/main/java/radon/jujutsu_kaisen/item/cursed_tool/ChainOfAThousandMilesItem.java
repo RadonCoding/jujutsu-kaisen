@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.ChainOfAThousandMilesRenderer;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
+import radon.jujutsu_kaisen.item.CursedToolItem;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -24,8 +25,8 @@ import java.util.function.Consumer;
 public class ChainOfAThousandMilesItem extends CursedToolItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public ChainOfAThousandMilesItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    public ChainOfAThousandMilesItem(Tier pTier, Properties pProperties) {
+        super(pTier, pProperties);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class ChainOfAThousandMilesItem extends CursedToolItem implements GeoItem
             private ChainOfAThousandMilesRenderer renderer;
 
             @Override
-            public ChainOfAThousandMilesRenderer getCustomRenderer() {
+            public @NotNull ChainOfAThousandMilesRenderer getCustomRenderer() {
                 if (this.renderer == null) this.renderer = new ChainOfAThousandMilesRenderer();
                 return this.renderer;
             }
@@ -65,7 +66,7 @@ public class ChainOfAThousandMilesItem extends CursedToolItem implements GeoItem
 
             if (!item.isEmpty()) {
                 if (!(pLivingEntity instanceof Player player && player.getAbilities().instabuild)) {
-                    item.hurtAndBreak(1, pLivingEntity, entity -> entity.broadcastBreakEvent(InteractionHand.OFF_HAND));
+                    item.hurtAndBreak(1, pLivingEntity, EquipmentSlot.OFFHAND);
                 }
                 item.shrink(1);
 

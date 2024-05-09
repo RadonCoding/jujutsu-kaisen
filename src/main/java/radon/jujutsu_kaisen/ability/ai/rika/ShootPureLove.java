@@ -4,14 +4,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.ICharged;
+import radon.jujutsu_kaisen.ability.IDomainAttack;
+import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -49,7 +49,7 @@ public class ShootPureLove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        ((RikaEntity) owner).setShooting(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION + PureLoveBeamEntity.FRAMES);
+        ((RikaEntity) owner).setShooting(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION);
 
         PureLoveBeamEntity beam = new PureLoveBeamEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(beam);

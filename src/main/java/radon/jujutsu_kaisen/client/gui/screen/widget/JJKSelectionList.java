@@ -28,12 +28,15 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
         this.x1 = this.x0 + width;
         this.y1 = this.y0 + height;
 
-        this.setRenderBackground(false);
-
         this.builder = builder;
         this.refreshList();
 
         this.callback = callback;
+    }
+
+    @Override
+    protected void renderListBackground(@NotNull GuiGraphics pGuiGraphics) {
+
     }
 
     @Override

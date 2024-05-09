@@ -9,21 +9,20 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ScrollableSlider;
 import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.AcceptMissionC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.SearchForMissionsC2SPacket;
 
@@ -211,7 +210,7 @@ public class MissionsScreen extends Screen {
         super.init();
 
         if (!this.initialized) {
-            PacketHandler.sendToServer(new SearchForMissionsC2SPacket());
+            PacketDistributor.sendToServer(new SearchForMissionsC2SPacket());
             this.initialized = true;
         }
 
@@ -258,7 +257,7 @@ public class MissionsScreen extends Screen {
 
             Mission mission = this.selected.getMission();
 
-            PacketHandler.sendToServer(new AcceptMissionC2SPacket(mission.getPos()));
+            PacketDistributor.sendToServer(new AcceptMissionC2SPacket(mission.getPos()));
 
             IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

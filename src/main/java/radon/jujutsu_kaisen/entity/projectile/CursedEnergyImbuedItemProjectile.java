@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -47,7 +47,7 @@ public class CursedEnergyImbuedItemProjectile extends ItemEntity {
                 double y = this.getY() + HelperMethods.RANDOM.nextDouble() * this.getBbHeight();
                 double z = this.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (this.getBbWidth() * 1.5F);
                 double speed = (this.getBbHeight() * 0.3F) * HelperMethods.RANDOM.nextDouble();
-                level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), this.getBbWidth() * 0.5F,
+                level.sendParticles(new CursedEnergyParticle.Options(ParticleColors.getCursedEnergyColor(owner), this.getBbWidth() * 0.5F,
                         0.2F, 6), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
             }
         }

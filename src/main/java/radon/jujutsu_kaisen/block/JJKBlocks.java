@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
@@ -40,7 +41,7 @@ public class JJKBlocks {
         return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
     }
 
-    public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, JujutsuKaisen.MOD_ID);
+    public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, JujutsuKaisen.MOD_ID);
 
     public static final DeferredHolder<Block, Block> METEOR = BLOCKS.register("meteor", () -> new MagmaBlock(BlockBehaviour.Properties.of()
             .mapColor(MapColor.NETHER)
@@ -186,7 +187,7 @@ public class JJKBlocks {
                     .noLootTable()));
 
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
-            new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+            new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
 
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of()
@@ -222,9 +223,9 @@ public class JJKBlocks {
             new CurseSpawnerBlock(BlockBehaviour.Properties.of().noCollission()));
 
     public static DeferredHolder<Block, FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
-            new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+            new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
     public static DeferredHolder<Block, FakeWaterDomainBlock> FAKE_WATER_DOMAIN = BLOCKS.register("fake_water_domain", () ->
-            new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+            new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
 
     public static DeferredHolder<Block, FakeWoodBlock> FAKE_WOOD = BLOCKS.register("fake_wood", () ->
             new FakeWoodBlock(BlockBehaviour.Properties.of()

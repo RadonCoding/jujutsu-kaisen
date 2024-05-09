@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.item.armor;
 
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -26,8 +27,8 @@ import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurio;
@@ -39,7 +40,7 @@ import java.util.function.Consumer;
 public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvider, ICurioItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public InventoryCurseItem(ArmorMaterial pMaterial, Type pType, Properties pProperties) {
+    public InventoryCurseItem(Holder<ArmorMaterial> pMaterial, Type pType, Properties pProperties) {
         super(pMaterial, pType, pProperties);
     }
 

@@ -1,0 +1,1 @@
+- Playful Cloud's damage is to the power of 1.25

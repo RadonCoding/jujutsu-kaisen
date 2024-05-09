@@ -1,9 +1,8 @@
 package radon.jujutsu_kaisen.cursed_technique;
 
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ public class Shrine implements ICursedTechnique {
         ABILITIES.add(JJKAbilities.DISMANTLE_SKATING.get());
         ABILITIES.add(JJKAbilities.CLEAVE.get());
         ABILITIES.add(JJKAbilities.SPIDERWEB.get());
-        ABILITIES.add(JJKAbilities.FIRE_ARROW.get());
+        ABILITIES.add(JJKAbilities.FURNACE_OPEN.get());
     }
 
     @Override

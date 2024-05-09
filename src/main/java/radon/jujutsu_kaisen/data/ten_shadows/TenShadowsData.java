@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.data.ten_shadows;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,22 +13,16 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.base.IAdditionalAdaptation;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.IAdditionalAdaptation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
@@ -188,7 +183,7 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     private Adaptation getAdaptation(DamageSource source) {
-        RegistryAccess registry = this.owner.level().registryAccess();
+        RegistryAccess registry = this.owner.registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new Adaptation(types.getKey(source.type()),
                 source instanceof JJKDamageSources.JujutsuDamageSource cap ? cap.getAbility() : null);
@@ -212,7 +207,7 @@ public class TenShadowsData implements ITenShadowsData {
 
     @Override
     public Adaptation.Type getAdaptationType(Adaptation adaptation) {
-        RegistryAccess registry = this.owner.level().registryAccess();
+        RegistryAccess registry = this.owner.registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
 
         DamageType type = types.get(adaptation.getKey());
@@ -295,7 +290,7 @@ public class TenShadowsData implements ITenShadowsData {
 
         if (this.isAdaptedTo(source)) return;
 
-        RegistryAccess registry = this.owner.level().registryAccess();
+        RegistryAccess registry = this.owner.registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
 
         Adaptation adaptation = new Adaptation(types.getKey(source.type()), null);
@@ -325,7 +320,7 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
 
         ListTag tamedTag = new ListTag();
@@ -355,7 +350,7 @@ public class TenShadowsData implements ITenShadowsData {
         ListTag shadowInventoryTag = new ListTag();
 
         for (ItemStack stack : this.shadowInventory) {
-            shadowInventoryTag.add(stack.save(new CompoundTag()));
+            shadowInventoryTag.add(stack.save(provider, new CompoundTag()));
         }
         nbt.put("shadow_inventory", shadowInventoryTag);
 
@@ -363,30 +358,30 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
         this.tamed.clear();
 
-        for (Tag key : nbt.getList("tamed", Tag.TAG_STRING)) {
-            this.tamed.add(new ResourceLocation(key.getAsString()));
+        for (Tag tag : nbt.getList("tamed", Tag.TAG_STRING)) {
+            this.tamed.add(new ResourceLocation(tag.getAsString()));
         }
 
         this.dead.clear();
 
-        for (Tag key : nbt.getList("dead", Tag.TAG_STRING)) {
-            this.dead.add(new ResourceLocation(key.getAsString()));
+        for (Tag tag : nbt.getList("dead", Tag.TAG_STRING)) {
+            this.dead.add(new ResourceLocation(tag.getAsString()));
         }
 
         this.adapted.clear();
 
-        for (Tag key : nbt.getList("adapted", Tag.TAG_COMPOUND)) {
-            CompoundTag adaptation = (CompoundTag) key;
-            this.adapted.put(new Adaptation(adaptation.getCompound("adaptation")), adaptation.getInt("stage"));
+        for (Tag tag : nbt.getList("adapted", Tag.TAG_COMPOUND)) {
+            CompoundTag DATA = (CompoundTag) tag;
+            this.adapted.put(new Adaptation(DATA.getCompound("adaptation")), DATA.getInt("stage"));
         }
 
         this.shadowInventory.clear();
 
         for (Tag key : nbt.getList("shadow_inventory", Tag.TAG_COMPOUND)) {
-            this.shadowInventory.add(ItemStack.of((CompoundTag) key));
+            this.shadowInventory.add(ItemStack.parse(provider, key).orElseThrow());
         }
     }
 }

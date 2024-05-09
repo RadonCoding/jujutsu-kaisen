@@ -12,10 +12,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestBountyCostC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.SetTojiBountyC2SPacket;
 
@@ -46,7 +48,7 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
 
         Button button = new Button.Builder(Component.translatable(String.format("container.%s.bounty.accept", JujutsuKaisen.MOD_ID)), ignored -> {
             if (this.menu.charge()) {
-                PacketHandler.sendToServer(new SetTojiBountyC2SPacket(this.name.getValue()));
+                PacketDistributor.sendToServer(new SetTojiBountyC2SPacket(this.name.getValue()));
                 this.onClose();
             }
         }).pos(i + 59, j + 46).size(58, 16).build();
@@ -55,15 +57,15 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
 
     private void onNameChanged(String name) {
         if (!name.isEmpty()) {
-            PacketHandler.sendToServer(new RequestBountyCostC2SPacket(name));
+            PacketDistributor.sendToServer(new RequestBountyCostC2SPacket(name));
         }
     }
 
     @Override
     public void resize(@NotNull Minecraft pMinecraft, int pWidth, int pHeight) {
-        String s = this.name.getValue();
+        String name = this.name.getValue();
         this.init(pMinecraft, pWidth, pHeight);
-        this.name.setValue(s);
+        this.name.setValue(name);
     }
 
     @Override

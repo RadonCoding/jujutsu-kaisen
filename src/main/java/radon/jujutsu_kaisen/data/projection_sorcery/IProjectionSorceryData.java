@@ -13,11 +13,16 @@ public interface IProjectionSorceryData extends INBTSerializable<CompoundTag> {
     void tick();
 
     List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames();
+
     void addFrame(Vec3 frame, float yaw);
+
     void removeFrame(AbstractMap.SimpleEntry<Vec3, Float> frame);
+
     void resetFrames();
 
     int getSpeedStacks();
+
     void addSpeedStack();
+
     void resetSpeedStacks();
 }

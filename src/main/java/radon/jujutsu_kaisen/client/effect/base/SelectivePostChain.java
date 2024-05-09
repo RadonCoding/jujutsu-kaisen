@@ -18,8 +18,8 @@ public class SelectivePostChain extends PostChain {
     }
 
     @Override
-    public @NotNull PostPass addPass(@NotNull String pProgramName, @NotNull RenderTarget pFramebuffer, @NotNull RenderTarget pFramebufferOut) throws IOException {
-        SelectivePostPass pass = new SelectivePostPass(this.resourceManager, pProgramName, pFramebuffer, pFramebufferOut);
+    public @NotNull PostPass addPass(@NotNull String pName, @NotNull RenderTarget pInTarget, @NotNull RenderTarget pOutTarget, boolean pUseLinearFilter) throws IOException {
+        SelectivePostPass pass = new SelectivePostPass(this.resourceProvider, pName, pInTarget, pOutTarget, pUseLinearFilter);
         this.passes.add(this.passes.size(), pass);
         return pass;
     }

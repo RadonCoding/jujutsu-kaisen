@@ -6,14 +6,14 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.ability.shrine.Cleave;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -24,9 +24,9 @@ import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
@@ -79,7 +79,7 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
 
         if (experience <= ownerData.getExperience()) return false;
 
-        Cleave.perform(target, owner, null, JJKDamageSources.soulAttack(owner));
+        Cleave.perform(target, owner, null, JJKDamageSources.soulAttack(owner), false);
 
         return true;
     }
@@ -87,7 +87,7 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
     private void run(LivingEntity owner, LivingEntity target) {
         if (checkSukuna(owner, target)) return;
 
-        MobEffectInstance existing = target.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+        MobEffectInstance existing = target.getEffect(JJKEffects.TRANSFIGURED_SOUL);
 
         int amplifier = 0;
 
@@ -95,7 +95,7 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
             amplifier = existing.getAmplifier() + 1;
         }
 
-        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), 60 * 20, amplifier, false, true, true);
+        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL, 60 * 20, amplifier, false, true, true);
         target.addEffect(instance);
     }
 
@@ -161,7 +161,7 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
         return true;
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
@@ -183,7 +183,7 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
 
             if (victim.level().isClientSide) return;
 
-            MobEffectInstance existing = victim.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+            MobEffectInstance existing = victim.getEffect(JJKEffects.TRANSFIGURED_SOUL);
 
             if (existing == null) return;
 

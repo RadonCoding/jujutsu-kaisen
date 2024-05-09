@@ -4,20 +4,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDomainAttack;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.PiranhaShikigamiProjectile;
@@ -48,7 +42,7 @@ public class DeathSwarm extends Ability implements IDomainAttack {
         return result;
     }
 
-    private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
+    private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain, boolean instant) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
@@ -59,7 +53,7 @@ public class DeathSwarm extends Ability implements IDomainAttack {
             float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
             float yOffset = owner.getBbHeight() + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F);
 
-            float power = domain == null ? this.getOutput(owner) : this.getOutput(owner) * DomainExpansion.getStrength(owner, false);
+            float power = domain == null ? this.getOutput(owner) : this.getOutput(owner) * (instant ? 0.5F : 1.0F);
 
             FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
                     new EelShikigamiProjectile(owner, power, target, xOffset, yOffset),
@@ -80,8 +74,8 @@ public class DeathSwarm extends Ability implements IDomainAttack {
     }
 
     @Override
-    public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {
-        this.perform(owner, target, domain);
+    public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain, boolean instant) {
+        this.perform(owner, target, domain, instant);
     }
 
     @Override
@@ -90,7 +84,7 @@ public class DeathSwarm extends Ability implements IDomainAttack {
 
         if (target == null) return;
 
-        this.perform(owner, target, null);
+        this.perform(owner, target, null, false);
     }
 
     @Override

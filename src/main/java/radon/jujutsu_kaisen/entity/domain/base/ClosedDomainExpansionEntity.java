@@ -21,7 +21,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
@@ -30,18 +30,20 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.IBarrier;
-import radon.jujutsu_kaisen.entity.base.IDomain;
-import radon.jujutsu_kaisen.entity.base.ISimpleDomain;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.IBarrier;
+import radon.jujutsu_kaisen.entity.IDomain;
+import radon.jujutsu_kaisen.entity.ISimpleDomain;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.*;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
+    public static final int RADIUS = 20;
+
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
 
     private int total;
@@ -52,19 +54,19 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super(pType, pLevel);
     }
 
-    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius) {
-        this(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability, radius);
+    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability) {
+        this(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
     }
 
-    public ClosedDomainExpansionEntity(EntityType<? > pType, LivingEntity owner, DomainExpansion ability, int radius) {
+    public ClosedDomainExpansionEntity(EntityType<? > pType, LivingEntity owner, DomainExpansion ability) {
         super(pType, owner, ability);
 
         float yaw = RotationUtil.getTargetAdjustedYRot(owner);
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
-        Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
+        Vec3 behind = owner.position().subtract(0.0D, RADIUS, 0.0D).add(direction.scale(RADIUS - OFFSET));
         this.moveTo(behind.x, behind.y, behind.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        this.entityData.set(DATA_RADIUS, radius);
+        this.entityData.set(DATA_RADIUS, RADIUS);
     }
 
     @Override
@@ -80,10 +82,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_RADIUS, 0);
+        pBuilder.define(DATA_RADIUS, 0);
     }
 
     @Override
@@ -93,8 +95,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         this.entityData.set(DATA_RADIUS, pCompound.getInt("radius"));
         this.total = pCompound.getInt("total");
 
-        for (Tag key : pCompound.getList("positions", Tag.TAG_COMPOUND)) {
-            CompoundTag nbt = (CompoundTag) key;
+        for (Tag tag : pCompound.getList("positions", Tag.TAG_COMPOUND)) {
+            CompoundTag nbt = (CompoundTag) tag;
             this.positions.put(nbt.getUUID("identifier"), new Vec3(nbt.getDouble("pos_x"),
                     nbt.getDouble("pos_y"), nbt.getDouble("pos_z")));
         }
@@ -165,7 +167,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         CompoundTag saved = null;
 
         if (existing != null) {
-            saved = existing.saveWithFullMetadata();
+            saved = existing.saveWithFullMetadata(this.registryAccess());
         }
 
         DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
@@ -344,7 +346,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         data.setBurnout(DomainExpansion.BURNOUT);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(data.serializeNBT(player.registryAccess())));
         }
     }
 

@@ -1,16 +1,16 @@
 package radon.jujutsu_kaisen.data.curse_manipulation;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -103,7 +103,7 @@ public class CurseManipulationData implements ICurseManipulationData {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
 
         if (this.currentAbsorbed != null) {
@@ -120,7 +120,8 @@ public class CurseManipulationData implements ICurseManipulationData {
         ListTag cursesTag = new ListTag();
 
         for (AbsorbedCurse curse : this.curses) {
-            cursesTag.add(curse.serializeNBT());
+            cursesTag.add(AbsorbedCurse.CODEC.encode(curse, provider.createSerializationContext(NbtOps.INSTANCE),
+                    new CompoundTag()).getOrThrow());
         }
         nbt.put("curses", cursesTag);
 
@@ -128,7 +129,7 @@ public class CurseManipulationData implements ICurseManipulationData {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
         if (nbt.contains("current_absorbed")) {
             this.currentAbsorbed = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("current_absorbed")));
         }
@@ -141,9 +142,8 @@ public class CurseManipulationData implements ICurseManipulationData {
 
         this.curses.clear();
 
-        for (Tag key : nbt.getList("curses", Tag.TAG_COMPOUND)) {
-            CompoundTag curse = (CompoundTag) key;
-            this.curses.add(new AbsorbedCurse(curse));
+        for (Tag tag : nbt.getList("curses", Tag.TAG_COMPOUND)) {
+            this.curses.add(AbsorbedCurse.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow());
         }
     }
 }

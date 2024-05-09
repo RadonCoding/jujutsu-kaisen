@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.item.armor;
 
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -11,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.item.armor.BlindfoldRenderer;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -20,7 +21,7 @@ import java.util.function.Consumer;
 public class BlindfoldItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public BlindfoldItem(ArmorMaterial pMaterial, Type pType, Properties pProperties) {
+    public BlindfoldItem(Holder<ArmorMaterial> pMaterial, Type pType, Properties pProperties) {
         super(pMaterial, pType, pProperties);
     }
 

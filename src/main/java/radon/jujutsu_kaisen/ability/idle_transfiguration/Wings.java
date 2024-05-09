@@ -5,9 +5,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.IFlight;
-import radon.jujutsu_kaisen.ability.base.Transformation;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.ability.IFlight;
+import radon.jujutsu_kaisen.ability.Transformation;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Wings extends Transformation implements IFlight {

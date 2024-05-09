@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import java.util.function.Supplier;
 
 public class FakeWaterDomainBlock extends LiquidBlock implements EntityBlock {
-    public FakeWaterDomainBlock(Supplier<? extends FlowingFluid> pFluid, Properties pProperties) {
+    public FakeWaterDomainBlock(FlowingFluid pFluid, Properties pProperties) {
         super(pFluid, pProperties);
     }
 

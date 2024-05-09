@@ -3,16 +3,10 @@ package radon.jujutsu_kaisen.ability.disaster_tides;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IDomainAttack;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -20,7 +14,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 
 import java.util.List;
 
@@ -34,30 +28,20 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
             if (cap == null) return;
 
-            ISorcererData data = cap.getSorcererData();
-
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.DEATH_SWARM.get()),
-                    DAMAGE * this.getOutput(owner) * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - data.getDomainSize()));
+                    DAMAGE * this.getOutput(owner));
 
             if (owner.hasLineOfSight(entity)) {
-                Ability fish = JJKAbilities.DEATH_SWARM.get();
-                ((IDomainAttack) fish).performEntity(owner, entity, domain);
+                DeathSwarm swarm = JJKAbilities.DEATH_SWARM.get();
+                swarm.performEntity(owner, entity, domain, instant);
             }
         }
     }
 
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-
-    }
-
-    @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        int radius = Math.round(this.getRadius(owner));
-
-        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
-
         return domain;
     }
 

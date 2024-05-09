@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.data.sorcerer;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,31 +21,32 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.entity.EntityTypeTest;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
-import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.*;
@@ -61,8 +64,6 @@ public class SorcererData implements ISorcererData {
     private int skillPoints;
 
     private final Set<Ability> unlocked;
-
-    private float domainSize;
 
     private @Nullable ICursedTechnique technique;
 
@@ -96,13 +97,12 @@ public class SorcererData implements ISorcererData {
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
     private static final UUID HEALTH_UUID = UUID.fromString("7d1ab920-e9ff-11ee-bd3d-0242ac120002");
+    private static final UUID SCALE_UUID = UUID.fromString("aa26da0f-46bf-4214-887e-ed3aca9d465a");
 
     private final LivingEntity owner;
 
     public SorcererData(LivingEntity owner) {
         this.owner = owner;
-
-        this.domainSize = 1.0F;
 
         this.unlocked = new HashSet<>();
 
@@ -145,7 +145,7 @@ public class SorcererData implements ISorcererData {
         }
 
         if (dirty && this.owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
+            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(this.serializeNBT(player.registryAccess())));
         }
     }
 
@@ -196,26 +196,39 @@ public class SorcererData implements ISorcererData {
 
         this.energy = Math.min(this.getMaxEnergy(), this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)));
 
-        /*
-         * Applies the attribute modifiers to the player with heavenly restrictions
-         */
+        // Applying attribute modifiers
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY)) {
             double damage = this.getBaseOutput() * 3.0D;
-            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADD_VALUE);
 
             double speed = this.getBaseOutput();
-            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADD_VALUE);
 
             double movement = this.getBaseOutput() * 0.05D;
-            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADD_VALUE);
 
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(1.0F / 20);
             }
         } else if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) {
-            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 0.5D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.5D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-            EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, HEALTH_UUID, "Health", -14, AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 0.5D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.5D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+            EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, HEALTH_UUID, "Health", -14, AttributeModifier.Operation.ADD_VALUE);
+        }
+        
+        if (this.traits.contains(Trait.PERFECT_BODY)) {
+            EntityUtil.applyModifier(this.owner, Attributes.SCALE, SCALE_UUID, "Scale", 1.25F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        }
+
+        // Miscellaneous stuff
+        if (this.traits.contains(Trait.SIX_EYES) && !this.owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
+            this.owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
+        }
+
+        if (this.type == JujutsuType.CURSE) {
+            if (this.owner instanceof Player player) {
+                player.getFoodData().setFoodLevel(20);
+            }
         }
     }
 
@@ -321,23 +334,28 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public float getOutputBoost() {
+        float multiplier = 0.0F;
+
+        if (this.hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY)) multiplier += 0.5F;
+
+        if (this.hasSummonOfClass(SimpleDomainEntity.class) || this.hasSummonOfClass(DomainExpansionEntity.class)) {
+            multiplier += 0.2F;
+        }
+
+        if (this.isInZone()) multiplier += 1.2F;
+
+        return multiplier;
+    }
+
+    @Override
     public float getAbilityOutput(Ability ability) {
         return this.getAbilityOutput() * ChantHandler.getOutput(this.owner, ability);
     }
 
     @Override
     public float getAbilityOutput() {
-        float power = this.getBaseOutput() * this.getOutput();
-
-        if (this.hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY)) power *= 1.5F;
-
-        if (this.hasSummonOfClass(SimpleDomainEntity.class) || this.hasSummonOfClass(DomainExpansionEntity.class)) {
-            power *= 1.2F;
-        }
-
-        if (this.isInZone()) power *= 1.2F;
-
-        return power;
+        return this.getBaseOutput() * this.getOutput() * (1.0F + this.getOutputBoost());
     }
 
     @Override
@@ -402,16 +420,6 @@ public class SorcererData implements ISorcererData {
             }
         }
         return true;
-    }
-
-    @Override
-    public float getDomainSize() {
-        return this.domainSize;
-    }
-
-    @Override
-    public void setDomainSize(float domainSize) {
-        this.domainSize = domainSize;
     }
 
     public @Nullable ICursedTechnique getTechnique() {
@@ -919,13 +927,13 @@ public class SorcererData implements ISorcererData {
         if (pos != null) {
             ItemStack stack = MapItem.create(owner.level(), pos.getX(), pos.getZ(), (byte) 2, true, true);
             MapItem.renderBiomePreviewMap(level, stack);
-            MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.RED_X);
+            MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecorationTypes.RED_X);
 
-            stack.setHoverName(Component.translatable(String.format("item.%s.headquarters_map", JujutsuKaisen.MOD_ID)));
+            stack.set(DataComponents.CUSTOM_NAME, Component.translatable(String.format("item.%s.headquarters_map", JujutsuKaisen.MOD_ID)));
 
             owner.addItem(stack);
         }
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), owner);
+        PacketDistributor.sendToPlayer(owner, new SyncSorcererDataS2CPacket(this.serializeNBT(owner.registryAccess())));
     }
 
     @Override
@@ -979,13 +987,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("initialized", this.initialized);
         nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
         nbt.putInt("ability_points", this.abilityPoints);
         nbt.putInt("skill_points", this.skillPoints);
-        nbt.putFloat("domain_size", this.domainSize);
 
         if (this.technique != null) {
             nbt.putString("technique", JJKCursedTechniques.getKey(this.technique).toString());
@@ -1026,7 +1033,12 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("unlocked", unlockedTag);
 
-        nbt.put("traits", new IntArrayTag(this.traits.stream().map(Enum::ordinal).toList()));
+        ListTag traitsTag = new ListTag();
+
+        for (Trait trait : this.traits) {
+            traitsTag.add(IntTag.valueOf(trait.ordinal()));
+        }
+        nbt.put("traits", traitsTag);
 
         ListTag summonsTag = new ListTag();
 
@@ -1039,14 +1051,13 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
         this.initialized = nbt.getBoolean("initialized");
 
         this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
 
         this.abilityPoints = nbt.getInt("ability_points");
         this.skillPoints = nbt.getInt("skill_points");
-        this.domainSize = nbt.getFloat("domain_size");
 
         if (nbt.contains("technique")) {
             this.technique = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique")));
@@ -1081,8 +1092,8 @@ public class SorcererData implements ISorcererData {
 
         this.traits.clear();
 
-        for (int index : nbt.getIntArray("traits")) {
-            this.traits.add(Trait.values()[index]);
+        for (Tag tag : nbt.getList("traits", Tag.TAG_INT)) {
+            this.traits.add(Trait.values()[((IntTag) tag).getAsInt()]);
         }
 
         this.summons.clear();

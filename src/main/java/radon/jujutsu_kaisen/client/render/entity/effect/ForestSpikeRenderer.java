@@ -54,22 +54,21 @@ public class ForestSpikeRenderer extends EntityRenderer<ForestSpikeEntity> {
             float maxU = minU + 16.0F / TEXTURE_WIDTH;
             float maxV = minV + 32.0F / TEXTURE_HEIGHT;
             Matrix4f matrix4f = pose.pose();
-            Matrix3f matrix3f = pose.normal();
-            this.drawVertex(matrix4f, matrix3f, consumer, -WIDTH, -HEIGHT, 0.0F, minU, minV, pPackedLight);
-            this.drawVertex(matrix4f, matrix3f, consumer, -WIDTH, HEIGHT, 0.0F, minU, maxV, pPackedLight);
-            this.drawVertex(matrix4f, matrix3f, consumer, WIDTH, HEIGHT, 0.0F, maxU, maxV, pPackedLight);
-            this.drawVertex(matrix4f, matrix3f, consumer, WIDTH, -HEIGHT, 0.0F, maxU, minV, pPackedLight);
+            this.drawVertex(matrix4f, pose, consumer, -WIDTH, -HEIGHT, 0.0F, minU, minV, pPackedLight);
+            this.drawVertex(matrix4f, pose, consumer, -WIDTH, HEIGHT, 0.0F, minU, maxV, pPackedLight);
+            this.drawVertex(matrix4f, pose, consumer, WIDTH, HEIGHT, 0.0F, maxU, maxV, pPackedLight);
+            this.drawVertex(matrix4f, pose, consumer, WIDTH, -HEIGHT, 0.0F, maxU, minV, pPackedLight);
         }
         pPoseStack.popPose();
     }
 
-    private void drawVertex(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer consumer, float x, float y, float z, float u, float v, int packedLight) {
+    private void drawVertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, int packedLight) {
         consumer.vertex(matrix4f, x, y, z)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(u, v)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(packedLight)
-                .normal(matrix3f, 0.0F, 1.0F, 0.0F)
+                .normal(pose, 0.0F, 1.0F, 0.0F)
                 .endVertex();
     }
 

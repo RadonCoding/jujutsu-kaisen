@@ -16,21 +16,20 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     public NueTotalityEntity(LivingEntity owner) {
         this(JJKEntities.NUE_TOTALITY.get(), owner.level());
 
-        this.setTame(true);
+        this.setTame(true, false);
         this.setOwner(owner);
 
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
@@ -203,18 +202,18 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         return new Vec3(
                 new Vector3f(0.0F, -pEntity.getBbHeight() + 0.8F, 0.0F)
                         .add(0.0F, 0.5F, 0.0F)
-                        .rotateY(-this.yBodyRot * (float) (Math.PI / 180.0)))
+                        .rotateY(-this.yBodyRot * (float) (Math.PI / 180.0D)))
                 .add(this.position());
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+    public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
         EntityDimensions dimensions = super.getDimensions(pPose);
 
         LivingEntity passenger = this.getControllingPassenger();
 
         if (passenger != null) {
-            return new EntityDimensions(dimensions.width, dimensions.height + passenger.getBbHeight(), dimensions.fixed);
+            return EntityDimensions.fixed(dimensions.width(), dimensions.height() + passenger.getBbHeight());
         }
         return dimensions;
     }

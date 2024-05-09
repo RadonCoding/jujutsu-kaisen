@@ -12,24 +12,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -62,14 +55,23 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         this.startRiding(owner);
     }
+    
+    public int getSpin() {
+        return this.entityData.get(DATA_SPIN);
+    }
+    
+    public void setSpin(int spin) {
+        this.entityData.set(DATA_SPIN, spin);
+    }
 
     @Override
-    public float getMyRidingOffset(@NotNull Entity pEntity) {
-        return 0.1F;
+    public @NotNull Vec3 getVehicleAttachmentPoint(@NotNull Entity pEntity) {
+        return super.getVehicleAttachmentPoint(pEntity)
+                .add(0.0D, 0.1F, 0.0D);
     }
 
     public void spin() {
-        this.entityData.set(DATA_SPIN, SPIN_DURATION);
+        this.setSpin(SPIN_DURATION);
         this.playSound(JJKSounds.WHEEL.get(), 3.0F, 1.0F);
     }
 
@@ -115,18 +117,18 @@ public class WheelEntity extends Entity implements GeoEntity {
             super.tick();
 
             if (!this.level().isClientSide) {
-                int spin = this.entityData.get(DATA_SPIN);
+                int spin = this.getSpin();
 
                 if (spin > 0) {
-                    this.entityData.set(DATA_SPIN, --spin);
+                    this.setSpin(--spin);
                 }
             }
         }
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_SPIN, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_SPIN, 0);
     }
 
     @Override
@@ -134,7 +136,7 @@ public class WheelEntity extends Entity implements GeoEntity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.entityData.set(DATA_SPIN, pCompound.getInt("spin"));
+        this.setSpin(pCompound.getInt("spin"));
     }
 
     @Override
@@ -142,7 +144,7 @@ public class WheelEntity extends Entity implements GeoEntity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putInt("spin", this.entityData.get(DATA_SPIN));
+        pCompound.putInt("spin", this.getSpin());
     }
 
     @Override
@@ -165,7 +167,7 @@ public class WheelEntity extends Entity implements GeoEntity {
     }
 
     private PlayState spinPredicate(AnimationState<WheelEntity> animationState) {
-        int spin = this.entityData.get(DATA_SPIN);
+        int spin = this.getSpin();
 
         if (spin > 0) {
             return animationState.setAndContinue(SPIN);

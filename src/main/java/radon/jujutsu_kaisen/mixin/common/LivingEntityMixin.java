@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.mixin.common;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,30 +15,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.base.IFlight;
-import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.IFlight;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
     @Shadow public abstract void remove(Entity.RemovalReason pReason);
 
-    @Shadow public abstract boolean hasEffect(MobEffect pEffect);
+    @Shadow public abstract boolean hasEffect(Holder<MobEffect> pEffect);
 
     @Inject(method = "isFallFlying", at = @At("HEAD"), cancellable = true)
     public void isFallFlying(CallbackInfoReturnable<Boolean> cir) {
@@ -98,7 +89,7 @@ public abstract class LivingEntityMixin {
 
     @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;travel(Lnet/minecraft/world/phys/Vec3;)V"))
     public void travel(LivingEntity instance, Vec3 f4) {
-        if (this.hasEffect(JJKEffects.STUN.get())) {
+        if (this.hasEffect(JJKEffects.STUN)) {
             instance.travel(Vec3.ZERO);
             return;
         }
@@ -107,11 +98,11 @@ public abstract class LivingEntityMixin {
 
     @Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)
     public void jumpFromGround(CallbackInfo ci) {
-        if (this.hasEffect(JJKEffects.STUN.get())) ci.cancel();
+        if (this.hasEffect(JJKEffects.STUN)) ci.cancel();
     }
 
     @Inject(method = "jumpInLiquid", at = @At("HEAD"), cancellable = true)
     public void jumpInLiquid(CallbackInfo ci) {
-        if (this.hasEffect(JJKEffects.STUN.get())) ci.cancel();
+        if (this.hasEffect(JJKEffects.STUN)) ci.cancel();
     }
 }

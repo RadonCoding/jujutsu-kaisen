@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 import java.util.UUID;
 
@@ -52,9 +52,9 @@ public class BlackFlashEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
-        this.entityData.define(DATA_START, Vec3.ZERO.toVector3f());
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_TIME, 0);
+        pBuilder.define(DATA_START, Vec3.ZERO.toVector3f());
     }
 
     public int getTime() {

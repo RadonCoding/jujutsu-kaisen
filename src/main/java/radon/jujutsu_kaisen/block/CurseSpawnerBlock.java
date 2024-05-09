@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -19,17 +18,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class CurseSpawnerBlock extends Block implements EntityBlock {
@@ -75,7 +73,7 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
             Collections.shuffle(pool);
 
             for (EntityType<?> type : pool) {
-                if (!pLevel.noCollision(type.getAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
+                if (!pLevel.noCollision(type.getSpawnAABB(pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D))) {
                     continue;
                 }
 
@@ -85,7 +83,7 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
                 mission.addCurse(curse.getUUID());
 
-                PacketHandler.broadcast(new SyncMissionS2CPacket(mission.getDimension(), mission.serializeNBT()));
+                PacketDistributor.sendToAllPlayers(new SyncMissionS2CPacket(mission.getDimension(), mission.serializeNBT()));
 
                 break;
             }

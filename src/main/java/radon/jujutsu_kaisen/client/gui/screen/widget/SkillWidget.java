@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.IncreaseSkillC2SPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
@@ -140,7 +141,7 @@ public class SkillWidget {
 
         this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
-        PacketHandler.sendToServer(new IncreaseSkillC2SPacket(this.skill, real));
+        PacketDistributor.sendToServer(new IncreaseSkillC2SPacket(this.skill, real));
 
         if (!this.minecraft.player.getAbilities().instabuild) {
             sorcererData.useSkillPoints(real);

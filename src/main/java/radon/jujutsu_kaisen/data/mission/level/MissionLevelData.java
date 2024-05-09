@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
@@ -70,7 +71,7 @@ public class MissionLevelData implements IMissionLevelData {
                 if (curse == null || curse.isRemoved() || !curse.isAlive()) {
                     cursesIter.remove();
 
-                    PacketHandler.broadcast(new SyncMissionS2CPacket(this.level.dimension(), mission.serializeNBT()));
+                    PacketDistributor.sendToAllPlayers(new SyncMissionS2CPacket(this.level.dimension(), mission.serializeNBT()));
                 }
             }
         }
@@ -105,7 +106,7 @@ public class MissionLevelData implements IMissionLevelData {
 
                 iter.remove();
             }
-            PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
+            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
         }
     }
 
@@ -120,7 +121,7 @@ public class MissionLevelData implements IMissionLevelData {
         this.missions.add(mission);
 
         if (!this.level.isClientSide) {
-            PacketHandler.broadcast(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
+            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
         }
     }
 
@@ -157,7 +158,7 @@ public class MissionLevelData implements IMissionLevelData {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
 
         ListTag missionsTag = new ListTag();

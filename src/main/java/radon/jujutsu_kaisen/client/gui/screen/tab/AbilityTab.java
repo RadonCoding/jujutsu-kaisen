@@ -4,19 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -27,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class AbilityTab extends JJKTab {
-    private static final Component TITLE = Component.translatable(String.format("gui.%s.ability", JujutsuKaisen.MOD_ID));
+    private static final Component TITLE = Component.translatable(String.format("gui.%s.technique", JujutsuKaisen.MOD_ID));
 
     private final Map<Ability, AbilityWidget> children = new HashMap<>();
     private final Map<Ability, AbilityWidget> roots = new HashMap<>();
@@ -64,12 +56,12 @@ public class AbilityTab extends JJKTab {
         Ability parent = ability.getParent(this.minecraft.player);
 
         if (parent != null) {
-            // If the ability is the start of an new group
+            // If the technique is the start of an new group
             if (this.roots.containsKey(parent)) {
                 x = this.roots.get(parent).getX() + 2.0F;
                 y = this.y + 2.0F;
             } else {
-                // Otherwise we'll just put the ability to the right side of the parent
+                // Otherwise we'll just put the technique to the right side of the parent
                 AbilityWidget widget = this.getAbility(parent);
 
                 if (widget != null) {
@@ -115,7 +107,7 @@ public class AbilityTab extends JJKTab {
 
         ISorcererData data = cap.getSorcererData();
 
-        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.ability.points", JujutsuKaisen.MOD_ID), data.getAbilityPoints()),
+        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.technique.points", JujutsuKaisen.MOD_ID), data.getAbilityPoints()),
                 xOffset, yOffset, 16777215, true);
     }
 

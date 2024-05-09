@@ -9,15 +9,13 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.neoforged.bus.api.EventPriority;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -25,22 +23,22 @@ import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
-import top.theillusivec4.curios.api.event.CurioEquipEvent;
+import top.theillusivec4.curios.api.event.CurioCanEquipEvent;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.Optional;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class CuriosEventHandler {
     @SubscribeEvent
-    public static void onCuriosEquip(CurioEquipEvent event) {
+    public static void onCuriosEquip(CurioCanEquipEvent event) {
         LivingEntity entity = event.getEntity();
 
         IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 
@@ -86,7 +84,7 @@ ISorcererData data = cap.getSorcererData();
             stack = leftHand.isPresent() ? leftHand.get().stack() : ItemStack.EMPTY;
         }
 
-        event.setAmount(event.getAmount() + EnchantmentHelper.getDamageBonus(stack, victim.getMobType()));
+        event.setAmount(event.getAmount() + EnchantmentHelper.getDamageBonus(stack, victim.getType()));
 
         if (attacker instanceof Player player) {
             if (!attacker.level().isClientSide && !stack.isEmpty()) {

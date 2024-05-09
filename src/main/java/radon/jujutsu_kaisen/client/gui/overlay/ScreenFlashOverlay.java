@@ -1,23 +1,22 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.LayeredDraw;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ScreenFlashOverlay {
     private static final int DEFAULT_DURATION = 20;
     private static FlashEvent current;
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) return;
-
+    public static void onClientTickPre(ClientTickEvent.Pre event) {
         if (current == null) return;
 
         current.duration--;
@@ -31,11 +30,16 @@ public class ScreenFlashOverlay {
         current = new FlashEvent(DEFAULT_DURATION);
     }
 
-    public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
+    public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
         if (current == null) return;
 
+        Minecraft mc = Minecraft.getInstance();
+
+        int width = mc.getWindow().getWidth();
+        int height = mc.getWindow().getHeight();
+
         float alpha = (float) current.duration / DEFAULT_DURATION;
-        graphics.fill(0, 0, width, height, HelperMethods.toRGB24(255, 255, 255, (int) (255 * alpha)));
+        pGuiGraphics.fill(0, 0, width, height, HelperMethods.toRGB24(255, 255, 255, (int) (255 * alpha)));
     };
 
     public static class FlashEvent {

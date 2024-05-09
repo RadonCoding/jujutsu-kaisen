@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.data.ability;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -8,16 +9,18 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererData;
 
+import javax.annotation.Nullable;
+
 public class AbilityDataSerializer implements IAttachmentSerializer<CompoundTag, IAbilityData> {
     @Override
-    public @NotNull IAbilityData read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag) {
+    public @NotNull IAbilityData read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         IAbilityData data = new AbilityData((LivingEntity) holder);
-        data.deserializeNBT(tag);
+        data.deserializeNBT(provider, tag);
         return data;
     }
 
     @Override
-    public CompoundTag write(IAbilityData attachment) {
-        return attachment.serializeNBT();
+    public @Nullable CompoundTag write(@NotNull IAbilityData attachment, HolderLookup.@NotNull Provider provider) {
+        return attachment.serializeNBT(provider);
     }
 }

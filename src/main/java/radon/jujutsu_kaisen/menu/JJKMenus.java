@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.menu;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -8,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKMenus {
-    public static DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(BuiltInRegistries.MENU, JujutsuKaisen.MOD_ID);
+    public static DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, JujutsuKaisen.MOD_ID);
 
     public static DeferredHolder<MenuType<?>, MenuType<AltarMenu>> ALTAR = MENUS.register("altar", () ->
             new MenuType<>(AltarMenu::new, FeatureFlags.DEFAULT_FLAGS));

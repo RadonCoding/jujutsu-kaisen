@@ -4,9 +4,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 public class DivineDogWhiteEntity extends DivineDogEntity {
     public DivineDogWhiteEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {

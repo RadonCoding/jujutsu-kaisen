@@ -15,12 +15,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class SkyHandler {
     private static final ResourceLocation UNLIMITED_VOID = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/unlimited_void.png");
     private static final ResourceLocation SELF_EMDOBIMENT_OF_PERFECTION = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/misc/self_embodiment_of_perfection.png");

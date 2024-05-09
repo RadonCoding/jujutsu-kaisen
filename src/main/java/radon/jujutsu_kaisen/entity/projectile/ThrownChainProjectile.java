@@ -20,8 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.util.EntityUtil;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
@@ -53,12 +52,12 @@ public class ThrownChainProjectile extends AbstractArrow {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
 
-        this.entityData.define(DATA_TIME, 0);
-        this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
-        this.entityData.define(DATA_RELEASED, false);
+        pBuilder.define(DATA_TIME, 0);
+        pBuilder.define(DATA_ITEM, ItemStack.EMPTY);
+        pBuilder.define(DATA_RELEASED, false);
     }
 
     public int getTime() {
@@ -143,8 +142,9 @@ public class ThrownChainProjectile extends AbstractArrow {
 
             double speed = this.getDeltaMovement().lengthSqr();
 
-            SwordItem sword = (SwordItem) this.getStack().getItem();
-            target.hurt(source, (float) (sword.getDamage() * speed));
+            ItemStack stack = this.getStack();
+            SwordItem sword = (SwordItem) stack.getItem();
+            target.hurt(source, (float) (sword.getDamage(stack) * speed));
 
             this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
         }
@@ -259,7 +259,7 @@ public class ThrownChainProjectile extends AbstractArrow {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NotNull ItemStack getDefaultPickupItem() {
         return ItemStack.EMPTY;
     }
 

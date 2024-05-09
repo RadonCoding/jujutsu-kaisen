@@ -10,22 +10,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.stat.ISkillData;
-import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.base.IBarrier;
-import radon.jujutsu_kaisen.entity.base.IDomain;
-import radon.jujutsu_kaisen.entity.base.IVeil;
+import radon.jujutsu_kaisen.entity.IBarrier;
+import radon.jujutsu_kaisen.entity.IDomain;
+import radon.jujutsu_kaisen.entity.IVeil;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class VeilHandler {
     private static final Map<ResourceKey<Level>, Set<UUID>> barriers = new HashMap<>();
 

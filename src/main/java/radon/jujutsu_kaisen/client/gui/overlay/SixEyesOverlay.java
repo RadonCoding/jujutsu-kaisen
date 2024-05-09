@@ -1,12 +1,11 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -18,8 +17,8 @@ import radon.jujutsu_kaisen.util.SorcererUtil;
 import java.util.*;
 
 public class SixEyesOverlay {
-    public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
-        Minecraft mc = gui.getMinecraft();
+    public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
+        Minecraft mc = Minecraft.getInstance();
 
         if (mc.level == null || mc.player == null) return;
 
@@ -64,11 +63,14 @@ public class SixEyesOverlay {
             }
         }
 
+        int width = mc.getWindow().getWidth();
+        int height = mc.getWindow().getHeight();
+
         int x = (width - offset) / 2;
         int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
 
         for (Component line : lines) {
-            graphics.drawString(gui.getFont(), line, x, y, 53503);
+            pGuiGraphics.drawString(mc.font, line, x, y, 53503);
             y += mc.font.lineHeight;
         }
     };

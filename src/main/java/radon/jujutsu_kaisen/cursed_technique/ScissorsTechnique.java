@@ -1,8 +1,7 @@
 package radon.jujutsu_kaisen.cursed_technique;
 
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.Ability;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

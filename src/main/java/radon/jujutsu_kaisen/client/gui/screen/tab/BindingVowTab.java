@@ -6,18 +6,16 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.IAttack;
-import radon.jujutsu_kaisen.ability.base.IChanneled;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ICharged;
-import radon.jujutsu_kaisen.ability.base.IDomainAttack;
-import radon.jujutsu_kaisen.ability.base.IDurationable;
-import radon.jujutsu_kaisen.ability.base.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.base.IToggled;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.IChanneled;
+import radon.jujutsu_kaisen.ability.ICharged;
+import radon.jujutsu_kaisen.ability.IDomainAttack;
+import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
+import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.binding_vow.BindingVow;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.data.contract.IContractData;
@@ -25,7 +23,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.BindingVowListWidget;
-import radon.jujutsu_kaisen.network.PacketHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.AddBindingVowC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.RemoveBindingVowC2SPacket;
 
@@ -134,7 +132,7 @@ public class BindingVowTab extends JJKTab {
 
             IContractData data = cap.getContractData();
 
-            PacketHandler.sendToServer(new AddBindingVowC2SPacket(this.vow.get()));
+            PacketDistributor.sendToServer(new AddBindingVowC2SPacket(this.vow.get()));
             data.addBindingVow(this.vow.get());
 
             this.add.active = !data.hasBindingVow(this.vow.get());
@@ -153,7 +151,7 @@ public class BindingVowTab extends JJKTab {
 
             IContractData data = cap.getContractData();
 
-            PacketHandler.sendToServer(new RemoveBindingVowC2SPacket(this.vow.get()));
+            PacketDistributor.sendToServer(new RemoveBindingVowC2SPacket(this.vow.get()));
             data.removeBindingVow(this.vow.get());
 
             this.add.active = !data.hasBindingVow(this.vow.get());

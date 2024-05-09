@@ -20,11 +20,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ImbuementHandler;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
+import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -54,9 +54,9 @@ public class MimicryKatanaEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_VARIANT, Variant.BLACK.ordinal());
-        this.entityData.define(DATA_TECHNIQUE, "");
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_VARIANT, Variant.BLACK.ordinal());
+        pBuilder.define(DATA_TECHNIQUE, "");
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MimicryKatanaEntity extends Entity {
 
         if (domain != null && pPlayer == domain.getOwner()) {
             ItemStack stack = new ItemStack(this::getItem);
-            MimicryKatanaItem.setTechnique(stack, this.getTechnique());
+            stack.set(JJKDataComponentTypes.CURSED_TECHNIQUE, this.getTechnique());
 
             if (pPlayer.getItemInHand(pHand).isEmpty()) {
                 pPlayer.setItemInHand(pHand, stack);

@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.PostPass;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -29,8 +30,8 @@ import java.io.IOException;
 
 // Credit: https://github.com/M-Marvin/MCMOD-HoloStructures-V2/blob/main-1.20.4/HoloStructures-1.20/src/main/java/de/m_marvin/holostruct/client/rendering/posteffect/SelectivePostPass.java
 public class SelectivePostPass extends PostPass {
-    public SelectivePostPass(ResourceManager pResourceManager, String pName, RenderTarget pInTarget, RenderTarget pOutTarget) throws IOException {
-        super(pResourceManager, pName, pInTarget, pOutTarget);
+    public SelectivePostPass(ResourceProvider pResourceProvider, String pName, RenderTarget pInTarget, RenderTarget pOutTarget, boolean pUseLinearFilter) throws IOException {
+        super(pResourceProvider, pName, pInTarget, pOutTarget, pUseLinearFilter);
     }
 
     @Override

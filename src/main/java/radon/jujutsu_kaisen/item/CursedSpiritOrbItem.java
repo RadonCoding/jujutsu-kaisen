@@ -18,25 +18,16 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
-import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 
 import java.util.List;
 
 public class CursedSpiritOrbItem extends Item {
     public CursedSpiritOrbItem(Properties pProperties) {
         super(pProperties);
-    }
-
-    public static AbsorbedCurse getAbsorbed(ItemStack stack) {
-        CompoundTag nbt = stack.getOrCreateTag();
-        return new AbsorbedCurse(nbt.getCompound("curse"));
-    }
-
-    public static void setAbsorbed(ItemStack stack, AbsorbedCurse curse) {
-        CompoundTag nbt = stack.getOrCreateTag();
-        nbt.put("curse", curse.serializeNBT());
     }
 
     @Override
@@ -46,10 +37,13 @@ public class CursedSpiritOrbItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pContext, pTooltipComponents, pIsAdvanced);
 
-        AbsorbedCurse curse = getAbsorbed(pStack);
+        AbsorbedCurse curse = pStack.get(JJKDataComponentTypes.ABSORBED_CURSE);
+
+        if (curse == null) return;
+
         pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID), curse.getName().copy().withStyle(ChatFormatting.DARK_RED)));
         pTooltipComponents.add(Component.translatable(String.format("item.%s.experience", JujutsuKaisen.MOD_ID),
                 Component.literal(Float.toString(CurseManipulationUtil.getCurseExperience(curse))).withStyle(ChatFormatting.GREEN)));
@@ -72,8 +66,12 @@ public class CursedSpiritOrbItem extends Item {
             return stack;
         }
 
+        AbsorbedCurse curse = pStack.get(JJKDataComponentTypes.ABSORBED_CURSE);
+
+        if (curse == null) return stack;
+
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-        curseManipulationData.addCurse(getAbsorbed(pStack));
+        curseManipulationData.addCurse(curse);
 
         return stack;
     }

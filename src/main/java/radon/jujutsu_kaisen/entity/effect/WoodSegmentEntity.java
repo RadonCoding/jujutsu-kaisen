@@ -12,8 +12,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 import javax.annotation.Nullable;
 
@@ -46,13 +45,13 @@ public class WoodSegmentEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
-        this.entityData.define(DATA_PARENT, -1);
-        this.entityData.define(DATA_OFFSET, Vec3.ZERO.toVector3f());
-        this.entityData.define(DATA_YAW, 0.0F);
-        this.entityData.define(DATA_PITCH, 0.0F);
-        this.entityData.define(DATA_INDEX, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
+        pBuilder.define(DATA_TIME, 0);
+        pBuilder.define(DATA_PARENT, -1);
+        pBuilder.define(DATA_OFFSET, Vec3.ZERO.toVector3f());
+        pBuilder.define(DATA_YAW, 0.0F);
+        pBuilder.define(DATA_PITCH, 0.0F);
+        pBuilder.define(DATA_INDEX, 0);
     }
 
     public int getTime() {

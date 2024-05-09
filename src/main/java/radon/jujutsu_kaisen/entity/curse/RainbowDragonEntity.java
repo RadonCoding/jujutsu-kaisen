@@ -22,15 +22,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
-import radon.jujutsu_kaisen.entity.base.IControllableFlyingRide;
+import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 
 public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable, IControllableFlyingRide {
     private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
@@ -118,11 +118,6 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     @Override
     public boolean canChant() {
         return false;
-    }
-
-    @Override
-    public float getStepHeight() {
-        return 2.0F;
     }
 
     @Override
@@ -283,8 +278,7 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED)
-                .add(Attributes.ARMOR, 10.0D);
+                .add(Attributes.FLYING_SPEED);
     }
 
     @Override
