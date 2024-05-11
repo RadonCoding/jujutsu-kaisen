@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;

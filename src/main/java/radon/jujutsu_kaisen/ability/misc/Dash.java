@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.particles.ParticleTypes;
@@ -131,6 +133,8 @@ public class Dash extends Ability {
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
@@ -139,7 +143,6 @@ public class Dash extends Ability {
         IProjectionSorceryData projectionSorceryData = cap.getProjectionSorceryData();
 
         if (projectionSorceryData.getSpeedStacks() > 0 || sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY, 5, 0, false, false, false));
             level.sendParticles(new MirageParticle.Options(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 1.0D);

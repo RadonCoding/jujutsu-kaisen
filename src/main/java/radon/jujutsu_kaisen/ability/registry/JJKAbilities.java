@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.registry;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +41,6 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 
@@ -47,7 +48,7 @@ import java.util.*;
 
 public class JJKAbilities {
     public static ResourceKey<Registry<Ability>> ABILITY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(JujutsuKaisen.MOD_ID, "technique"));
-    public static Registry<Ability> ABILITY_REGISTRY = new RegistryBuilder<>(ABILITY_KEY).create();
+    public static Registry<Ability> ABILITY_REGISTRY = new RegistryBuilder<>(ABILITY_KEY).sync(true).create();
     public static DeferredRegister<Ability> ABILITIES = DeferredRegister.create(ABILITY_REGISTRY, JujutsuKaisen.MOD_ID);
 
     public static DeferredHolder<Ability, Shockwave> SHOCKWAVE = ABILITIES.register("shockwave", Shockwave::new);
@@ -237,8 +238,8 @@ public class JJKAbilities {
         Set<Ability> abilities = new LinkedHashSet<>();
 
         if (owner instanceof JogoatEntity) {
-            for (DeferredHolder<ICursedTechnique, ? extends ICursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
-                ICursedTechnique technique = entry.get();
+            for (DeferredHolder<CursedTechnique, ? extends CursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
+                CursedTechnique technique = entry.get();
                 
                 abilities.addAll(technique.getAbilities());
 
@@ -264,11 +265,11 @@ public class JJKAbilities {
         }
 
         if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-            for (ICursedTechnique technique : data.getActiveTechniques()) {
+            for (CursedTechnique technique : data.getActiveTechniques()) {
                 abilities.addAll(technique.getAbilities());
             }
 
-            ICursedTechnique technique = data.getTechnique();
+            CursedTechnique technique = data.getTechnique();
 
             if (technique != null && technique.getDomain() != null) {
                 abilities.add(technique.getDomain());

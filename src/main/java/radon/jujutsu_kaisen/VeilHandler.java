@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;

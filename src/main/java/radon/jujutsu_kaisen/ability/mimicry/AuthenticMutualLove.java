@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.mimicry;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -10,7 +12,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.AuthenticMutualLoveEntity;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
@@ -22,7 +23,7 @@ public class AuthenticMutualLove extends DomainExpansion implements DomainExpans
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        ICursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
+        CursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
@@ -33,7 +34,7 @@ public class AuthenticMutualLove extends DomainExpansion implements DomainExpans
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
-        ICursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
+        CursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 

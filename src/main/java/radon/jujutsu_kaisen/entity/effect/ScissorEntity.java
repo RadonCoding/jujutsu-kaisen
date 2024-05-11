@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;

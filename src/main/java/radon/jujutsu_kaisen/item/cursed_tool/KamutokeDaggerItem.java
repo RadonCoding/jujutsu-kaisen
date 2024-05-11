@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -135,7 +137,8 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         return f;
     }
 
-    private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
+    @Nullable
+    private BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));

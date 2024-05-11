@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
@@ -65,10 +67,6 @@ public class JJKClientEventHandler {
 
             if (mc.player == null) return;
 
-            if (event.getButton() == InputConstants.MOUSE_BUTTON_LEFT) {
-                ImpactFrameHandler.impact(RotationUtil.getLookAtHit(mc.player, 64.0D).getLocation(), 5, 64.0F);
-            }
-
             if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (mc.options.keyShift.isDown()) {
                     if (RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
@@ -108,7 +106,7 @@ public class JJKClientEventHandler {
         }
 
         @SubscribeEvent
-        public static void onClientTick(ClientTickEvent event) {
+        public static void onClientTickPre(ClientTickEvent.Pre event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;

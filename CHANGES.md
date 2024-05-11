@@ -1,1 +1,2 @@
-- Playful Cloud's damage is to the power of 1.25
+- Playful Cloud's damage is now to the power of 1.25
+- Finished porting to 1.20.6

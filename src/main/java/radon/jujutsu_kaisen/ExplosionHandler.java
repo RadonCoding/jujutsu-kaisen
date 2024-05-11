@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;

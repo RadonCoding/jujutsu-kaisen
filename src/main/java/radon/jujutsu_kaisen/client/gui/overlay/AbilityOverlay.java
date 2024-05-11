@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IDurationable;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
-import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
+import radon.jujutsu_kaisen.client.gui.screen.radial.MeleeScreen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -187,8 +187,8 @@ public class AbilityOverlay {
             }
         }
 
-        int width = mc.getWindow().getWidth();
-        int height = mc.getWindow().getHeight();
+        int width = mc.getWindow().getGuiScaledWidth();
+        int height = mc.getWindow().getGuiScaledHeight();
 
         int x = width - 20 - offset;
         int y = height - 20 - (lines.size() * mc.font.lineHeight + 2);
@@ -218,9 +218,6 @@ public class AbilityOverlay {
 
             if (selected == null) return;
 
-            if (!selected.isValid(mc.player) || !JJKAbilities.getAbilities(mc.player).contains(selected)) {
-                return;
-            }
             renderToggle(pGuiGraphics, selected);
         }
     };

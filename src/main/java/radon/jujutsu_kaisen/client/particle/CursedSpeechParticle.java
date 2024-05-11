@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.HugeExplosionParticle;
 import net.minecraft.client.particle.Particle;

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.mixin.client;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;

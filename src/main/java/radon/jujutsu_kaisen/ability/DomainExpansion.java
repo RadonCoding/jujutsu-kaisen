@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
@@ -22,7 +24,6 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.IBarrier;
@@ -220,7 +221,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
         if (cap == null) return false;
 
         ISorcererData data = cap.getSorcererData();
-        ICursedTechnique technique = data.getTechnique();
+        CursedTechnique technique = data.getTechnique();
         return technique != null && technique.getDomain() == this && super.isDisplayed(owner);
     }
 

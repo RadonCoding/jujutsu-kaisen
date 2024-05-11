@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -38,7 +40,7 @@ public class BlackFlashHandler {
         private static final Map<UUID, Integer> COMBOS = new HashMap<>();
 
         @SubscribeEvent
-        public static void onServerTickPre(ServerTickEvent event) {
+        public static void onServerTickPre(ServerTickEvent.Pre event) {
             Iterator<Map.Entry<UUID, Integer>> iter = TIMERS.entrySet().iterator();
 
             while (iter.hasNext()) {

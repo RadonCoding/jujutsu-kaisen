@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +34,8 @@ public class TeleportOthers extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable Entity getEntityTarget(LivingEntity owner) {
+    @Nullable
+    private Entity getEntityTarget(LivingEntity owner) {
         return TeleportSelf.getTarget(owner) instanceof EntityHitResult hit ? hit.getEntity() : null;
     }
 

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.mission.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +25,8 @@ public class MissionEntityData implements IMissionEntityData {
     }
 
     @Override
-    public @Nullable Mission getMission() {
+    @Nullable
+    public Mission getMission() {
         if (this.pos == null) return null;
 
         IMissionLevelData data = this.owner.level().getData(JJKAttachmentTypes.MISSION_LEVEL);

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.sky_strike;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,7 +42,8 @@ public class SkyStrike extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable HitResult getTarget(LivingEntity owner) {
+    @Nullable
+    private HitResult getTarget(LivingEntity owner) {
         HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
         if (hit.getType() == HitResult.Type.MISS) return null;
         if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN) return null;

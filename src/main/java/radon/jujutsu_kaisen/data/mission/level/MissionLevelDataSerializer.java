@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.mission.level;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -18,7 +20,8 @@ public class MissionLevelDataSerializer implements IAttachmentSerializer<Compoun
     }
 
     @Override
-    public @Nullable CompoundTag write(@NotNull IMissionLevelData attachment, HolderLookup.@NotNull Provider provider) {
+    @Nullable
+    public CompoundTag write(@NotNull IMissionLevelData attachment, HolderLookup.@NotNull Provider provider) {
         return attachment.serializeNBT(provider);
     }
 }

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.block;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

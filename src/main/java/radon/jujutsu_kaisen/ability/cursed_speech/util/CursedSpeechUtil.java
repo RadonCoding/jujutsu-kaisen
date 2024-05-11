@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.cursed_speech.util;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;

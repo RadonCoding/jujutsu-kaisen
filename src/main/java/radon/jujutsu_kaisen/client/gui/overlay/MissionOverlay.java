@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
@@ -42,7 +44,7 @@ public class MissionOverlay {
             }
         }
 
-        int width = mc.getWindow().getWidth();
+        int width = mc.getWindow().getGuiScaledWidth();
 
         int x = (width - offset) / 2;
         int y = 20;

@@ -39,7 +39,7 @@ public abstract class Summon<T extends Entity> extends Ability implements IToggl
         return false;
     }
 
-    public boolean display() {
+    public boolean isDisplayed() {
         return true;
     }
 

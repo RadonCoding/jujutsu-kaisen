@@ -1,22 +1,28 @@
 package radon.jujutsu_kaisen.item.registry;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.serialization.Codec;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.imbuement.Imbuement;
-import radon.jujutsu_kaisen.item.armor.InventoryCurseItems;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class JJKDataComponentTypes {
@@ -27,8 +33,8 @@ public class JJKDataComponentTypes {
                     .persistent(StringRepresentable.fromEnum(SorcererGrade::values))
                     .networkSynchronized(NeoForgeStreamCodecs.enumCodec(SorcererGrade.class))
                     .build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ICursedTechnique>> CURSED_TECHNIQUE = DATA_COMPONENT_TYPES.register("cursed_technique", () ->
-            new DataComponentType.Builder<ICursedTechnique>()
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CursedTechnique>> CURSED_TECHNIQUE = DATA_COMPONENT_TYPES.register("cursed_technique", () ->
+            new DataComponentType.Builder<CursedTechnique>()
                     .persistent(JJKCursedTechniques.CURSED_TECHNIQUE_REGISTRY.byNameCodec())
                     .networkSynchronized(ByteBufCodecs.registry(JJKCursedTechniques.CURSED_TECHNIQUE_KEY))
                     .build());
@@ -52,14 +58,14 @@ public class JJKDataComponentTypes {
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Imbuement>> IMBUEMENTS = DATA_COMPONENT_TYPES.register("imbuements", () ->
-            new DataComponentType.Builder<Imbuement>()
-                    .persistent(Imbuement.CODEC)
-                    .networkSynchronized(Imbuement.STREAM_CODEC)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Map<Ability, Integer>>> IMBUEMENTS = DATA_COMPONENT_TYPES.register("imbuements", () ->
+            new DataComponentType.Builder<Map<Ability, Integer>>()
+                    .persistent(Codec.unboundedMap(JJKAbilities.ABILITY_REGISTRY.byNameCodec(), Codec.INT))
+                    .networkSynchronized(ByteBufCodecs.map(HashMap::new, ByteBufCodecs.registry(JJKAbilities.ABILITY_KEY), ByteBufCodecs.INT))
                     .build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<InventoryCurseItems>> INVENTORY_CURSE_ITEMS = DATA_COMPONENT_TYPES.register("inventory_curse_items", () ->
-            new DataComponentType.Builder<InventoryCurseItems>()
-                    .persistent(InventoryCurseItems.CODEC)
-                    .networkSynchronized(InventoryCurseItems.STREAM_CODEC)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ItemStack>>> HIDDEN_INVENTORY = DATA_COMPONENT_TYPES.register("hidden_inventory", () ->
+            new DataComponentType.Builder<List<ItemStack>>()
+                    .persistent(ItemStack.CODEC.listOf())
+                    .networkSynchronized(ItemStack.LIST_STREAM_CODEC)
                     .build());
 }

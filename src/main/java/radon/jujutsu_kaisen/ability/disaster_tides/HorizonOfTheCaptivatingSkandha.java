@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_tides;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;

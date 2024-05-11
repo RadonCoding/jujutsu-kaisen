@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -29,7 +31,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
@@ -105,7 +106,7 @@ public class DomainAmplification extends Ability implements IToggled {
 
         ISorcererData data = cap.getSorcererData();
 
-        ICursedTechnique technique = data.getTechnique();
+        CursedTechnique technique = data.getTechnique();
         return technique == null || technique.getDomain() == null ? JJKAbilities.CURSED_ENERGY_FLOW.get() : technique.getDomain();
     }
 

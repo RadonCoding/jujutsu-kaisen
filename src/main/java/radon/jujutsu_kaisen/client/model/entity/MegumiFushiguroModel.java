@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.model.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.resources.ResourceLocation;

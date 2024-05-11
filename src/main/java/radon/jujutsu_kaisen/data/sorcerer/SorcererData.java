@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -30,11 +32,11 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.contract.IContractData;
@@ -44,6 +46,7 @@ import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -65,10 +68,12 @@ public class SorcererData implements ISorcererData {
 
     private final Set<Ability> unlocked;
 
-    private @Nullable ICursedTechnique technique;
+    @Nullable
+    private CursedTechnique technique;
 
-    private final Set<ICursedTechnique> additional;
-    private @Nullable ICursedTechnique currentAdditional;
+    private final Set<CursedTechnique> additional;
+    @Nullable
+    private CursedTechnique currentAdditional;
 
     private CursedEnergyNature nature;
 
@@ -422,18 +427,20 @@ public class SorcererData implements ISorcererData {
         return true;
     }
 
-    public @Nullable ICursedTechnique getTechnique() {
+    @Override
+    @Nullable
+    public CursedTechnique getTechnique() {
         return this.technique;
     }
 
     @Override
-    public void setTechnique(@Nullable ICursedTechnique technique) {
+    public void setTechnique(@Nullable CursedTechnique technique) {
         this.technique = technique;
         ServerVisualHandler.sync(this.owner);
     }
 
-    private Set<ICursedTechnique> getMimicryTechniques() {
-        Set<ICursedTechnique> techniques = new HashSet<>();
+    private Set<CursedTechnique> getMimicryTechniques() {
+        Set<CursedTechnique> techniques = new HashSet<>();
 
         List<ItemStack> stacks = new ArrayList<>();
         stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND));
@@ -442,13 +449,18 @@ public class SorcererData implements ISorcererData {
 
         for (ItemStack stack : stacks) {
             if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
-            techniques.add(MimicryKatanaItem.getTechnique(stack));
+
+            CursedTechnique technique = stack.get(JJKDataComponentTypes.CURSED_TECHNIQUE);
+
+            if (technique == null) continue;
+
+            techniques.add(technique);
         }
         return techniques;
     }
 
     @Override
-    public Set<ICursedTechnique> getActiveTechniques() {
+    public Set<CursedTechnique> getActiveTechniques() {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return Set.of();
@@ -457,7 +469,7 @@ public class SorcererData implements ISorcererData {
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
         IMimicryData mimicryData = cap.getMimicryData();
 
-        Set<ICursedTechnique> techniques = new HashSet<>();
+        Set<CursedTechnique> techniques = new HashSet<>();
 
         if (this.technique != null) {
             techniques.add(this.technique);
@@ -468,14 +480,14 @@ public class SorcererData implements ISorcererData {
         }
 
         if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
-            ICursedTechnique copied = mimicryData.getCurrentCopied();
+            CursedTechnique copied = mimicryData.getCurrentCopied();
 
             if (copied != null) {
                 techniques.add(copied);
             }
         }
 
-        ICursedTechnique absorbed = curseManipulationData.getCurrentAbsorbed();
+        CursedTechnique absorbed = curseManipulationData.getCurrentAbsorbed();
 
         if (absorbed != null) {
             techniques.add(absorbed);
@@ -486,7 +498,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public Set<ICursedTechnique> getTechniques() {
+    public Set<CursedTechnique> getTechniques() {
         IJujutsuCapability cap = this.owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return Set.of();
@@ -494,7 +506,7 @@ public class SorcererData implements ISorcererData {
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
         IMimicryData mimicryData = cap.getMimicryData();
 
-        Set<ICursedTechnique> techniques = new HashSet<>();
+        Set<CursedTechnique> techniques = new HashSet<>();
 
         if (this.technique != null) {
             techniques.add(this.technique);
@@ -509,12 +521,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasTechnique(ICursedTechnique technique) {
+    public boolean hasTechnique(CursedTechnique technique) {
         return this.getTechniques().contains(technique);
     }
 
     @Override
-    public boolean hasActiveTechnique(ICursedTechnique technique) {
+    public boolean hasActiveTechnique(CursedTechnique technique) {
         return this.getActiveTechniques().contains(technique);
     }
 
@@ -847,7 +859,7 @@ public class SorcererData implements ISorcererData {
         this.traits.remove(Trait.HEAVENLY_RESTRICTION_SORCERY);
         this.traits.remove(Trait.VESSEL);
 
-        Set<ICursedTechnique> taken = new HashSet<>();
+        Set<CursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
 
         if (ConfigHolder.SERVER.uniqueTraits.get()) {
@@ -886,7 +898,7 @@ public class SorcererData implements ISorcererData {
                 this.addTrait(Trait.HEAVENLY_RESTRICTION_SORCERY);
             }
 
-            List<ICursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
+            List<CursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
 
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
                 unlockable.removeAll(taken);
@@ -952,12 +964,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void addAdditional(ICursedTechnique technique) {
+    public void addAdditional(CursedTechnique technique) {
         this.additional.add(technique);
     }
 
     @Override
-    public void removeAdditional(ICursedTechnique technique) {
+    public void removeAdditional(CursedTechnique technique) {
         if (this.currentAdditional == technique) {
             this.currentAdditional = null;
             ServerVisualHandler.sync(this.owner);
@@ -966,23 +978,24 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasAdditional(ICursedTechnique technique) {
+    public boolean hasAdditional(CursedTechnique technique) {
         return this.additional.contains(technique);
     }
 
     @Override
-    public @Nullable ICursedTechnique getCurrentAdditional() {
+    @Nullable
+    public CursedTechnique getCurrentAdditional() {
         return this.currentAdditional;
     }
 
     @Override
-    public void setCurrentAdditional(@Nullable ICursedTechnique technique) {
+    public void setCurrentAdditional(@Nullable CursedTechnique technique) {
         this.currentAdditional = technique;
         ServerVisualHandler.sync(this.owner);
     }
 
     @Override
-    public Set<ICursedTechnique> getAdditional() {
+    public Set<CursedTechnique> getAdditional() {
         return this.additional;
     }
 
@@ -1000,7 +1013,7 @@ public class SorcererData implements ISorcererData {
 
         ListTag additionalTag = new ListTag();
 
-        for (ICursedTechnique technique : this.additional) {
+        for (CursedTechnique technique : this.additional) {
             additionalTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
         }
         nbt.put("additional", additionalTag);

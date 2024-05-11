@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -8,7 +10,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -355,7 +356,7 @@ public abstract class Ability {
 
     public Component getName() {
         ResourceLocation key = JJKAbilities.getKey(this);
-        return Component.translatable(String.format("technique.%s.%s", key.getNamespace(), key.getPath()));
+        return Component.translatable(String.format("ability.%s.%s", key.getNamespace(), key.getPath()));
     }
 
     public abstract float getCost(LivingEntity owner);
@@ -390,7 +391,7 @@ public abstract class Ability {
         ISorcererData sorcererData = cap.getSorcererData();
         IMimicryData mimicryData = cap.getMimicryData();
 
-        ICursedTechnique copied = mimicryData.getCurrentCopied();
+        CursedTechnique copied = mimicryData.getCurrentCopied();
 
         if (copied != null && copied.getAbilities().contains(this)) {
             cost *= 1.5F;

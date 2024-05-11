@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;

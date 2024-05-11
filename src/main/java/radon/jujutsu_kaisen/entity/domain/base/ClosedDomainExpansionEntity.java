@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.domain.base;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
@@ -282,7 +284,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    this.ability.onHitBlock(this, owner, entity.blockPosition());
+                    this.ability.onHitBlock(this, owner, entity.blockPosition(), false);
                     continue;
                 }
             }
@@ -299,7 +301,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (distance < radius - 1) {
                         BlockPos pos = center.offset(x, y, z);
-                        this.ability.onHitBlock(this, owner, pos);
+                        this.ability.onHitBlock(this, owner, pos, false);
                     }
                 }
             }

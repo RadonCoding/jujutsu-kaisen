@@ -1,10 +1,9 @@
 package radon.jujutsu_kaisen.item.armor;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
@@ -12,7 +11,6 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
@@ -24,7 +22,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
-import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -34,7 +32,7 @@ import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvider, ICurioItem {
@@ -56,7 +54,7 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
             private InventoryCurseRenderer renderer;
 
             @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
+            public @NotNull HumanoidModel<?> getHumanoidArmorModel(@NotNull LivingEntity livingEntity, @NotNull ItemStack itemStack, @NotNull EquipmentSlot equipmentSlot, @NotNull HumanoidModel<?> original) {
                 if (this.renderer == null) this.renderer = new InventoryCurseRenderer();
                 this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return this.renderer;
@@ -79,47 +77,24 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
         return Component.translatable(String.format("%s.desc", this.getDescriptionId()));
     }
 
-    public static void addItem(ItemStack inventory, int slot, ItemStack stack) {
-        CompoundTag nbt = inventory.getOrCreateTag();
-        ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
-        itemsTag.add(slot, stack.save(new CompoundTag()));
-        nbt.put("items", itemsTag);
-    }
-
-    public static void removeItem(ItemStack inventory, int slot) {
-        CompoundTag nbt = inventory.getOrCreateTag();
-        ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
-
-        if (itemsTag.size() >= slot) {
-            itemsTag.remove(slot);
-        }
-        nbt.put("items", itemsTag);
-    }
-
-    public static ItemStack getItem(ItemStack inventory, int slot) {
-        CompoundTag nbt = inventory.getOrCreateTag();
-        ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
-        return ItemStack.of(itemsTag.getCompound(slot));
-    }
-
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
-        CompoundTag nbt = pPlayer.getItemBySlot(EquipmentSlot.CHEST).getOrCreateTag();
+    public AbstractContainerMenu createMenu(int pContainerId, @NotNull net.minecraft.world.entity.player.Inventory pPlayerInventory, @NotNull Player pPlayer) {
+        ItemStack chest = pPlayer.getItemBySlot(EquipmentSlot.CHEST);
+        List<ItemStack> inventory = chest.get(JJKDataComponentTypes.HIDDEN_INVENTORY);
 
-        AtomicInteger previous = new AtomicInteger(nbt.getList("items", Tag.TAG_COMPOUND).size());
+        if (inventory == null) return null;
 
         SimpleContainer container = new SimpleContainer(9);
-        container.fromTag(nbt.getList("items", Tag.TAG_COMPOUND));
+
+        for (ItemStack stack : inventory) {
+            container.addItem(stack);
+        }
+
+        chest.set(JJKDataComponentTypes.HIDDEN_INVENTORY, container.getItems());
+
         container.addListener(pContainer -> {
-            nbt.put("items", ((SimpleContainer) pContainer).createTag());
-
-            int current = nbt.getList("items", Tag.TAG_COMPOUND).size();
-
-            if (current > previous.get()) {
-                pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F);
-            }
-            previous.set(current);
+            pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F);
         });
         return new ChestMenu(MenuType.GENERIC_9x1, pContainerId, pPlayerInventory, container, container.getContainerSize() / 9);
     }

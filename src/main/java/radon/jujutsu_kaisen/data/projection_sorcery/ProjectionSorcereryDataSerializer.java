@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.projection_sorcery;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +20,8 @@ public class ProjectionSorcereryDataSerializer implements IAttachmentSerializer<
     }
 
     @Override
-    public @Nullable CompoundTag write(@NotNull IProjectionSorceryData attachment, HolderLookup.@NotNull Provider provider) {
+    @Nullable
+    public CompoundTag write(@NotNull IProjectionSorceryData attachment, HolderLookup.@NotNull Provider provider) {
         return attachment.serializeNBT(provider);
     }
 }

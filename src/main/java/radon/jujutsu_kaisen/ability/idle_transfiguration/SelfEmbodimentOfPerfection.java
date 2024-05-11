@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,7 +22,8 @@ import java.util.List;
 
 public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
-    public @Nullable ParticleOptions getEnvironmentParticle() {
+    @Nullable
+    public ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.WHITE_ASH;
     }
 

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -16,7 +18,6 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 
@@ -33,7 +34,7 @@ public class MaximumMeteor extends Ability {
         ISorcererData sorcererData = cap.getSorcererData();
         IAbilityData abilityData = cap.getAbilityData();
 
-        ICursedTechnique technique = sorcererData.getTechnique();
+        CursedTechnique technique = sorcererData.getTechnique();
 
         if (technique != null) {
             Ability domain = technique.getDomain();

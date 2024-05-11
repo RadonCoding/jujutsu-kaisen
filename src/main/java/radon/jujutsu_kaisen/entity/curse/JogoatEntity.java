@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -10,9 +12,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -78,7 +80,8 @@ public class JogoatEntity extends CursedSpirit {
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return null;
     }
 
@@ -93,7 +96,8 @@ public class JogoatEntity extends CursedSpirit {
     }
 
     @Override
-    public @Nullable CursedEnergyNature getNature() {
+    @Nullable
+    public CursedEnergyNature getNature() {
         return CursedEnergyNature.LIGHTNING;
     }
 

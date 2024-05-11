@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.effect.base;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.GlConst;

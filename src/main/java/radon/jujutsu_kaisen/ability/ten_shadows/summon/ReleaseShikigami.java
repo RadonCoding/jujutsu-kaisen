@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;

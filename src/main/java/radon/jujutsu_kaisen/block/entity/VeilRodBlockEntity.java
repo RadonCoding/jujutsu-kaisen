@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +33,8 @@ public class VeilRodBlockEntity extends BlockEntity {
         this.modifiers = new ArrayList<>();
     }
 
-    public @Nullable UUID getOwnerUUID() {
+    @Nullable
+    public UUID getOwnerUUID() {
         return this.ownerUUID;
     }
 

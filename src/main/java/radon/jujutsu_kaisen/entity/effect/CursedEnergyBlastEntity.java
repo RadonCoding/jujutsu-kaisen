@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;

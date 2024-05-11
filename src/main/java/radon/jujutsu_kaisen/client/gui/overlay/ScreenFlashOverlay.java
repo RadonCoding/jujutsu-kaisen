@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.neoforged.api.distmarker.Dist;
@@ -35,8 +37,8 @@ public class ScreenFlashOverlay {
 
         Minecraft mc = Minecraft.getInstance();
 
-        int width = mc.getWindow().getWidth();
-        int height = mc.getWindow().getHeight();
+        int width = mc.getWindow().getGuiScaledWidth();
+        int height = mc.getWindow().getGuiScaledHeight();
 
         float alpha = (float) current.duration / DEFAULT_DURATION;
         pGuiGraphics.fill(0, 0, width, height, HelperMethods.toRGB24(255, 255, 255, (int) (255 * alpha)));

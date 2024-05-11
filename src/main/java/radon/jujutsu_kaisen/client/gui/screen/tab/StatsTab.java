@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
@@ -15,7 +17,6 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
@@ -96,7 +97,7 @@ public class StatsTab extends JJKTab {
         component.append(Component.translatable(String.format("gui.%s.stats.experience", JujutsuKaisen.MOD_ID), data.getExperience(), next.getRequiredExperience()));
         component.append("\n");
 
-        ICursedTechnique technique = data.getTechnique();
+        CursedTechnique technique = data.getTechnique();
 
         if (technique != null) {
             component.append(Component.translatable(String.format("gui.%s.stats.cursed_technique", JujutsuKaisen.MOD_ID), technique.getName()));

@@ -1,11 +1,10 @@
-package radon.jujutsu_kaisen.client.gui.screen;
+package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.client.JJKKeys;
-import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class MeleeScreen extends RadialScreen {
 
     @Override
     protected boolean isActive(DisplayItem item) {
-        return MeleeScreen.getSelected() == item.ability || super.isActive(item);
+        return item instanceof AbilityDisplayItem abilityItem && MeleeScreen.getSelected() == abilityItem.getAbility() || super.isActive(item);
     }
 
     @Override
@@ -29,20 +28,8 @@ public class MeleeScreen extends RadialScreen {
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType(this.minecraft.player) != MenuType.MELEE);
 
-        return new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-
-        if (this.hovered != -1) {
-            if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
-
-            DisplayItem item = this.getCurrent().get(this.hovered);
-
-            selected = item.ability;
-        }
+        return new ArrayList<>(abilities.stream().map(ability -> new AbilityDisplayItem(this.minecraft, this, () ->
+                selected = ability, ability)).toList());
     }
 
     @Override

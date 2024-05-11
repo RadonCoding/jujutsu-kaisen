@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.item.registry;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.*;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
@@ -14,6 +16,9 @@ import radon.jujutsu_kaisen.item.armor.registry.JJKArmorMaterials;
 import radon.jujutsu_kaisen.item.cursed_object.*;
 import radon.jujutsu_kaisen.item.cursed_tool.*;
 import radon.jujutsu_kaisen.item.veil.VeilRodItem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class JJKItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, JujutsuKaisen.MOD_ID);
@@ -75,7 +80,8 @@ public class JJKItems {
             () -> new WingsItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
 
     public static DeferredHolder<Item, ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
-            () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+            () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()
+                    .component(JJKDataComponentTypes.HIDDEN_INVENTORY.get(), new ArrayList<>())));
     public static DeferredHolder<Item, Item> BLINDFOLD = ITEMS.register("blindfold",
             () -> new BlindfoldItem(JJKArmorMaterials.BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
 

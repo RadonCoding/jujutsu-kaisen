@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.stat;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -17,7 +19,8 @@ public class SkillDataSerializer implements IAttachmentSerializer<CompoundTag, I
     }
 
     @Override
-    public @Nullable CompoundTag write(@NotNull ISkillData attachment, HolderLookup.@NotNull Provider provider) {
+    @Nullable
+    public CompoundTag write(@NotNull ISkillData attachment, HolderLookup.@NotNull Provider provider) {
         return attachment.serializeNBT(provider);
     }
 }

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

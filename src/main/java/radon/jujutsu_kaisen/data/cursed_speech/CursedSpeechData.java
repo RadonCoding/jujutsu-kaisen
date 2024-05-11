@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.cursed_speech;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;

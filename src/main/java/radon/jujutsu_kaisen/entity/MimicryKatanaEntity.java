@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -21,11 +23,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
-import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
@@ -43,7 +43,7 @@ public class MimicryKatanaEntity extends Entity {
         super(pType, pLevel);
     }
 
-    public MimicryKatanaEntity(DomainExpansionEntity domain, ICursedTechnique technique, Vec3 pos) {
+    public MimicryKatanaEntity(DomainExpansionEntity domain, CursedTechnique technique, Vec3 pos) {
         super(JJKEntities.MIMICRY_KATANA.get(), domain.level());
 
         this.setDomain(domain);
@@ -110,11 +110,11 @@ public class MimicryKatanaEntity extends Entity {
         this.entityData.set(DATA_VARIANT, variant.ordinal());
     }
 
-    public ICursedTechnique getTechnique() {
+    public CursedTechnique getTechnique() {
         return JJKCursedTechniques.getValue(new ResourceLocation(this.entityData.get(DATA_TECHNIQUE)));
     }
 
-    private void setTechnique(ICursedTechnique technique) {
+    private void setTechnique(CursedTechnique technique) {
         this.entityData.set(DATA_TECHNIQUE, JJKCursedTechniques.getKey(technique).toString());
     }
 

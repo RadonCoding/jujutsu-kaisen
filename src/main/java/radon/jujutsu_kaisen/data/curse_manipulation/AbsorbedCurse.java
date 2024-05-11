@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.curse_manipulation;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

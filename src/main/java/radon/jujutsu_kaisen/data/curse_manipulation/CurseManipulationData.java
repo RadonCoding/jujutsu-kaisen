@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.data.curse_manipulation;
 
-import com.mojang.serialization.JsonOps;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
@@ -10,16 +11,15 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class CurseManipulationData implements ICurseManipulationData {
     private final List<AbsorbedCurse> curses;
-    private final Set<ICursedTechnique> absorbed;
+    private final Set<CursedTechnique> absorbed;
     @Nullable
-    private ICursedTechnique currentAbsorbed;
+    private CursedTechnique currentAbsorbed;
 
     private final LivingEntity owner;
 
@@ -36,28 +36,28 @@ public class CurseManipulationData implements ICurseManipulationData {
     }
 
     @Override
-    public void absorb(@Nullable ICursedTechnique technique) {
+    public void absorb(@Nullable CursedTechnique technique) {
         this.absorbed.add(technique);
     }
 
     @Override
-    public void absorb(Set<ICursedTechnique> techniques) {
+    public void absorb(Set<CursedTechnique> techniques) {
         this.absorbed.addAll(techniques);
     }
 
     @Override
-    public void unabsorb(ICursedTechnique technique) {
+    public void unabsorb(CursedTechnique technique) {
         this.absorbed.remove(technique);
         this.currentAbsorbed = null;
     }
 
     @Override
-    public Set<ICursedTechnique> getAbsorbed() {
+    public Set<CursedTechnique> getAbsorbed() {
         return this.absorbed;
     }
 
     @Override
-    public void setCurrentAbsorbed(@Nullable ICursedTechnique technique) {
+    public void setCurrentAbsorbed(@Nullable CursedTechnique technique) {
         if (this.owner == null) return;
 
         this.currentAbsorbed = this.currentAbsorbed == technique ? null : technique;
@@ -65,12 +65,13 @@ public class CurseManipulationData implements ICurseManipulationData {
     }
 
     @Override
-    public @Nullable ICursedTechnique getCurrentAbsorbed() {
+    @Nullable
+    public CursedTechnique getCurrentAbsorbed() {
         return this.currentAbsorbed;
     }
 
     @Override
-    public void addCurse(AbsorbedCurse curse) {
+    public void addCurse(@NotNull AbsorbedCurse curse) {
         this.curses.add(curse);
     }
 
@@ -87,7 +88,8 @@ public class CurseManipulationData implements ICurseManipulationData {
     }
 
     @Override
-    public @Nullable AbsorbedCurse getCurse(EntityType<?> type) {
+    @Nullable
+    public AbsorbedCurse getCurse(EntityType<?> type) {
         for (AbsorbedCurse curse : this.getCurses()) {
             if (curse.getType() == type) return curse;
         }
@@ -112,7 +114,7 @@ public class CurseManipulationData implements ICurseManipulationData {
 
         ListTag absorbedTag = new ListTag();
 
-        for (ICursedTechnique technique : this.absorbed) {
+        for (CursedTechnique technique : this.absorbed) {
             absorbedTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
         }
         nbt.put("absorbed", absorbedTag);

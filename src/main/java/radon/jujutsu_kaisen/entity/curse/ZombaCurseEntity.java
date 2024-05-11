@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
@@ -9,7 +11,6 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -58,7 +59,8 @@ public class ZombaCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return JJKCursedTechniques.SKY_STRIKE.get();
     }
 

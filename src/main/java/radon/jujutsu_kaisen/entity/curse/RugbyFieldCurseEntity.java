@@ -1,10 +1,12 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -52,7 +54,8 @@ public class RugbyFieldCurseEntity extends CursedSpirit implements PlayerRideabl
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return null;
     }
 

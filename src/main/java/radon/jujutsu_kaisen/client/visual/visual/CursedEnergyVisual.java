@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.visual.visual;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;

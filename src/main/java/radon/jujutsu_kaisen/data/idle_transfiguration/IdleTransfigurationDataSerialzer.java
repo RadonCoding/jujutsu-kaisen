@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.idle_transfiguration;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +22,8 @@ public class IdleTransfigurationDataSerialzer implements IAttachmentSerializer<C
     }
 
     @Override
-    public @Nullable CompoundTag write(@NotNull IIdleTransfigurationData attachment, HolderLookup.@NotNull Provider provider) {
+    @Nullable
+    public CompoundTag write(@NotNull IIdleTransfigurationData attachment, HolderLookup.@NotNull Provider provider) {
         return attachment.serializeNBT(provider);
     }
 }

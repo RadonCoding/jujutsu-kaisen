@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -47,16 +49,16 @@ public record TriggerAbilityC2SPacket(Ability ability) implements CustomPacketPa
 
                 switch (status) {
                     case FAILURE ->
-                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("technique.%s.fail.failure",
+                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.failure",
                                     JujutsuKaisen.MOD_ID)), false));
                     case ENERGY ->
-                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("technique.%s.fail.energy",
+                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.energy",
                                     JujutsuKaisen.MOD_ID)), false));
                     case COOLDOWN ->
-                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("technique.%s.fail.cooldown",
+                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.cooldown",
                                     JujutsuKaisen.MOD_ID), Math.max(1, abilityData.getRemainingCooldown(ability) / 20)), false));
                     case THROAT ->
-                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("technique.%s.fail.throat",
+                            PacketDistributor.sendToPlayer(sender, new SetOverlayMessageS2CPacket(Component.translatable(String.format("ability.%s.fail.throat",
                                     JujutsuKaisen.MOD_ID), cursedSpeechData.getThroatDamage() / 20), false));
                 }
             }

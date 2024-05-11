@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
@@ -63,8 +65,8 @@ public class SixEyesOverlay {
             }
         }
 
-        int width = mc.getWindow().getWidth();
-        int height = mc.getWindow().getHeight();
+        int width = mc.getWindow().getGuiScaledWidth();
+        int height = mc.getWindow().getGuiScaledHeight();
 
         int x = (width - offset) / 2;
         int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;

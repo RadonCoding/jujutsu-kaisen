@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Attackable;
 import net.minecraft.world.entity.Entity;

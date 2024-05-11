@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen.widget;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;

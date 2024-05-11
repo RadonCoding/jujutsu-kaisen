@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;

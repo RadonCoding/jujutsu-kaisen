@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -212,7 +214,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     @Override
-    public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         float radius = this.getRadius();
         return EntityDimensions.fixed(radius, radius);
     }

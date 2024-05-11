@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.sound;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -44,8 +46,6 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "red_explosion")));
     public static DeferredHolder<SoundEvent, SoundEvent> SLAM = SOUNDS.register("slam", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "slam")));
-    public static DeferredHolder<SoundEvent, SoundEvent> PURE_LOVE = SOUNDS.register("pure_love", () ->
-            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")));
     public static DeferredHolder<SoundEvent, SoundEvent> FLAME_EXPLOSION = SOUNDS.register("flame_explosion", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "flame_explosion")));
     public static DeferredHolder<SoundEvent, SoundEvent> SHOOT = SOUNDS.register("shoot", () ->

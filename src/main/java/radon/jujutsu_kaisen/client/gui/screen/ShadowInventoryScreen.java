@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
-import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
+import net.minecraft.world.item.ItemStack;
+import radon.jujutsu_kaisen.client.gui.screen.radial.DisplayItem;
+import radon.jujutsu_kaisen.client.gui.screen.radial.ItemStackDisplayItem;
+import radon.jujutsu_kaisen.client.gui.screen.radial.RadialScreen;
+
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
@@ -12,7 +16,7 @@ import java.util.List;
 
 public class ShadowInventoryScreen extends RadialScreen {
     @Override
-    protected List<DisplayItem> getItems() {
+    protected List<? extends DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -20,25 +24,8 @@ public class ShadowInventoryScreen extends RadialScreen {
         if (cap == null) return List.of();
 
         ITenShadowsData data = cap.getTenShadowsData();
-        return data.getShadowInventory().stream().map(DisplayItem::new).toList();
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-
-        if (this.hovered == -1) return;
-
-        if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
-
-        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        DisplayItem item = this.getCurrent().get(this.hovered);
-
-        if (item.type == DisplayItem.Type.ITEM) {
-            PacketDistributor.sendToServer(new ShadowInventoryTakeC2SPacket((page * MAX_ITEMS) + this.hovered));
-        }
+        List<ItemStack> inventory = data.getShadowInventory();
+        return inventory.stream().map(stack -> new ItemStackDisplayItem(this.minecraft, this, () ->
+                PacketDistributor.sendToServer(new ShadowInventoryTakeC2SPacket((page * MAX_ITEMS) + inventory.indexOf(stack))), stack)).toList();
     }
 }

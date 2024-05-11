@@ -1,12 +1,14 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import java.util.List;
 import java.util.Set;
@@ -68,29 +70,29 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     boolean addExperience(float amount);
 
-    void addAdditional(ICursedTechnique technique);
+    void addAdditional(CursedTechnique technique);
 
-    void removeAdditional(ICursedTechnique technique);
+    void removeAdditional(CursedTechnique technique);
 
-    boolean hasAdditional(ICursedTechnique technique);
+    boolean hasAdditional(CursedTechnique technique);
 
-    Set<ICursedTechnique> getAdditional();
+    Set<CursedTechnique> getAdditional();
 
-    @Nullable ICursedTechnique getCurrentAdditional();
+    @Nullable CursedTechnique getCurrentAdditional();
 
-    void setCurrentAdditional(@Nullable ICursedTechnique technique);
+    void setCurrentAdditional(@Nullable CursedTechnique technique);
 
-    @Nullable ICursedTechnique getTechnique();
+    @Nullable CursedTechnique getTechnique();
 
-    void setTechnique(@Nullable ICursedTechnique technique);
+    void setTechnique(@Nullable CursedTechnique technique);
 
-    Set<ICursedTechnique> getActiveTechniques();
+    Set<CursedTechnique> getActiveTechniques();
 
-    Set<ICursedTechnique> getTechniques();
+    Set<CursedTechnique> getTechniques();
 
-    boolean hasTechnique(ICursedTechnique technique);
+    boolean hasTechnique(CursedTechnique technique);
 
-    boolean hasActiveTechnique(ICursedTechnique technique);
+    boolean hasActiveTechnique(CursedTechnique technique);
 
     CursedEnergyNature getNature();
 

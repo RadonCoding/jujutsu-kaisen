@@ -8,23 +8,10 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "counter",
-                  "target": "BlockEntityTag.counter"
-                },
-                {
-                  "op": "replace",
-                  "source": "frequency",
-                  "target": "BlockEntityTag.frequency"
-                },
-                {
-                  "op": "replace",
-                  "source": "modifiers",
-                  "target": "BlockEntityTag.modifiers"
-                }
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name",
+                "minecraft:block_entity_data"
               ],
               "source": "block_entity"
             }

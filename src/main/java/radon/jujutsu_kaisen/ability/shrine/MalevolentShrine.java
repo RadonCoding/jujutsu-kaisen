@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;

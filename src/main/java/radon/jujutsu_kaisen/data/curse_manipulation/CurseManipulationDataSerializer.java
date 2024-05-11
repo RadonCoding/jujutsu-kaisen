@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.curse_manipulation;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +22,8 @@ public class CurseManipulationDataSerializer implements IAttachmentSerializer<Co
     }
 
     @Override
-    public @Nullable CompoundTag write(@NotNull ICurseManipulationData attachment, HolderLookup.@NotNull Provider provider) {
+    @Nullable
+    public CompoundTag write(@NotNull ICurseManipulationData attachment, HolderLookup.@NotNull Provider provider) {
         return attachment.serializeNBT(provider);
     }
 }

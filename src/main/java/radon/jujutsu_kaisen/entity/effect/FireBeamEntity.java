@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -60,7 +62,8 @@ public class FireBeamEntity extends BeamEntity {
     }
 
     @Override
-    protected @Nullable Ability getSource() {
+    @Nullable
+    protected Ability getSource() {
         return JJKAbilities.FIRE_BEAM.get();
     }
 

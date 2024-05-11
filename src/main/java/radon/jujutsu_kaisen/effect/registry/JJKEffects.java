@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.effect.registry;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;

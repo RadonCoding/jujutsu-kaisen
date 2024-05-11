@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.model.base;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.LayerDefinitions;

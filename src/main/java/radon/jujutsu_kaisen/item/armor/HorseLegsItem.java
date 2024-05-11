@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.item.armor;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;

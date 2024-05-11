@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;

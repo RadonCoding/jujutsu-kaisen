@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.event;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -29,8 +31,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
-import radon.jujutsu_kaisen.mixin.client.IItemInHandRendererAccessor;
-import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
@@ -82,8 +82,8 @@ public class TransformationHandler {
                 }
 
                 float swing = arm == HumanoidArm.RIGHT ? mc.player.getAttackAnim(event.getPartialTick()) : 0.0F;
-                float equip = 1.0F - Mth.lerp(event.getPartialTick(), ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getOMainHandHeightAccessor(),
-                        ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getMainHandHeightAccessor());
+                float equip = 1.0F - Mth.lerp(event.getPartialTick(), mc.gameRenderer.itemInHandRenderer.oMainHandHeight,
+                        mc.gameRenderer.itemInHandRenderer.mainHandHeight);
 
                 IClientItemExtensions extensions = IClientItemExtensions.of(transformation.getItem());
 
@@ -109,7 +109,7 @@ public class TransformationHandler {
                     event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f * -135.0F));
                     event.getPoseStack().translate(f * 5.6F, 0.0F, 0.0F);
 
-                    if (((IPlayerModelAccessor) model).getSlimAccessor()) {
+                    if (model.slim) {
                         event.getPoseStack().translate(f * 0.0546875F, 0.0F, 0.0F);
                     }
                 }

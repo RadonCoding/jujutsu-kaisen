@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

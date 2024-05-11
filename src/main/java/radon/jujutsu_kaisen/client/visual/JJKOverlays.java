@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.visual;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
 import radon.jujutsu_kaisen.client.visual.overlay.CursedSpeechOverlay;
 import radon.jujutsu_kaisen.client.visual.overlay.PerfectBodyOverlay;

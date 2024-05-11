@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.ai.rika;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -53,8 +55,6 @@ public class ShootPureLove extends Ability {
 
         PureLoveBeamEntity beam = new PureLoveBeamEntity(owner, this.getOutput(owner));
         owner.level().addFreshEntity(beam);
-
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.PURE_LOVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
     }
 
     @Override

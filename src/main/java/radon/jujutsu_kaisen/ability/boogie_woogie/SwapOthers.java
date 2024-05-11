@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -44,7 +46,8 @@ public class SwapOthers extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable Entity getTarget(LivingEntity owner) {
+    @Nullable
+    private Entity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
             return SwapSelf.canSwap(owner, target) ? target : null;

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -54,11 +56,13 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
         this.modifiers = new ArrayList<>();
     }
 
-    public @Nullable UUID getParentUUID() {
+    @Nullable
+    public UUID getParentUUID() {
         return this.parentUUID;
     }
 
-    public @Nullable UUID getOwnerUUID() {
+    @Nullable
+    public UUID getOwnerUUID() {
         return this.ownerUUID;
     }
 
@@ -101,7 +105,8 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public @Nullable BlockState getOriginal() {
+    @Nullable
+    public BlockState getOriginal() {
         if (this.level == null) return this.original;
 
         if (this.original == null && this.deferred != null) {
@@ -113,7 +118,8 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
     }
 
     @Override
-    public @Nullable CompoundTag getSaved() {
+    @Nullable
+    public CompoundTag getSaved() {
         return this.saved;
     }
 

@@ -1,8 +1,11 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;

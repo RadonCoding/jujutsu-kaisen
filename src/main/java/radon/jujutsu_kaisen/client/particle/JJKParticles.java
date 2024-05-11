@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;

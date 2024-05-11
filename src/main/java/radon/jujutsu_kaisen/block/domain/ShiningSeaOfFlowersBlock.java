@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.block.domain;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -25,12 +27,14 @@ public class ShiningSeaOfFlowersBlock extends DomainBlock implements EntityBlock
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+    @Nullable
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return JJKBlockEntities.SHINING_SEA_OF_FLOWERS.get().create(pPos, pState);
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.SHINING_SEA_OF_FLOWERS.get(), DomainBlockEntity::tick);
     }
 }

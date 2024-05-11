@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +51,8 @@ public class ReleaseCurse extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable Entity getTarget(LivingEntity owner) {
+    @Nullable
+    private Entity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
             return hit.getEntity();
         }

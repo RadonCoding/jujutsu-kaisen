@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.util;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;

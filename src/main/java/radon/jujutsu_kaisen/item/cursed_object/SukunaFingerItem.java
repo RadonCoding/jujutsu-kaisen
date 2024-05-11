@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.item.cursed_object;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,7 +54,7 @@ public class SukunaFingerItem extends CursedObjectItem {
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) return pStack;
 
-            if (isFull(pStack)) {
+            if (pStack.getOrDefault(JJKDataComponentTypes.IS_FULL_SOUL, false)) {
                 data.addTrait(Trait.PERFECT_BODY);
                 return super.finishUsingItem(pStack, pLevel, pEntityLiving);
             } else if (data.getType() == JujutsuType.SORCERER) {

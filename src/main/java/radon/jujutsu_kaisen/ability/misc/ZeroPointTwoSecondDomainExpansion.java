@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +17,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -54,7 +55,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        ICursedTechnique technique = data.getTechnique();
+        CursedTechnique technique = data.getTechnique();
         return technique != null && technique.getDomain() != null && super.isDisplayed(owner);
     }
 
@@ -66,7 +67,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         ISorcererData data = cap.getSorcererData();
 
-        ICursedTechnique technique = data.getTechnique();
+        CursedTechnique technique = data.getTechnique();
         return technique != null && technique.getDomain() != null && technique.getDomain().isValid(owner) && super.isValid(owner);
     }
 
@@ -81,7 +82,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
             if (data == null) return Status.FAILURE;
 
-            ICursedTechnique technique = data.getTechnique();
+            CursedTechnique technique = data.getTechnique();
 
             if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return Status.FAILURE;
 
@@ -106,7 +107,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
         IAbilityData abilityData = cap.getAbilityData();
 
         abilityData.delayTickEvent(() -> {
-            ICursedTechnique technique = sorcererData.getTechnique();
+            CursedTechnique technique = sorcererData.getTechnique();
 
             if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return;
 
@@ -143,7 +144,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         if (data == null) return null;
 
-        ICursedTechnique technique = data.getTechnique();
+        CursedTechnique technique = data.getTechnique();
         return technique == null || technique.getDomain() == null ? JJKAbilities.SIMPLE_DOMAIN.get() : technique.getDomain();
     }
 

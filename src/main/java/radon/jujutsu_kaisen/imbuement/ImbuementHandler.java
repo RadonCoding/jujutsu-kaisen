@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.imbuement;
 
-import net.minecraft.nbt.CompoundTag;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -19,13 +20,13 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IImbuement;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.DamageUtil;
@@ -66,36 +67,22 @@ public class ImbuementHandler {
     }
 
     public static int getImbuementAmount(ItemStack stack, Ability ability) {
-        CompoundTag nbt = stack.getTag();
+        Map<Ability, Integer> imbuements = stack.get(JJKDataComponentTypes.IMBUEMENTS);
 
-        if (nbt == null) return 0;
+        if (imbuements == null) return 0;
 
-        if (!nbt.contains(JujutsuKaisen.MOD_ID)) return 0;
-
-        CompoundTag mod = nbt.getCompound(JujutsuKaisen.MOD_ID);
-
-        if (!mod.contains("imbuements")) return 0;
-
-        CompoundTag imbuements = mod.getCompound("imbuements");
-        return imbuements.getInt(JJKAbilities.getKey(ability).toString());
+        return imbuements.get(ability);
     }
 
     public static void increaseImbuementAmount(ItemStack stack, Ability ability, int amount) {
-        CompoundTag nbt = stack.getOrCreateTag();
+        if (!stack.has(JJKDataComponentTypes.IMBUEMENTS)) stack.set(JJKDataComponentTypes.IMBUEMENTS, new HashMap<>());
 
-        if (!nbt.contains(JujutsuKaisen.MOD_ID)) {
-            nbt.put(JujutsuKaisen.MOD_ID, new CompoundTag());
-        }
-        CompoundTag mod = nbt.getCompound(JujutsuKaisen.MOD_ID);
+        Map<Ability, Integer> imbuements = stack.get(JJKDataComponentTypes.IMBUEMENTS);
 
-        if (!mod.contains("imbuements")) {
-            mod.put("imbuements", new CompoundTag());
-        }
-        CompoundTag imbuements = mod.getCompound("imbuements");
+        if (imbuements == null) return;
 
-        int imbuement = imbuements.getInt(JJKAbilities.getKey(ability).toString());
-
-        imbuements.putInt(JJKAbilities.getKey(ability).toString(), Math.min(ConfigHolder.SERVER.requiredImbuementAmount.get(), imbuement + amount));
+        imbuements.put(ability, Math.min(ConfigHolder.SERVER.requiredImbuementAmount.get(),
+                imbuements.getOrDefault(ability, 0) + amount));
     }
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
@@ -106,7 +93,7 @@ public class ImbuementHandler {
 
             Ability ability = event.getAbility();
 
-            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
+            CursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
 
             if (technique == null) return;
 

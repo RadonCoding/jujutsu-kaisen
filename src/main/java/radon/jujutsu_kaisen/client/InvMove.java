@@ -1,17 +1,14 @@
 package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ToggleKeyMapping;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.KeyboardInput;
-import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
+import radon.jujutsu_kaisen.client.gui.screen.radial.RadialScreen;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public abstract class InvMove {

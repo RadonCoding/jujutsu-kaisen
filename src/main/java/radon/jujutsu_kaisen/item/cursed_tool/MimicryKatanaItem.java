@@ -1,9 +1,9 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
@@ -16,13 +16,11 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -61,7 +59,7 @@ public class MimicryKatanaItem extends KatanaItem {
     public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pContext, pTooltipComponents, pIsAdvanced);
 
-        ICursedTechnique technique = pStack.get(JJKDataComponentTypes.CURSED_TECHNIQUE);
+        CursedTechnique technique = pStack.get(JJKDataComponentTypes.CURSED_TECHNIQUE);
 
         if (technique == null) return;
 
@@ -76,7 +74,7 @@ public class MimicryKatanaItem extends KatanaItem {
 
             Ability ability = event.getAbility();
 
-            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
+            CursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
 
             if (technique == null) return;
 
@@ -100,7 +98,7 @@ public class MimicryKatanaItem extends KatanaItem {
         public static void onAbilityStop(AbilityStopEvent event) {
             Ability ability = event.getAbility();
 
-            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
+            CursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
 
             if (technique == null) return;
 

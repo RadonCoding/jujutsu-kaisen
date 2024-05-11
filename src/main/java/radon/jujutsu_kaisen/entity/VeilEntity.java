@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -130,7 +132,7 @@ public class VeilEntity extends Entity implements IVeil {
         this.modifiers = ModifierUtils.deserialize(pCompound.getList("modifiers", CompoundTag.TAG_LIST));
 
         if (pCompound.contains("center")) {
-            this.center = NbtUtils.readBlockPos(pCompound.getCompound("center"));
+            this.center = NbtUtils.readBlockPos(pCompound, "center").orElseThrow();
         }
     }
 
@@ -275,7 +277,7 @@ public class VeilEntity extends Entity implements IVeil {
                         CompoundTag saved = null;
 
                         if (existing != null) {
-                            saved = existing.saveWithFullMetadata();
+                            saved = existing.saveWithFullMetadata(this.registryAccess());
                         }
 
                         if (existing instanceof VeilBlockEntity be) {
@@ -346,7 +348,7 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         int radius = this.getRadius() * 2;
         return EntityDimensions.fixed(radius, radius);
     }

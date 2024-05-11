@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 
 public interface IDomain extends IBarrier {

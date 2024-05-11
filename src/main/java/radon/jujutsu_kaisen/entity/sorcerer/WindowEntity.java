@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -13,7 +15,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
@@ -116,16 +118,18 @@ public class WindowEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         if (this.random.nextInt(TECHNIQUE_CHANCE) == 0) {
-            List<ICursedTechnique> techniques = ConfigHolder.SERVER.getUnlockableTechniques();
+            List<CursedTechnique> techniques = ConfigHolder.SERVER.getUnlockableTechniques();
             return techniques.get(this.random.nextInt(techniques.size()));
         }
         return null;
     }
 
     @Override
-    public @Nullable CursedEnergyNature getNature() {
+    @Nullable
+    public CursedEnergyNature getNature() {
         if (this.random.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
             return HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));
         }

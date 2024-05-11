@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.visual;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -25,7 +28,6 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -134,16 +136,16 @@ public class ClientVisualHandler {
         @Nullable
         public Ability channeled;
         public Set<Trait> traits;
-        public Set<ICursedTechnique> techniques;
+        public Set<CursedTechnique> techniques;
         @Nullable
-        public ICursedTechnique technique;
+        public CursedTechnique technique;
         public JujutsuType type;
         public float experience;
         public int cursedEnergyColor;
 
         public int mouth;
 
-        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<ICursedTechnique> techniques, @Nullable ICursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
+        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
             this.toggled = toggled;
             this.channeled = channeled;
             this.traits = traits;
@@ -209,7 +211,7 @@ public class ClientVisualHandler {
 
             ListTag techniquesTag = new ListTag();
 
-            for (ICursedTechnique technique : this.techniques) {
+            for (CursedTechnique technique : this.techniques) {
                 techniquesTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
             }
             nbt.put("techniques", techniquesTag);

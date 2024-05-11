@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +29,8 @@ public class ItemSwap extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable Entity getTarget(LivingEntity owner) {
+    @Nullable
+    private Entity getTarget(LivingEntity owner) {
         Entity target = null;
 
         for (Entity entity : owner.level().getEntitiesOfClass(CursedEnergyImbuedItemProjectile.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {

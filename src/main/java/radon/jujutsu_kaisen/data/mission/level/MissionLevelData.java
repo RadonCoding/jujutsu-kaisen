@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.mission.level;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -106,7 +108,7 @@ public class MissionLevelData implements IMissionLevelData {
 
                 iter.remove();
             }
-            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
+            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT(this.level.registryAccess())));
         }
     }
 
@@ -121,7 +123,7 @@ public class MissionLevelData implements IMissionLevelData {
         this.missions.add(mission);
 
         if (!this.level.isClientSide) {
-            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT()));
+            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT(this.level.registryAccess())));
         }
     }
 
@@ -182,7 +184,7 @@ public class MissionLevelData implements IMissionLevelData {
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         this.missions.clear();
 
         for (Tag tag : nbt.getList("missions", Tag.TAG_COMPOUND)) {

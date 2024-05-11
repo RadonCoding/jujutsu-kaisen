@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.chant;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -85,7 +87,8 @@ public class ChantData implements IChantData {
     }
 
     @Override
-    public @Nullable Ability getAbility(String chant) {
+    @Nullable
+    public Ability getAbility(String chant) {
         for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
             if (entry.getValue().contains(chant)) return entry.getKey();
         }
@@ -93,7 +96,8 @@ public class ChantData implements IChantData {
     }
 
     @Override
-    public @Nullable Ability getAbility(Set<String> chants) {
+    @Nullable
+    public Ability getAbility(Set<String> chants) {
         for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
             if (entry.getValue().equals(chants)) return entry.getKey();
         }

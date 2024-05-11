@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;

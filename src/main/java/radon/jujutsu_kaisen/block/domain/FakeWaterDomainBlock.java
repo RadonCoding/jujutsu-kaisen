@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.block.domain;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;

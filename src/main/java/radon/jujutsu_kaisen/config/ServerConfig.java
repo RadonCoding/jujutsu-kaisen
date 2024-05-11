@@ -1,9 +1,11 @@
 package radon.jujutsu_kaisen.config;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -237,7 +239,7 @@ public class ServerConfig {
         builder.pop();
     }
 
-    public List<ICursedTechnique> getUnlockableTechniques() {
+    public List<CursedTechnique> getUnlockableTechniques() {
         return this.unlockableTechniques.get().stream()
                 .map(key -> JJKCursedTechniques.getValue(new ResourceLocation(key)))
                 .collect(Collectors.toList());

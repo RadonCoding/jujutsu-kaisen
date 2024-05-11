@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect.base;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -46,7 +48,8 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
     public boolean on = true;
 
-    public @Nullable Direction side = null;
+    @Nullable
+    public Direction side = null;
 
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);

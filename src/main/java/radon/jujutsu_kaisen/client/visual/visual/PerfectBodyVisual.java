@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.visual.visual;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;

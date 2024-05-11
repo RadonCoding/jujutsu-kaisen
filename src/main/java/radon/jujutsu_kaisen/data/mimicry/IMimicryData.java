@@ -1,26 +1,28 @@
 package radon.jujutsu_kaisen.data.mimicry;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import java.util.Set;
 
 public interface IMimicryData extends INBTSerializable<CompoundTag> {
     void tick();
 
-    void copy(ICursedTechnique technique);
+    void copy(CursedTechnique technique);
 
-    void copy(Set<ICursedTechnique> techniques);
+    void copy(Set<CursedTechnique> techniques);
 
-    void uncopy(ICursedTechnique technique);
+    void uncopy(CursedTechnique technique);
 
-    boolean hasCopied(ICursedTechnique technique);
+    boolean hasCopied(CursedTechnique technique);
 
-    Set<ICursedTechnique> getCopied();
+    Set<CursedTechnique> getCopied();
 
-    @Nullable ICursedTechnique getCurrentCopied();
+    @Nullable CursedTechnique getCurrentCopied();
 
-    void setCurrentCopied(@Nullable ICursedTechnique technique);
+    void setCurrentCopied(@Nullable CursedTechnique technique);
 }

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -14,8 +16,8 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -92,7 +94,8 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, ICo
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return null;
     }
 

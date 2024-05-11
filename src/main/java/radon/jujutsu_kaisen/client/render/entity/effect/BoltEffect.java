@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
@@ -297,6 +299,7 @@ public class BoltEffect {
          * The chance of creating an additional branch after a certain segment.
          */
         private float branchInitiationFactor = 0.0F;
+
         /**
          * The chance of a branch continuing (post-initiation).
          */

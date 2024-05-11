@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -29,12 +31,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -49,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-
 
 public abstract class TenShadowsSummon extends SummonEntity implements ICommandable, ISorcerer {
     private static final int MAX_DISTANCE = 128;
@@ -345,7 +346,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return null;
     }
 }

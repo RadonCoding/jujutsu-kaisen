@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.projection_sorcery;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;

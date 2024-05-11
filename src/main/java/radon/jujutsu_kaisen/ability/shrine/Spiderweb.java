@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +38,8 @@ public class Spiderweb extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
+    @Nullable
+    private BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));

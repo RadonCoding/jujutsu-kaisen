@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.domain;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,7 +18,6 @@ import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
@@ -25,9 +26,9 @@ import java.util.*;
 
 public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
     @Nullable
-    private ICursedTechnique technique;
+    private CursedTechnique technique;
 
-    private final Map<BlockPos, ICursedTechnique> offsets = new HashMap<>();
+    private final Map<BlockPos, CursedTechnique> offsets = new HashMap<>();
 
     public AuthenticMutualLoveEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
@@ -44,15 +45,15 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         this.technique = data.getCurrentCopied();
 
-        Set<ICursedTechnique> copied = data.getCopied();
+        Set<CursedTechnique> copied = data.getCopied();
 
         if (copied.isEmpty()) return;
 
         int share = (RADIUS * 2) / copied.size();
 
-        List<ICursedTechnique> all = new ArrayList<>();
+        List<CursedTechnique> all = new ArrayList<>();
 
-        for (ICursedTechnique technique : copied) {
+        for (CursedTechnique technique : copied) {
             all.addAll(Collections.nCopies(share, technique));
         }
 
@@ -72,10 +73,10 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
             }
         }
 
-        Iterator<ICursedTechnique> iter = all.iterator();
+        Iterator<CursedTechnique> iter = all.iterator();
 
         while (iter.hasNext()) {
-            ICursedTechnique technique = iter.next();
+            CursedTechnique technique = iter.next();
             BlockPos pos = floor.get(this.random.nextInt(floor.size()));
             this.offsets.put(pos, technique);
 
@@ -84,7 +85,8 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
         }
     }
 
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return this.technique;
     }
 
@@ -98,7 +100,7 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         ListTag offsetsTag = new ListTag();
 
-        for (Map.Entry<BlockPos, ICursedTechnique> entry : this.offsets.entrySet()) {
+        for (Map.Entry<BlockPos, CursedTechnique> entry : this.offsets.entrySet()) {
             CompoundTag nbt = new CompoundTag();
             nbt.put("pos", NbtUtils.writeBlockPos(entry.getKey()));
             nbt.putString("technique", JJKCursedTechniques.getKey(entry.getValue()).toString());

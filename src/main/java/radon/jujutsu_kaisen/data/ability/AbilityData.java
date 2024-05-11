@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.ability;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -30,7 +32,8 @@ import java.util.*;
 public class AbilityData implements IAbilityData {
     private final Set<Ability> toggled;
 
-    private @Nullable Ability channeled;
+    @Nullable
+    private Ability channeled;
     private int charge;
 
     private final List<DelayedTickEvent> delayedTickEvents;
@@ -255,7 +258,8 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
-    public @Nullable Ability getChanneled() {
+    @Nullable
+    public Ability getChanneled() {
         return this.channeled;
     }
 

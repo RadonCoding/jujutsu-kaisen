@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.item;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import radon.jujutsu_kaisen.JujutsuKaisen;

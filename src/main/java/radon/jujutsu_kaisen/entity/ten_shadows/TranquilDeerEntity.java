@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

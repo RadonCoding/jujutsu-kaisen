@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -16,11 +18,10 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
-import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -84,7 +85,7 @@ public class SorcererGoal extends Goal {
         }
 
         if (ownerSorcererData.getCurrentAdditional() == null || this.mob.tickCount % CHANGE_TECHNIQUE_INTERVAL == 0) {
-            List<ICursedTechnique> additional = new ArrayList<>(ownerSorcererData.getAdditional());
+            List<CursedTechnique> additional = new ArrayList<>(ownerSorcererData.getAdditional());
 
             if (!additional.isEmpty()) {
                 ownerSorcererData.setCurrentAdditional(additional.get(HelperMethods.RANDOM.nextInt(additional.size())));
@@ -93,7 +94,7 @@ public class SorcererGoal extends Goal {
 
         if (ownerAbilityData.hasToggled(JJKAbilities.RIKA.get())) {
             if (ownerMimicryData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_TECHNIQUE_INTERVAL == 0) {
-                List<ICursedTechnique> copied = new ArrayList<>(ownerMimicryData.getCopied());
+                List<CursedTechnique> copied = new ArrayList<>(ownerMimicryData.getCopied());
 
                 if (!copied.isEmpty()) {
                     ownerMimicryData.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
@@ -133,9 +134,13 @@ public class SorcererGoal extends Goal {
             ItemStack stack = this.mob.getItemInHand(InteractionHand.MAIN_HAND);
 
             if (stack.is(JJKItems.CURSED_SPIRIT_ORB.get())) {
-                this.mob.playSound(this.mob.getEatingSound(stack), 1.0F, 1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.4F);
-                ownerCurseManipulationData.addCurse(CursedSpiritOrbItem.getAbsorbed(stack));
-                this.mob.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                AbsorbedCurse absorbed = stack.get(JJKDataComponentTypes.ABSORBED_CURSE);
+
+                if (absorbed != null) {
+                    this.mob.playSound(this.mob.getEatingSound(stack), 1.0F, 1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.4F);
+                    ownerCurseManipulationData.addCurse(absorbed);
+                    this.mob.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                }
             }
         }
 

@@ -1,4 +1,6 @@
-package radon.jujutsu_kaisen.client.gui.screen;
+package radon.jujutsu_kaisen.client.gui.screen.radial;
+
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -16,9 +18,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.client.JJKKeys;
-import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 
@@ -26,7 +26,7 @@ import java.util.*;
 
 public class AbilityScreen extends RadialScreen {
     @Override
-    protected List<DisplayItem> getItems() {
+    protected List<? extends DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -41,74 +41,61 @@ public class AbilityScreen extends RadialScreen {
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType(this.minecraft.player) != MenuType.RADIAL);
 
-        List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
+        List<DisplayItem> items = new ArrayList<>();
 
-        if (!this.minecraft.player.isSpectator()) {
-            Set<ICursedTechnique> additional = sorcererData.getAdditional();
-            items.addAll(additional.stream().map(technique -> new DisplayItem(DisplayItem.Type.ADDITIONAL, technique)).toList());
-
-            if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-                List<AbsorbedCurse> curses = curseManipulationData.getCurses();
-                items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
-            }
-
-            if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
-                Set<ICursedTechnique> copied = mimicryData.getCopied();
-                items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
-            }
-
-            if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-                Set<ICursedTechnique> absorbed = curseManipulationData.getAbsorbed();
-                items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
-            }
-        }
-        return items;
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-
-        if (this.hovered == -1) return;
-
-        if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
-
-        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
-        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
-        IMimicryData mimicryData = cap.getMimicryData();
-
-        DisplayItem item = this.getCurrent().get(this.hovered);
-
-        switch (item.type) {
-            case ABILITY -> {
-                Ability ability = item.ability;
-
+        for (Ability ability : abilities) {
+            items.add(new AbilityDisplayItem(this.minecraft, this, () -> {
                 if (abilityData.hasToggled(ability) || abilityData.isChanneling(ability)) {
                     AbilityHandler.untrigger(this.minecraft.player, ability);
                     PacketDistributor.sendToServer(new UntriggerAbilityC2SPacket(ability));
                 } else {
                     PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(ability));
                 }
-            }
-            case CURSE -> PacketDistributor.sendToServer(new CurseSummonC2SPacket(item.curse.getValue()));
-            case COPIED -> {
-                mimicryData.setCurrentCopied(item.copied);
-                PacketDistributor.sendToServer(new SetCopiedC2SPacket(item.copied));
-            }
-            case ABSORBED -> {
-                curseManipulationData.setCurrentAbsorbed(item.absorbed);
-                PacketDistributor.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
-            }
-            case ADDITIONAL -> {
-                sorcererData.setCurrentAdditional(item.additional);
-                PacketDistributor.sendToServer(new SetAdditionalC2SPacket(item.additional));
-            }
+            }, ability));
         }
+
+        if (!this.minecraft.player.isSpectator()) {
+            if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+                List<AbsorbedCurse> curses = curseManipulationData.getCurses();
+                for (AbsorbedCurse curse : curses) {
+                    items.add(new CurseDisplayItem(this.minecraft, this, () ->
+                            PacketDistributor.sendToServer(new CurseSummonC2SPacket(curses.indexOf(curse))), curse));
+                }
+            }
+
+            if (abilityData.hasToggled(JJKAbilities.RIKA.get())) {
+                Set<CursedTechnique> copied = mimicryData.getCopied();
+
+                for (CursedTechnique technique : copied) {
+                    items.add(new CopiedDisplayItem(this.minecraft, this, () -> {
+                        mimicryData.setCurrentCopied(technique);
+                        PacketDistributor.sendToServer(new SetCopiedC2SPacket(technique));
+                    }, technique));
+                }
+            }
+
+            if (sorcererData.hasActiveTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+                Set<CursedTechnique> absorbed = curseManipulationData.getAbsorbed();
+
+                for (CursedTechnique technique : absorbed) {
+                    items.add(new AbsorbedDisplayItem(this.minecraft, this, () -> {
+                        curseManipulationData.setCurrentAbsorbed(technique);
+                        PacketDistributor.sendToServer(new SetAbsorbedC2SPacket(technique));
+                    }, technique));
+                }
+            }
+
+            Set<CursedTechnique> additional = sorcererData.getAdditional();
+
+            for (CursedTechnique technique : additional) {
+                items.add(new AdditionalDisplayItem(this.minecraft, this, () -> {
+                    sorcererData.setCurrentAdditional(technique);
+                    PacketDistributor.sendToServer(new SetAdditionalC2SPacket(technique));
+                }, technique));
+            }
+
+        }
+        return items;
     }
 
     @Override

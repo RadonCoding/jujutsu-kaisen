@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen.widget;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.client.Minecraft;

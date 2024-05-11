@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.item;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;

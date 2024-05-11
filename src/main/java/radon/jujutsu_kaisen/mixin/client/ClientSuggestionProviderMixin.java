@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.mixin.client;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 import net.minecraft.world.entity.player.Player;

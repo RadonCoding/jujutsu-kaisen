@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;

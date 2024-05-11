@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.server.level.ServerLevel;

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.world.gen.feature;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;

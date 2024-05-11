@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.capability;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;

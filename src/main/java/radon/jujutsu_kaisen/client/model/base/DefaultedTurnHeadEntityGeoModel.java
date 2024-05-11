@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.model.base;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.GeoBone;

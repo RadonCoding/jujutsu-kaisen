@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.config;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 

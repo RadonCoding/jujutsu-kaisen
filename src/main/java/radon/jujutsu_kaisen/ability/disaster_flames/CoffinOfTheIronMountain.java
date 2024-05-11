@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,7 +27,8 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
     }
 
     @Override
-    public @Nullable ParticleOptions getEnvironmentParticle() {
+    @Nullable
+    public ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.LARGE_SMOKE;
     }
 

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.entity.sorcerer;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -21,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
-import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
 
 import java.util.Optional;
 
@@ -60,7 +61,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             if (entity == null) return;
             LivingEntityRenderer<?, ?> renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
             if (!(renderer.getModel() instanceof PlayerModel<?> player)) return;
-            this.model = ((IPlayerModelAccessor) player).getSlimAccessor() ? this.slim : this.normal;
+            this.model = player.slim ? this.slim : this.normal;
         }
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }

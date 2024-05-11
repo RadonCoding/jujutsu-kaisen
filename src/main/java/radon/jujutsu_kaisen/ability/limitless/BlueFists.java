@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;

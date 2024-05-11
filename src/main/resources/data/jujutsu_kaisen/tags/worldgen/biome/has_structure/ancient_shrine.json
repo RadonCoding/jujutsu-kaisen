@@ -1,10 +1,10 @@
 {
   "values": [
-    "#forge:is_mountain",
-    "#minecraft:is_hill",
-    "#minecraft:is_taiga",
-    "#minecraft:is_jungle",
-    "#minecraft:is_forest",
+    "#c:is_mountain",
+    "#c:is_hill",
+    "#c:is_taiga",
+    "#c:is_jungle",
+    "#c:is_forest",
     "minecraft:stony_shore",
     "minecraft:mushroom_fields",
     "minecraft:ice_spikes",

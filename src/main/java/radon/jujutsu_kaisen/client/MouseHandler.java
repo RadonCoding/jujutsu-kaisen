@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.bus.api.SubscribeEvent;

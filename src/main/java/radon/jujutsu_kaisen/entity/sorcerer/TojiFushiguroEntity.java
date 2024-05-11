@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,16 +23,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
-import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -173,7 +175,8 @@ public class TojiFushiguroEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return null;
     }
 
@@ -191,13 +194,17 @@ public class TojiFushiguroEntity extends SorcererEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        ItemStack inventory = new ItemStack(JJKItems.INVENTORY_CURSE.get());
+        ItemStack chest = new ItemStack(JJKItems.INVENTORY_CURSE.get());
 
-        InventoryCurseItem.addItem(inventory, PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
-        InventoryCurseItem.addItem(inventory, INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
-        InventoryCurseItem.addItem(inventory, SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
+        List<ItemStack> inventory = chest.get(JJKDataComponentTypes.HIDDEN_INVENTORY);
 
-        CuriosUtil.setItemInSlot(this, "body", inventory);
+        if (inventory == null) return;
+
+        inventory.add(PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
+        inventory.add(INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
+        inventory.add(SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
+
+        CuriosUtil.setItemInSlot(this, "body", chest);
     }
 
     private int getSlot(ItemStack stack) {
@@ -212,14 +219,18 @@ public class TojiFushiguroEntity extends SorcererEntity {
     }
 
     private void pickWeapon(@Nullable LivingEntity target) {
-        ItemStack inventory = CuriosUtil.findSlot(this, "body");
+        ItemStack chest = CuriosUtil.findSlot(this, "body");
+
+        List<ItemStack> inventory = chest.get(JJKDataComponentTypes.HIDDEN_INVENTORY);
+
+        if (inventory == null) return;
 
         if (target == null) {
             if (!this.getMainHandItem().isEmpty()) {
                 int slot = this.getSlot(this.getMainHandItem());
 
                 if (slot != -1) {
-                    InventoryCurseItem.addItem(inventory, slot, this.getMainHandItem());
+                    inventory.add(slot, this.getMainHandItem());
                 }
             }
             this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
@@ -248,12 +259,12 @@ public class TojiFushiguroEntity extends SorcererEntity {
                 int slot = this.getSlot(this.getMainHandItem());
 
                 if (slot != -1) {
-                    InventoryCurseItem.addItem(inventory, slot, this.getMainHandItem());
+                    inventory.add(slot, this.getMainHandItem());
                 }
             }
 
-            ItemStack main = InventoryCurseItem.getItem(inventory, result);
-            InventoryCurseItem.removeItem(inventory, result);
+            ItemStack main = inventory.get(result);
+            inventory.remove(result);
             this.setItemInHand(InteractionHand.MAIN_HAND, main);
         }
     }

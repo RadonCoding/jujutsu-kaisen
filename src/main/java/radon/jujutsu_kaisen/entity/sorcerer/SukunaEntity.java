@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +36,6 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -193,7 +192,8 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable ICursedTechnique getTechnique() {
+    @Nullable
+    public CursedTechnique getTechnique() {
         return JJKCursedTechniques.SHRINE.get();
     }
 
@@ -300,7 +300,7 @@ public class SukunaEntity extends SorcererEntity {
         sorcererDst.unlockAll(sorcererSrc.getUnlocked());
         sorcererDst.setTraits(sorcererSrc.getTraits());
 
-        ICursedTechnique technique = sorcererSrc.getTechnique();
+        CursedTechnique technique = sorcererSrc.getTechnique();
 
         if (technique != null) {
             sorcererDst.addAdditional(technique);

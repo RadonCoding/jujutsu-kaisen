@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -52,7 +54,8 @@ public class PiercingWaterEntity extends BeamEntity {
     }
 
     @Override
-    protected @Nullable Ability getSource() {
+    @Nullable
+    protected Ability getSource() {
         return JJKAbilities.PIERCING_WATER.get();
     }
 

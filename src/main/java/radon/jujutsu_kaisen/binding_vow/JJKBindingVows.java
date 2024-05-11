@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.binding_vow;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +20,7 @@ import radon.jujutsu_kaisen.ability.IToggled;
 
 public class JJKBindingVows {
     public static ResourceKey<Registry<BindingVow>> BINDING_VOW_KEY = ResourceKey.createRegistryKey(new ResourceLocation(JujutsuKaisen.MOD_ID, "binding_vow"));
-    public static Registry<BindingVow> BINDING_VOW_REGISTRY = new RegistryBuilder<>(BINDING_VOW_KEY).create();
+    public static Registry<BindingVow> BINDING_VOW_REGISTRY = new RegistryBuilder<>(BINDING_VOW_KEY).sync(true).create();
     public static DeferredRegister<BindingVow> BINDING_VOWS = DeferredRegister.create(BINDING_VOW_REGISTRY, JujutsuKaisen.MOD_ID);
 
     public static DeferredHolder<BindingVow, BindingVow> OVERTIME = BINDING_VOWS.register("overtime", Overtime::new);

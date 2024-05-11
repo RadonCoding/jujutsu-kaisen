@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.event;
 
+import radon.jujutsu_kaisen.client.gui.screen.radial.AbilityScreen;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -23,6 +25,8 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.ITransformation;
+import radon.jujutsu_kaisen.client.gui.screen.radial.DomainScreen;
+import radon.jujutsu_kaisen.client.gui.screen.radial.MeleeScreen;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -111,7 +115,7 @@ public class ClientAbilityHandler {
         }
 
         @SubscribeEvent
-        public static void onClientTick(ClientTickEvent event) {
+        public static void onClientTickPre(ClientTickEvent.Pre event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
@@ -158,29 +162,29 @@ public class ClientAbilityHandler {
 
             ISorcererData data = cap.getSorcererData();
 
-            if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
+            if (JJKKeys.OPEN_JUJUTSU_MENU.consumeClick()) {
                 mc.setScreen(new JujutsuScreen());
             }
 
-            if (JJKKeys.SHOW_ABILITY_MENU.isDown()) {
+            if (JJKKeys.SHOW_ABILITY_MENU.consumeClick()) {
                 mc.setScreen(new AbilityScreen());
             }
 
-            if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
+            if (JJKKeys.SHOW_DOMAIN_MENU.consumeClick()) {
                 mc.setScreen(new DomainScreen());
             }
 
             switch (ConfigHolder.CLIENT.meleeMenuType.get()) {
                 case TOGGLE -> {
-                    if (JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
+                    if (JJKKeys.ACTIVATE_MELEE_MENU.consumeClick()) {
                         mc.setScreen(new MeleeScreen());
                     }
                 }
                 case SCROLL -> {
-                    if (JJKKeys.MELEE_MENU_UP.isDown()) {
+                    if (JJKKeys.MELEE_MENU_UP.consumeClick()) {
                         AbilityOverlay.scroll(1);
                     }
-                    if (JJKKeys.MELEE_MENU_DOWN.isDown()) {
+                    if (JJKKeys.MELEE_MENU_DOWN.consumeClick()) {
                         AbilityOverlay.scroll(-1);
                     }
                 }
@@ -196,7 +200,7 @@ public class ClientAbilityHandler {
                 data.decreaseOutput();
             }
 
-            if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
+            if (JJKKeys.ACTIVATE_ABILITY.consumeClick()) {
                 Ability ability = AbilityOverlay.getSelected();
 
                 if (ability != null) {
@@ -209,7 +213,7 @@ public class ClientAbilityHandler {
                 }
             }
 
-            if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
+            if (JJKKeys.ACTIVATE_RCT_OR_HEAL.consumeClick()) {
                 Ability rct = EntityUtil.getRCTTier(mc.player);
 
                 if (data.getType() == JujutsuType.CURSE) {
@@ -221,19 +225,13 @@ public class ClientAbilityHandler {
                 }
             }
 
-            if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
+            if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.consumeClick()) {
                 channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
                 current = JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD;
             }
 
-            if (JJKKeys.DASH.isDown()) {
+            if (JJKKeys.DASH.consumeClick()) {
                 PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.DASH.get()));
-            }
-
-            if ((!JJKKeys.SHOW_ABILITY_MENU.isDown() && mc.screen instanceof AbilityScreen) ||
-                    (!JJKKeys.SHOW_DOMAIN_MENU.isDown() && mc.screen instanceof DomainScreen) ||
-                    (!JJKKeys.ACTIVATE_ABILITY.isDown() && mc.screen instanceof ShadowInventoryScreen)) {
-                mc.screen.onClose();
             }
         }
 

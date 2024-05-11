@@ -3,7 +3,7 @@
   "structures": "#minecraft:village",
   "spawners": [
     {
-      "type": "jujutsu_kaisen:toji_zenin",
+      "type": "jujutsu_kaisen:toji_fushiguro",
       "weight": 50,
       "minCount": 1,
       "maxCount": 1

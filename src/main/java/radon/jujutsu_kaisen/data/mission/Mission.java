@@ -1,22 +1,13 @@
 package radon.jujutsu_kaisen.data.mission;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
-import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 

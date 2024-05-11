@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -49,7 +51,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
     }
 
     @Override
-    public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         float radius = this.getRadius();
         return EntityDimensions.fixed(radius, radius);
     }

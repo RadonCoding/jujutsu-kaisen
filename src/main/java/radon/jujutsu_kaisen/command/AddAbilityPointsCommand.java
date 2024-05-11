@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.command;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;

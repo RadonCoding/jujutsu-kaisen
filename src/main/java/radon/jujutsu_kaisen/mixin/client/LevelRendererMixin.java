@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.mixin.client;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.world.entity.Entity;

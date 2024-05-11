@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.ten_shadows;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -22,7 +24,6 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
@@ -270,7 +271,7 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public boolean isAdaptedTo(ICursedTechnique technique) {
+    public boolean isAdaptedTo(CursedTechnique technique) {
         for (Ability ability : technique.getAbilities()) {
             if (this.isAdaptedTo(ability)) return true;
         }

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import com.mojang.serialization.Codec;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.network.chat.Component;

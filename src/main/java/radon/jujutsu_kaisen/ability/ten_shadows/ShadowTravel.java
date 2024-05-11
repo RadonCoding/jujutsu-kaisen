@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -39,7 +41,8 @@ public class ShadowTravel extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable HitResult getTarget(LivingEntity owner) {
+    @Nullable
+    private HitResult getTarget(LivingEntity owner) {
         HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
         if (hit.getType() == HitResult.Type.MISS) return null;
         if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN) return null;

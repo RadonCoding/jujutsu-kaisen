@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.event;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +36,6 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
@@ -339,7 +340,7 @@ public class JJKEventHandler {
         public static void onAbilityStop(AbilityStopEvent event) {
             Ability ability = event.getAbility();
 
-            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
+            CursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
 
             LivingEntity owner = event.getEntity();
 
@@ -359,7 +360,7 @@ public class JJKEventHandler {
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
             Ability ability = event.getAbility();
 
-            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
+            CursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
 
             LivingEntity owner = event.getEntity();
 

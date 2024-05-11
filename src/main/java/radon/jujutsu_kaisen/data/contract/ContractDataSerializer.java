@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.contract;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -19,7 +21,8 @@ public class ContractDataSerializer implements IAttachmentSerializer<CompoundTag
     }
 
     @Override
-    public @Nullable CompoundTag write(@NotNull IContractData attachment, HolderLookup.@NotNull Provider provider) {
+    @Nullable
+    public CompoundTag write(@NotNull IContractData attachment, HolderLookup.@NotNull Provider provider) {
         return attachment.serializeNBT(provider);
     }
 }

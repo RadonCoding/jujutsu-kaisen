@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -103,7 +105,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     @Override
-    public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         return EntityDimensions.fixed(this.getRadius(), this.getRadius());
     }
 

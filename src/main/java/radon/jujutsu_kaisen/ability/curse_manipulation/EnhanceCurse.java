@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -38,7 +40,8 @@ public class EnhanceCurse extends Ability implements IChanneled {
         return ActivationType.CHANNELED;
     }
 
-    private @Nullable CursedSpirit getTarget(LivingEntity owner) {
+    @Nullable
+    private CursedSpirit getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
             if (curse.getOwner() != owner) return null;
 

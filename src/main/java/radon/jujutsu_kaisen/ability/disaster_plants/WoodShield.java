@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -65,7 +67,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
     }
 
     @Override
-    public boolean display() {
+    public boolean isDisplayed() {
         return false;
     }
 

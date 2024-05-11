@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.ten_shadows;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -7,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 
 import java.util.*;
 
@@ -62,7 +63,7 @@ public interface ITenShadowsData extends INBTSerializable<CompoundTag> {
 
     boolean isAdaptedTo(Ability ability);
 
-    boolean isAdaptedTo(ICursedTechnique technique);
+    boolean isAdaptedTo(CursedTechnique technique);
 
     void tryAdapt(DamageSource source);
 

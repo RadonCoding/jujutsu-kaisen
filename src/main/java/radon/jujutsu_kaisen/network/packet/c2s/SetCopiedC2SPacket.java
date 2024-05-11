@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -10,14 +12,14 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.cursed_technique.ICursedTechnique;
 
-public record SetCopiedC2SPacket(ICursedTechnique technique) implements CustomPacketPayload {
+public record SetCopiedC2SPacket(CursedTechnique technique) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SetCopiedC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "set_copied_serverbound"));
     public static final StreamCodec<? super RegistryFriendlyByteBuf, SetCopiedC2SPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(JJKCursedTechniques.CURSED_TECHNIQUE_KEY),

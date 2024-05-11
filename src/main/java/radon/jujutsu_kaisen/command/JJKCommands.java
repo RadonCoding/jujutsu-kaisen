@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.command;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
 
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.bus.api.SubscribeEvent;
