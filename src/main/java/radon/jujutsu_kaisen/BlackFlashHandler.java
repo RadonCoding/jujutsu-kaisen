@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import net.minecraft.world.phys.Vec3;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -14,12 +14,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
@@ -123,9 +123,11 @@ public class BlackFlashHandler {
 
             attacker.level().addFreshEntity(new BlackFlashEntity(attacker, victim));
 
-            victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
+            Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
+
+            victim.level().playSound(null, pos.x, pos.y, pos.z,
                     SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-            victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
+            victim.level().playSound(null, pos.x, pos.y, pos.z,
                     SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
         }
     }

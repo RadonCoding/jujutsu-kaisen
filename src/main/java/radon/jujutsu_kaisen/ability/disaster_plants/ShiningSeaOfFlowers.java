@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+import net.minecraft.world.level.block.Blocks;
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -14,7 +16,7 @@ import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 
 import java.util.List;
 
-public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class ShiningSeaOfFlowers extends DomainExpansion implements IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
@@ -28,7 +30,7 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
     }
 
     @Override
-    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+    protected DomainExpansionEntity summon(LivingEntity owner) {
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
@@ -37,24 +39,6 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS.get());
-    }
-
-    @Override
-    public List<Block> getFillBlocks() {
-        return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS_FILL.get());
-    }
-
-    @Override
-    public List<Block> getFloorBlocks() {
-        return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
-    }
-
-    @Override
-    public List<Block> getDecorationBlocks() {
-        return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_ONE.get(),
-                JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_TWO.get(),
-                JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(),
-                JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get());
+        return List.of(Blocks.GRASS_BLOCK);
     }
 }

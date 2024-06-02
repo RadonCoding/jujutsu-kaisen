@@ -18,8 +18,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class GreatSerpentSegmentEntity extends JJKPartEntity<GreatSerpentEntity> implements GeoEntity, Attackable {
-    public static final ResourceLocation RENDERER = new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent_segment");
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public GreatSerpentSegmentEntity(GreatSerpentEntity parent) {
@@ -49,11 +47,6 @@ public class GreatSerpentSegmentEntity extends JJKPartEntity<GreatSerpentEntity>
         if (!(entity instanceof GreatSerpentEntity)) {
             entity.push(this);
         }
-    }
-
-    @Override
-    public ResourceLocation getRenderer() {
-        return RENDERER;
     }
 
     @Override

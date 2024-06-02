@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
+import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -21,7 +24,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
 
-public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class UnlimitedVoid extends DomainExpansion implements IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
@@ -51,7 +54,7 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     }
 
     @Override
-    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+    protected DomainExpansionEntity summon(LivingEntity owner) {
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
@@ -60,6 +63,6 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.UNLIMITED_VOID.get());
+        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
     }
 }

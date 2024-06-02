@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.client;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
+import radon.jujutsu_kaisen.client.dimension.JJKDimensionSpecialEffects;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
@@ -12,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.api.distmarker.Dist;
@@ -25,11 +27,12 @@ import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 import radon.jujutsu_kaisen.client.model.entity.effect.CursedEnergyBlastModel;
 import radon.jujutsu_kaisen.client.model.entity.effect.FireBeamModel;
-import radon.jujutsu_kaisen.client.render.block.*;
+import radon.jujutsu_kaisen.client.render.block.DomainFloorRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulSmallRenderer;
+import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.menu.JJKMenus;
@@ -38,7 +41,6 @@ import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
-import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
@@ -55,6 +57,8 @@ import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.world.level.dimension.JJKDimensionTypes;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 import java.awt.event.KeyEvent;
 
@@ -139,11 +143,14 @@ public class JJKClientEventHandler {
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ModEvents {
         @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            CuriosRendererRegistry.register(JJKItems.INVENTORY_CURSE.get(), InventoryCurseRenderer::new);
+        }
+
+        @SubscribeEvent
         public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
             event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(VeilBlock.COLOR).getMapColor().col,
                     JJKBlocks.VEIL.get());
-            event.register((pState, pLevel, pPos, pTintIndex) -> GrassColor.getDefaultColor(),
-                    JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
         }
 
         @SubscribeEvent
@@ -249,8 +256,10 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(JJKBlockEntities.DOMAIN_FLOOR.get(), pContext -> new DomainFloorRenderer());
+
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
-            event.registerEntityRenderer(JJKEntities.GENUINE_MUTUAL_LOVE.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.AUTHENTIC_MUTUAL_LOVE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), ChimeraShadowGardenRenderer::new);
 
@@ -371,12 +380,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.ELECTRIC_BLAST.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.BODY_REPEL.get(), BodyRepelRenderer::new);
             event.registerEntityRenderer(JJKEntities.FEROCIOUS_BODY_REPEL.get(), FerociousBodyRepelRenderer::new);
-
-            event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidBlockRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionBlockRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), HorizonOfTheCaptivatingSkandhaBlockRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.SHINING_SEA_OF_FLOWERS.get(), ShiningSeaOfFlowersBlockRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.AUTHENTIC_MUTUAL_LOVE.get(), AuthenticMutualLoveBlockRenderer::new);
         }
 
         @SubscribeEvent
@@ -393,6 +396,11 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.EMITTING_LIGHTNING.get(), EmittingLightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.FIRE.get(), FireParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SMOKE.get(), BetterSmokeParticle.Provider::new);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterDimensionSpecialEffects(RegisterDimensionSpecialEffectsEvent event) {
+            event.register(JJKDimensionTypes.DOMAIN_EXPANSION.location(), new JJKDimensionSpecialEffects.DomainExpansionEffects());
         }
     }
 }

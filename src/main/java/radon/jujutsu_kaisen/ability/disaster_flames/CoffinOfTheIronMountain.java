@@ -1,8 +1,8 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import net.minecraft.world.level.block.Blocks;
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,19 +17,11 @@ import radon.jujutsu_kaisen.entity.projectile.LavaRockProjectile;
 
 import java.util.List;
 
-public class CoffinOfTheIronMountain extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class CoffinOfTheIronMountain extends DomainExpansion implements IClosedDomain {
     private static final float DAMAGE = 10.0F;
 
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_ONE.get(),
-                JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_TWO.get(),
-                JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_THREE.get());
-    }
-
-    @Override
-    @Nullable
-    public ParticleOptions getEnvironmentParticle() {
-        return ParticleTypes.LARGE_SMOKE;
+        return List.of(Blocks.MAGMA_BLOCK, Blocks.BASALT, Blocks.BLACKSTONE);
     }
 
     @Override
@@ -37,12 +29,14 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
         super.onHitEntity(domain, owner, entity, instant);
 
         if (instant || owner.level().getGameTime() % 20 == 0) {
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getOutput(owner))) {
+            float power = this.getOutput(owner) * (instant ? 0.5F : 1.0F);
+
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * power)) {
                 entity.setRemainingFireTicks(15 * 20);
             }
 
             if (owner.hasLineOfSight(entity)) {
-                LavaRockProjectile rock = new LavaRockProjectile(owner, this.getOutput(owner), entity);
+                LavaRockProjectile rock = new LavaRockProjectile(owner, power, entity);
                 rock.setDomain(true);
                 owner.level().addFreshEntity(rock);
             }
@@ -50,7 +44,7 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
     }
 
     @Override
-    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+    protected DomainExpansionEntity summon(LivingEntity owner) {
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 

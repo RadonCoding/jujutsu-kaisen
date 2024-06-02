@@ -4,13 +4,11 @@ import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +20,8 @@ import radon.jujutsu_kaisen.ability.event.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -33,8 +33,6 @@ import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.List;
 
 public abstract class DomainExpansion extends Ability implements IToggled {
     public static final int BURNOUT = 10 * 20;
@@ -51,7 +49,9 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying()) return false;
+        return true;
+
+        /*if (target == null || target.isDeadOrDying()) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -67,7 +67,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
             return domain.isInsideBarrier(target.blockPosition());
         } else {
-            if (this instanceof DomainExpansion.IClosedDomain) {
+            if (this instanceof IClosedDomain) {
                 float yaw = RotationUtil.getTargetAdjustedYRot(owner);
                 Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
                 Vec3 behind = owner.position().subtract(0.0D, ClosedDomainExpansionEntity.RADIUS, 0.0D).add(direction.scale(ClosedDomainExpansionEntity.RADIUS - DomainExpansionEntity.OFFSET));
@@ -99,7 +99,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
                 }
             }
             return result;
-        }
+        }*/
     }
 
     @Override
@@ -118,25 +118,39 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
         if (cap == null) return Status.FAILURE;
 
-        ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
 
-        if (data.hasSummonOfClass(DomainExpansionEntity.class)) return Status.FAILURE;
+        if (sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
+            boolean valid = false;
+
+            if (owner.level().hasData(JJKAttachmentTypes.DOMAIN)) {
+                IDomainData domainData = owner.level().getData(JJKAttachmentTypes.DOMAIN);
+                valid = domainData.hasDomain(owner.getUUID());
+            }
+
+            if (valid) return Status.FAILURE;
+        }
 
         return super.isTriggerable(owner);
     }
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (!owner.level().isClientSide) {
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return Status.FAILURE;
+        if (cap == null) return Status.FAILURE;
 
-            ISorcererData data = cap.getSorcererData();
+        ISorcererData sorcererData = cap.getSorcererData();
 
-            if (!data.hasSummonOfClass(DomainExpansionEntity.class)) {
-                return Status.FAILURE;
+        if (!sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
+            boolean valid = false;
+
+            if (owner.level().hasData(JJKAttachmentTypes.DOMAIN)) {
+                IDomainData domainData = owner.level().getData(JJKAttachmentTypes.DOMAIN);
+                valid = domainData.hasDomain(owner.getUUID());
             }
+
+            if (!valid) return Status.FAILURE;
         }
         return super.isStillUsable(owner);
     }
@@ -156,7 +170,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
         ISorcererData data = cap.getSorcererData();
 
-        DomainExpansionEntity domain = this.createBarrier(owner);
+        DomainExpansionEntity domain = this.summon(owner);
 
         data.addSummon(domain);
     }
@@ -202,7 +216,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {}
 
-    protected abstract DomainExpansionEntity createBarrier(LivingEntity owner);
+    protected abstract DomainExpansionEntity summon(LivingEntity owner);
 
     @Override
     public boolean shouldLog(LivingEntity owner) {
@@ -227,7 +241,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
     @Override
     public ResourceLocation getIcon(LivingEntity owner) {
-        return new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/technique/domain_expansion.png");
+        return new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/ability/domain_expansion.png");
     }
 
     @Nullable
@@ -239,32 +253,5 @@ public abstract class DomainExpansion extends Ability implements IToggled {
     @Override
     public int getPointsCost() {
         return ConfigHolder.SERVER.domainExpansionCost.get();
-    }
-
-    public interface IClosedDomain {
-        List<Block> getBlocks();
-
-        default List<Block> getFillBlocks() {
-            return this.getBlocks();
-        }
-
-        default List<Block> getFloorBlocks() {
-            return List.of();
-        }
-
-        default List<Block> getDecorationBlocks() {
-            return List.of();
-        }
-
-        @Nullable
-        default ParticleOptions getEnvironmentParticle() {
-            return null;
-        }
-    }
-
-    public interface IOpenDomain {
-        int getWidth();
-
-        int getHeight();
     }
 }

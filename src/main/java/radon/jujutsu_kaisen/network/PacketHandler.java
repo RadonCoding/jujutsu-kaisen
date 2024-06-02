@@ -45,6 +45,9 @@ public class PacketHandler {
         registrar.playToClient(OpenMissionScreenS2CPacket.TYPE, OpenMissionScreenS2CPacket.STREAM_CODEC, OpenMissionScreenS2CPacket::handle);
         registrar.playToClient(SyncMissionLevelDataS2CPacket.TYPE, SyncMissionLevelDataS2CPacket.STREAM_CODEC, SyncMissionLevelDataS2CPacket::handle);
         registrar.playToClient(SyncMissionS2CPacket.TYPE, SyncMissionS2CPacket.STREAM_CODEC, SyncMissionS2CPacket::handle);
+        registrar.playToClient(AddDimensionS2CPacket.TYPE, AddDimensionS2CPacket.STREAM_CODEC, AddDimensionS2CPacket::handle);
+        registrar.playToClient(SyncDomainDataS2CPacket.TYPE, SyncDomainDataS2CPacket.STREAM_CODEC, SyncDomainDataS2CPacket::handle);
+        registrar.playToClient(UpdateDomainInfoS2CPacket.TYPE, UpdateDomainInfoS2CPacket.STREAM_CODEC, UpdateDomainInfoS2CPacket::handle);
 
         // Serverbound packets
         registrar.playToServer(TriggerAbilityC2SPacket.TYPE, TriggerAbilityC2SPacket.STREAM_CODEC, TriggerAbilityC2SPacket::handle);

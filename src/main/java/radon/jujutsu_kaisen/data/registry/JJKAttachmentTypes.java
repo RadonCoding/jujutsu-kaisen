@@ -23,6 +23,9 @@ import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.cursed_speech.CursedSpeechData;
 import radon.jujutsu_kaisen.data.cursed_speech.CursedSpeechDataSerializer;
 import radon.jujutsu_kaisen.data.cursed_speech.ICursedSpeechData;
+import radon.jujutsu_kaisen.data.domain.DomainData;
+import radon.jujutsu_kaisen.data.domain.DomainDataSerializer;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationDataSerialzer;
@@ -80,4 +83,7 @@ public class JJKAttachmentTypes {
             AttachmentType.<IMissionLevelData>builder(holder -> new MissionLevelData((Level) holder)).serialize(new MissionLevelDataSerializer())::build);
     public static final Supplier<AttachmentType<IMissionEntityData>> MISSION_ENTITY = ATTACHMENT_TYPES.register("mission_entity",
             AttachmentType.<IMissionEntityData>builder(holder -> new MissionEntityData((LivingEntity) holder)).serialize(new MissionEntityDataSerializer()).copyOnDeath()::build);
+
+    public static final Supplier<AttachmentType<IDomainData>> DOMAIN = ATTACHMENT_TYPES.register("domain",
+            AttachmentType.<IDomainData>builder(holder -> new DomainData((Level) holder)).serialize(new DomainDataSerializer())::build);
 }

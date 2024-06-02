@@ -73,15 +73,15 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        if (!this.level().isClientSide) {
-            VeilHandler.barrier(this.level().dimension(), this.getUUID());
-        }
+        if (this.level().isClientSide) return;
+
+        VeilHandler.barrier(this.level().dimension(), this.getUUID());
 
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
 
-        for (LivingEntity entity : this.getAffected()) {
+        for (LivingEntity entity : this.getAffected(this.level())) {
             NeoForge.EVENT_BUS.post(new LivingInsideDomainEvent(entity, this.ability, owner));
         }
     }
@@ -126,8 +126,8 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         return Vec3.ZERO;
     }
 
-    public List<LivingEntity> getAffected() {
-        return this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), this::isAffected);
+    public List<LivingEntity> getAffected(Level level) {
+        return level.getEntitiesOfClass(LivingEntity.class, this.getBounds(), this::isAffected);
     }
 
     @Override
@@ -135,7 +135,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         return true;
     }
 
-    public Ability getAbility() {
+    public DomainExpansion getAbility() {
         return this.ability;
     }
 
@@ -211,12 +211,6 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
             if ((victim instanceof MahoragaEntity && data.isAdaptedTo(this.ability))) return false;
         }
-
-        // Simple domains are now registered to the VeilHandler
-        /*for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(),
-                SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2))) {
-            if (victim.distanceTo(simple) < simple.getRadius()) return false;
-        }*/
         return this.isAffected(victim.blockPosition());
     }
 

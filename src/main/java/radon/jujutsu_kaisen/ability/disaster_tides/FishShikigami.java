@@ -19,7 +19,9 @@ public class FishShikigami extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && this.getTarget(owner) == target;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
+        return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
@@ -27,41 +29,17 @@ public class FishShikigami extends Ability {
         return ActivationType.INSTANT;
     }
 
-    @Nullable
-    private LivingEntity getTarget(LivingEntity owner) {
-        LivingEntity result = null;
-
-        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            result = target;
-        }
-        return result;
-    }
-
     @Override
     public void run(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
-
-        if (target == null) return;
-
         float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
         float yOffset = owner.getBbHeight() + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F);
 
         FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
-                new EelShikigamiProjectile(owner, this.getOutput(owner), target, xOffset, yOffset),
-                new SharkShikigamiProjectile(owner, this.getOutput(owner), target, xOffset, yOffset),
-                new PiranhaShikigamiProjectile(owner, getOutput(owner), target, xOffset, yOffset)
+                new EelShikigamiProjectile(owner, this.getOutput(owner), xOffset, yOffset),
+                new SharkShikigamiProjectile(owner, this.getOutput(owner), xOffset, yOffset),
+                new PiranhaShikigamiProjectile(owner, getOutput(owner), xOffset, yOffset)
         };
         owner.level().addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
-    }
-
-    @Override
-    public Status isTriggerable(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
-
-        if (target == null) {
-            return Status.FAILURE;
-        }
-        return super.isTriggerable(owner);
     }
 
     @Override

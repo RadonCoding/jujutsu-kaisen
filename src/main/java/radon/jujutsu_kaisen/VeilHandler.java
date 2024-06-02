@@ -14,6 +14,8 @@ import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.IVeil;
@@ -40,6 +42,17 @@ public class VeilHandler {
                 if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !barrier.isInsideBarrier(target))
                     continue;
                 result.add(barrier);
+            }
+        }
+
+        if (level.hasData(JJKAttachmentTypes.DOMAIN)) {
+            IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
+
+            ServerLevel original = level.getServer().getLevel(data.getOriginal());
+
+            if (original != null) {
+                result.addAll(getBarriers(original, BlockPos.containing(target.getCenter().scale(original.dimensionType().coordinateScale() /
+                        level.dimensionType().coordinateScale()))));
             }
         }
         return result;

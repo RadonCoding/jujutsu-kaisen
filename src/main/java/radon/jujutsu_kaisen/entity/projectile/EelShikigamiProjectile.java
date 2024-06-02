@@ -14,7 +14,11 @@ public class EelShikigamiProjectile extends FishShikigamiProjectile {
         super(pType, pLevel);
     }
 
-    public EelShikigamiProjectile(LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {
-        super(JJKEntities.EEL_SHIKIGAMI.get(), owner, power, target, xOffset, yOffset);
+    public EelShikigamiProjectile(LivingEntity owner, float power, float xOffset, float yOffset, LivingEntity target) {
+        super(JJKEntities.EEL_SHIKIGAMI.get(), owner, power, xOffset, yOffset, target);
+    }
+
+    public EelShikigamiProjectile(LivingEntity owner, float power, float xOffset, float yOffset) {
+        super(JJKEntities.EEL_SHIKIGAMI.get(), owner, power, xOffset, yOffset);
     }
 }

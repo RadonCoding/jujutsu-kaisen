@@ -44,18 +44,6 @@ public class JJKRenderTypes extends RenderType {
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false)));
-    private static final Function<Optional<TextureTarget>, RenderType> SKYBOX = Util.memoize((target) ->
-            create("skybox", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
-            false, false,RenderType.CompositeState.builder()
-                    .setShaderState(new ShaderStateShard(JJKShaders::getSkyShader))
-                    .setTextureState(new EmptyTextureStateShard(() -> {
-                        if (target.isPresent()) {
-                            RenderSystem.setShaderTexture(0, target.get().getColorTextureId());
-                        } else {
-                            RenderSystem.setShaderTexture(0, 0);
-                        }
-                    }, () -> {}))
-                    .createCompositeState(false)));
     private static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 1536,
             false, true, RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
@@ -78,10 +66,6 @@ public class JJKRenderTypes extends RenderType {
 
     public static @NotNull RenderType eyes(@NotNull ResourceLocation pLocation) {
         return EYES.apply(pLocation);
-    }
-
-    public static RenderType skybox(@Nullable TextureTarget target) {
-        return SKYBOX.apply(Optional.ofNullable(target));
     }
 
     public static @NotNull RenderType lightning() {

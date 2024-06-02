@@ -107,7 +107,6 @@ public class JJKCursedTechniques {
                     .abilities(
                             JJKAbilities.DISASTER_TIDES,
                             JJKAbilities.WATER_SHIELD,
-                            JJKAbilities.DEATH_SWARM,
                             JJKAbilities.FISH_SHIKIGAMI,
                             JJKAbilities.WATER_TORRENT,
                             JJKAbilities.EEL_GRAPPLE

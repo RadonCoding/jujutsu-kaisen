@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.event;
 
+import radon.jujutsu_kaisen.ability.IOpenDomain;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -142,8 +143,9 @@ public class AdaptationEventHandler {
             Set<Ability> toggled = new HashSet<>(victimData.getToggled());
 
             for (Ability ability : toggled) {
-                if (ability instanceof DomainExpansion.IOpenDomain) continue;
+                if (ability instanceof IOpenDomain) continue;
                 if (!attackerTenShadowsData.isAdaptedTo(ability)) continue;
+
                 victimData.disrupt(ability, DISRUPTION_DURATION * attackerTenShadowsData.getAdaptation(ability));
             }
 

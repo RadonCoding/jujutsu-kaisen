@@ -184,7 +184,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
 
     @Override
     public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
-        EntityDimensions dimensions = super.getDimensions(pPose);
+        EntityDimensions dimensions = super.getDefaultDimensions(pPose);
 
         LivingEntity passenger = this.getControllingPassenger();
 

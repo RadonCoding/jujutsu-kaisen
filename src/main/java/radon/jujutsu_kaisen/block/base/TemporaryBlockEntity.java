@@ -18,6 +18,7 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
     @Nullable
     private BlockState original;
 
+    @Nullable
     private CompoundTag deferred;
 
     @Nullable
@@ -84,7 +85,7 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
 
         if (this.original != null) {
             pTag.put("original", NbtUtils.writeBlockState(this.original));
-        } else {
+        } else if (this.deferred != null) {
             pTag.put("original", this.deferred);
         }
 

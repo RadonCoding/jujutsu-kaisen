@@ -1,13 +1,13 @@
 package radon.jujutsu_kaisen.entity.domain.base;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import net.minecraft.world.level.ChunkPos;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.DomainHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -25,11 +25,12 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
@@ -46,11 +47,14 @@ import java.util.*;
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public static final int RADIUS = 20;
 
+    public static TicketController CONTROLLER = new TicketController(JJKEntities.CLOSED_DOMAIN_EXPANSION.getId());
+
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
 
     private int total;
 
-    private final Map<UUID, Vec3> positions = new HashMap<>();
+    @Nullable
+    private Level inside;
 
     public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
         super(pType, pLevel);
@@ -96,12 +100,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         this.entityData.set(DATA_RADIUS, pCompound.getInt("radius"));
         this.total = pCompound.getInt("total");
-
-        for (Tag tag : pCompound.getList("positions", Tag.TAG_COMPOUND)) {
-            CompoundTag nbt = (CompoundTag) tag;
-            this.positions.put(nbt.getUUID("identifier"), new Vec3(nbt.getDouble("pos_x"),
-                    nbt.getDouble("pos_y"), nbt.getDouble("pos_z")));
-        }
     }
 
     @Override
@@ -110,21 +108,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         pCompound.putInt("radius", this.getRadius());
         pCompound.putInt("total", this.total);
-
-        ListTag positionsTag = new ListTag();
-
-        for (Map.Entry<UUID, Vec3> entry : this.positions.entrySet()) {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putUUID("identifier", entry.getKey());
-
-            Vec3 position = entry.getValue();
-            nbt.putDouble("pos_x", position.x);
-            nbt.putDouble("pos_y", position.y);
-            nbt.putDouble("pos_z", position.z);
-
-            positionsTag.add(nbt);
-        }
-        pCompound.put("positions", positionsTag);
     }
 
     public int getRadius() {
@@ -147,7 +130,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return relative.distSqr(Vec3i.ZERO) < radius * radius;
     }
 
-    protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
+    private void createBlock(int delay, BlockPos pos, int radius, double distance) {
         if (distance > radius) return;
 
         if (!this.level().isInWorldBounds(pos)) return;
@@ -172,48 +155,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             saved = existing.saveWithFullMetadata(this.registryAccess());
         }
 
-        DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
-        List<Block> blocks = domain.getBlocks();
-        List<Block> fill = domain.getFillBlocks();
-        List<Block> floor = domain.getFloorBlocks();
-        List<Block> decoration = domain.getDecorationBlocks();
-
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
-
-        Block block;
+        Block block = distance < radius - 1 ? JJKBlocks.DOMAIN_AIR.get() : JJKBlocks.DOMAIN.get();
 
         if (distance >= radius - 1) {
             block = JJKBlocks.DOMAIN.get();
-        } else {
-            if (distance >= radius - 2) {
-                block = blocks.get(this.random.nextInt(blocks.size()));
-            } else if (pos.getY() < center.getY()) {
-                block = floor.isEmpty() ? fill.get(this.random.nextInt(fill.size())) : floor.get(this.random.nextInt(floor.size()));
-            } else if (!decoration.isEmpty() && pos.getY() == center.getY()) {
-                block = decoration.get(this.random.nextInt(decoration.size()));
-            } else {
-                block = JJKBlocks.DOMAIN_AIR.get();
-            }
-        }
-
-        // We don't want to destroy the barrier of other domains :P
-        if (existing instanceof DomainBlockEntity be) {
-            UUID identifier = be.getIdentifier();
-
-            if (identifier != null) {
-                if (identifier.equals(this.getUUID())) {
-                    if (distance >= radius - 1) this.total++;
-
-                    return;
-                }
-
-                if (block == JJKBlocks.DOMAIN_AIR.get()) return;
-            }
-        }
-
-        if (existing instanceof ITemporaryBlockEntity tmp) {
-            state = tmp.getOriginal();
-            saved = tmp.getSaved();
         }
 
         boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
@@ -226,7 +171,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
-    protected void createBarrier(boolean instant) {
+    private void createOutsideBarrier() {
         this.total = 0;
 
         LivingEntity owner = this.getOwner();
@@ -255,19 +200,24 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (cap == null) return;
 
-                    if (instant) {
+                    if (delay == 0) {
                         this.createBlock(radius - delay, pos, radius, distance);
                     } else {
-                        if (delay == 0) {
-                            this.createBlock(radius - delay, pos, radius, distance);
-                        } else {
-                            IAbilityData data = cap.getAbilityData();
-                            data.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
-                        }
+                        IAbilityData data = cap.getAbilityData();
+                        data.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
                     }
                 }
             }
         }
+    }
+
+    private void createInsideBarrier() {
+        this.inside = DomainHandler.getOrCreateInside((ServerLevel) this.level(), this);
+
+        if (this.inside == null) return;
+
+        IDomainData data = this.inside.getData(JJKAttachmentTypes.DOMAIN);
+        data.update(this);
     }
 
     @Override
@@ -276,8 +226,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return EntityDimensions.fixed(radius, radius);
     }
 
-    protected void doSureHitEffect(@NotNull LivingEntity owner) {
-        for (LivingEntity entity : this.getAffected()) {
+    private void doSureHitEffect(@NotNull LivingEntity owner) {
+        if (this.inside == null) return;
+
+        for (LivingEntity entity : this.getAffected(this.inside)) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
@@ -357,6 +309,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super.onAddedToWorld();
 
         this.refreshDimensions();
+
+        if (this.level() instanceof ServerLevel level) {
+            ChunkPos pos = this.chunkPosition();
+            CONTROLLER.forceChunk(level, this, pos.x, pos.z, true, true);
+        }
     }
 
     private void check() {
@@ -386,34 +343,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public void remove(@NotNull RemovalReason pReason) {
-        super.remove(pReason);
-
-        Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
-
-        for (IBarrier barrier : barriers) {
-            if (!(barrier instanceof IDomain domain)) continue;
-            if (domain == this || !(domain instanceof ClosedDomainExpansionEntity closed)) continue;
-
-            closed.createBarrier(true);
-        }
-
-        for (Map.Entry<UUID, Vec3> entry : this.positions.entrySet()) {
-            UUID identifier = entry.getKey();
-
-            Entity entity = ((ServerLevel) this.level()).getEntity(identifier);
-
-            if (entity == null) continue;
-
-            if (!this.isInsideBarrier(entity.blockPosition())) continue;
-
-            Vec3 pos = entry.getValue();
-
-            entity.teleportTo(pos.x, pos.y, pos.z);
-        }
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -428,47 +357,37 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         boolean completed = this.getTime() >= radius * 2;
 
-        if (this.getTime() <= radius * 2) {
-            BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
-
-            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(),
-                    entity -> this.isInsideBarrier(entity.blockPosition()))) {
-                if (!this.positions.containsKey(entity.getUUID())) {
-                    this.positions.put(entity.getUUID(), entity.position());
-                }
-                if (entity.getY() < center.getY()) {
-                    entity.teleportTo(entity.getX(), center.getY(), entity.getZ());
-                }
-            }
-        }
-
         if (this.checkSureHitEffect()) {
             this.doSureHitEffect(owner);
         }
+
+        if (this.getTime() - 1 == 0) this.createOutsideBarrier();
+        if (this.getTime() == radius * 2) this.createInsideBarrier();
 
         if (completed) {
             if (this.getTime() % 20 == 0) {
                 this.check();
             }
-        }
 
-        ParticleOptions particle = ((DomainExpansion.IClosedDomain) this.ability).getEnvironmentParticle();
+            if (this.inside instanceof ServerLevel level) {
+                IDomainData data = this.inside.getData(JJKAttachmentTypes.DOMAIN);
+                data.update(this);
 
-        if (particle != null) {
-            AABB bounds = this.getBounds();
-
-            for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, 16, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ,
-                    (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
-                if (!this.isInsideBarrier(pos)) continue;
-                Vec3 center = pos.getCenter();
-                ((ServerLevel) this.level()).sendParticles(particle, center.x, center.y, center.z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                for (Entity entity : this.level().getEntities(this, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
+                    entity.teleportTo(level, entity.getX(), entity.getY(), entity.getZ(), Set.of(), 0.0F, 0.0F);
+                }
             }
         }
+    }
 
-        if (this.getTime() - 1 == 0) {
-            this.createBarrier(false);
-        } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
-            this.discard();
-        }
+    @Override
+    public @Nullable Entity getCenter() {
+        return this.getOwner();
+    }
+
+    @Nullable
+    @Override
+    public Level getInside() {
+        return this.inside;
     }
 }

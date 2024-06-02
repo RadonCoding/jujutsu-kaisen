@@ -30,7 +30,7 @@ public class FireballRenderer extends GeoEntityRenderer<FireballProjectile> {
         float pitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
 
         poseStack.mulPose(Axis.YN.rotationDegrees(yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+        poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }

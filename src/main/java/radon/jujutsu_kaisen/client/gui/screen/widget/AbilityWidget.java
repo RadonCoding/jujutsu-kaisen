@@ -67,9 +67,9 @@ public class AbilityWidget {
         MutableComponent component = Component.empty();
 
         if (cost > 0) {
-            component.append(Component.translatable(String.format("gui.%s.technique.cost", JujutsuKaisen.MOD_ID), cost));
+            component.append(Component.translatable(String.format("gui.%s.ability.cost", JujutsuKaisen.MOD_ID), cost));
         } else {
-            component.append(Component.translatable(String.format("gui.%s.technique.locked", JujutsuKaisen.MOD_ID), cost));
+            component.append(Component.translatable(String.format("gui.%s.ability.locked", JujutsuKaisen.MOD_ID), cost));
         }
         this.description = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component.copy(), Style.EMPTY), l));
 

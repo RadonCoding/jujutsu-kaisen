@@ -222,7 +222,7 @@ public class SorcererData implements ISorcererData {
         }
         
         if (this.traits.contains(Trait.PERFECT_BODY)) {
-            EntityUtil.applyModifier(this.owner, Attributes.SCALE, SCALE_UUID, "Scale", 1.25F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+            EntityUtil.applyModifier(this.owner, Attributes.SCALE, SCALE_UUID, "Scale", 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
 
         // Miscellaneous stuff

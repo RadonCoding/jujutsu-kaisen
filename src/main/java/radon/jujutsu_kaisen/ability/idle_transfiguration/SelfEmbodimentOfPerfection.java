@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -20,13 +21,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain {
-    @Override
-    @Nullable
-    public ParticleOptions getEnvironmentParticle() {
-        return ParticleTypes.WHITE_ASH;
-    }
-
+public class SelfEmbodimentOfPerfection extends DomainExpansion implements IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
@@ -44,7 +39,7 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     }
 
     @Override
-    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+    protected DomainExpansionEntity summon(LivingEntity owner) {
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
@@ -63,11 +58,6 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get());
-    }
-
-    @Override
-    public List<Block> getFloorBlocks() {
-        return List.of(JJKBlocks.DOMAIN.get());
+        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
     }
 }

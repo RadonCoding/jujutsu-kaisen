@@ -1,12 +1,9 @@
 package radon.jujutsu_kaisen;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -15,12 +12,12 @@ import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.command.argument.JJKCommandArgumentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.item.armor.registry.JJKArmorMaterials;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.tab.JJKCreativeTabs;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
@@ -30,7 +27,6 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.world.gen.feature.JJKFeatures;
 import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 import radon.jujutsu_kaisen.world.gen.structure.JJKStructureTypes;
-import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 @Mod(JujutsuKaisen.MOD_ID)
 public class JujutsuKaisen {
@@ -60,6 +56,7 @@ public class JujutsuKaisen {
         JJKEffects.EFFECTS.register(bus);
 
         JJKItems.ITEMS.register(bus);
+        JJKArmorMaterials.ARMOR_MATERIALS.register(bus);
         JJKDataComponentTypes.DATA_COMPONENT_TYPES.register(bus);
 
         JJKSounds.SOUNDS.register(bus);
@@ -73,11 +70,5 @@ public class JujutsuKaisen {
         JJKCommandArgumentTypes.COMMAND_ARGUMENT_TYPES.register(bus);
 
         JJKAttachmentTypes.ATTACHMENT_TYPES.register(bus);
-
-        bus.addListener(JujutsuKaisen::onClientSetup);
-    }
-
-    public static void onClientSetup(FMLClientSetupEvent event) {
-         CuriosRendererRegistry.register(JJKItems.INVENTORY_CURSE.get(), InventoryCurseRenderer::new);
     }
 }

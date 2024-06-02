@@ -28,12 +28,12 @@ public class CursedEnergyParticle extends TextureSheetParticle {
     protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, Options options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
-        this.lifetime = options.lifetime();
-
         this.xd = pXSpeed;
         this.yd = pYSpeed;
         this.zd = pZSpeed;
+
+        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.lifetime = options.lifetime();
 
         Vector3f color = options.color();
         this.rCol = color.x;

@@ -115,24 +115,25 @@ public class JujutsuProjectile extends Projectile {
 
         if (!this.level().isClientSide && (this.getTime() >= MAX_DURATION || (owner == null || owner.isRemoved() || !owner.isAlive()))) {
             this.discard();
-        } else {
-            super.tick();
+            return;
+        }
 
-            if (this.isProjectile()) {
-                HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+        super.tick();
 
-                if (hit.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hit)) {
-                    this.onHit(hit);
-                }
+        if (this.isProjectile()) {
+            HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 
-                this.checkInsideBlocks();
-
-                Vec3 movement = this.getDeltaMovement();
-                double d0 = this.getX() + movement.x;
-                double d1 = this.getY() + movement.y;
-                double d2 = this.getZ() + movement.z;
-                this.setPos(d0, d1, d2);
+            if (hit.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hit)) {
+                this.onHit(hit);
             }
+
+            this.checkInsideBlocks();
+
+            Vec3 movement = this.getDeltaMovement();
+            double d0 = this.getX() + movement.x;
+            double d1 = this.getY() + movement.y;
+            double d2 = this.getZ() + movement.z;
+            this.setPos(d0, d1, d2);
         }
     }
 

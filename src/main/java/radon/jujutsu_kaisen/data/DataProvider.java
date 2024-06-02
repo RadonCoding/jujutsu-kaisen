@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
@@ -112,8 +113,11 @@ public class DataProvider {
         PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT(player.registryAccess())));
         PacketDistributor.sendToPlayer(player, new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT(player.registryAccess())));
 
-        IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT(player.registryAccess())));
+        IMissionLevelData missionData = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
+        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), missionData.serializeNBT(player.registryAccess())));
+
+        IDomainData domainData = player.level().getData(JJKAttachmentTypes.DOMAIN);
+        PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(), domainData.serializeNBT(player.registryAccess())));
     }
 
     @SubscribeEvent
@@ -137,8 +141,11 @@ public class DataProvider {
         PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT(player.registryAccess())));
         PacketDistributor.sendToPlayer(player, new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT(player.registryAccess())));
 
-        IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), data.serializeNBT(player.registryAccess())));
+        IMissionLevelData missionData = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
+        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), missionData.serializeNBT(player.registryAccess())));
+
+        IDomainData domainData = player.level().getData(JJKAttachmentTypes.DOMAIN);
+        PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(), domainData.serializeNBT(player.registryAccess())));
     }
 
     @SubscribeEvent

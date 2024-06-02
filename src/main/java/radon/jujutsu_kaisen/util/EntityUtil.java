@@ -122,9 +122,8 @@ public class EntityUtil {
     }
 
     public static void rotation(Entity entity, Vec3 look) {
-        double d0 = look.horizontalDistance();
-        entity.setYRot(-(float) (Mth.atan2(look.x, look.z) * (double) (180.0F / Mth.PI)));
-        entity.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / Mth.PI)));
+        entity.setYRot(RotationUtil.getYaw(look));
+        entity.setXRot(RotationUtil.getPitch(look));
         entity.yRotO = entity.getYRot();
         entity.xRotO = entity.getXRot();
     }

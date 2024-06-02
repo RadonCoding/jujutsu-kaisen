@@ -27,11 +27,13 @@ public interface IBarrier {
 
     default boolean isOwned(BlockPos pos) {
         if (!(this.level() instanceof ServerLevel level)) return false;
+
         return VeilHandler.isOwnedBy(level, pos, this);
     }
 
     default boolean isOwnedByNonDomain(BlockPos pos) {
         if (!(this.level() instanceof ServerLevel level)) return false;
+
         return VeilHandler.isOwnedNonDomain(level, pos);
     }
 

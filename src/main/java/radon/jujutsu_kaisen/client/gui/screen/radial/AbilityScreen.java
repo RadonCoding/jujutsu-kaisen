@@ -118,7 +118,7 @@ public class AbilityScreen extends RadialScreen {
         int x = centerX;
         int y = centerY - RADIUS_OUT - this.font.lineHeight * 2;
 
-        pGuiGraphics.drawCenteredString(this.font, Component.translatable(String.format("gui.%s.technique.right_click", JujutsuKaisen.MOD_ID)), x, y, 0xFFFFFF);
+        pGuiGraphics.drawCenteredString(this.font, Component.translatable(String.format("gui.%s.ability.right_click", JujutsuKaisen.MOD_ID)), x, y, 0xFFFFFF);
     }
 
     @Override

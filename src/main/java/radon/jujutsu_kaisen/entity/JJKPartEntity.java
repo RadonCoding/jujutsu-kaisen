@@ -113,8 +113,6 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
         while (getXRot() - this.xRotO >= 180F) this.xRotO += 360F;
     }
 
-    public abstract ResourceLocation getRenderer();
-
     @Override
     public void setId(int pId) {
         super.setId(pId + 1);

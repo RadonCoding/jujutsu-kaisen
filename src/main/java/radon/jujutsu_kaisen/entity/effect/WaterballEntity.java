@@ -87,22 +87,22 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                         for (int z = -horizontal; z <= horizontal; z++) {
                             double distance = Math.sqrt(x * x + -j * -j + z * z);
 
-                            if (distance <= horizontal && distance >= horizontal - 1) {
-                                BlockPos pos = center.offset(x, j, z);
+                            if (distance > horizontal || distance < horizontal - 1) continue;
 
-                                if (pos == center) continue;
+                            BlockPos pos = center.offset(x, j, z);
 
-                                if (!this.level().isInWorldBounds(pos)) continue;
+                            if (pos == center) continue;
 
-                                BlockState state = owner.level().getBlockState(pos);
+                            if (!this.level().isInWorldBounds(pos)) continue;
 
-                                if (!state.isAir() || state.canOcclude()) continue;
+                            BlockState state = owner.level().getBlockState(pos);
 
-                                owner.level().setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
+                            if (!state.isAir() || state.canOcclude()) continue;
 
-                                if (owner.level().getBlockEntity(pos) instanceof DurationBlockEntity be) {
-                                    be.create(duration, state);
-                                }
+                            owner.level().setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
+
+                            if (owner.level().getBlockEntity(pos) instanceof DurationBlockEntity be) {
+                                be.create(duration, state);
                             }
                         }
                     }

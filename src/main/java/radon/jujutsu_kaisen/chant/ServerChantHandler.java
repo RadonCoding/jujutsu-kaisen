@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.chant;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,8 +19,10 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
+import radon.jujutsu_kaisen.util.DimensionUtil;
 
 import java.util.*;
+import java.util.List;
 
 public class ServerChantHandler {
     private static final Map<UUID, Integer> TIMERS = new HashMap<>();

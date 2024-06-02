@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import net.minecraft.client.renderer.LightTexture;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -43,17 +44,7 @@ public class BlackFlashParticle extends TextureSheetParticle {
 
     @Override
     protected int getLightColor(float pPartialTick) {
-        float f = ((float) this.age + pPartialTick) / (float) this.lifetime;
-        f = Mth.clamp(f, 0.0F, 1.0F);
-        int i = super.getLightColor(pPartialTick);
-        int j = i & 255;
-        int k = i >> 16 & 255;
-        j += (int) (f * 15.0F * 16.0F);
-
-        if (j > 240) {
-            j = 240;
-        }
-        return j | k << 16;
+        return LightTexture.FULL_BRIGHT;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {

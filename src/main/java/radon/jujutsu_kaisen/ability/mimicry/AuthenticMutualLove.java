@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.mimicry;
 
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,7 @@ import radon.jujutsu_kaisen.item.registry.JJKItems;
 
 import java.util.List;
 
-public class AuthenticMutualLove extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class AuthenticMutualLove extends DomainExpansion implements IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
@@ -44,7 +45,7 @@ public class AuthenticMutualLove extends DomainExpansion implements DomainExpans
     }
 
     @Override
-    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+    protected DomainExpansionEntity summon(LivingEntity owner) {
         AuthenticMutualLoveEntity domain = new AuthenticMutualLoveEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
@@ -53,12 +54,7 @@ public class AuthenticMutualLove extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.AUTHENTIC_MUTUAL_LOVE.get());
-    }
-
-    @Override
-    public List<Block> getFloorBlocks() {
-        return List.of(JJKBlocks.AUTHENTIC_MUTUAL_LOVE_ONE.get(), JJKBlocks.AUTHENTIC_MUTUAL_LOVE_TWO.get(), JJKBlocks.AUTHENTIC_MUTUAL_LOVE_THREE.get());
+        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
     }
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)

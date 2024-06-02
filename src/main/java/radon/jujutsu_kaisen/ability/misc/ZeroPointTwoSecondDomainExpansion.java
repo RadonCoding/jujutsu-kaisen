@@ -99,7 +99,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        /*IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
 
@@ -125,7 +125,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
                 }
                 domain.discard();
             }, 4);
-        }, 20);
+        }, 20);*/
     }
 
     @Override

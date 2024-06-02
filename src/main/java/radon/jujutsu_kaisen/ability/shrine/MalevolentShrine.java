@@ -1,20 +1,31 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DomainExpansion;
-import radon.jujutsu_kaisen.ability.IDomainAttack;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
+import java.util.List;
+
+public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
     public static final int DELAY = 2 * 20;
     private static final int INTERVAL = 10;
 
@@ -47,20 +58,32 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
     }
 
     @Override
-    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, this.getWidth(), this.getHeight());
+    protected DomainExpansionEntity summon(LivingEntity owner) {
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
+
+        for (LivingEntity entity : domain.getAffected(domain.level())) {
+            if (!(entity instanceof ServerPlayer player)) continue;
+
+            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
+            player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.getHolder(JJKSounds.MALEVOLENT_SHRINE.getKey()).orElseThrow(), SoundSource.MASTER,
+                    player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, HelperMethods.RANDOM.nextLong()));
+        }
+
+        MalevolentShrineEntity center = new MalevolentShrineEntity(domain);
+
+        Vec3 pos = owner.position()
+                .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
+                        .multiply(center.getBbWidth() / 2.0F, 0.0D, center.getBbWidth() / 2.0F));
+        center.moveTo(pos.x, pos.y, pos.z, 180.0F - RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
+
+        owner.level().addFreshEntity(center);
 
         return domain;
     }
 
     @Override
-    public int getWidth() {
-        return 64;
-    }
-
-    @Override
-    public int getHeight() {
-        return 32;
+    public List<Block> getBlocks() {
+        return List.of();
     }
 }

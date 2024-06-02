@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class AbilityTab extends JJKTab {
-    private static final Component TITLE = Component.translatable(String.format("gui.%s.technique", JujutsuKaisen.MOD_ID));
+    private static final Component TITLE = Component.translatable(String.format("gui.%s.ability", JujutsuKaisen.MOD_ID));
 
     private final Map<Ability, AbilityWidget> children = new HashMap<>();
     private final Map<Ability, AbilityWidget> roots = new HashMap<>();
@@ -109,7 +109,7 @@ public class AbilityTab extends JJKTab {
 
         ISorcererData data = cap.getSorcererData();
 
-        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.technique.points", JujutsuKaisen.MOD_ID), data.getAbilityPoints()),
+        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.ability.points", JujutsuKaisen.MOD_ID), data.getAbilityPoints()),
                 xOffset, yOffset, 16777215, true);
     }
 

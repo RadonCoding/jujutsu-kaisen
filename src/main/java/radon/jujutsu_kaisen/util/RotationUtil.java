@@ -86,22 +86,28 @@ public class RotationUtil {
         return getTargetAdjustedLookAngle(entity.getEyePosition(), entity);
     }
 
-    public static boolean hasLineOfSight(Vec3 start, Entity entity, Entity target) {
-        if (target.level() != entity.level()) {
+    public static boolean hasLineOfSight(Entity entity, Vec3 start, Vec3 end) {
+        if (end.distanceTo(start) > 128.0D) {
             return false;
         } else {
-            Vec3 end = new Vec3(target.getX(), target.getEyeY(), target.getZ());
-
-            if (end.distanceTo(start) > 128.0D) {
-                return false;
-            } else {
-                return entity.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
-            }
+            return entity.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
         }
     }
 
+    public static boolean hasLineOfSight(Entity entity, Vec3 start, Entity target) {
+        if (target.level() != entity.level()) {
+            return false;
+        } else {
+            return hasLineOfSight(entity, start, target.getEyePosition());
+        }
+    }
+
+    public static boolean hasLineOfSight(Entity entity, Vec3 pos) {
+        return hasLineOfSight(entity, entity.getEyePosition(), pos);
+    }
+
     public static boolean hasLineOfSight(Entity entity, Entity target) {
-        return hasLineOfSight(entity.getEyePosition(), entity, target);
+        return hasLineOfSight(entity, target.getEyePosition());
     }
 
     public static Vec3 calculateViewVector(float pitch, float yaw) {
@@ -115,7 +121,11 @@ public class RotationUtil {
     }
 
     public static float getYaw(Vec3 vec) {
-        return (float) (-Mth.atan2(vec.x, vec.z) * (180.0D / Math.PI));
+        return Mth.wrapDegrees((float) (-Mth.atan2(vec.x, vec.z) * (180.0D / Math.PI)));
+    }
+
+    public static float getPitch(Vec3 vec) {
+        return Mth.wrapDegrees((float) (-(Mth.atan2(vec.y, vec.horizontalDistance()) * (double) (180.0F / Mth.PI))));
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {

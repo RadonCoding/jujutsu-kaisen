@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -39,10 +38,11 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
 
         this.setOwner(owner);
 
-        Vec3 spawn = new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ());
-        this.setPos(spawn.x, spawn.y, spawn.z);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(look));
 
-        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
+        this.setDeltaMovement(look.scale(SPEED));
     }
 
     @Override
@@ -62,33 +62,36 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
         this.setDeltaMovement(Vec3.ZERO);
     }
 
+    private void pull(Entity owner) {
+        if (this.pulled.isRemoved() || this.pulled.isDeadOrDying()) {
+            this.discard();
+            return;
+        }
+
+        this.setPos(this.pulled.getX(), this.pulled.getY() + (this.pulled.getBbHeight() / 2.0F), this.pulled.getZ());
+        this.pulled.setDeltaMovement(owner.position().subtract(this.pulled.position()).normalize());
+        this.pulled.hurtMarked = true;
+
+        if (this.pulled.distanceTo(owner) <= 1.0D) {
+            this.discard();
+        }
+    }
+
     @Override
     public void tick() {
         super.tick();
 
         Entity owner = this.getOwner();
 
+        if (owner == null) return;
+
         if (this.getTime() >= DURATION) {
             this.discard();
             return;
         }
 
-        if (owner == null) return;
-
         if (this.pulled != null) {
-            if (this.pulled.isRemoved() || this.pulled.isDeadOrDying()) {
-                this.discard();
-                return;
-            }
-
-            this.setPos(this.pulled.getX(), this.pulled.getY() + (this.pulled.getBbHeight() / 2.0F), this.pulled.getZ());
-
-            this.pulled.setDeltaMovement(owner.position().subtract(this.pulled.position()).normalize());
-            this.pulled.hurtMarked = true;
-
-            if (this.pulled.distanceTo(owner) <= 1.0D) {
-                this.discard();
-            }
+            this.pull(owner);
         } else if (this.distanceTo(owner) >= RANGE) {
             this.discard();
         }

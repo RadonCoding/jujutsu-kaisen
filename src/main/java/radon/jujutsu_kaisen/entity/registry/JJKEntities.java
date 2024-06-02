@@ -1,8 +1,5 @@
 package radon.jujutsu_kaisen.entity.registry;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
@@ -43,10 +40,10 @@ public class JJKEntities {
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "closed_domain_expansion")
                             .toString()));
-    public static DeferredHolder<EntityType<?>, EntityType<AuthenticMutualLoveEntity>> GENUINE_MUTUAL_LOVE = ENTITIES.register("genuine_mutual_love", () ->
+    public static DeferredHolder<EntityType<?>, EntityType<AuthenticMutualLoveEntity>> AUTHENTIC_MUTUAL_LOVE = ENTITIES.register("authentic_mutual_love", () ->
             EntityType.Builder.<AuthenticMutualLoveEntity>of(AuthenticMutualLoveEntity::new, MobCategory.MISC)
                     .fireImmune()
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "genuine_mutual_love")
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "authentic_mutual_love")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<MalevolentShrineEntity>> MALEVOLENT_SHRINE = ENTITIES.register("malevolent_shrine", () ->
             EntityType.Builder.<MalevolentShrineEntity>of(MalevolentShrineEntity::new, MobCategory.MISC)

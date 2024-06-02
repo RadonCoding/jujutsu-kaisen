@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.domain.base;
 
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -110,7 +111,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
-        for (LivingEntity entity : this.getAffected()) {
+        for (LivingEntity entity : this.getAffected(this.level())) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
@@ -175,5 +176,16 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 this.doSureHitEffect(owner);
             }
         }
+    }
+
+    @Override
+    public @Nullable Entity getCenter() {
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public ServerLevel getInside() {
+        return null;
     }
 }

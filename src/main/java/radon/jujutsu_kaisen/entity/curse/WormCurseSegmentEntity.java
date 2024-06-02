@@ -52,11 +52,6 @@ public class WormCurseSegmentEntity extends JJKPartEntity<WormCurseEntity> imple
     }
 
     @Override
-    public ResourceLocation getRenderer() {
-        return RENDERER;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
 
     }

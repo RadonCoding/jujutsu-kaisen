@@ -93,13 +93,14 @@ public class FireParticle extends TextureSheetParticle {
         float f3 = this.quadSize / f;
         float f4 = 0.0F;
         stack.mulPose(Axis.YN.rotationDegrees(pRenderInfo.getYRot()));
+        stack.mulPose(Axis.XP.rotationDegrees(pRenderInfo.getXRot()));
         stack.translate(0.0F, 0.0F, -0.3F + (float) ((int) f3) * 0.02F);
         float f5 = 0.0F;
         int i = 0;
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(Sheets.cutoutBlockSheet());
 
-        for (PoseStack.Pose posestack$pose = stack.last(); f3 > 0.0F; ++i) {
+        for (PoseStack.Pose pose = stack.last(); f3 > 0.0F; ++i) {
             TextureAtlasSprite sprite = i % 2 == 0 ? fire0 : fire1;
             float f6 = sprite.getU0();
             float f7 = sprite.getV0();
@@ -112,10 +113,11 @@ public class FireParticle extends TextureSheetParticle {
                 f6 = f10;
             }
 
-            this.fireVertex(posestack$pose, consumer, f1 - 0.0F, 0.0F - f4, f5, f8, f9);
-            this.fireVertex(posestack$pose, consumer, -f1 - 0.0F, 0.0F - f4, f5, f6, f9);
-            this.fireVertex(posestack$pose, consumer, -f1 - 0.0F, 1.4F - f4, f5, f6, f7);
-            this.fireVertex(posestack$pose, consumer, f1 - 0.0F, 1.4F - f4, f5, f8, f7);
+            this.fireVertex(pose, consumer, f1 - 0.0F, 0.0F - f4, f5, f8, f9);
+            this.fireVertex(pose, consumer, -f1 - 0.0F, 0.0F - f4, f5, f6, f9);
+            this.fireVertex(pose, consumer, -f1 - 0.0F, 1.4F - f4, f5, f6, f7);
+            this.fireVertex(pose, consumer, f1 - 0.0F, 1.4F - f4, f5, f8, f7);
+
             f3 -= 0.45F;
             f4 -= 0.45F;
             f1 *= 0.9F;

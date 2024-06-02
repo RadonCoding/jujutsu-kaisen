@@ -60,7 +60,7 @@ public class BlueFire extends Ability implements IChanneled, IDurationable {
         if (owner.isVehicle()) {
             return data.isChanneling(this);
         }
-        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && RotationUtil.hasLineOfSight(calculateSpawnPos(owner), owner, target);
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && RotationUtil.hasLineOfSight(owner, calculateSpawnPos(owner), target);
     }
 
     private static Vec3 calculateSpawnPos(LivingEntity owner) {

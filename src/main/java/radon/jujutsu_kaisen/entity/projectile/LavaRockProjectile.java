@@ -99,18 +99,15 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
         if (entity == owner) return;
 
-        if (this.isDomain()) {
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
-        
-            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
-        } else {
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
-        }
+
+        DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
+        entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()), DAMAGE * this.getPower());
+
         this.discard();
     }
 

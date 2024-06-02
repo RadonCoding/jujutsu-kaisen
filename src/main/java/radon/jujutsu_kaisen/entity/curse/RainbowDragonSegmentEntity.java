@@ -68,11 +68,6 @@ public class RainbowDragonSegmentEntity extends JJKPartEntity<RainbowDragonEntit
     }
 
     @Override
-    public ResourceLocation getRenderer() {
-        return RENDERER;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
 
     }

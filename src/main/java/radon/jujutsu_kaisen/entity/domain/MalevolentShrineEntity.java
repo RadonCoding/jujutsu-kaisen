@@ -25,6 +25,8 @@ import radon.jujutsu_kaisen.ability.shrine.MalevolentShrine;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.entity.DomainExpansionCenterEntity;
+import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
@@ -35,126 +37,14 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+public class MalevolentShrineEntity extends DomainExpansionCenterEntity {
     public MalevolentShrineEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
-    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
-        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height);
-    }
+    public MalevolentShrineEntity(DomainExpansionEntity domain) {
+        super(JJKEntities.MALEVOLENT_SHRINE.get(), domain.level());
 
-    @Override
-    public boolean isBarrier(BlockPos pos) {
-        return this.isInsideBarrier(pos);
-    }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        for (LivingEntity entity : this.getAffected()) {
-            if (!(entity instanceof ServerPlayer player)) continue;
-
-            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
-            player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.getHolder(JJKSounds.MALEVOLENT_SHRINE.getKey()).orElseThrow(), SoundSource.MASTER,
-                    player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, this.random.nextLong()));
-        }
-    }
-
-    @Override
-    public boolean checkSureHitEffect() {
-        return this.getTime() >= MalevolentShrine.DELAY && super.checkSureHitEffect();
-    }
-
-    @Override
-    protected void doSureHitEffect(@NotNull LivingEntity owner) {
-        super.doSureHitEffect(owner);
-
-        BlockPos center = this.blockPosition();
-
-        int width = this.getWidth();
-        int height = this.getHeight();
-
-        if (this.first) {
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    int delay = i * 4;
-
-                    int horizontal = i;
-                    int vertical = j;
-
-                    IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                    if (cap == null) return;
-
-                    IAbilityData data = cap.getAbilityData();
-
-                    data.delayTickEvent(() -> {
-                        if (this.isRemoved()) return;
-
-                        for (int x = -horizontal; x <= horizontal; x++) {
-                            for (int z = -horizontal; z <= horizontal; z++) {
-                                double distance = Math.sqrt(x * x + vertical * vertical + z * z);
-
-                                if (distance >= horizontal || distance < horizontal - 1) continue;
-
-                                BlockPos pos = center.offset(x, vertical, z);
-
-                                if (!this.isAffected(pos)) continue;
-
-                                if (!HelperMethods.isDestroyable((ServerLevel) this.level(), owner, owner, pos)) continue;
-
-                                owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                        Block.UPDATE_CLIENTS);
-
-                                if (this.random.nextInt(10) == 0) {
-                                    owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER,
-                                            1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
-                                    ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
-                                            0.0D, 0.0D, 0.0D, 0.0D);
-                                }
-                            }
-                        }
-                    }, delay);
-                }
-            }
-            this.first = false;
-        }
-
-        AABB bounds = this.getBounds();
-
-        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            if (!this.isAffected(pos)) return;
-
-            this.ability.onHitBlock(this, owner, pos, false);
-        });
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.level().isClientSide) {
-            if (this.getTime() >= MalevolentShrine.DELAY && this.getTime() % 10 == 0 && this.checkSureHitEffect()) {
-                for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
-                    if (!(entity instanceof ServerPlayer player)) continue;
-
-                    PacketDistributor.sendToPlayer(player, new CameraShakeS2CPacket(1.0F, 5.0F, 20));
-                }
-            }
-        }
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+        this.setDomain(domain);
     }
 }

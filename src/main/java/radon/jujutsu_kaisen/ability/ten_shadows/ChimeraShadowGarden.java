@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -29,9 +30,9 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChimeraShadowGarden extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class ChimeraShadowGarden extends DomainExpansion implements IClosedDomain {
     @Override
-    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+    protected DomainExpansionEntity summon(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return null;
@@ -68,11 +69,6 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
-    }
-
-    @Override
-    public List<Block> getFillBlocks() {
         return List.of(JJKBlocks.CHIMERA_SHADOW_GARDEN.get());
     }
 

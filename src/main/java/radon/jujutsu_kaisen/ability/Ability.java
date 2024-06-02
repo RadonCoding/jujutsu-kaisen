@@ -166,7 +166,7 @@ public abstract class Ability {
     }
 
     public ResourceLocation getIcon(LivingEntity owner) {
-        return new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/technique/%s.png", JJKAbilities.getKey(this).getPath()));
+        return new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/ability/%s.png", JJKAbilities.getKey(this).getPath()));
     }
 
     @Nullable
@@ -370,7 +370,7 @@ public abstract class Ability {
 
         if (key == null) return Component.empty();
 
-        return Component.translatable(String.format("technique.%s.%s.enable", key.getNamespace(), key.getPath()));
+        return Component.translatable(String.format("ability.%s.%s.enable", key.getNamespace(), key.getPath()));
     }
 
     public Component getDisableMessage() {
@@ -378,7 +378,7 @@ public abstract class Ability {
 
         if (key == null) return Component.empty();
 
-        return Component.translatable(String.format("technique.%s.%s.disable", key.getNamespace(), key.getPath()));
+        return Component.translatable(String.format("ability.%s.%s.disable", key.getNamespace(), key.getPath()));
     }
 
     public float getRealCost(LivingEntity owner) {

@@ -129,13 +129,12 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, FireBeam> FIRE_BEAM = ABILITIES.register("fire_beam", FireBeam::new);
     public static DeferredHolder<Ability, CoffinOfTheIronMountain> COFFIN_OF_THE_IRON_MOUNTAIN = ABILITIES.register("coffin_of_the_iron_mountain", CoffinOfTheIronMountain::new);
 
-    public static DeferredHolder<Ability, HorizonOfTheCaptivatingSkandha> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
     public static DeferredHolder<Ability, DisasterTides> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
     public static DeferredHolder<Ability, WaterShield> WATER_SHIELD = ABILITIES.register("water_shield", WaterShield::new);
-    public static DeferredHolder<Ability, DeathSwarm> DEATH_SWARM = ABILITIES.register("death_swarm", DeathSwarm::new);
     public static DeferredHolder<Ability, FishShikigami> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
     public static DeferredHolder<Ability, WaterTorrent> WATER_TORRENT = ABILITIES.register("water_torrent", WaterTorrent::new);
     public static DeferredHolder<Ability, EelGrapple> EEL_GRAPPLE = ABILITIES.register("eel_grapple", EelGrapple::new);
+    public static DeferredHolder<Ability, HorizonOfTheCaptivatingSkandha> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
 
     public static DeferredHolder<Ability, ForestPlatform> FOREST_PLATFORM = ABILITIES.register("forest_platform", ForestPlatform::new);
     public static DeferredHolder<Ability, ForestSpikes> FOREST_SPIKES = ABILITIES.register("forest_spikes", ForestSpikes::new);

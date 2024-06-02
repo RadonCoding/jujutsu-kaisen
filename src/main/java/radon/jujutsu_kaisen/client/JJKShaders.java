@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.client;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
@@ -13,19 +11,18 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 import java.io.IOException;
 
-
 @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class JJKShaders {
-    private static ShaderInstance skyShader;
+    private static ShaderInstance domain;
 
     @SubscribeEvent
     public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(JujutsuKaisen.MOD_ID, "sky"), DefaultVertexFormat.POSITION),
-                shader -> skyShader = shader);
+                        new ResourceLocation(JujutsuKaisen.MOD_ID, "domain"), DefaultVertexFormat.POSITION_TEX),
+                shader -> domain = shader);
     }
 
-    public static ShaderInstance getSkyShader() {
-        return skyShader;
+    public static ShaderInstance getDomainShader() {
+        return domain;
     }
 }

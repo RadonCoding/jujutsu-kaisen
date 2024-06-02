@@ -49,11 +49,6 @@ public class BodyRepelSegmentEntity extends JJKPartEntity<BodyRepelEntity> imple
     }
 
     @Override
-    public ResourceLocation getRenderer() {
-        return RENDERER;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
 
     }

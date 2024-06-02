@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile.base;
 
+import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.nbt.CompoundTag;
@@ -43,6 +44,8 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     private static final int DELAY = 20;
     private static final int DURATION = 20;
     private static final double SPEED = 2.0D;
+    private static final float EXPLOSIVE_POWER = 2.5F;
+    private static final float MAX_EXPLOSION = 10.0F;
 
     @Nullable
     private UUID targetUUID;
@@ -53,13 +56,17 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         super(pType, pLevel);
     }
 
-    public FishShikigamiProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {
+    public FishShikigamiProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, float xOffset, float yOffset, LivingEntity target) {
+        this(pType, owner, power, xOffset, yOffset);
+
+        this.setTarget(target);
+    }
+
+    public FishShikigamiProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, float xOffset, float yOffset) {
         super(pType, owner.level(), owner, power);
 
         this.setOffsetX(xOffset);
         this.setOffsetY(yOffset);
-
-        this.setTarget(target);
 
         this.applyOffset();
     }
@@ -137,11 +144,17 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     }
 
     private void applyRotation() {
+        Entity owner = this.getOwner();
+
+        if (owner == null) return;
+
         LivingEntity target = this.getTarget();
 
-        if (target == null) return;
-
-        EntityUtil.rotation(this, target.position().subtract(this.position()));
+        if (target == null) {
+            EntityUtil.rotation(this, RotationUtil.getTargetAdjustedLookAngle(owner));
+        } else {
+            EntityUtil.rotation(this, target.position().subtract(this.position()));
+        }
     }
 
     private void applyOffset() {
@@ -162,6 +175,12 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
+
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        Vec3 location = pResult.getLocation();
+        ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()),
+                20, 1.0F, owner, this.damageSources().explosion(this, owner), false);
 
         this.discard();
     }
@@ -188,11 +207,10 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
             ISorcererData data = cap.getSorcererData();
 
             DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, null), DAMAGE * this.getPower());
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get()), DAMAGE * this.getPower());
         } else {
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FISH_SHIKIGAMI.get()), DAMAGE * this.getPower());
         }
-        this.discard();
     }
 
     @Override
@@ -216,9 +234,9 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                 this.applyOffset();
             }
         } else if (this.getTime() >= DELAY) {
-            this.applyRotation();
+            if (this.isDomain()) {
+                this.applyRotation();
 
-            if (!this.level().isClientSide) {
                 LivingEntity target = this.getTarget();
 
                 if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
@@ -227,6 +245,8 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                 } else {
                     this.discard();
                 }
+            } else if (this.getTime() == DELAY) {
+                this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
             }
         }
     }

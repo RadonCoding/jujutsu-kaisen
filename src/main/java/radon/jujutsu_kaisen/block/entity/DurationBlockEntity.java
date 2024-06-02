@@ -18,13 +18,8 @@ import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
 
 public class DurationBlockEntity extends TemporaryBlockEntity {
-    private boolean initialized;
     private int duration;
 
-    @Nullable
-    private BlockState original;
-
-    private CompoundTag deferred;
 
     public DurationBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -46,38 +41,22 @@ public class DurationBlockEntity extends TemporaryBlockEntity {
     }
 
     public void create(int duration, BlockState state) {
-        this.initialized = true;
         this.duration = duration;
         this.setOriginal(state);
         this.setChanged();
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-
-        this.initialized = pTag.getBoolean("initialized");
-
-        if (this.initialized) {
-            this.duration = pTag.getInt("duration");
-            this.deferred = pTag.getCompound("original");
-        }
-    }
-
-    @Override
     public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(pTag, pRegistries);
 
-        pTag.putBoolean("initialized", this.initialized);
+        pTag.putInt("duration", this.duration);
+    }
 
-        if (this.initialized) {
-            pTag.putInt("duration", this.duration);
+    @Override
+    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
 
-            if (this.original != null) {
-                pTag.put("original", NbtUtils.writeBlockState(this.original));
-            } else {
-                pTag.put("original", this.deferred);
-            }
-        }
+        this.duration = pTag.getInt("duration");
     }
 }

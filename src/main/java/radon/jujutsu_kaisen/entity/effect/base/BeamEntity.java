@@ -63,8 +63,6 @@ public abstract class BeamEntity extends JujutsuProjectile {
         super(pType, pLevel);
 
         this.noCulling = true;
-
-        this.update();
     }
 
     protected BeamEntity(EntityType<? extends Projectile> pType, LivingEntity owner, float power) {
@@ -72,6 +70,15 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
         this.setOwner(owner);
         this.setPower(power);
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        this.update();
+        this.calculateEndPos();
+        this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
     }
 
     public abstract int getFrames();
@@ -111,15 +118,6 @@ public abstract class BeamEntity extends JujutsuProjectile {
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        this.update();
-        this.calculateEndPos();
-        this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -136,85 +134,86 @@ public abstract class BeamEntity extends JujutsuProjectile {
             this.update();
         }
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.shouldSwing()) {
-                if (this.getTime() % 5 == 0) {
-                    owner.swing(InteractionHand.MAIN_HAND);
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        if (this.shouldSwing()) {
+            if (this.getTime() % 5 == 0) {
+                owner.swing(InteractionHand.MAIN_HAND);
+            }
+        }
+
+        if (!this.on && this.animation == 0) {
+            this.discard();
+        }
+
+        if (this.getFrames() > 0) {
+            if (this.on) {
+                if (this.animation < this.getFrames()) {
+                    this.animation++;
+                }
+            } else {
+                if (this.animation > 0) {
+                    this.animation--;
+                }
+            }
+        }
+
+        if (this.getTime() >= this.getCharge()) {
+            if (!this.isStill()) {
+                this.calculateEndPos();
+            }
+
+            List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                    new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+
+            for (Entity entity : entities) {
+                if (entity == owner) continue;
+                if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.getSource()), this.getDamage() * this.getPower())) continue;
+
+                if (this.causesFire()) {
+                    entity.setRemainingFireTicks(5 * 20);
                 }
             }
 
-            if (!this.on && this.animation == 0) {
-                this.discard();
-            }
+            if (!this.level().isClientSide) {
+                double radius = this.getScale() * 2.0F;
 
-            if (this.getFrames() > 0) {
-                if (this.on) {
-                    if (this.animation < this.getFrames()) {
-                        this.animation++;
-                    }
-                } else {
-                    if (this.animation > 0) {
-                        this.animation--;
-                    }
-                }
-            }
+                AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
+                        this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
 
-            if (this.getTime() >= this.getCharge()) {
-                if (!this.isStill()) {
-                    this.calculateEndPos();
-                }
+                double centerX = bounds.getCenter().x;
+                double centerY = bounds.getCenter().y;
+                double centerZ = bounds.getCenter().z;
 
-                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+                for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+                    for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                        for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                            BlockPos pos = new BlockPos(x, y, z);
 
-                for (Entity entity : entities) {
-                    if (entity == owner) continue;
-                    if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.getSource()), this.getDamage() * this.getPower())) continue;
+                            if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
 
-                    if (this.causesFire()) {
-                        entity.setRemainingFireTicks(5 * 20);
-                    }
-                }
+                            double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                if (!this.level().isClientSide) {
-                    double radius = this.getScale() * 2.0F;
+                            if (distance > radius) continue;
 
-                    AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
-                            this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
+                            if (this.breaksBlocks()) {
+                                this.level().destroyBlock(pos, false);
+                            }
 
-                    double centerX = bounds.getCenter().x;
-                    double centerY = bounds.getCenter().y;
-                    double centerZ = bounds.getCenter().z;
+                            if (!this.causesFire()) continue;
 
-                    for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
-                        for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
-                            for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                                BlockPos pos = new BlockPos(x, y, z);
-
-                                if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
-
-                                double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
-
-                                if (distance > radius) continue;
-
-                                if (this.breaksBlocks()) {
-                                    this.level().destroyBlock(pos, false);
-                                }
-
-                                if (!this.causesFire()) continue;
-
-                                if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
-                                        this.level().getBlockState(pos.below()).isSolidRender(this.level(), pos.below())) {
-                                    this.level().setBlockAndUpdate(pos, BaseFireBlock.getState(this.level(), pos));
-                                }
+                            if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
+                                    this.level().getBlockState(pos.below()).isSolidRender(this.level(), pos.below())) {
+                                this.level().setBlockAndUpdate(pos, BaseFireBlock.getState(this.level(), pos));
                             }
                         }
                     }
                 }
             }
-            if (this.getTime() - this.getCharge() >= this.getDuration()) {
-                this.on = false;
-            }
+        }
+
+        if (this.getTime() - this.getCharge() >= this.getDuration()) {
+            this.on = false;
         }
     }
 
@@ -294,17 +293,17 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        return distance < 1024;
+        return distance < 1024.0D;
     }
 
     private void update() {
-        if (this.getOwner() instanceof LivingEntity owner) {
-            this.renderYaw = (float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0D) * Math.PI / 180.0D);
-            this.renderPitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D);
-            this.setYaw((float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0D));
-            this.setPitch((float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D));
-            Vec3 spawn = this.calculateSpawnPos(owner);
-            this.setPos(spawn.x, spawn.y, spawn.z);
-        }
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        this.renderYaw = (float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0D) * Math.PI / 180.0D);
+        this.renderPitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D);
+        this.setYaw((float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0D));
+        this.setPitch((float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D));
+        Vec3 spawn = this.calculateSpawnPos(owner);
+        this.setPos(spawn.x, spawn.y, spawn.z);
     }
 }
