@@ -41,14 +41,14 @@ public class CursedTechnique {
     }
 
     public static class Builder {
-        private Set<Holder<Ability>> abilities = new LinkedHashSet<>();
+        private final LinkedHashSet<Holder<Ability>> abilities = new LinkedHashSet<>();
 
         @Nullable
         private Holder<Ability> domain;
 
         @SafeVarargs
         public final Builder abilities(Holder<Ability>... abilities) {
-            this.abilities = new LinkedHashSet<>(List.of(abilities));
+            this.abilities.addAll(List.of(abilities));
             return this;
         }
 

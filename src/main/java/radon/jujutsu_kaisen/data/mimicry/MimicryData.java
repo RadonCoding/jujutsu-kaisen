@@ -18,7 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class MimicryData implements IMimicryData {
-    private final Set<CursedTechnique> copied;
+    private final LinkedHashSet<CursedTechnique> copied;
     @Nullable
     private CursedTechnique currentCopied;
 

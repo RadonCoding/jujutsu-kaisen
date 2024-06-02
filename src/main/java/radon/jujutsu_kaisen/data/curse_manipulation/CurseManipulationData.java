@@ -17,7 +17,7 @@ import java.util.*;
 
 public class CurseManipulationData implements ICurseManipulationData {
     private final List<AbsorbedCurse> curses;
-    private final Set<CursedTechnique> absorbed;
+    private final LinkedHashSet<CursedTechnique> absorbed;
     @Nullable
     private CursedTechnique currentAbsorbed;
 

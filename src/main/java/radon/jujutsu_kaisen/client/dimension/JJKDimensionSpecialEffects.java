@@ -109,7 +109,6 @@ public class JJKDimensionSpecialEffects {
                 buffer.bind();
                 buffer.upload(rendered);
 
-                // Renders a box with the domain texture mapped on it
                 DomainRenderDispatcher.render(info.ability(), modelViewMatrix, projectionMatrix, buffer);
 
                 current += info.strength();

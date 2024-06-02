@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.ability.IDurationable;
 import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
 import radon.jujutsu_kaisen.ability.IToggled;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public interface IChantData extends INBTSerializable<CompoundTag> {
@@ -21,7 +22,7 @@ public interface IChantData extends INBTSerializable<CompoundTag> {
 
     void addChant(Ability ability, String chant);
 
-    void addChants(Ability ability, Set<String> chants);
+    void addChants(Ability ability, LinkedHashSet<String> chants);
 
     void removeChant(Ability ability, String chant);
 

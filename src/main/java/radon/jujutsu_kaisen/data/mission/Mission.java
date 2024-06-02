@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Mission {
     private final ResourceKey<Level> dimension;
@@ -17,7 +18,7 @@ public class Mission {
     private final MissionGrade grade;
     private final BlockPos pos;
     private final Set<UUID> curses;
-    private final Set<BlockPos> spawns;
+    private final CopyOnWriteArraySet<BlockPos> spawns;
     private int total;
 
     public Mission(ResourceKey<Level> dimension, MissionType type, MissionGrade grade, BlockPos pos) {
@@ -26,7 +27,7 @@ public class Mission {
         this.grade = grade;
         this.pos = pos;
         this.curses = new HashSet<>();
-        this.spawns = new HashSet<>();
+        this.spawns = new CopyOnWriteArraySet<>();
     }
 
     public Mission(CompoundTag nbt) {
@@ -41,7 +42,7 @@ public class Mission {
             this.curses.add(NbtUtils.loadUUID(key));
         }
 
-        this.spawns = new HashSet<>();
+        this.spawns = new CopyOnWriteArraySet<>();
 
         for (Tag tag : nbt.getList("spawns", Tag.TAG_INT_ARRAY)) {
             int[] data = ((IntArrayTag) tag).getAsIntArray();

@@ -32,8 +32,8 @@ import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import java.util.*;
 
 public class MissionLevelData implements IMissionLevelData {
-    private final Set<Mission> missions;
-    private final Map<Mission, UUID> taken;
+    private final LinkedHashSet<Mission> missions;
+    private final LinkedHashMap<Mission, UUID> taken;
 
     private final Level level;
 

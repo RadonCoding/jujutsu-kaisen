@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,10 +35,10 @@ public class ChantGoal<T extends PathfinderMob & ISorcerer> extends Goal {
         return true;
     }
 
-    private static Set<String> getRandomChantCombo() {
+    private static LinkedHashSet<String> getRandomChantCombo() {
         List<? extends String> chants = ConfigHolder.SERVER.chants.get();
 
-        Set<String> combo = new HashSet<>();
+        LinkedHashSet<String> combo = new LinkedHashSet<>();
 
         while (combo.size() < Math.min(chants.size(), ConfigHolder.SERVER.maximumChantCount.get())) {
             combo.add(chants.get(HelperMethods.RANDOM.nextInt(chants.size())));
@@ -58,7 +59,7 @@ public class ChantGoal<T extends PathfinderMob & ISorcerer> extends Goal {
         for (Ability ability : JJKAbilities.getAbilities(this.mob)) {
             if (!ability.isScalable(this.mob) || data.hasChants(ability)) continue;
 
-            Set<String> chants = getRandomChantCombo();
+            LinkedHashSet<String> chants = getRandomChantCombo();
 
             while (!data.isChantsAvailable(chants)) chants = getRandomChantCombo();
 

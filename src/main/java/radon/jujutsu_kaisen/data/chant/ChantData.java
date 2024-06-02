@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ChantData implements IChantData {
-    private final Map<Ability, Set<String>> chants;
+    private final Map<Ability, LinkedHashSet<String>> chants;
 
     public ChantData() {
         this.chants = new LinkedHashMap<>();
@@ -37,7 +37,7 @@ public class ChantData implements IChantData {
     }
 
     @Override
-    public void addChants(Ability ability, Set<String> chants) {
+    public void addChants(Ability ability, LinkedHashSet<String> chants) {
         this.chants.put(ability, chants);
     }
 
@@ -54,13 +54,13 @@ public class ChantData implements IChantData {
 
     @Override
     public boolean hasChant(Ability ability, String chant) {
-        List<String> chants = new ArrayList<>(this.chants.getOrDefault(ability, Set.of()));
+        List<String> chants = new ArrayList<>(this.chants.getOrDefault(ability, new LinkedHashSet<>()));
 
         if (chants.contains(chant)) return true;
 
         chants.add(chant);
 
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+        for (Map.Entry<Ability, LinkedHashSet<String>> entry : this.chants.entrySet()) {
             if (entry.getKey() == ability) continue;
 
             List<String> current = new ArrayList<>(entry.getValue());
@@ -89,7 +89,7 @@ public class ChantData implements IChantData {
     @Override
     @Nullable
     public Ability getAbility(String chant) {
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+        for (Map.Entry<Ability, LinkedHashSet<String>> entry : this.chants.entrySet()) {
             if (entry.getValue().contains(chant)) return entry.getKey();
         }
         return null;
@@ -98,7 +98,7 @@ public class ChantData implements IChantData {
     @Override
     @Nullable
     public Ability getAbility(Set<String> chants) {
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+        for (Map.Entry<Ability, LinkedHashSet<String>> entry : this.chants.entrySet()) {
             if (entry.getValue().equals(chants)) return entry.getKey();
         }
         return null;
@@ -111,7 +111,7 @@ public class ChantData implements IChantData {
 
     @Override
     public Set<String> getFirstChants(Ability ability) {
-        return this.chants.getOrDefault(ability, Set.of());
+        return this.chants.getOrDefault(ability, new LinkedHashSet<>());
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ChantData implements IChantData {
 
         ListTag chantsTag = new ListTag();
 
-        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+        for (Map.Entry<Ability, LinkedHashSet<String>> entry : this.chants.entrySet()) {
             ResourceLocation key = JJKAbilities.getKey(entry.getKey());
 
             if (key == null) continue;
@@ -149,7 +149,7 @@ public class ChantData implements IChantData {
         for (Tag key : nbt.getList("chants", Tag.TAG_COMPOUND)) {
             CompoundTag data = (CompoundTag) key;
 
-            Set<String> chants = new LinkedHashSet<>();
+            LinkedHashSet<String> chants = new LinkedHashSet<>();
 
             for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
                 chants.add(entry.getAsString());
