@@ -13,6 +13,8 @@ import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.render.domain.DomainRenderDispatcher;
 import radon.jujutsu_kaisen.data.domain.DomainInfo;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
@@ -26,7 +28,7 @@ public class JJKDimensionSpecialEffects {
 
         @Override
         public boolean renderSky(@NotNull ClientLevel level, int ticks, float partialTick, @NotNull Matrix4f modelViewMatrix, @NotNull Camera camera, @NotNull Matrix4f projectionMatrix, boolean isFoggy, @NotNull Runnable setupFog) {
-            /*IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
+            IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
 
             Set<DomainInfo> domains = data.getDomains();
 
@@ -34,19 +36,7 @@ public class JJKDimensionSpecialEffects {
 
             for (DomainInfo info : domains) {
                 total += info.strength();
-            }*/
-
-            float total = 10.0F;
-
-            Minecraft mc = Minecraft.getInstance();
-
-            Set<DomainInfo> domains = new LinkedHashSet<>();
-            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.UNLIMITED_VOID.get(), total / 3,
-                    mc.player.position(), new Vec3(mc.player.xOld, mc.player.yOld, mc.player.zOld)));
-            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get(), total / 3,
-                    mc.player.position().add(16.0D, 0.0D, 0.0D), new Vec3(mc.player.xOld, mc.player.yOld, mc.player.zOld).add(16.0D, 0.0D, 0.0D)));
-            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), total / 3,
-                    mc.player.position().add(-16.0D, 0.0D, 0.0D), new Vec3(mc.player.xOld, mc.player.yOld, mc.player.zOld).add(-16.0D, 0.0D, 0.0D)));
+            }
 
             List<DomainInfo> sorted = new ArrayList<>(domains);
             sorted.sort((a, b) -> Float.compare(a.strength(), b.strength()));
