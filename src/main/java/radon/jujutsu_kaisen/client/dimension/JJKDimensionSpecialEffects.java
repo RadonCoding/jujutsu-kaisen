@@ -7,9 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.render.domain.DomainRenderDispatcher;
 import radon.jujutsu_kaisen.data.domain.DomainInfo;
@@ -24,6 +27,21 @@ public class JJKDimensionSpecialEffects {
     public static class DomainExpansionEffects extends DimensionSpecialEffects {
         public DomainExpansionEffects() {
             super(Float.NaN, false, SkyType.NORMAL, true, false);
+        }
+
+        public float[] spikeVertex(float x, float y, float z, float intensity) {
+            // Normalize the position vector
+            float length = (float) Math.sqrt(x * x + y * y + z * z);
+            float nx = x / length;
+            float ny = y / length;
+            float nz = z / length;
+
+            // Move the vertex outward
+            float spikedX = x + nx * intensity;
+            float spikedY = y + ny * intensity;
+            float spikedZ = z + nz * intensity;
+
+            return new float[]{spikedX, spikedY, spikedZ};
         }
 
         @Override
@@ -47,16 +65,16 @@ public class JJKDimensionSpecialEffects {
             for (DomainInfo info : sorted) {
                 PoseStack pose = new PoseStack();
 
-                float yaw = RotationUtil.getYaw(Vec3.ZERO.subtract(info.center()));
-                pose.mulPose(Axis.YN.rotationDegrees(yaw));
+                //float yaw = RotationUtil.getYaw(Vec3.ZERO.subtract(info.center()));
+                //pose.mulPose(Axis.YN.rotationDegrees(yaw));
 
                 Tesselator tesselator = Tesselator.getInstance();
                 BufferBuilder builder = tesselator.getBuilder();
-                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
                 Matrix4f matrix4f = pose.last().pose();
 
-                int divisions = domains.size();
+                int divisions = domains.size() * 16;
 
                 for (int lat = 0; lat < divisions; lat++) {
                     float theta = lat * Mth.PI / divisions;
@@ -67,7 +85,10 @@ public class JJKDimensionSpecialEffects {
                     float sinTheta2 = Mth.sin(theta2);
                     float cosTheta2 = Mth.cos(theta2);
 
-                    for (int lon = 0; lon < divisions * (1.0F - (current / total)); lon++) {
+                    int start = Math.round(divisions * (current / total));
+                    int end = Math.round(start + (divisions * (info.strength() / total)));
+
+                    for (int lon = start; lon < end; lon++) {
                         float phi = lon * 2 * Mth.PI / divisions;
                         float sinPhi = Mth.sin(phi);
                         float cosPhi = Mth.cos(phi);
@@ -93,12 +114,16 @@ public class JJKDimensionSpecialEffects {
                         float z4 = sinPhi2 * sinTheta;
 
                         builder.vertex(matrix4f, x1 * 100.0F, y1 * 100.0F, z1 * 100.0F)
+                                .color(255, 255, 255, 255)
                                 .endVertex();
                         builder.vertex(matrix4f, x2 * 100.0F, y2 * 100.0F, z2 * 100.0F)
+                                .color(255, 255, 255, 255)
                                 .endVertex();
                         builder.vertex(matrix4f, x3 * 100.0F, y3 * 100.0F, z3 * 100.0F)
+                                .color(255, 255, 255, 255)
                                 .endVertex();
                         builder.vertex(matrix4f, x4 * 100.0F, y4 * 100.0F, z4 * 100.0F)
+                                .color(255, 255, 255, 255)
                                 .endVertex();
                     }
                 }

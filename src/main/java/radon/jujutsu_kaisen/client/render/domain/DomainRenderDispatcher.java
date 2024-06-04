@@ -10,7 +10,9 @@ import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.Holder;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
 import radon.jujutsu_kaisen.ability.mimicry.AuthenticMutualLove;
@@ -42,39 +44,42 @@ public class DomainRenderDispatcher {
             buffers.put(holder, buffer);
         }
 
-        // Render the skybox into a separate TextureTarget
+        RenderSystem.depthMask(false);
+
+        // Render the mask
         Minecraft mc = Minecraft.getInstance();
 
         Window window = mc.getWindow();
 
+        // Create the mask target
         TextureTarget target = new TextureTarget(window.getWidth(), window.getHeight(), true, Minecraft.ON_OSX);
+        target.setClearColor(0.0F, 0.0F, 0.0F, 0.0F);
+        target.clear(Minecraft.ON_OSX);
+        target.copyDepthFrom(mc.getMainRenderTarget());
 
         target.bindWrite(false);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        mask.bind();
+        mask.drawWithShader(modelViewStack, projectionMatrix, RenderSystem.getShader());
+
+        target.unbindWrite();
+        mc.getMainRenderTarget().bindWrite(false);
+
+        // Render the skybox
+        RenderSystem.setShader(JJKShaders::getDomainShader);
 
         RenderSystem.setShaderTexture(0, renderer.getTexture());
+        RenderSystem.setShaderTexture(1, target.getColorTextureId());
 
         VertexBuffer buffer = buffers.get(holder);
         buffer.bind();
         buffer.drawWithShader(modelViewStack, projectionMatrix, RenderSystem.getShader());
 
-        target.unbindWrite();
-
+        target.destroyBuffers();
         mc.getMainRenderTarget().bindWrite(false);
 
-        RenderSystem.depthMask(false);
-
-        // Render the mask
-        RenderSystem.setShader(JJKShaders::getDomainShader);
-
-        RenderSystem.setShaderTexture(0, target.getColorTextureId());
-
-        mask.bind();
-        mask.drawWithShader(modelViewStack, projectionMatrix, RenderSystem.getShader());
-
         RenderSystem.depthMask(true);
-
-        target.destroyBuffers();
     }
 }

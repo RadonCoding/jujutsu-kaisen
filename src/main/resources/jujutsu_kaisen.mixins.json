@@ -15,6 +15,9 @@
     "client.LocalPlayerMixin",
     "client.MinecraftMixin"
   ],
+  "server": [
+    "server.MinecraftServerMixin"
+  ],
   "mixins": [
     "common.EnchantmentHelperMixin",
     "common.EntityMixin",

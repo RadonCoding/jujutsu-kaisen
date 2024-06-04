@@ -9,7 +9,6 @@ import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.ISimpleDomain;
-import radon.jujutsu_kaisen.util.DimensionUtil;
 
 public class DomainHandler {
     public static @Nullable Level getOrCreateInside(ServerLevel level, DomainExpansionEntity domain) {
@@ -22,7 +21,7 @@ public class DomainHandler {
             return domain.getInside();
         }
 
-        ServerLevel inside = DimensionUtil.createDomainInside(level.getServer());
+        ServerLevel inside = DimensionManager.createDomainInside(level.getServer());
 
         if (inside == null) return null;
 

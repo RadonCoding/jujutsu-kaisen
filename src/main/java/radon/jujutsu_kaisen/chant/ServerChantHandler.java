@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
-import radon.jujutsu_kaisen.util.DimensionUtil;
 
 import java.util.*;
 import java.util.List;
