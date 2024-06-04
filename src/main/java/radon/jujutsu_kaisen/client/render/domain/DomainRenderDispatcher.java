@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.ability.mimicry.AuthenticMutualLove;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.JJKShaders;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,15 +1,11 @@
 package radon.jujutsu_kaisen.client.dimension;
 
-import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
@@ -30,12 +26,12 @@ import java.util.*;
 public class JJKDimensionSpecialEffects {
     public static class DomainExpansionEffects extends DimensionSpecialEffects {
         public DomainExpansionEffects() {
-            super(Float.NaN, true, SkyType.NONE, true, false);
+            super(Float.NaN, false, SkyType.NORMAL, true, false);
         }
 
         @Override
         public boolean renderSky(@NotNull ClientLevel level, int ticks, float partialTick, @NotNull Matrix4f modelViewMatrix, @NotNull Camera camera, @NotNull Matrix4f projectionMatrix, boolean isFoggy, @NotNull Runnable setupFog) {
-            /*IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
+            IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
 
             Set<DomainInfo> domains = data.getDomains();
 
@@ -43,15 +39,7 @@ public class JJKDimensionSpecialEffects {
 
             for (DomainInfo info : domains) {
                 total += info.strength();
-            }*/
-
-            float total = 10.0F;
-
-            Minecraft mc = Minecraft.getInstance();
-
-            Set<DomainInfo> domains = new LinkedHashSet<>();
-            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.UNLIMITED_VOID.get(), total / 2));
-            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get(), total / 2));
+            }
 
             List<DomainInfo> sorted = new ArrayList<>(domains);
             sorted.sort((a, b) -> Float.compare(a.strength(), b.strength()));
@@ -119,7 +107,6 @@ public class JJKDimensionSpecialEffects {
                 VertexBuffer buffer = rendered.drawState().format().getImmediateDrawVertexBuffer();
                 buffer.bind();
                 buffer.upload(rendered);
-                VertexBuffer.unbind();
 
                 DomainRenderDispatcher.render(info.ability(), modelViewMatrix, projectionMatrix, buffer);
 

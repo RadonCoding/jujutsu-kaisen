@@ -55,7 +55,6 @@ public class DomainData implements IDomainData {
         return false;
     }
 
-    // TODO: Implement removal of domains
     @Override
     public void update(DomainExpansionEntity domain) {
         LivingEntity owner = domain.getOwner();
