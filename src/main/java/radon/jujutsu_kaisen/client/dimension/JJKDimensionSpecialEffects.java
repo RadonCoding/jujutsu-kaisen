@@ -1,24 +1,26 @@
 package radon.jujutsu_kaisen.client.dimension;
 
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.render.domain.DomainRenderDispatcher;
+import radon.jujutsu_kaisen.client.util.RenderUtil;
 import radon.jujutsu_kaisen.data.domain.DomainInfo;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -47,12 +49,28 @@ public class JJKDimensionSpecialEffects {
 
             float current = 0.0F;
 
+            int divisions = domains.size() * 16;
+
             for (DomainInfo info : sorted) {
+                Minecraft mc = Minecraft.getInstance();
+
+                Window window = mc.getWindow();
+
+                TextureTarget include = new TextureTarget(window.getWidth(), window.getHeight(), true, Minecraft.ON_OSX);
+                include.setClearColor(0.0F, 0.0F, 0.0F, 0.0F);
+                include.clear(Minecraft.ON_OSX);
+                include.copyDepthFrom(mc.getMainRenderTarget());
+
+                include.bindWrite(false);
+
+                RenderSystem.depthMask(false);
+
                 Tesselator tesselator = Tesselator.getInstance();
                 BufferBuilder builder = tesselator.getBuilder();
-                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
-                int divisions = domains.size() * 16;
+                RenderSystem.setShader(GameRenderer::getPositionShader);
+
+                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
                 for (int lat = 0; lat < divisions; lat++) {
                     float theta = lat * Mth.PI / divisions;
@@ -102,13 +120,17 @@ public class JJKDimensionSpecialEffects {
                     }
                 }
 
-                BufferBuilder.RenderedBuffer rendered = builder.end();
+                RenderUtil.drawWithShader(modelViewMatrix, projectionMatrix, builder.end());
 
-                VertexBuffer buffer = rendered.drawState().format().getImmediateDrawVertexBuffer();
-                buffer.bind();
-                buffer.upload(rendered);
+                RenderSystem.depthMask(true);
 
-                DomainRenderDispatcher.render(info.ability(), modelViewMatrix, projectionMatrix, buffer);
+                include.unbindWrite();
+                mc.getMainRenderTarget().bindWrite(false);
+
+                DomainRenderDispatcher.render(info.ability(), modelViewMatrix, projectionMatrix, include);
+
+                include.destroyBuffers();
+                mc.getMainRenderTarget().bindWrite(false);
 
                 current += info.strength();
             }

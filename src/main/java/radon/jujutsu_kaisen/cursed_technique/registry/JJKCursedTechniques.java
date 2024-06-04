@@ -111,6 +111,7 @@ public class JJKCursedTechniques {
                             JJKAbilities.WATER_TORRENT,
                             JJKAbilities.EEL_GRAPPLE
                     )
+                    .domain(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA)
                     .build());
     public static DeferredHolder<CursedTechnique, CursedTechnique> DISASTER_PLANTS = CURSED_TECHNIQUES.register("disaster_plants", () ->
             new CursedTechnique.Builder()

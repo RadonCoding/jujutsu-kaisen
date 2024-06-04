@@ -40,14 +40,6 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
 
     private List<Modifier> modifiers;
 
-    @Nullable
-    private BlockState original;
-
-    private CompoundTag deferred;
-
-    @Nullable
-    private CompoundTag saved;
-
     private int death;
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -78,49 +70,6 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
         if (pBlockEntity.death <= 0) {
             pBlockEntity.destroy();
         }
-    }
-
-    public void destroy() {
-        if (this.level == null) return;
-
-        BlockState original = this.getOriginal();
-
-        if (original != null) {
-            if (original.isAir()) {
-                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-            } else {
-                this.level.setBlockAndUpdate(this.getBlockPos(), original);
-
-                if (this.saved != null) {
-                    BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
-
-                    if (be != null) {
-                        be.loadWithComponents(this.saved, this.level.registryAccess());
-                    }
-                }
-            }
-        } else {
-            this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
-        }
-    }
-
-    @Override
-    @Nullable
-    public BlockState getOriginal() {
-        if (this.level == null) return this.original;
-
-        if (this.original == null && this.deferred != null) {
-            this.original = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), this.deferred);
-            this.deferred = null;
-            this.setChanged();
-        }
-        return this.original;
-    }
-
-    @Override
-    @Nullable
-    public CompoundTag getSaved() {
-        return this.saved;
     }
 
     public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, List<Modifier> modifiers, BlockState state, CompoundTag saved) {
@@ -170,16 +119,6 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
             }
             pTag.putInt("size", this.size);
             pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
-
-            if (this.original != null) {
-                pTag.put("original", NbtUtils.writeBlockState(this.original));
-            } else {
-                pTag.put("original", this.deferred);
-            }
-
-            if (this.saved != null) {
-                pTag.put("saved", this.saved);
-            }
         }
     }
 
@@ -200,11 +139,6 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
             }
             this.size = pTag.getInt("size");
             this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
-            this.deferred = pTag.getCompound("original");
-
-            if (pTag.contains("saved")) {
-                this.saved = pTag.getCompound("saved");
-            }
         }
 
         if (this.level != null) {

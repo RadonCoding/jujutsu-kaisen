@@ -1,12 +1,23 @@
 package radon.jujutsu_kaisen.client.util;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class RenderUtil {
+    public static void drawWithShader(Matrix4f modelViewMatrix, Matrix4f projectionMatrix, BufferBuilder.RenderedBuffer rendered) {
+        VertexBuffer vertex = rendered.drawState().format().getImmediateDrawVertexBuffer();
+        vertex.bind();
+        vertex.upload(rendered);
+        vertex.drawWithShader(modelViewMatrix, projectionMatrix, RenderSystem.getShader());
+    }
+
     public static void renderEntityInInventoryFollowsAngle(
             GuiGraphics graphics,
             int x,

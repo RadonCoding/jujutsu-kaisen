@@ -33,7 +33,7 @@ public class DomainRenderDispatcher {
 
     private static final Map<Holder<Ability>, VertexBuffer> buffers = new HashMap<>();
 
-    public static void render(Ability ability, Matrix4f modelViewStack, Matrix4f projectionMatrix, VertexBuffer mask) {
+    public static void render(Ability ability, Matrix4f modelViewStack, Matrix4f projectionMatrix, TextureTarget include) {
         Holder<Ability> holder = JJKAbilities.ABILITY_REGISTRY.getHolder(JJKAbilities.getKey(ability)).orElseThrow();
 
         DomainRenderer renderer = renderers.get(holder);
@@ -44,42 +44,17 @@ public class DomainRenderDispatcher {
             buffers.put(holder, buffer);
         }
 
-        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
 
-        // Render the mask
-        Minecraft mc = Minecraft.getInstance();
-
-        Window window = mc.getWindow();
-
-        // Create the mask target
-        TextureTarget target = new TextureTarget(window.getWidth(), window.getHeight(), true, Minecraft.ON_OSX);
-        target.setClearColor(0.0F, 0.0F, 0.0F, 0.0F);
-        target.clear(Minecraft.ON_OSX);
-        target.copyDepthFrom(mc.getMainRenderTarget());
-
-        target.bindWrite(false);
-
-        RenderSystem.setShader(GameRenderer::getPositionShader);
-
-        mask.bind();
-        mask.drawWithShader(modelViewStack, projectionMatrix, RenderSystem.getShader());
-
-        target.unbindWrite();
-        mc.getMainRenderTarget().bindWrite(false);
-
-        // Render the skybox
         RenderSystem.setShader(JJKShaders::getDomainShader);
 
         RenderSystem.setShaderTexture(0, renderer.getTexture());
-        RenderSystem.setShaderTexture(1, target.getColorTextureId());
+        RenderSystem.setShaderTexture(1, include.getColorTextureId());
 
         VertexBuffer buffer = buffers.get(holder);
         buffer.bind();
         buffer.drawWithShader(modelViewStack, projectionMatrix, RenderSystem.getShader());
 
-        target.destroyBuffers();
-        mc.getMainRenderTarget().bindWrite(false);
-
-        RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
     }
 }

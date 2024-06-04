@@ -2,4 +2,4 @@
 - Finished porting to 1.20.6
 - Domain rework (not finished)
   - Domains no longer use blocks for an illusion but instead transfer to a temporary dimension
-  - In domain clashes the skybox will be split between the clashing domains
+  - In domain clashes the skybox are split between the clashing domains
