@@ -1,11 +1,15 @@
 package radon.jujutsu_kaisen.client.dimension;
 
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
@@ -26,27 +30,12 @@ import java.util.*;
 public class JJKDimensionSpecialEffects {
     public static class DomainExpansionEffects extends DimensionSpecialEffects {
         public DomainExpansionEffects() {
-            super(Float.NaN, false, SkyType.NORMAL, true, false);
-        }
-
-        public float[] spikeVertex(float x, float y, float z, float intensity) {
-            // Normalize the position vector
-            float length = (float) Math.sqrt(x * x + y * y + z * z);
-            float nx = x / length;
-            float ny = y / length;
-            float nz = z / length;
-
-            // Move the vertex outward
-            float spikedX = x + nx * intensity;
-            float spikedY = y + ny * intensity;
-            float spikedZ = z + nz * intensity;
-
-            return new float[]{spikedX, spikedY, spikedZ};
+            super(Float.NaN, true, SkyType.NONE, true, false);
         }
 
         @Override
         public boolean renderSky(@NotNull ClientLevel level, int ticks, float partialTick, @NotNull Matrix4f modelViewMatrix, @NotNull Camera camera, @NotNull Matrix4f projectionMatrix, boolean isFoggy, @NotNull Runnable setupFog) {
-            IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
+            /*IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
 
             Set<DomainInfo> domains = data.getDomains();
 
@@ -54,7 +43,15 @@ public class JJKDimensionSpecialEffects {
 
             for (DomainInfo info : domains) {
                 total += info.strength();
-            }
+            }*/
+
+            float total = 10.0F;
+
+            Minecraft mc = Minecraft.getInstance();
+
+            Set<DomainInfo> domains = new LinkedHashSet<>();
+            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.UNLIMITED_VOID.get(), total / 2));
+            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get(), total / 2));
 
             List<DomainInfo> sorted = new ArrayList<>(domains);
             sorted.sort((a, b) -> Float.compare(a.strength(), b.strength()));
@@ -63,16 +60,9 @@ public class JJKDimensionSpecialEffects {
             float current = 0.0F;
 
             for (DomainInfo info : sorted) {
-                PoseStack pose = new PoseStack();
-
-                //float yaw = RotationUtil.getYaw(Vec3.ZERO.subtract(info.center()));
-                //pose.mulPose(Axis.YN.rotationDegrees(yaw));
-
                 Tesselator tesselator = Tesselator.getInstance();
                 BufferBuilder builder = tesselator.getBuilder();
-                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-
-                Matrix4f matrix4f = pose.last().pose();
+                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
                 int divisions = domains.size() * 16;
 
@@ -113,17 +103,13 @@ public class JJKDimensionSpecialEffects {
                         float y4 = cosTheta;
                         float z4 = sinPhi2 * sinTheta;
 
-                        builder.vertex(matrix4f, x1 * 100.0F, y1 * 100.0F, z1 * 100.0F)
-                                .color(255, 255, 255, 255)
+                        builder.vertex(x1 * 100.0F, y1 * 100.0F, z1 * 100.0F)
                                 .endVertex();
-                        builder.vertex(matrix4f, x2 * 100.0F, y2 * 100.0F, z2 * 100.0F)
-                                .color(255, 255, 255, 255)
+                        builder.vertex(x2 * 100.0F, y2 * 100.0F, z2 * 100.0F)
                                 .endVertex();
-                        builder.vertex(matrix4f, x3 * 100.0F, y3 * 100.0F, z3 * 100.0F)
-                                .color(255, 255, 255, 255)
+                        builder.vertex(x3 * 100.0F, y3 * 100.0F, z3 * 100.0F)
                                 .endVertex();
-                        builder.vertex(matrix4f, x4 * 100.0F, y4 * 100.0F, z4 * 100.0F)
-                                .color(255, 255, 255, 255)
+                        builder.vertex(x4 * 100.0F, y4 * 100.0F, z4 * 100.0F)
                                 .endVertex();
                     }
                 }
@@ -133,6 +119,7 @@ public class JJKDimensionSpecialEffects {
                 VertexBuffer buffer = rendered.drawState().format().getImmediateDrawVertexBuffer();
                 buffer.bind();
                 buffer.upload(rendered);
+                VertexBuffer.unbind();
 
                 DomainRenderDispatcher.render(info.ability(), modelViewMatrix, projectionMatrix, buffer);
 

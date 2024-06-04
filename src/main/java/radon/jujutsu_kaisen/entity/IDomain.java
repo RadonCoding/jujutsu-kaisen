@@ -10,8 +10,6 @@ import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 
 public interface IDomain extends IBarrier {
-    @Nullable Entity getCenter();
-
     @Nullable Level getInside();
 
     float getScale();

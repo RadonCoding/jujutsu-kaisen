@@ -55,21 +55,17 @@ public class DomainData implements IDomainData {
         return false;
     }
 
+    // TODO: Implement removal of domains
     @Override
     public void update(DomainExpansionEntity domain) {
         LivingEntity owner = domain.getOwner();
 
         if (owner == null) return;
 
-        Entity center = domain.getCenter();
+        DomainInfo info = new DomainInfo(owner.getUUID(), domain.getUUID(), domain.getAbility(), domain.getStrength());
+        this.domains.add(info);
 
-        if (center != null) {
-            DomainInfo info = new DomainInfo(owner.getUUID(), domain.getUUID(), domain.getAbility(), domain.getStrength(),
-                    center.position(), new Vec3(center.xOld, center.yOld, center.zOld));
-            this.domains.add(info);
-
-            PacketDistributor.sendToAllPlayers(new UpdateDomainInfoS2CPacket(this.level.dimension(), info));
-        }
+        PacketDistributor.sendToAllPlayers(new UpdateDomainInfoS2CPacket(this.level.dimension(), info));
     }
 
     @Override

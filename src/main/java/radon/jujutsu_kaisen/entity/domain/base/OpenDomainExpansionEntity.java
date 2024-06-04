@@ -178,11 +178,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
-    @Override
-    public @Nullable Entity getCenter() {
-        return this;
-    }
-
     @Nullable
     @Override
     public ServerLevel getInside() {

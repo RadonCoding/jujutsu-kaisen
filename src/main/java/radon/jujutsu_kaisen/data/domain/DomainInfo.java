@@ -21,14 +21,12 @@ import radon.jujutsu_kaisen.network.codec.JJKByteBufCodecs;
 import java.util.Objects;
 import java.util.UUID;
 
-public record DomainInfo(UUID owner, UUID identifier, Ability ability, float strength, Vec3 center, Vec3 previous) {
+public record DomainInfo(UUID owner, UUID identifier, Ability ability, float strength) {
     public static Codec<DomainInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.fieldOf("owner").forGetter(DomainInfo::owner),
             UUIDUtil.CODEC.fieldOf("identifier").forGetter(DomainInfo::identifier),
             JJKAbilities.ABILITY_REGISTRY.byNameCodec().fieldOf("ability").forGetter(DomainInfo::ability),
-            Codec.FLOAT.fieldOf("strength").forGetter(DomainInfo::strength),
-            Vec3.CODEC.fieldOf("center").forGetter(DomainInfo::center),
-            Vec3.CODEC.fieldOf("previous").forGetter(DomainInfo::previous)
+            Codec.FLOAT.fieldOf("strength").forGetter(DomainInfo::strength)
     ).apply(instance, DomainInfo::new));
     public static StreamCodec<RegistryFriendlyByteBuf, DomainInfo> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
@@ -39,10 +37,6 @@ public record DomainInfo(UUID owner, UUID identifier, Ability ability, float str
             DomainInfo::ability,
             ByteBufCodecs.FLOAT,
             DomainInfo::strength,
-            JJKByteBufCodecs.VEC3,
-            DomainInfo::center,
-            JJKByteBufCodecs.VEC3,
-            DomainInfo::previous,
             DomainInfo::new
     );
 
@@ -50,7 +44,7 @@ public record DomainInfo(UUID owner, UUID identifier, Ability ability, float str
     public boolean equals(Object obj) {
         if (!(obj instanceof DomainInfo other)) return false;
 
-        return this.identifier == other.identifier;
+        return this.identifier.equals(other.identifier);
     }
 
     @Override

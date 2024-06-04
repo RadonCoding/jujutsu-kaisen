@@ -380,11 +380,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
-    @Override
-    public @Nullable Entity getCenter() {
-        return this.getOwner();
-    }
-
     @Nullable
     @Override
     public Level getInside() {

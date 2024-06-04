@@ -329,11 +329,6 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     }
 
     @Override
-    public @Nullable Entity getCenter() {
-        return this.getOwner();
-    }
-
-    @Override
     public @org.jetbrains.annotations.Nullable ServerLevel getInside() {
         return null;
     }
