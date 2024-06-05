@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc.lightning;
 
 
+import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -76,9 +77,21 @@ public class Discharge extends Ability implements IChanneled, IDurationable {
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 3.0F, 1.0F);
 
         float radius = this.getRadius(owner);
+        int count = (int) (radius * 0.1F * Math.PI * 2);
 
-        level.sendParticles(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner), radius, 8),
-                owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+        Vec3 center = owner.position().add(0.0D, owner.getBbHeight() / 2.0F, 0.0D);
+
+        for (int i = 0; i < count; i++) {
+            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2.0D;
+            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+
+            Vec3 direction = new Vec3(Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi));
+            Vec3 offset = center.add(direction.multiply(owner.getBbWidth() / 2.0F, owner.getBbHeight() / 2.0F, owner.getBbWidth() / 2.0F));
+
+            level.sendParticles(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner),
+                            direction, radius, 4), offset.x, offset.y, offset.z, 0,
+                    0.0D, 0.0D, 0.0D, 0.0D);
+        }
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), radius, radius, radius))) {
             if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) continue;

@@ -34,6 +34,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import radon.jujutsu_kaisen.client.render.entity.effect.BoltEffect;
 import radon.jujutsu_kaisen.client.render.entity.effect.BoltRenderer;
+import radon.jujutsu_kaisen.network.codec.JJKByteBufCodecs;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.Locale;
@@ -41,12 +42,16 @@ import java.util.Locale;
 public class EmittingLightningParticle extends TextureSheetParticle {
     private final Vector3f color;
 
+    private final Vec3 direction;
+
     private final BoltRenderer renderer;
 
     protected EmittingLightningParticle(ClientLevel pLevel, double pX, double pY, double pZ, Options options) {
         super(pLevel, pX, pY, pZ);
 
         this.color = options.color();
+
+        this.direction = options.direction();
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
@@ -64,8 +69,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         PoseStack pose = new PoseStack();
 
         Vec3 offset = this.getPos()
-                .add(RotationUtil.calculateViewVector((this.random.nextFloat() - 0.5F) * 360.0F, (this.random.nextFloat() - 0.5F) * 360.0F)
-                .scale(this.random.nextFloat() * this.quadSize));
+                .add(this.direction.scale(this.random.nextFloat() * this.quadSize));
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
         double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
@@ -84,7 +88,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
                 .size(0.05F)
                 .lifespan(this.lifetime - this.age)
                 .fade(BoltEffect.FadeFunction.fade(0.5F))
-                .spawn(BoltEffect.SpawnFunction.noise(0.5F, 0.25F));
+                .spawn(BoltEffect.SpawnFunction.CONSECUTIVE);
         this.renderer.update(null, bolt, pPartialTicks);
         pose.translate(-this.x, -this.y, -this.z);
         this.renderer.render(pPartialTicks, pose, Minecraft.getInstance().renderBuffers().bufferSource());
@@ -98,10 +102,11 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         return ParticleRenderType.CUSTOM;
     }
 
-    public record Options(Vector3f color, float scalar, int lifetime) implements ParticleOptions {
+    public record Options(Vector3f color, Vec3 direction, float scalar, int lifetime) implements ParticleOptions {
         public static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec(
                 builder -> builder.group(
                                 ExtraCodecs.VECTOR3F.fieldOf("color").forGetter(options -> options.color),
+                                Vec3.CODEC.fieldOf("direction").forGetter(options -> options.direction),
                                 Codec.FLOAT.fieldOf("scalar").forGetter(options -> options.scalar),
                                 Codec.INT.fieldOf("lifetime").forGetter(options -> options.lifetime)
                         )
@@ -110,6 +115,8 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         public static final StreamCodec<RegistryFriendlyByteBuf, Options> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.VECTOR3F,
                 Options::color,
+                JJKByteBufCodecs.VEC3,
+                Options::direction,
                 ByteBufCodecs.FLOAT,
                 Options::scalar,
                 ByteBufCodecs.INT,

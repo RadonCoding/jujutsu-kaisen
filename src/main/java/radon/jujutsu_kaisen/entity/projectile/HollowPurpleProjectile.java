@@ -249,9 +249,15 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
-        for (int i = 0; i < 4; i++) {
-            this.level().addParticle(new EmittingLightningParticle.Options(ParticleColors.LIGHT_PURPLE, radius * 1.25F, 8),
-                    true, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
+        for (int i = 0; i < count / 2; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            Vec3 direction = new Vec3(Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi));
+            Vec3 offset = center.add(direction.scale(radius * 0.25F));
+
+            this.level().addParticle(new EmittingLightningParticle.Options(ParticleColors.LIGHT_PURPLE, direction, radius, 8),
+                    true, offset.x, offset.y, offset.z, 0.0D, 0.0D, 0.0D);
         }
     }
 
