@@ -77,10 +77,8 @@ public class Discharge extends Ability implements IChanneled, IDurationable {
 
         float radius = this.getRadius(owner);
 
-        for (int i = 0; i < 4; i++) {
-            level.sendParticles(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner), radius, 1),
-                    owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
-        }
+        level.sendParticles(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner), radius, 8),
+                owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), radius, radius, radius))) {
             if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) continue;

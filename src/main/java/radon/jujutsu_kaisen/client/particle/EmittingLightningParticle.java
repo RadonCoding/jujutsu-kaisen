@@ -82,9 +82,9 @@ public class EmittingLightningParticle extends TextureSheetParticle {
                 new Vector4f(this.color.x, this.color.y, this.color.z, 0.8F), 1.8F);
         BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end) * 100)))
                 .size(0.05F)
-                .lifespan(1)
-                .fade(BoltEffect.FadeFunction.NONE)
-                .spawn(BoltEffect.SpawnFunction.NO_DELAY);
+                .lifespan(this.lifetime - this.age)
+                .fade(BoltEffect.FadeFunction.fade(0.5F))
+                .spawn(BoltEffect.SpawnFunction.noise(0.5F, 0.25F));
         this.renderer.update(null, bolt, pPartialTicks);
         pose.translate(-this.x, -this.y, -this.z);
         this.renderer.render(pPartialTicks, pose, Minecraft.getInstance().renderBuffers().bufferSource());

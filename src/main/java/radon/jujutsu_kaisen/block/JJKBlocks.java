@@ -64,7 +64,8 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel(pState -> 14)
                     .noLootTable()
-                    .sound(SoundType.GLASS)));
+                    .sound(SoundType.GLASS)
+                    .noTerrainParticles()));
     public static DeferredHolder<Block, DomainAirBlock> DOMAIN_AIR = BLOCKS.register("domain_air", () ->
             new DomainAirBlock(BlockBehaviour.Properties.of()
                     .lightLevel(pState -> 14)

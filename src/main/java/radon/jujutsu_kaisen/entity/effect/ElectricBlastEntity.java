@@ -85,29 +85,10 @@ public class ElectricBlastEntity extends JujutsuProjectile {
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        for (int i = 0; i < radius * 4; i++) {
+        for (int i = 0; i < radius; i++) {
             this.level().addParticle(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner),
-                            radius * this.random.nextFloat(), 1), center.x, center.y, center.z,
+                            radius * this.random.nextFloat(), 8), center.x, center.y, center.z,
                     0.0D, 0.0D, 0.0D);
-        }
-
-        for (int i = 0; i < radius * 4; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 4.0F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 4.0F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 4.0F * Math.cos(phi);
-
-            double x = center.x + xOffset * 0.1F;
-            double y = center.y + yOffset * 0.1F;
-            double z = center.z + zOffset * 0.1F;
-
-            Vec3 offset = new Vec3(x, y, z);
-
-            this.level().addParticle(new TravelParticle.Options(offset.toVector3f(), ParticleColors.getCursedEnergyColorBright(owner),
-                            radius * 0.1F, 1.0F, true, 5), true,
-                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
     }
 }

@@ -66,19 +66,19 @@ public class BoltEffect {
     }
 
     public int getLifespan() {
-        return lifespan;
+        return this.lifespan;
     }
 
     public SpawnFunction getSpawnFunction() {
-        return spawnFunction;
+        return this.spawnFunction;
     }
 
     public FadeFunction getFadeFunction() {
-        return fadeFunction;
+        return this.fadeFunction;
     }
 
     public Vector4f getColor() {
-        return renderInfo.color;
+        return this.renderInfo.color;
     }
 
     public List<BoltQuads> generate() {
@@ -233,13 +233,14 @@ public class BoltEffect {
 
     public interface SpawnFunction {
         /** Allow for bolts to be spawned each update call without any delay. */
-        SpawnFunction NO_DELAY = (rand) -> Pair.of(0F, 0F);
+        SpawnFunction NO_DELAY = (rand) -> Pair.of(0.0F, 0.0F);
         /** Will re-spawn a bolt each time one expires. */
         SpawnFunction CONSECUTIVE = new SpawnFunction() {
             @Override
             public Pair<Float, Float> getSpawnDelayBounds(Random rand) {
-                return Pair.of(0F, 0F);
+                return Pair.of(0.0F, 0.0F);
             }
+
             @Override
             public boolean isConsecutive() {
                 return true;

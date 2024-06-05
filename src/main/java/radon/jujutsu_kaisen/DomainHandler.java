@@ -40,6 +40,7 @@ public class DomainHandler {
                 Optional.empty(), registry.getHolderOrThrow(JJKBiomes.TEMPORARY), List.of()
         );
         settings.getLayersInfo().add(new FlatLayerInfo(1, JJKBlocks.DOMAIN_FLOOR.get()));
+        settings.updateLayers();
 
         ServerLevel inside = DimensionManager.create(level.getServer(), JJKDimensionTypes.DOMAIN_EXPANSION, settings);
 
