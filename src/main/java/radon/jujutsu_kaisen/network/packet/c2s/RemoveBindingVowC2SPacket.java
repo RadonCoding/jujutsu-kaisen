@@ -1,8 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
-import net.minecraft.network.FriendlyByteBuf;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,8 +16,6 @@ import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.contract.IContractData;
-
-import javax.naming.Binding;
 
 public record RemoveBindingVowC2SPacket(BindingVow vow) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<RemoveBindingVowC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "remove_binding_vow_serverbound"));

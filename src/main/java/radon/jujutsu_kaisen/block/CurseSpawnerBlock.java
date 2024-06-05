@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.block;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -20,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
+import radon.jujutsu_kaisen.data.DataProvider;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
@@ -31,6 +35,7 @@ import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class CurseSpawnerBlock extends Block implements EntityBlock {
     public static final BooleanProperty IS_BOSS = BooleanProperty.create("is_boss");
@@ -41,11 +46,13 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
     @Override
     public void tick(@NotNull BlockState pState, @NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
-        IMissionLevelData data = pLevel.getData(JJKAttachmentTypes.MISSION_LEVEL);
+        Optional<IMissionLevelData> data = DataProvider.getDataIfPresent(pLevel, JJKAttachmentTypes.MISSION_LEVEL);
+
+        if (data.isEmpty()) return;
 
         if (!(pLevel.getBlockEntity(pPos) instanceof CurseSpawnerBlockEntity be)) return;
 
-        Mission mission = data.getMission(be.getPos());
+        Mission mission = data.get().getMission(be.getPos());
 
         if (mission == null) return;
 

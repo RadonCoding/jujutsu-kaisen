@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.cursed_technique;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.Holder;
 
 import net.minecraft.network.chat.Component;

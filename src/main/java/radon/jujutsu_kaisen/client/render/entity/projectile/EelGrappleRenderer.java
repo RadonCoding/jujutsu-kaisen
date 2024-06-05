@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.entity.projectile;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.renderer.culling.Frustum;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;

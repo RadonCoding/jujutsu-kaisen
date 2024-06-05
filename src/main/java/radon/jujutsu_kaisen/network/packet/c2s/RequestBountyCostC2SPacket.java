@@ -1,8 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
-import net.minecraft.network.FriendlyByteBuf;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,11 +17,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.menu.BountyMenu;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.util.SorcererUtil;
-
-import java.nio.charset.Charset;
 
 public record RequestBountyCostC2SPacket(String name) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<RequestBountyCostC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "request_bounty_cost_serverbound"));

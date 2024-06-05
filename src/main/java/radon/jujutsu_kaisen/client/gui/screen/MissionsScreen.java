@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameNarrator;
@@ -17,9 +17,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ScrollableSlider;
 import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
@@ -95,12 +96,14 @@ public class MissionsScreen extends Screen {
 
         this.cards.clear();
 
-        IMissionLevelData data = this.minecraft.level.getData(JJKAttachmentTypes.MISSION_LEVEL);
+        Optional<IMissionLevelData> data = DataProvider.getDataIfPresent(this.minecraft.level, JJKAttachmentTypes.MISSION_LEVEL);
 
-        Set<Mission> missions = data.getMissions();
+        if (data.isEmpty()) return;
+
+        Set<Mission> missions = data.get().getMissions();
 
         for (Mission mission : missions) {
-            if (data.isTaken(mission)) continue;
+            if (data.get().isTaken(mission)) continue;
 
             MissionCard card = new MissionCard(this.minecraft, mission);
 
@@ -220,12 +223,14 @@ public class MissionsScreen extends Screen {
 
         this.cards.clear();
 
-        IMissionLevelData levelData = this.minecraft.level.getData(JJKAttachmentTypes.MISSION_LEVEL);
+        Optional<IMissionLevelData> levelData = DataProvider.getDataIfPresent(this.minecraft.level, JJKAttachmentTypes.MISSION_LEVEL);
 
-        Set<Mission> missions = levelData.getMissions();
+        if (levelData.isEmpty()) return;
+
+        Set<Mission> missions = levelData.get().getMissions();
 
         for (Mission mission : missions) {
-            if (levelData.isTaken(mission)) continue;
+            if (levelData.get().isTaken(mission)) continue;
 
             this.cards.add(new MissionCard(this.minecraft, mission));
         }

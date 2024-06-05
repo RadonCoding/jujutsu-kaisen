@@ -1,9 +1,9 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
@@ -14,9 +14,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
+import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.domain.DomainInfo;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
+
+import java.util.Optional;
 
 public record UpdateDomainInfoS2CPacket(ResourceKey<Level> dimension, DomainInfo info) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<UpdateDomainInfoS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "update_domain_info_clientbound"));
@@ -36,8 +40,11 @@ public record UpdateDomainInfoS2CPacket(ResourceKey<Level> dimension, DomainInfo
 
             if (player.level().dimension() != this.dimension) return;
 
-            IDomainData data = player.level().getData(JJKAttachmentTypes.DOMAIN);
-            data.update(this.info);
+            Optional<IDomainData> data = DataProvider.getDataIfPresent(player.level(), JJKAttachmentTypes.DOMAIN);
+
+            if (data.isEmpty()) return;
+
+            data.get().update(this.info);
         });
     }
 

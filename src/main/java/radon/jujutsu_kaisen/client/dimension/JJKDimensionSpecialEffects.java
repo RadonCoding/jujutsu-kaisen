@@ -1,23 +1,23 @@
 package radon.jujutsu_kaisen.client.dimension;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.render.domain.DomainRenderDispatcher;
 import radon.jujutsu_kaisen.client.util.RenderUtil;
+import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.domain.DomainInfo;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
@@ -33,9 +33,11 @@ public class JJKDimensionSpecialEffects {
 
         @Override
         public boolean renderSky(@NotNull ClientLevel level, int ticks, float partialTick, @NotNull Matrix4f modelViewMatrix, @NotNull Camera camera, @NotNull Matrix4f projectionMatrix, boolean isFoggy, @NotNull Runnable setupFog) {
-            IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
+            Optional<IDomainData> data = DataProvider.getDataIfPresent(level, JJKAttachmentTypes.DOMAIN);
 
-            Set<DomainInfo> domains = data.getDomains();
+            if (data.isEmpty()) return true;
+
+            Set<DomainInfo> domains = data.get().getDomains();
 
             float total = 0.0F;
 

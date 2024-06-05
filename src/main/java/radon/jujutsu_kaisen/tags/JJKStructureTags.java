@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.tags;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.registries.Registries;

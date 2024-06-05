@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;

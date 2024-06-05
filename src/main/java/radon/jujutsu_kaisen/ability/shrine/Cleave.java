@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -17,7 +17,6 @@ import radon.jujutsu_kaisen.ability.IAttack;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IDomainAttack;
 import radon.jujutsu_kaisen.ability.IToggled;
-import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -83,7 +82,7 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
             data.delayTickEvent(() -> {
                 if (!target.isDeadOrDying()) {
                     level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
-                            0.0D, 0.0D, 1.0D);
+                            0.0D, 0.0D, 2.0D);
 
                     Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                     Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbWidth(),

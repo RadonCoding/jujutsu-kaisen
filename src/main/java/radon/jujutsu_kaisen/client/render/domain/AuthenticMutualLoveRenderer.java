@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.render.domain;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.resources.ResourceLocation;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 

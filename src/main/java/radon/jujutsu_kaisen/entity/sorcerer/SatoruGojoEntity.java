@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 

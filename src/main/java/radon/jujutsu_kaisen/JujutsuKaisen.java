@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;

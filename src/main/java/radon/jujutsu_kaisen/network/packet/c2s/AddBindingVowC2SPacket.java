@@ -1,9 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.FriendlyByteBuf;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,10 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.binding_vow.BindingVow;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.pact.JJKPacts;
 
 public record AddBindingVowC2SPacket(BindingVow vow) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<AddBindingVowC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "add_binding_vow_serverbound"));

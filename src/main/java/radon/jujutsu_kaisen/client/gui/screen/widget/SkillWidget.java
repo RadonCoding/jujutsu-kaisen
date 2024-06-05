@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen.widget;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.client.Minecraft;
@@ -18,12 +18,10 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.DisplayInfo;
 import radon.jujutsu_kaisen.client.gui.screen.tab.SkillsTab;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.network.PacketHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.IncreaseSkillC2SPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;

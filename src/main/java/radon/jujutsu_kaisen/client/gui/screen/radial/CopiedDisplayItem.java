@@ -1,23 +1,15 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.network.PacketDistributor;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
-import radon.jujutsu_kaisen.client.util.RenderUtil;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.network.packet.c2s.UncopyC2SPacket;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CopiedDisplayItem extends CursedTechniqueDisplayItem {
     public CopiedDisplayItem(Minecraft minecraft, RadialScreen screen, Runnable select, CursedTechnique technique) {

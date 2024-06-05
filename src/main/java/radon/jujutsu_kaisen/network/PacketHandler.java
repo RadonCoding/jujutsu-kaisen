@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.network;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -46,8 +48,10 @@ public class PacketHandler {
         registrar.playToClient(SyncMissionLevelDataS2CPacket.TYPE, SyncMissionLevelDataS2CPacket.STREAM_CODEC, SyncMissionLevelDataS2CPacket::handle);
         registrar.playToClient(SyncMissionS2CPacket.TYPE, SyncMissionS2CPacket.STREAM_CODEC, SyncMissionS2CPacket::handle);
         registrar.playToClient(AddDimensionS2CPacket.TYPE, AddDimensionS2CPacket.STREAM_CODEC, AddDimensionS2CPacket::handle);
+        registrar.playToClient(RemoveDimensionS2CPacket.TYPE, RemoveDimensionS2CPacket.STREAM_CODEC, RemoveDimensionS2CPacket::handle);
         registrar.playToClient(SyncDomainDataS2CPacket.TYPE, SyncDomainDataS2CPacket.STREAM_CODEC, SyncDomainDataS2CPacket::handle);
         registrar.playToClient(UpdateDomainInfoS2CPacket.TYPE, UpdateDomainInfoS2CPacket.STREAM_CODEC, UpdateDomainInfoS2CPacket::handle);
+        registrar.playToClient(RemoveDomainInfoS2CPacket.TYPE, RemoveDomainInfoS2CPacket.STREAM_CODEC, RemoveDomainInfoS2CPacket::handle);
 
         // Serverbound packets
         registrar.playToServer(TriggerAbilityC2SPacket.TYPE, TriggerAbilityC2SPacket.STREAM_CODEC, TriggerAbilityC2SPacket::handle);

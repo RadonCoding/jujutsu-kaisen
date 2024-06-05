@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.server.level.ServerLevel;

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.data.domain;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.UUIDUtil;

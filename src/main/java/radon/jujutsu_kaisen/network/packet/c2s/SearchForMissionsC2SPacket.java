@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
@@ -65,7 +68,9 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
         ctx.enqueueWork(() -> {
             if (!(ctx.player() instanceof ServerPlayer sender)) return;
 
-            IMissionLevelData data = sender.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
+            Optional<IMissionLevelData> data = DataProvider.getDataIfPresent(sender.level(), JJKAttachmentTypes.MISSION_LEVEL);
+
+            if (data.isEmpty()) return;
 
             Optional<HolderSet.Named<Structure>> optional = sender.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION);
 
@@ -103,10 +108,10 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
                             if (start == null) continue;
 
-                            if (data.isRegistered(pos)) continue;
+                            if (data.get().isRegistered(pos)) continue;
 
                             RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                            data.register(HelperMethods.randomEnum(MissionType.class, random),
+                            data.get().register(HelperMethods.randomEnum(MissionType.class, random),
                                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
                                     new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
                             found++;
@@ -147,10 +152,10 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
                                         BlockPos pos = spread.getLocatePos(start.getChunkPos());
 
-                                        if (data.isRegistered(pos)) continue;
+                                        if (data.get().isRegistered(pos)) continue;
 
                                         RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                                        data.register(HelperMethods.randomEnum(MissionType.class, random),
+                                        data.get().register(HelperMethods.randomEnum(MissionType.class, random),
                                                 HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
                                                 new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
                                         found++;
@@ -163,7 +168,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
             }
 
             if (found > 0) {
-                PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), data.serializeNBT(sender.registryAccess())));
+                PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), data.get().serializeNBT(sender.registryAccess())));
             }
         });
     }

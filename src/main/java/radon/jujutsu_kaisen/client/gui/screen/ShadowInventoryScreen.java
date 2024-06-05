@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.client.gui.screen.radial.DisplayItem;
 import radon.jujutsu_kaisen.client.gui.screen.radial.ItemStackDisplayItem;

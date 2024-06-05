@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.level.block.Blocks;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;

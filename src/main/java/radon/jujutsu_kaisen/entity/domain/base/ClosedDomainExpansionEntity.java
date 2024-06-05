@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.domain.base;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +41,7 @@ import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.ISimpleDomain;
 import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.network.packet.s2c.RemoveDomainInfoS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -155,7 +158,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             saved = existing.saveWithFullMetadata(this.registryAccess());
         }
 
-        Block block = distance < radius - 1 ? JJKBlocks.DOMAIN_AIR.get() : JJKBlocks.DOMAIN.get();
+        Block block = state.getCollisionShape(this.level(), pos).isEmpty() ? JJKBlocks.DOMAIN_AIR.get() : JJKBlocks.DOMAIN.get();
 
         if (distance >= radius - 1) {
             block = JJKBlocks.DOMAIN.get();
@@ -374,7 +377,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 data.update(this);
 
                 for (Entity entity : this.level().getEntities(this, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
-                    entity.teleportTo(level, entity.getX(), entity.getY(), entity.getZ(), Set.of(), 0.0F, 0.0F);
+                    data.addSpawn(entity.getUUID(), entity.position());
+
+                    entity.teleportTo(level, entity.getX(), 1.0D, entity.getZ(), Set.of(), 0.0F, 0.0F);
                 }
             }
         }

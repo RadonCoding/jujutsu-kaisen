@@ -1,11 +1,9 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
-import net.minecraft.world.entity.PathfinderMob;
-import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.IClosedDomain;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
-import net.minecraft.core.BlockPos;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.ability.IClosedDomain;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -13,9 +11,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceKey;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
@@ -46,5 +48,13 @@ public class ClientWrapper {
         if (player == null) return;
 
         player.connection.levels().add(key);
+    }
+
+    public static void removeDimension(ResourceKey<Level> key) {
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player == null) return;
+
+        player.connection.levels().remove(key);
     }
 }

@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -10,7 +10,6 @@ import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Transformation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;

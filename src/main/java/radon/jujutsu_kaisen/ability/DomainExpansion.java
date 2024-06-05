@@ -1,38 +1,43 @@
 package radon.jujutsu_kaisen.ability;
 
+
+import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.VeilHandler;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.event.LivingHitByDomainEvent;
+import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
+
+import java.util.Optional;
 
 public abstract class DomainExpansion extends Ability implements IToggled {
     public static final int BURNOUT = 10 * 20;
@@ -49,9 +54,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return true;
-
-        /*if (target == null || target.isDeadOrDying()) return false;
+        if (target == null || target.isDeadOrDying()) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -99,7 +102,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
                 }
             }
             return result;
-        }*/
+        }
     }
 
     @Override
@@ -121,14 +124,9 @@ public abstract class DomainExpansion extends Ability implements IToggled {
         ISorcererData sorcererData = cap.getSorcererData();
 
         if (sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
-            boolean valid = false;
+            Optional<IDomainData> domainData = DataProvider.getDataIfPresent(owner.level(), JJKAttachmentTypes.DOMAIN);
 
-            if (owner.level().hasData(JJKAttachmentTypes.DOMAIN)) {
-                IDomainData domainData = owner.level().getData(JJKAttachmentTypes.DOMAIN);
-                valid = domainData.hasDomain(owner.getUUID());
-            }
-
-            if (valid) return Status.FAILURE;
+            if (domainData.isPresent() && domainData.get().hasDomain(owner.getUUID())) return Status.FAILURE;
         }
 
         return super.isTriggerable(owner);
@@ -143,14 +141,9 @@ public abstract class DomainExpansion extends Ability implements IToggled {
         ISorcererData sorcererData = cap.getSorcererData();
 
         if (!sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
-            boolean valid = false;
+            Optional<IDomainData> domainData = DataProvider.getDataIfPresent(owner.level(), JJKAttachmentTypes.DOMAIN);
 
-            if (owner.level().hasData(JJKAttachmentTypes.DOMAIN)) {
-                IDomainData domainData = owner.level().getData(JJKAttachmentTypes.DOMAIN);
-                valid = domainData.hasDomain(owner.getUUID());
-            }
-
-            if (!valid) return Status.FAILURE;
+            if (domainData.isEmpty() || !domainData.get().hasDomain(owner.getUUID())) return Status.FAILURE;
         }
         return super.isStillUsable(owner);
     }

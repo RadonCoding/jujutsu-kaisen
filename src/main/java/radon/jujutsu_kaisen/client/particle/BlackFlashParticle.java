@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.particle;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.renderer.LightTexture;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 

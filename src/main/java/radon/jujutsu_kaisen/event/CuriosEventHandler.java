@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.event;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import net.neoforged.neoforge.common.util.TriState;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,12 +16,11 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -45,7 +46,7 @@ public class CuriosEventHandler {
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 
         if (event.getSlotContext().identifier().equals("right_hand") || event.getSlotContext().identifier().equals("left_hand")) {
-            event.setResult(Event.Result.ALLOW);
+            event.setEquipResult(TriState.TRUE);
         }
     }
 

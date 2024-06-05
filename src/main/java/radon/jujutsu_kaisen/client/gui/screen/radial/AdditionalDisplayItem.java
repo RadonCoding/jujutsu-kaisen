@@ -1,18 +1,15 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.network.packet.c2s.RemoveAdditionalC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.SetAdditionalC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.UncopyC2SPacket;
 
 public class AdditionalDisplayItem extends CursedTechniqueDisplayItem {
     public AdditionalDisplayItem(Minecraft minecraft, RadialScreen screen, Runnable select, CursedTechnique technique) {

@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.client.particle;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -52,8 +55,8 @@ public class EmittingLightningParticle extends TextureSheetParticle {
     }
 
     @Override
-    public boolean shouldCull() {
-        return false;
+    public @NotNull AABB getBoundingBox() {
+        return AABB.ofSize(this.getPos(), this.quadSize, this.quadSize, this.quadSize);
     }
 
     @Override

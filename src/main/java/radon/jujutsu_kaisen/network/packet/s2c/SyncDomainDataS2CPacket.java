@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
-import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 
 public record SyncDomainDataS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt) implements CustomPacketPayload {

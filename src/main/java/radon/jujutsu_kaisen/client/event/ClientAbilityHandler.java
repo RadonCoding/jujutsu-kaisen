@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.event;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.client.gui.screen.radial.AbilityScreen;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -28,9 +30,9 @@ import radon.jujutsu_kaisen.ability.ITransformation;
 import radon.jujutsu_kaisen.client.gui.screen.radial.DomainScreen;
 import radon.jujutsu_kaisen.client.gui.screen.radial.MeleeScreen;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.JJKKeys;

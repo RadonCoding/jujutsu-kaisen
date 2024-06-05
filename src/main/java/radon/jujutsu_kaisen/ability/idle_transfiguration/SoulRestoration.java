@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.particles.ParticleTypes;

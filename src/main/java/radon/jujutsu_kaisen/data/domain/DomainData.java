@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.data.domain;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -14,11 +16,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
+import radon.jujutsu_kaisen.DimensionManager;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncDomainDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.RemoveDomainInfoS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.UpdateDomainInfoS2CPacket;
 
 import java.util.*;
@@ -29,12 +29,44 @@ public class DomainData implements IDomainData {
 
     private final Set<DomainInfo> domains;
 
+    private final Map<UUID, Vec3> spawns;
+
     private final Level level;
 
     public DomainData(Level level) {
         this.level = level;
 
         this.domains = new LinkedHashSet<>();
+        this.spawns = new HashMap<>();
+    }
+
+    @Override
+    public void tick() {
+        if (!(this.level instanceof ServerLevel serverLevel)) return;
+
+        if (this.original == null) return;
+
+        ServerLevel original = serverLevel.getServer().getLevel(this.original);
+
+        if (original == null) return;
+
+        this.domains.removeIf(info -> !(original.getEntity(info.identifier()) instanceof DomainExpansionEntity domain)
+                || domain.isRemoved());
+
+        if (this.domains.isEmpty()) {
+            Iterable<Entity> entities = serverLevel.getEntities().getAll();
+
+            for (Entity entity : entities) {
+                UUID identifier = entity.getUUID();
+
+                if (!this.spawns.containsKey(identifier)) continue;
+
+                Vec3 pos = this.spawns.get(identifier);
+
+                entity.teleportTo(original, pos.x, pos.y, pos.z, Set.of(), entity.getYRot(), entity.getXRot());
+            }
+            DimensionManager.remove(serverLevel);
+        }
     }
 
     @Override
@@ -43,7 +75,7 @@ public class DomainData implements IDomainData {
     }
 
     @Override
-    public void init(ResourceKey<Level> original) {
+    public void setOriginal(@Nullable ResourceKey<Level> original) {
         this.original = original;
     }
 
@@ -73,8 +105,20 @@ public class DomainData implements IDomainData {
     }
 
     @Override
+    public void remove(UUID identifier) {
+        this.domains.removeIf(info -> info.identifier().equals(identifier));
+
+        PacketDistributor.sendToAllPlayers(new RemoveDomainInfoS2CPacket(this.level.dimension(), identifier));
+    }
+
+    @Override
     public Set<DomainInfo> getDomains() {
         return this.domains;
+    }
+
+    @Override
+    public void addSpawn(UUID identifier, Vec3 pos) {
+        this.spawns.put(identifier, pos);
     }
 
     @Override
@@ -93,6 +137,16 @@ public class DomainData implements IDomainData {
         }
         nbt.put("domains", domainsTag);
 
+        ListTag spawnsTag = new ListTag();
+
+        for (Map.Entry<UUID, Vec3> entry : this.spawns.entrySet()) {
+            CompoundTag data = new CompoundTag();
+            data.putUUID("identifier", entry.getKey());
+            data.put("spawn", Vec3.CODEC.encodeStart(NbtOps.INSTANCE, entry.getValue()).getOrThrow());
+            spawnsTag.add(data);
+        }
+        nbt.put("spawns", spawnsTag);
+
         return nbt;
     }
 
@@ -104,8 +158,16 @@ public class DomainData implements IDomainData {
 
         this.domains.clear();
 
-        for (Tag tag : nbt.getList("domains", Tag.TAG_COMPOUND)) {
-            this.domains.add(DomainInfo.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow());
+        for (Tag key : nbt.getList("domains", Tag.TAG_COMPOUND)) {
+            this.domains.add(DomainInfo.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), key).getOrThrow());
+        }
+
+        this.spawns.clear();
+
+        for (Tag key : nbt.getList("spawns", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+            this.spawns.put(data.getUUID("identifier"), Vec3.CODEC.parse(NbtOps.INSTANCE,
+                    data.get("spawn")).getOrThrow());
         }
     }
 }

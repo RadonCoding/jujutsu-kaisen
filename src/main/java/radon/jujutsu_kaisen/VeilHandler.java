@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +14,7 @@ import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.IBarrier;
@@ -45,14 +46,18 @@ public class VeilHandler {
             }
         }
 
-        if (level.hasData(JJKAttachmentTypes.DOMAIN)) {
-            IDomainData data = level.getData(JJKAttachmentTypes.DOMAIN);
+        Optional<IDomainData> data = DataProvider.getDataIfPresent(level, JJKAttachmentTypes.DOMAIN);
 
-            ServerLevel original = level.getServer().getLevel(data.getOriginal());
+        if (data.isPresent()) {
+            ResourceKey<Level> key = data.get().getOriginal();
 
-            if (original != null) {
-                result.addAll(getBarriers(original, BlockPos.containing(target.getCenter().scale(original.dimensionType().coordinateScale() /
-                        level.dimensionType().coordinateScale()))));
+            if (key != null) {
+                ServerLevel original = level.getServer().getLevel(key);
+
+                if (original != null) {
+                    result.addAll(getBarriers(original, BlockPos.containing(target.getCenter().scale(original.dimensionType().coordinateScale() /
+                            level.dimensionType().coordinateScale()))));
+                }
             }
         }
         return result;

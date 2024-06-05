@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;

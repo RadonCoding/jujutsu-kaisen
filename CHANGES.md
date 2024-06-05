@@ -3,3 +3,4 @@
 - Domain rework (not finished)
   - Domains no longer use blocks for an illusion but instead transfer to a temporary dimension
   - In domain clashes the skybox are split between the clashing domains
+  - Added entity handling inside domain dimension

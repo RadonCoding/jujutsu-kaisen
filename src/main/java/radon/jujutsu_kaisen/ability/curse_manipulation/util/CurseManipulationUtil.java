@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation.util;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;

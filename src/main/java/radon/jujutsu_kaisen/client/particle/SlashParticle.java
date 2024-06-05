@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.client.particle;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -35,6 +38,8 @@ public class SlashParticle extends TextureSheetParticle {
     private Entity entity;
 
     private float roll;
+
+    @Nullable
     private Vec3 offset;
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/dismantle.png");
@@ -50,8 +55,10 @@ public class SlashParticle extends TextureSheetParticle {
     }
 
     @Override
-    public boolean shouldCull() {
-        return false;
+    public @NotNull AABB getBoundingBox() {
+        if (this.offset == null) return super.getBoundingBox();
+
+        return AABB.ofSize(this.offset, this.quadSize, this.quadSize, this.quadSize);
     }
 
     @Override
@@ -100,28 +107,28 @@ public class SlashParticle extends TextureSheetParticle {
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
         Matrix4f pose = stack.last().pose();
 
-        consumer.vertex(pose, -this.quadSize, 0.0F, -1.0F)
+        consumer.vertex(pose, -this.quadSize / 2.0F, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, -this.quadSize, 0.0F, 1.0F)
+        consumer.vertex(pose, -this.quadSize / 2.0F, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, this.quadSize, 0.0F, 1.0F)
+        consumer.vertex(pose, this.quadSize / 2.0F, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, this.quadSize, 0.0F, -1.0F)
+        consumer.vertex(pose, this.quadSize / 2.0F, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)

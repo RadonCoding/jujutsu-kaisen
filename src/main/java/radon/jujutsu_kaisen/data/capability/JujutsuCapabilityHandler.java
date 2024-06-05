@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.data.capability;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -16,7 +16,8 @@ import radon.jujutsu_kaisen.entity.ISorcerer;
 
 @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class JujutsuCapabilityHandler {
-    public static final EntityCapability<IJujutsuCapability, Void> INSTANCE = EntityCapability.create(new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu"), IJujutsuCapability.class, void.class);
+    public static final EntityCapability<IJujutsuCapability, Void> INSTANCE = EntityCapability.create(new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu_entity")
+            , IJujutsuCapability.class, void.class);
 
     @SubscribeEvent
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {

@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,14 +12,17 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.DataProvider;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
+
+import java.util.Optional;
 
 public record AcceptMissionC2SPacket(BlockPos pos) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<AcceptMissionC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "accept_mission_serverbound"));
@@ -41,19 +44,21 @@ public record AcceptMissionC2SPacket(BlockPos pos) implements CustomPacketPayloa
 
             if (entityData.getMission() != null) return;
 
-            IMissionLevelData levelData = sender.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
+            Optional<IMissionLevelData> levelData = DataProvider.getDataIfPresent(sender.level(), JJKAttachmentTypes.MISSION_LEVEL);
 
-            Mission mission = levelData.getMission(this.pos);
+            if (levelData.isEmpty()) return;
+
+            Mission mission = levelData.get().getMission(this.pos);
 
             if (mission == null) return;
 
-            if (levelData.isTaken(mission)) return;
+            if (levelData.get().isTaken(mission)) return;
 
             entityData.setMission(mission);
 
-            levelData.setTaken(mission, sender.getUUID());
+            levelData.get().setTaken(mission, sender.getUUID());
 
-            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), levelData.serializeNBT(sender.registryAccess())));
+            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), levelData.get().serializeNBT(sender.registryAccess())));
 
             Vec3 pos = this.pos.getCenter();
             sender.teleportTo(pos.x, pos.y, pos.z);

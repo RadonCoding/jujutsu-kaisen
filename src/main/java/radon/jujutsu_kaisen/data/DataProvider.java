@@ -1,12 +1,15 @@
 package radon.jujutsu_kaisen.data;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import net.minecraft.world.level.Level;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -24,8 +27,17 @@ import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class DataProvider {
+    public static <T> Optional<T> getDataIfPresent(Level level, Supplier<AttachmentType<T>> type) {
+        if (!level.hasData(type)) return Optional.empty();
+
+        return Optional.of(level.getData(type));
+    }
+
     @SubscribeEvent
     public static void onEntityTickPre(EntityTickEvent.Pre event) {
         if (!(event.getEntity() instanceof LivingEntity owner)) return;
@@ -50,8 +62,10 @@ public class DataProvider {
 
     @SubscribeEvent
     public static void onLevelTickPre(LevelTickEvent.Pre event) {
-        IMissionLevelData data = event.getLevel().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        data.tick();
+        Level level = event.getLevel();
+
+        getDataIfPresent(level, JJKAttachmentTypes.MISSION_LEVEL).ifPresent(IMissionLevelData::tick);
+        getDataIfPresent(level, JJKAttachmentTypes.DOMAIN).ifPresent(IDomainData::tick);
     }
 
     @SubscribeEvent
@@ -113,11 +127,13 @@ public class DataProvider {
         PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT(player.registryAccess())));
         PacketDistributor.sendToPlayer(player, new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT(player.registryAccess())));
 
-        IMissionLevelData missionData = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), missionData.serializeNBT(player.registryAccess())));
+        getDataIfPresent(player.level(), JJKAttachmentTypes.MISSION_LEVEL).ifPresent(data ->
+                PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(),
+                        data.serializeNBT(player.registryAccess()))));
 
-        IDomainData domainData = player.level().getData(JJKAttachmentTypes.DOMAIN);
-        PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(), domainData.serializeNBT(player.registryAccess())));
+        getDataIfPresent(player.level(), JJKAttachmentTypes.DOMAIN).ifPresent(data ->
+                PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(),
+                        data.serializeNBT(player.registryAccess()))));
     }
 
     @SubscribeEvent
@@ -141,11 +157,13 @@ public class DataProvider {
         PacketDistributor.sendToPlayer(player, new SyncSkillDataSC2Packet(cap.getSkillData().serializeNBT(player.registryAccess())));
         PacketDistributor.sendToPlayer(player, new SyncMissionEntityDataS2CPacket(cap.getMissionData().serializeNBT(player.registryAccess())));
 
-        IMissionLevelData missionData = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
-        PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(), missionData.serializeNBT(player.registryAccess())));
+        getDataIfPresent(player.level(), JJKAttachmentTypes.MISSION_LEVEL).ifPresent(data ->
+                PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(),
+                        data.serializeNBT(player.registryAccess()))));
 
-        IDomainData domainData = player.level().getData(JJKAttachmentTypes.DOMAIN);
-        PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(), domainData.serializeNBT(player.registryAccess())));
+        getDataIfPresent(player.level(), JJKAttachmentTypes.DOMAIN).ifPresent(data ->
+                PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(),
+                        data.serializeNBT(player.registryAccess()))));
     }
 
     @SubscribeEvent

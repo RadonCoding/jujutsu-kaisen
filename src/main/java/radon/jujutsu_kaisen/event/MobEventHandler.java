@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.event;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,10 +20,9 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -43,14 +42,14 @@ public class MobEventHandler {
         }
 
         @SubscribeEvent
-        public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
+        public static void onMobSpawnPositionCheck(MobSpawnEvent.PositionCheck event) {
             if (!(event.getLevel() instanceof ServerLevel level)) return;
             if (event.getSpawnType() == MobSpawnType.SPAWN_EGG) return;
 
             Mob mob = event.getEntity();
 
             if (!VeilHandler.canSpawn(level, mob, event.getX(), event.getY(), event.getZ())) {
-                event.setSpawnCancelled(true);
+                event.setResult(MobSpawnEvent.PositionCheck.Result.FAIL);
             }
         }
 

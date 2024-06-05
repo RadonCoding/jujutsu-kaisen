@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.client.model.entity.effect;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import com.mojang.blaze3d.vertex.PoseStack;

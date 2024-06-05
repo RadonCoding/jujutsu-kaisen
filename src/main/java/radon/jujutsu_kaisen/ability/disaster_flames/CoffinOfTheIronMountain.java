@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
+
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.level.block.Blocks;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
 
