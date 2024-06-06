@@ -144,10 +144,10 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
         float maxV = minV + 16.0F / TEXTURE_HEIGHT;
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
-        this.drawVertex(matrix4f, pose, consumer, -START_RADIUS, -START_RADIUS, 0.0F, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -START_RADIUS, START_RADIUS, 0, minU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, START_RADIUS, START_RADIUS, 0, maxU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, START_RADIUS, -START_RADIUS, 0, maxU, minV, 1, packedLight);
+        vertex(matrix4f, pose, consumer, -START_RADIUS, -START_RADIUS, 0.0F, minU, minV, 1.0F, packedLight);
+        vertex(matrix4f, pose, consumer, -START_RADIUS, START_RADIUS, 0, minU, maxV, 1, packedLight);
+        vertex(matrix4f, pose, consumer, START_RADIUS, START_RADIUS, 0, maxU, maxV, 1, packedLight);
+        vertex(matrix4f, pose, consumer, START_RADIUS, -START_RADIUS, 0, maxU, minV, 1, packedLight);
     }
 
     private void renderStart(int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
@@ -188,10 +188,10 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
         float offset = this.clearerView ? -1 : 0;
-        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, 0.0F, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, 0, minU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, 0, maxU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, 0, maxU, minV, 1, packedLight);
+        vertex(matrix4f, pose, consumer, -1.0F, offset, 0.0F, minU, minV, 1.0F, packedLight);
+        vertex(matrix4f, pose, consumer, -1.0F, length, 0, minU, maxV, 1, packedLight);
+        vertex(matrix4f, pose, consumer, 1.0F, length, 0, maxU, maxV, 1, packedLight);
+        vertex(matrix4f, pose, consumer, 1.0F, offset, 0, maxU, minV, 1, packedLight);
     }
 
     private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
@@ -213,7 +213,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
         poseStack.popPose();
     }
 
-    public void drawVertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
         consumer.vertex(matrix4f, x, y, z)
                 .color(1.0F, 1.0F, 1.0F, alpha)
                 .uv(u, v)

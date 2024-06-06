@@ -24,7 +24,6 @@ public class PureLoveBeamEntity extends BeamEntity {
     public static final double RANGE = 32.0D;
     public static final int CHARGE = (int) (2.5F * 20);
     public static final int DURATION = 3 * 20;
-    private static final float SPEED = 5.0F;
     private static final float MAX_RADIUS = 1.0F;
     private static final float RADIUS = 0.5F;
 
@@ -34,20 +33,12 @@ public class PureLoveBeamEntity extends BeamEntity {
 
     public PureLoveBeamEntity(LivingEntity owner, float power) {
         super(JJKEntities.PURE_LOVE.get(), owner, power);
-
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (owner.getBbHeight() * 0.1F) -
-                (this.getBbHeight() / 2), owner.getZ()).add(look));
-    }
-
-    @Override
-    public int getFrames() {
-        return 16;
     }
 
     @Override
     public float getScale() {
-        return 1.0F;
+        return Math.max(RADIUS, Math.min(MAX_RADIUS, RADIUS * this.getPower()))
+                * (this.getOwner() instanceof RikaEntity rika && rika.isOpen() ? 2.0F : 1.0F);
     }
 
     @Override
@@ -71,28 +62,28 @@ public class PureLoveBeamEntity extends BeamEntity {
     }
 
     @Override
+    protected boolean shouldSwing() {
+        return false;
+    }
+
+    @Override
     @Nullable
     protected Ability getSource() {
         return JJKAbilities.SHOOT_PURE_LOVE.get();
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        float radius = this.getRadius();
-        return EntityDimensions.fixed(radius, radius);
+    protected Vec3 calculateSpawnPos(LivingEntity owner) {
+        return new Vec3(owner.getX(), owner.getEyeY() - (owner.getBbHeight() * 0.1F) - (this.getBbHeight() / 2), owner.getZ())
+                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
     }
 
-    public float getRadius() {
-        return Math.max(RADIUS, Math.min(MAX_RADIUS, RADIUS * this.getPower()))
-                * (this.getOwner() instanceof RikaEntity rika && rika.isOpen() ? 2.0F : 1.0F);
-    }
-
-    private void animate() {
-        float intensity = (float) this.getTime() / CHARGE;
+    private void spawnParticles() {
+        float intensity = Math.min(1.0F, (float) this.getTime() / CHARGE);
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-        float radius = this.getRadius();
+        float radius = this.getScale() * 2.0F;
 
         ParticleAnimator.sphere(this.level(), center, () -> radius * this.random.nextFloat() * 4.0F, () -> radius * 0.2F,
                 () -> radius * intensity * this.random.nextFloat() * 0.3F, Math.round(radius * intensity * 8.0F),
@@ -102,14 +93,8 @@ public class PureLoveBeamEntity extends BeamEntity {
                 () -> radius * intensity * 0.2F, Math.round(radius * intensity * 8.0F),
                 1.0F, true, true, CHARGE - this.getTime(), ParticleColors.PURE_LOVE_BRIGHT);
 
-        ParticleAnimator.lightning(this.level(), center, radius * 0.2F, () -> radius * (1.0F + intensity) * this.random.nextFloat() * 4.0F,
+        ParticleAnimator.lightning(this.level(), center, radius * intensity * 0.2F, () -> radius * (1.0F + intensity) * this.random.nextFloat() * 4.0F,
                 Math.round(radius * intensity * 4.0F), 4, ParticleColors.PURE_LOVE_BRIGHT);
-    }
-
-    private void spawnParticles() {
-        if (this.getTime() <= CHARGE) {
-            this.animate();
-        }
     }
 
     @Override
@@ -118,29 +103,10 @@ public class PureLoveBeamEntity extends BeamEntity {
 
         this.refreshDimensions();
 
-        if (this.getTime() >= DURATION) {
-            this.discard();
-            return;
-        }
-
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
         if (this.getTime() - 1 == 0) {
             this.playSound(JJKSounds.PURE_LOVE.get(), 3.0F, 1.0F);
         }
 
         this.spawnParticles();
-
-        if (this.getTime() < CHARGE) {
-            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-            EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (owner.getBbHeight() * 0.1F) -
-                    (this.getBbHeight() / 2), owner.getZ()).add(look));
-        } else if (this.getTime() >= DURATION) {
-            this.discard();
-        } else if (this.getTime() >= CHARGE) {
-            if (this.getTime() == CHARGE) {
-                this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
-            }
-        }
     }
 }

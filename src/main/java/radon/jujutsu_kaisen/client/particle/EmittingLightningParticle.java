@@ -58,7 +58,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
-        PoseStack pose = new PoseStack();
+        PoseStack poseStack = new PoseStack();
 
         Vec3 offset = this.getPos()
                 .add(this.direction.scale(this.random.nextFloat() * this.quadSize));
@@ -69,8 +69,8 @@ public class EmittingLightningParticle extends TextureSheetParticle {
 
         Vec3 cam = pRenderInfo.getPosition();
 
-        pose.pushPose();
-        pose.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
+        poseStack.pushPose();
+        poseStack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         Vec3 start = new Vec3(this.x, this.y, this.z);
         Vec3 end = new Vec3(offset.x, offset.y, offset.z);
@@ -82,11 +82,11 @@ public class EmittingLightningParticle extends TextureSheetParticle {
                 .fade(BoltEffect.FadeFunction.fade(0.5F))
                 .spawn(BoltEffect.SpawnFunction.CONSECUTIVE);
         this.renderer.update(null, bolt, pPartialTicks);
-        pose.translate(-this.x, -this.y, -this.z);
-        this.renderer.render(pPartialTicks, pose, Minecraft.getInstance().renderBuffers().bufferSource());
+        poseStack.translate(-this.x, -this.y, -this.z);
+        this.renderer.render(pPartialTicks, poseStack, Minecraft.getInstance().renderBuffers().bufferSource());
         Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
 
-        pose.popPose();
+        poseStack.popPose();
     }
 
     @Override

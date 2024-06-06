@@ -96,10 +96,10 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
 
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
-        this.drawVertex(matrix4f, pose, consumer, -RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, minU, minV, opacity, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, minU, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, maxU, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, maxU, minV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, -RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, minU, minV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, -RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, minU, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, RING_RADIUS + offset, 0.0F, RING_RADIUS + offset, maxU, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, consumer, RING_RADIUS + offset, 0.0F, -RING_RADIUS + offset, maxU, minV, opacity, packedLight);
     }
 
     private void drawBeam(boolean drawing, float drawTime, float strikeTime, float opacity, float maxY, PoseStack poseStack, VertexConsumer builder, int packedLight) {
@@ -119,13 +119,13 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
 
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
-        this.drawVertex(matrix4f, pose, builder, -radius, 0.0F, 0.0F, BEAM_MIN_U, minV, opacity, packedLight);
-        this.drawVertex(matrix4f, pose, builder, -radius, maxY, 0.0F, BEAM_MIN_U, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, pose, builder, radius, maxY, 0.0F, BEAM_MAX_U, maxV, opacity, packedLight);
-        this.drawVertex(matrix4f, pose, builder, radius, 0.0F, 0.0F, BEAM_MAX_U, minV, opacity, packedLight);
+        vertex(matrix4f, pose, builder, -radius, 0.0F, 0.0F, BEAM_MIN_U, minV, opacity, packedLight);
+        vertex(matrix4f, pose, builder, -radius, maxY, 0.0F, BEAM_MIN_U, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, builder, radius, maxY, 0.0F, BEAM_MAX_U, maxV, opacity, packedLight);
+        vertex(matrix4f, pose, builder, radius, 0.0F, 0.0F, BEAM_MAX_U, minV, opacity, packedLight);
     }
 
-    public void drawVertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
         consumer.vertex(matrix4f, x, y, z)
                 .color(1.0F, 1.0F, 1.0F, alpha)
                 .uv(u, v)

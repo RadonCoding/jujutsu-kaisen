@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.render.domain;
 
 
+import net.minecraft.resources.ResourceLocation;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Window;
@@ -25,25 +26,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DomainRenderDispatcher {
-    private static final Map<Holder<Ability>, DomainRenderer> renderers = new HashMap<>();
+    private static final Map<ResourceLocation, DomainRenderer> renderers = new HashMap<>();
 
     static {
-        renderers.put(JJKAbilities.UNLIMITED_VOID, new UnlimitedVoidRenderer());
-        renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE, new AuthenticMutualLoveRenderer());
-        renderers.put(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA, new HorizonOfTheCaptivatingSkandhaRenderer());
+        renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
+        renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
+        renderers.put(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.getId(), new HorizonOfTheCaptivatingSkandhaRenderer());
     }
 
-    private static final Map<Holder<Ability>, VertexBuffer> buffers = new HashMap<>();
+    private static final Map<ResourceLocation, VertexBuffer> buffers = new HashMap<>();
 
     public static void render(Ability ability, Matrix4f modelViewStack, Matrix4f projectionMatrix, TextureTarget include) {
-        Holder<Ability> holder = JJKAbilities.ABILITY_REGISTRY.getHolder(JJKAbilities.getKey(ability)).orElseThrow();
+        ResourceLocation key = JJKAbilities.getKey(ability);
+        DomainRenderer renderer = renderers.get(key);
 
-        DomainRenderer renderer = renderers.get(holder);
-
-        if (!buffers.containsKey(holder)) {
+        if (!buffers.containsKey(key)) {
             VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
             renderer.renderToBuffer(buffer);
-            buffers.put(holder, buffer);
+            buffers.put(key, buffer);
         }
 
         RenderSystem.enableBlend();
@@ -53,7 +53,7 @@ public class DomainRenderDispatcher {
         RenderSystem.setShaderTexture(0, renderer.getTexture());
         RenderSystem.setShaderTexture(1, include.getColorTextureId());
 
-        VertexBuffer buffer = buffers.get(holder);
+        VertexBuffer buffer = buffers.get(key);
         buffer.bind();
         buffer.drawWithShader(modelViewStack, projectionMatrix, RenderSystem.getShader());
 

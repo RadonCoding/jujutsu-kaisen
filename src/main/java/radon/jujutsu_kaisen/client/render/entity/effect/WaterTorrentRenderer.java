@@ -76,42 +76,42 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
     private void drawCube(float length, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
         float minU = 0.0F;
         float minV = 16.0F / TEXTURE_HEIGHT * frame;
-        float maxU = minU + 16.0F / TEXTURE_WIDTH;
-        float maxV = minV + 16.0F / TEXTURE_HEIGHT;
+        float maxU = minU + TEXTURE_WIDTH / 16.0F;
+        float maxV = minV + TEXTURE_HEIGHT / 16.0F;
 
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
         float offset = this.clearerView ? -1.0F : 0.0F;
 
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, offset, 0.5F, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, length, 0.5F, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, offset, 0.5F, maxU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, offset, 0.5F, minU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, length, 0.5F, maxU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, offset, 0.5F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, offset, -0.5F, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, length, -0.5F, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, length, -0.5F, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, offset, -0.5F, minU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, length, -0.5F, minU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, length, -0.5F, maxU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, length, -0.5F, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, length, 0.5F, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, length, -0.5F, maxU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, length, -0.5F, minU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, length, 0.5F, maxU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, length, -0.5F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, offset, -0.5F, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, offset, 0.5F, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, offset, 0.5F, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, offset, -0.5F, minU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, offset, 0.5F, minU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, offset, 0.5F, maxU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, length, -0.5F, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, offset, 0.5F, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, length, -0.5F, minU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, offset, 0.5F, maxU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, -0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, length, -0.5F, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, offset, 0.5F, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, 0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, length, -0.5F, minU, minV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, length, 0.5F, minU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, offset, 0.5F, maxU, maxV, ALPHA, packedLight);
+        vertex(matrix4f, pose, consumer, 0.5F, offset, -0.5F, maxU, minV, ALPHA, packedLight);
     }
 
     private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
@@ -125,7 +125,7 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
         poseStack.popPose();
     }
 
-    public void drawVertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
         consumer.vertex(matrix4f, x, y, z)
                 .color(1.0F, 1.0F, 1.0F, alpha)
                 .uv(u, v)

@@ -73,7 +73,9 @@ public abstract class BeamEntity extends JujutsuProjectile {
         this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
     }
 
-    public abstract int getFrames();
+    public int getFrames() {
+        return 1;
+    }
 
     public abstract float getScale();
 
