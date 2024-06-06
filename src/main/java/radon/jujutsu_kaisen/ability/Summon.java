@@ -26,6 +26,10 @@ public abstract class Summon<T extends Entity> extends Ability implements IToggl
         this.clazz = clazz;
     }
 
+    public final Class<T> getClazz() {
+        return this.clazz;
+    }
+
     public abstract List<EntityType<?>> getTypes();
 
     protected boolean canTame() {

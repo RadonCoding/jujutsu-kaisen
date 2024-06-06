@@ -47,14 +47,14 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
     }
 
     public CursedBudProjectile(LivingEntity owner, float power, DisasterPlantEntity plant) {
         super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(plant);
-        EntityUtil.offset(this, look, new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2), plant.getZ()).add(look));
 
         this.setDeltaMovement(look.scale(SPEED));
 
@@ -114,7 +114,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
                         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+                        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
                     }
                 } else if (this.getTime() == DELAY) {
                     this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));

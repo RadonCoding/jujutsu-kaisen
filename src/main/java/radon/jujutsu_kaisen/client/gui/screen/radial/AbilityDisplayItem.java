@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,13 +19,16 @@ import radon.jujutsu_kaisen.ability.cursed_speech.ICursedSpeech;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.client.util.RenderUtil;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AbilityDisplayItem extends DisplayItem {
+    private static final ResourceLocation HEALTH_BAR = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/health_bar.png");
+    private static final float HEALTH_BAR_SCALE = 0.3F;
+
     private final Ability ability;
 
     public AbilityDisplayItem(Minecraft minecraft, RadialScreen screen, Runnable select, Ability ability) {
@@ -88,32 +95,62 @@ public class AbilityDisplayItem extends DisplayItem {
 
     @Override
     public void draw(GuiGraphics graphics, int x, int y) {
-        if (this.minecraft.level == null) return;
+        if (this.minecraft.level == null || this.minecraft.player == null) return;
+
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
 
         if (this.ability instanceof Summon<?> summon && summon.isDisplayed()) {
             List<EntityType<?>> types = summon.getTypes();
 
-            float width = 0.0F;
             float height = 0.0F;
             int scale = 0;
 
             for (EntityType<?> type : types) {
                 if (!(type.create(this.minecraft.level) instanceof LivingEntity instance)) continue;
 
-                width = Math.max(width, instance.getBbWidth());
                 height = Math.max(height, instance.getBbHeight());
                 scale = Math.max(scale, Math.round(Math.max(3.0F, 10.0F - instance.getBbHeight())));
             }
 
-            float offset = -((width / 2) * scale) * (types.size() - 1);
-
             for (EntityType<?> type : types) {
                 if (!(type.create(this.minecraft.level) instanceof LivingEntity instance)) continue;
 
-                RenderUtil.renderEntityInInventoryFollowsAngle(graphics, Math.round(x + offset), (int) (y + (height * scale / 2.0F)), scale,
-                        0.0F, -1.0F, -0.5F, instance);
+                RenderUtil.renderEntityInInventoryFollowsAngle(graphics, x, y,
+                        scale, 0.0F, -1.0F, -0.5F, instance);
+            }
 
-                offset += width * scale;
+            if (summon.getActivationType(this.minecraft.player) == Ability.ActivationType.TOGGLED) {
+                int yOffset = Math.round((y + (height * scale / 2.0F) + (this.minecraft.font.lineHeight / 2.0F)) * (1.0F / HEALTH_BAR_SCALE));
+
+                for (Entity entity : data.getSummonsByClass(summon.getClazz())) {
+                    if (!(entity instanceof LivingEntity living)) continue;
+
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(HEALTH_BAR_SCALE, HEALTH_BAR_SCALE, HEALTH_BAR_SCALE);
+
+                    RenderSystem.disableDepthTest();
+                    RenderSystem.depthMask(false);
+                    RenderSystem.defaultBlendFunc();
+                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+                    int xOffset = Math.round(x * (1.0F / HEALTH_BAR_SCALE) - 46.5F);
+
+                    graphics.blit(HEALTH_BAR, xOffset, yOffset, 0, 0, 93, 10, 93, 18);
+
+                    float health = (living.getHealth() / living.getMaxHealth()) * 93.0F;
+                    graphics.blit(HEALTH_BAR, xOffset, yOffset + 1, 0, 10, (int) health, 8, 93, 18);
+
+                    RenderSystem.depthMask(true);
+                    RenderSystem.enableDepthTest();
+
+                    graphics.pose().popPose();
+
+                    yOffset += 10 + 2;
+                }
             }
         } else {
             graphics.pose().pushPose();

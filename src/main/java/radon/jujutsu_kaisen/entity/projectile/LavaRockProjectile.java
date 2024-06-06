@@ -46,7 +46,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
         this.setTarget(target);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
                 .add(look));
     }
 
@@ -113,7 +113,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
     @Override
     public void tick() {
-        this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
+        this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ(), 0.0D, 0.0D, 0.0D);
 
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
@@ -133,7 +133,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
             LivingEntity target = this.getTarget();
 
             if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
-                this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D)
+                this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2, 0.0D)
                         .subtract(this.position()).normalize().scale(SPEED));
             } else {
                 this.discard();

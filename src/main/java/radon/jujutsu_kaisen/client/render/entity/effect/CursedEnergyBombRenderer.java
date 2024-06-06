@@ -73,7 +73,7 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
 
         pPoseStack.pushPose();
         pPoseStack.scale(pEntity.getScale(), pEntity.getScale(), pEntity.getScale());
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
 

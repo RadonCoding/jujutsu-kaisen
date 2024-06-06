@@ -37,9 +37,9 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
         if (!(pEntity.getOwner() instanceof LivingEntity owner)) return;
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
+        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2, 0.0D);
         Vec3 ownerPos = EntityUtil.getPosition(owner, owner.getEyeHeight() - 0.1D, pPartialTick);
-        Vec3 projectilePos = EntityUtil.getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick);
+        Vec3 projectilePos = EntityUtil.getPosition(pEntity, pEntity.getBbHeight() / 2, pPartialTick);
         Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
         relative = relative.normalize();

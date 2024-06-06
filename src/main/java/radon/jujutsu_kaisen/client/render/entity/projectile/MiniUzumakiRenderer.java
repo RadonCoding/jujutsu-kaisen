@@ -67,7 +67,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
 
             pPoseStack.pushPose();
             pPoseStack.scale(pEntity.getScale(), pEntity.getScale(), pEntity.getScale());
-            pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+            pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
             VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(BEAM));
 
@@ -85,7 +85,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
             Minecraft mc = Minecraft.getInstance();
 
             pPoseStack.pushPose();
-            pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
+            pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2, 0.0D);
 
             Entity viewer = mc.getCameraEntity();
 

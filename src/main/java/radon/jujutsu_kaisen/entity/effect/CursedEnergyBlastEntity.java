@@ -29,7 +29,7 @@ public class CursedEnergyBlastEntity extends JujutsuProjectile {
         super(JJKEntities.CURSED_ENERGY_BLAST.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ()));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2) - (this.getBbHeight() / 2), owner.getZ()));
     }
 
     @Override

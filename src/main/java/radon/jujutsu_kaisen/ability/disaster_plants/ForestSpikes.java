@@ -92,7 +92,7 @@ public class ForestSpikes extends Ability {
                 }
 
                 Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD);
-                spike.moveTo(offset.x, offset.y - spike.getBbHeight() / 2.0F, offset.z, yRot, xRot);
+                spike.moveTo(offset.x, offset.y - spike.getBbHeight() / 2, offset.z, yRot, xRot);
 
                 if (owner.level().getBlockState(BlockPos.containing(offset.subtract(RotationUtil.getTargetAdjustedLookAngle(spike)))).isAir()) {
                     spike.setPos(center);

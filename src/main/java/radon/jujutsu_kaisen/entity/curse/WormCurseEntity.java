@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -19,7 +18,6 @@ import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
@@ -198,7 +196,7 @@ public class WormCurseEntity extends CursedSpirit {
         }
 
         if (!this.isGrabbing()) {
-            this.lookAt(EntityAnchorArgument.Anchor.EYES, this.target.position().add(0.0D, this.target.getBbHeight() / 2.0F, 0.0D));
+            this.lookAt(EntityAnchorArgument.Anchor.EYES, this.target.position().add(0.0D, this.target.getBbHeight() / 2, 0.0D));
 
             this.setDeltaMovement(this.target.position().subtract(this.position()).normalize().scale(2.0D));
 
@@ -208,7 +206,7 @@ public class WormCurseEntity extends CursedSpirit {
         } else {
             this.setYRot(this.target.yBodyRot);
 
-            Vec3 pos = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+            Vec3 pos = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
             this.target.teleportTo(pos.x, pos.y, pos.z);
         }
     }

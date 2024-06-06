@@ -1,8 +1,7 @@
-package radon.jujutsu_kaisen.entity.sorcerer.base;
+package radon.jujutsu_kaisen.entity.sorcerer;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import net.minecraft.world.level.pathfinder.PathType;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -16,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.ISorcerer;
-import radon.jujutsu_kaisen.entity.sorcerer.WindowEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -29,6 +27,8 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     protected SorcererEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
+
+        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
 
         Arrays.fill(this.armorDropChances, 1.0F);
         Arrays.fill(this.handDropChances, 1.0F);

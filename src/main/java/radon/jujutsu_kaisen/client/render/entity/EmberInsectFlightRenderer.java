@@ -42,7 +42,7 @@ public class EmberInsectFlightRenderer extends GeoEntityRenderer<EmberInsectFlig
 
         for (int i = 0; i < 2; i++) {
             poseStack.pushPose();
-            poseStack.translate(owner.getBbWidth() / 2.0F * (i == 0 ? -1 : 1), entity.getBbHeight() / 2.0F, 0.0F);
+            poseStack.translate(owner.getBbWidth() / 2.0F * (i == 0 ? -1 : 1), entity.getBbHeight() / 2, 0.0F);
             super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
             poseStack.popPose();
         }

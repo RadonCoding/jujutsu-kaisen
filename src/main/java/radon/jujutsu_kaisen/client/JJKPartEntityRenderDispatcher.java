@@ -1,6 +1,13 @@
 package radon.jujutsu_kaisen.client;
 
 
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -18,16 +25,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JJKPartEntityRenderDispatcher {
-    private static final Map<Holder<EntityType<?>>, EntityRenderer<?>> renderers = new HashMap<>();
+    private static final Map<EntityType<?>, EntityRenderer<?>> renderers = new HashMap<>();
 
     public static void bake(EntityRendererProvider.Context ctx) {
-        renderers.put(JJKEntities.GREAT_SERPENT, new GreatSerpentSegmentRenderer(ctx));
-        renderers.put(JJKEntities.WOOD_SEGMENT, new WormCurseSegmentRenderer(ctx));
-        renderers.put(JJKEntities.RAINBOW_DRAGON, new RainbowDragonSegmentRenderer(ctx));
-        renderers.put(JJKEntities.BODY_REPEL, new BodyRepelSegmentRenderer(ctx));
+        renderers.put(JJKEntities.GREAT_SERPENT.get(), new GreatSerpentSegmentRenderer(ctx));
+        renderers.put(JJKEntities.WOOD_SEGMENT.get(), new WormCurseSegmentRenderer(ctx));
+        renderers.put(JJKEntities.RAINBOW_DRAGON.get(), new RainbowDragonSegmentRenderer(ctx));
+        renderers.put(JJKEntities.BODY_REPEL.get(), new BodyRepelSegmentRenderer(ctx));
     }
 
     public static EntityRenderer<?> lookup(EntityType<?> type) {
-        return renderers.get(Holder.direct(type));
+        return renderers.get(type);
     }
 }

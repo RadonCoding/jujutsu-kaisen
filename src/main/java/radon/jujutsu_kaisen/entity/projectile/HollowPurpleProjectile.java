@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 
+import radon.jujutsu_kaisen.ParticleAnimator;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
@@ -43,13 +44,15 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     public HollowPurpleProjectile(LivingEntity owner, float power) {
         super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
+        float radius = this.getRadius() * 2;
+
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(look.scale(this.getRadius())));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
+                .add(look.scale(radius)));
     }
 
     public float getRadius() {
-        return Math.max(Mth.PI, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
+        return Math.max(RADIUS, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
     }
 
     private void hurtEntities() {
@@ -108,81 +111,24 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        return EntityDimensions.fixed(this.getRadius(), this.getRadius());
+        float radius = this.getRadius();
+        return EntityDimensions.fixed(radius, radius);
     }
 
     private void renderBlue(Vec3 center) {
         float radius = this.getRadius();
-        int count = (int) (radius * Math.PI * 2);
+        int count = (int) (radius * Math.PI * 2 * 0.5F);
 
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.75F * Math.cos(phi);
-
-            double x = center.x + xOffset * (radius * 0.1F);
-            double y = center.y + yOffset * (radius * 0.1F);
-            double z = center.z + zOffset * (radius * 0.1F);
-
-            this.level().addParticle(new TravelParticle.Options(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_BLUE, radius * 0.2F, 1.0F, true, 5), true,
-                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
-        }
-
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 0.5F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.5F * Math.cos(phi);
-
-            double x = center.x + xOffset * 0.1F;
-            double y = center.y + yOffset * 0.1F;
-            double z = center.z + zOffset * 0.1F;
-
-            this.level().addParticle(new TravelParticle.Options(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.1F, 1.0F, true, 5), true,
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
+        ParticleAnimator.sphere(this.level(), center, () -> radius * 0.1F, () -> radius * 0.01F,
+                () -> radius * 0.1F, count, 1.0F, true, true, 5, ParticleColors.LIGHT_BLUE);
     }
 
     private void renderRed(Vec3 center) {
         float radius = this.getRadius();
-        int count = (int) (radius * Math.PI * 2);
+        int count = (int) (radius * Math.PI * 2 * 0.5F);
 
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.75F * Math.cos(phi);
-
-            double x = center.x + xOffset * (radius * 0.1F);
-            double y = center.y + yOffset * (radius * 0.1F);
-            double z = center.z + zOffset * (radius * 0.1F);
-
-            this.level().addParticle(new TravelParticle.Options(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_RED, radius * 0.2F, 1.0F, true, 5), true,
-                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
-        }
-
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 0.5F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.5F * Math.cos(phi);
-
-            double x = center.x + xOffset * 0.1F;
-            double y = center.y + yOffset * 0.1F;
-            double z = center.z + zOffset * 0.1F;
-
-            this.level().addParticle(new TravelParticle.Options(center.toVector3f(), ParticleColors.LIGHT_RED, radius * 0.1F, 1.0F, true, 5), true,
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
+        ParticleAnimator.sphere(this.level(), center, () -> radius * 0.1F, () -> radius * 0.01F,
+                () -> radius * 0.1F, count, 1.0F, true, true, 5, ParticleColors.DARK_RED);
     }
 
     private void animate() {
@@ -200,7 +146,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         Vec3 right = new Vec3(-Math.sin(Math.toRadians(yaw)), 0.0D, Math.cos(Math.toRadians(yaw)));
         Vec3 pos = look.cross(right).normalize().scale(offset);
 
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         this.renderRed(center.add(pos));
         this.renderBlue(center.subtract(pos));
@@ -212,53 +158,19 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             return;
         }
 
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-        float radius = this.getRadius() * 2.0F;
-        int count = (int) (radius * Math.PI * 2);
+        float radius = this.getRadius();
+        int count = (int) (radius * Math.PI * 2) * 2;
 
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
+        ParticleAnimator.sphere(this.level(), center, () -> radius * 0.5F, () -> 0.0F,
+                () -> radius * 0.25F, count, 1.0F, true, true, 5, ParticleColors.DARK_PURPLE);
 
-            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.75F * Math.cos(phi);
+        ParticleAnimator.sphere(this.level(), center, () -> radius * 0.25F, () -> 0.0F,
+                () -> radius * 0.25F, count, 1.0F, true, true, 5, ParticleColors.LIGHT_PURPLE);
 
-            double x = center.x + xOffset * (radius * 0.1F);
-            double y = center.y + yOffset * (radius * 0.1F);
-            double z = center.z + zOffset * (radius * 0.1F);
-
-            this.level().addParticle(new TravelParticle.Options(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_PURPLE, radius * 0.2F, 1.0F, true, 5), true,
-                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
-        }
-
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.75F * Math.cos(phi);
-
-            double x = center.x + xOffset * 0.1F;
-            double y = center.y + yOffset * 0.1F;
-            double z = center.z + zOffset * 0.1F;
-
-            this.level().addParticle(new TravelParticle.Options(center.toVector3f(), ParticleColors.LIGHT_PURPLE, radius * 0.2F, 1.0F, true, 5), true,
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
-
-        for (int i = 0; i < count / 2; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            Vec3 direction = new Vec3(Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi));
-            Vec3 offset = center.add(direction.scale(radius * 0.25F));
-
-            this.level().addParticle(new EmittingLightningParticle.Options(ParticleColors.LIGHT_PURPLE, direction, radius, 8),
-                    true, offset.x, offset.y, offset.z, 0.0D, 0.0D, 0.0D);
-        }
+        ParticleAnimator.lightning(this.level(), center, radius * 0.25F, () -> radius,
+                count / 4, 8, ParticleColors.LIGHT_PURPLE);
     }
 
     @Override
@@ -284,7 +196,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     owner.swing(InteractionHand.MAIN_HAND);
                 }
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
                         .add(look.scale(this.getRadius())));
             }
         } else {

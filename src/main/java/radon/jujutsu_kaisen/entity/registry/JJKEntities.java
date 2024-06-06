@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.registry;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
@@ -21,7 +20,7 @@ import radon.jujutsu_kaisen.entity.domain.AuthenticMutualLoveEntity;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.effect.*;
 import radon.jujutsu_kaisen.entity.effect.WoodSegmentEntity;
@@ -222,7 +221,7 @@ public class JJKEntities {
 
     public static DeferredHolder<EntityType<?>, EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 3.875F)
+                    .sized(1.4F, 3.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rika")
                             .toString()));
 

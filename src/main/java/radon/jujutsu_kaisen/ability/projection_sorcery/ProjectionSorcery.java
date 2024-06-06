@@ -283,7 +283,7 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
 
             if (speed <= 0.0F) return;
 
-            Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
+            Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2, 0.0D);
             ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER, 1.0F, 1.0F);
 

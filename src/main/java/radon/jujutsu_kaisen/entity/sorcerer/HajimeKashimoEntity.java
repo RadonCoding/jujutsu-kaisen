@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.world.InteractionHand;
@@ -10,11 +9,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 
 public class HajimeKashimoEntity extends SorcererEntity {

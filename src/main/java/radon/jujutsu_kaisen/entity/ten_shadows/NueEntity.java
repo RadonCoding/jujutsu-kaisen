@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -26,7 +23,7 @@ import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -103,12 +100,12 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? 0.15F : 0.5F;
+        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED)
+                .add(Attributes.FLYING_SPEED, 2.0F)
                 .add(Attributes.MAX_HEALTH, 2 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
@@ -179,7 +176,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
     public @NotNull Vec3 getPassengerRidingPosition(Entity pEntity) {
         return new Vec3(
                 new Vector3f(0.0F, -pEntity.getBbHeight() + 0.8F, 0.0F)
-                        .add(0.0F, 0.5F, 0.0F)
                         .rotateY(-this.yBodyRot * (float) (Math.PI / 180.0D)))
                 .add(this.position());
     }
@@ -203,8 +199,8 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
         LivingEntity passenger = this.getControllingPassenger();
 
         if (passenger != null) {
-            return bounds.setMinY(bounds.minY - passenger.getBbHeight() / 2 - 0.4D)
-                    .setMaxY(bounds.maxY - passenger.getBbHeight() + 0.4D);
+            return bounds.setMinY(bounds.minY - passenger.getBbHeight() / 2 - 0.7D)
+                    .setMaxY(bounds.maxY - passenger.getBbHeight());
         }
         return bounds;
     }
@@ -253,7 +249,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
 
         Vec3 movement = this.getDeltaMovement();
-
+        
         if (this.jump) {
             this.setDeltaMovement(movement.add(0.0D, this.getFlyingSpeed(), 0.0D));
         }

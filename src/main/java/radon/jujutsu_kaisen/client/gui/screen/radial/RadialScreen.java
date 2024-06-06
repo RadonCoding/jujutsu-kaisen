@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RadialScreen extends Screen {
-    public static ResourceLocation HEALTH_BAR = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/health_bar.png");
-    private static final float HEALTH_BAR_SCALE = 0.3F;
-
     protected static final int RADIUS_IN = 50;
     protected static final int RADIUS_OUT = RADIUS_IN * 2;
 
@@ -32,8 +29,9 @@ public abstract class RadialScreen extends Screen {
     private final List<List<? extends DisplayItem>> pages = new ArrayList<>();
 
     private int hovered = -1;
-    protected static int page;
     private int hover;
+
+    protected static int page;
 
     public RadialScreen() {
         super(Component.nullToEmpty(null));
@@ -45,7 +43,11 @@ public abstract class RadialScreen extends Screen {
 
         if (this.hovered == -1) return;
 
-        DisplayItem item = this.getItems().get(this.hovered);
+        List<? extends DisplayItem> items = this.getItems();
+
+        if (this.hovered >= items.size()) return;
+
+        DisplayItem item = items.get(this.hovered);
         item.select();
     }
 

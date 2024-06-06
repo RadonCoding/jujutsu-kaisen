@@ -41,7 +41,7 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
         this.setOwner(owner);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ())
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2) - (this.getBbHeight() / 2), owner.getZ())
                 .add(look));
 
         this.setDeltaMovement(look.scale(SPEED));
@@ -70,7 +70,7 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
             return;
         }
 
-        this.setPos(this.pulled.getX(), this.pulled.getY() + (this.pulled.getBbHeight() / 2.0F), this.pulled.getZ());
+        this.setPos(this.pulled.getX(), this.pulled.getY() + (this.pulled.getBbHeight() / 2), this.pulled.getZ());
         this.pulled.setDeltaMovement(owner.position().subtract(this.pulled.position()).normalize());
         this.pulled.hurtMarked = true;
 

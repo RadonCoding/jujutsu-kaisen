@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;

@@ -33,25 +33,23 @@ public class RenderUtil {
         Quaternionf pose = new Quaternionf().rotateZ((float) Math.PI);
         Quaternionf cam = new Quaternionf().rotateX(angleYComponent * 20.0F * (float) (Math.PI / 180.0));
         pose.mul(cam);
-        float f4 = entity.yBodyRot;
-        float f5 = entity.getYRot();
-        float f6 = entity.getXRot();
-        float f7 = entity.yHeadRotO;
-        float f8 = entity.yHeadRot;
+        float yBodyRot = entity.yBodyRot;
+        float yRot = entity.getYRot();
+        float xRot = entity.getXRot();
+        float yHeadRotO = entity.yHeadRotO;
+        float yHeadRot = entity.yHeadRot;
         entity.yBodyRot = 180.0F + angleXComponent * 20.0F;
         entity.setYRot(180.0F + angleXComponent * 40.0F);
         entity.setXRot(-angleYComponent * 20.0F);
         entity.yHeadRot = entity.getYRot();
         entity.yHeadRotO = entity.getYRot();
-        float f9 = entity.getScale();
-        Vector3f vector3f = new Vector3f(0.0F, entity.getBbHeight() / 2.0F + yOffset * f9, 0.0F);
-        float f10 = (float)scale / f9;
-        InventoryScreen.renderEntityInInventory(graphics, x, y, f10, vector3f, pose, cam, entity);
-        entity.yBodyRot = f4;
-        entity.setYRot(f5);
-        entity.setXRot(f6);
-        entity.yHeadRotO = f7;
-        entity.yHeadRot = f8;
-        graphics.disableScissor();
+        float scalar = entity.getScale();
+        Vector3f vector3f = new Vector3f(0.0F, entity.getBbHeight() / 2 + yOffset * scalar, 0.0F);
+        InventoryScreen.renderEntityInInventory(graphics, x, y, (float) scale / scalar, vector3f, pose, cam, entity);
+        entity.yBodyRot = yBodyRot;
+        entity.setYRot(yRot);
+        entity.setXRot(xRot);
+        entity.yHeadRotO = yHeadRotO;
+        entity.yHeadRot = yHeadRot;
     }
 }

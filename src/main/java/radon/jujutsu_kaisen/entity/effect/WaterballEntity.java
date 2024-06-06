@@ -50,7 +50,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.WATERBALL.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
     }
 
     private static boolean isInside(LivingEntity owner, BlockPos pos) {
@@ -128,7 +128,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                     this.createWave(owner);
                 }
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
                         .add(look));
             }
         } else {

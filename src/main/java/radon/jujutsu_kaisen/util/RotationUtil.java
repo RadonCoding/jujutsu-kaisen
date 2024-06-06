@@ -25,7 +25,7 @@ public class RotationUtil {
 
             if (target != null) {
                 double inaccuracy = (float) (14 - entity.level().getDifficulty().getId() * 4);
-                Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2, 0.0D);
                 double d0 = end.x - start.x;
                 double d1 = end.y - start.y;
                 double d2 = end.z - start.z;

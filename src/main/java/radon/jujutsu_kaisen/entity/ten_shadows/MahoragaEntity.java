@@ -26,7 +26,7 @@ import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -73,8 +73,6 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
     @Override
@@ -210,7 +208,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                         target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
                         target.hurtMarked = true;
 
-                        Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                        Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2, 0.0D);
                         ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                         this.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER, 1.0F, 1.0F);
                     }

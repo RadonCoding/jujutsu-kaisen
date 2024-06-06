@@ -50,6 +50,7 @@ public class TeleportSelf extends Ability {
     public static void teleport(Entity entity, Vec3 pos) {
         entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
         entity.setPos(pos.x, pos.y, pos.z);
+        entity.fallDistance = 0.0F;
         entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
     }
 

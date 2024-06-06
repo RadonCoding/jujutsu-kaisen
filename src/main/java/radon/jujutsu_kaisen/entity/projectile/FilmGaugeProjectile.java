@@ -48,7 +48,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
         this.setTarget(target);
 
-        this.setPos(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ());
+        this.setPos(owner.getX(), owner.getY() + (owner.getBbHeight() / 2) - (this.getBbHeight() / 2), owner.getZ());
     }
 
     public void setTarget(@Nullable LivingEntity target) {
@@ -142,7 +142,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
             if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
                 Vec3 src = this.position();
-                Vec3 dst = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                Vec3 dst = target.position().add(0.0D, target.getBbHeight() / 2, 0.0D);
                 this.setDeltaMovement(dst.subtract(src).normalize().scale(SPEED));
             } else {
                 this.discard();

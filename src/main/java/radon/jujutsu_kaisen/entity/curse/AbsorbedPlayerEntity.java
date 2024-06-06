@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import com.mojang.authlib.GameProfile;
@@ -18,14 +17,13 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.registry.JJKEntityDataSerializers;
 
 import java.util.Optional;
 
 public class AbsorbedPlayerEntity extends CursedSpirit {
     private static final EntityDataAccessor<Optional<GameProfile>> DATA_PLAYER = SynchedEntityData.defineId(AbsorbedPlayerEntity.class,
-            EntityDataSerializer.forValueType(ByteBufCodecs.optional(ByteBufCodecs.GAME_PROFILE)));
+            JJKEntityDataSerializers.GAME_PROFILE.get());
 
     public AbsorbedPlayerEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);

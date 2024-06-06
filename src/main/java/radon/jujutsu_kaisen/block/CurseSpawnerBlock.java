@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.block;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -23,11 +20,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.data.DataProvider;
-import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;

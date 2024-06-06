@@ -40,7 +40,7 @@ public record NyoiStaffSummonLightningC2SPacket(UUID identifier) implements Cust
 
         ISorcererData data = cap.getSorcererData();
 
-            sender.level().addFreshEntity(new ConnectedLightningEntity(sender, data.getAbilityOutput(), sender.position().add(0.0D, sender.getBbHeight() / 2.0F, 0.0D),
+            sender.level().addFreshEntity(new ConnectedLightningEntity(sender, data.getAbilityOutput(), sender.position().add(0.0D, sender.getBbHeight() / 2, 0.0D),
                     staff.position()));
 
             staff.setCharged(false);

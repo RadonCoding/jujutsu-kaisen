@@ -24,7 +24,7 @@ public class Wings extends Transformation implements IFlight {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.fallDistance > 2.0F && !owner.isInFluidType();
+        return owner.fallDistance > 4.0F && !owner.isInFluidType();
     }
 
     @Override

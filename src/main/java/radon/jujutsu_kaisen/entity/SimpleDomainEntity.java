@@ -223,7 +223,7 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
             ParticleOptions particle = new VaporParticle.Options(ParticleColors.SIMPLE_DOMAIN, 1.0F,
                     1.0F, true, 1);
 
-            double circumference = Math.PI * 2.0D * factor;
+            double circumference = Math.PI * 2 * factor;
 
             float radius = this.getRadius();
 

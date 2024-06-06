@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.world.InteractionHand;
@@ -18,11 +17,9 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
@@ -73,12 +70,12 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, ICo
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? 0.15F : 0.05F;
+        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED);
+                .add(Attributes.FLYING_SPEED, 2.0F);
     }
 
     @Override

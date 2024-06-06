@@ -121,7 +121,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
             return;
         }
 
-        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D));
+        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2, 0.0D));
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 

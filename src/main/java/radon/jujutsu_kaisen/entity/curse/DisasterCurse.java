@@ -1,19 +1,10 @@
-package radon.jujutsu_kaisen.entity.curse.base;
+package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public abstract class DisasterCurse extends CursedSpirit {
     protected DisasterCurse(EntityType<? extends TamableAnimal> pType, Level pLevel) {

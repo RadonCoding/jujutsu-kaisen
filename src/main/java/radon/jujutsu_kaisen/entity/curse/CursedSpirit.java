@@ -1,6 +1,7 @@
-package radon.jujutsu_kaisen.entity.curse.base;
+package radon.jujutsu_kaisen.entity.curse;
 
 
+import net.minecraft.world.level.pathfinder.PathType;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -27,7 +28,6 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
@@ -47,6 +47,8 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
     protected CursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+
+        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
 
         this.setTame(false, false);
     }

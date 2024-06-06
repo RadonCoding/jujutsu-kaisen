@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.MixinData;
 

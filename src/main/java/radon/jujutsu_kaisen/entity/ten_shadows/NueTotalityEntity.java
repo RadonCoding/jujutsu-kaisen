@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -27,7 +24,7 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -130,12 +127,12 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? 0.15F : 0.5F;
+        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED)
+                .add(Attributes.FLYING_SPEED, 2.0F)
                 .add(Attributes.MAX_HEALTH, 4 * 20.0D);
     }
 

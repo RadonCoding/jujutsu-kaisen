@@ -125,7 +125,7 @@ public class BlackFlashHandler {
 
             attacker.level().addFreshEntity(new BlackFlashEntity(attacker, victim));
 
-            Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
+            Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2, 0.0D);
 
             victim.level().playSound(null, pos.x, pos.y, pos.z,
                     SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);

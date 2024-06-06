@@ -16,11 +16,10 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -56,8 +55,6 @@ public class PiercingBullEntity extends TenShadowsSummon {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
     @Override
@@ -118,7 +115,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
             entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(data.getAbilityOutput()));
             entity.hurtMarked = true;
 
-            Vec3 center = new Vec3(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ());
+            Vec3 center = new Vec3(entity.getX(), entity.getY() + (entity.getBbHeight() / 2), entity.getZ());
 
             ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);

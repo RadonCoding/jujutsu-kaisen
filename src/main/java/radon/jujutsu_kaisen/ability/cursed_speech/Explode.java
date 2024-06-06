@@ -37,7 +37,7 @@ public class Explode extends CursedSpeech {
         if (owner.level().isClientSide) return;
 
         CursedSpeechUtil.attack(owner, entity -> {
-            ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getOutput(owner)),
+            ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getOutput(owner)),
                     20, this.getOutput(owner) * 0.25F, owner, JJKDamageSources.jujutsuAttack(owner, this), false);
 
             if (entity instanceof Player player) {

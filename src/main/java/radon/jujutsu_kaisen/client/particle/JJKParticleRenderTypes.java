@@ -28,6 +28,7 @@ public class JJKParticleRenderTypes {
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+            RenderSystem.setShader(GameRenderer::getParticleShader);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
@@ -47,6 +48,7 @@ public class JJKParticleRenderTypes {
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+            RenderSystem.setShader(GameRenderer::getParticleShader);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
@@ -62,10 +64,11 @@ public class JJKParticleRenderTypes {
     public static ParticleRenderType TRANSLUCENT = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
-            RenderSystem.depthMask(true);
+            RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
             RenderSystem.defaultBlendFunc();
+            RenderSystem.setShader(GameRenderer::getParticleShader);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }

@@ -101,7 +101,7 @@ public class MeteorEntity extends JujutsuProjectile {
     @Override
     public @NotNull Vec3 getPassengerRidingPosition(@NotNull Entity pEntity) {
         return super.getPassengerRidingPosition(pEntity)
-                .add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+                .add(0.0D, this.getBbHeight() / 2, 0.0D);
     }
 
     @Override
@@ -257,7 +257,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
-                if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ())) >= this.getSize()) continue;
+                if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ())) >= this.getSize()) continue;
                 if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower())) continue;
                 entity.setRemainingFireTicks(10 * 20);
             }
@@ -270,13 +270,13 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     private void spawnParticles() {
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         float radius = this.getSize() * 1.1F;
         int count = (int) (radius * Math.PI * 2) / 2;
 
         for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double theta = this.random.nextDouble() * Math.PI * 2;
             double phi = this.random.nextDouble() * Math.PI;
 
             double xOffset = radius * Math.sin(phi) * Math.cos(theta);
@@ -287,7 +287,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double y = center.y + yOffset;
             double z = center.z + zOffset;
 
-            this.level().addParticle(new TravelParticle.Options(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.25F, true, 20),
+            this.level().addParticle(new TravelParticle.Options(center, ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.25F, true, true, 20),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -323,7 +323,7 @@ public class MeteorEntity extends JujutsuProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         float radius = this.getSize();
-        AABB bounds = AABB.ofSize(this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D), radius * 2, radius * 2, radius * 2);
+        AABB bounds = AABB.ofSize(this.position().add(0.0D, this.getBbHeight() / 2, 0.0D), radius * 2, radius * 2, radius * 2);
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
         double centerZ = bounds.getCenter().z;

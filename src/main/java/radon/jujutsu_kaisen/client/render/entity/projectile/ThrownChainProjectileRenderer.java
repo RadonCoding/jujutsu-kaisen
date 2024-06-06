@@ -59,7 +59,7 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
 
         if (!pEntity.isReleased()) {
             Vec3 displacement = ownerPos
-                    .subtract(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D)
+                    .subtract(0.0D, pEntity.getBbHeight() / 2, 0.0D)
                     .subtract(EntityUtil.getPosition(pEntity, pPartialTick));
             pPoseStack.translate(displacement.x, displacement.y, displacement.z);
         }
@@ -75,7 +75,7 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
             pPoseStack.translate(-offset.x, -offset.y, -offset.z);
         }
 
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * (1.0F / SCALE), 0.0F);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2 * (1.0F / SCALE), 0.0F);
         pPoseStack.scale(SCALE, SCALE, SCALE);
 
         float yaw;
@@ -99,9 +99,9 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
         pPoseStack.popPose();
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F * (1.0F / SCALE), 0.0F);
+        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2 * (1.0F / SCALE), 0.0F);
 
-        Vec3 projectilePos = pEntity.isReleased() ? EntityUtil.getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick) : ownerPos.add(offset);
+        Vec3 projectilePos = pEntity.isReleased() ? EntityUtil.getPosition(pEntity, pEntity.getBbHeight() / 2, pPartialTick) : ownerPos.add(offset);
 
         Vec3 direction = ownerPos.subtract(projectilePos);
         float f0 = (float) direction.length();

@@ -71,7 +71,7 @@ public class FireBeamEntity extends BeamEntity {
 
     @Override
     protected Vec3 calculateSpawnPos(LivingEntity owner) {
-        return new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() * 0.75F) - (this.getBbHeight() / 2.0F), owner.getZ())
+        return new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() * 0.75F) - (this.getBbHeight() / 2), owner.getZ())
                 .add(RotationUtil.getTargetAdjustedLookAngle(owner));
     }
 }

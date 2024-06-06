@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -33,7 +30,7 @@ import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -378,10 +375,10 @@ public class ToadEntity extends TenShadowsSummon {
     private void shoot(Entity target) {
         if (!this.canShoot()) return;
 
-        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D));
+        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2, 0.0D));
 
         Vec3 start = this.getEyePosition();
-        Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+        Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2, 0.0D);
         double d0 = end.x - start.x;
         double d1 = end.y - start.y;
         double d2 = end.z - start.z;

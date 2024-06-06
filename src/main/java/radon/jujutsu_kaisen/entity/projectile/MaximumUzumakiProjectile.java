@@ -15,11 +15,10 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -113,7 +112,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.setPos(pos);
 
                 float radius = Math.min(MAX_EXPLOSION, RADIUS * this.getPower());
-                Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+                Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
                 ExplosionHandler.spawn(this.level().dimension(), offset, radius, 3 * 20, this.getPower() * 0.1F, owner,
                         JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_UZUMAKI.get()), false);
             }

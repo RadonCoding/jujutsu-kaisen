@@ -50,7 +50,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
             case UP, DOWN -> xRot = -xRot;
             case WEST -> xRot -= 180.0F;
         }
-        this.moveTo(center.x, center.y - this.getBbHeight() / 2.0F, center.z, dir.toYRot(), xRot);
+        this.moveTo(center.x, center.y - this.getBbHeight() / 2, center.z, dir.toYRot(), xRot);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
                 double x = r * Math.sin(phi) * Math.cos(theta);
                 double y = r * Math.sin(phi) * Math.sin(theta);
                 double z = r * Math.cos(phi);
-                Vec3 start = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D).add(look);
+                Vec3 start = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D).add(look);
                 Vec3 end = start.add(look.scale(RANGE)).add(x, y, z);
                 Vec3 speed = start.subtract(end).scale(1.0D / 12).reverse().scale(HelperMethods.RANDOM.nextDouble());
                 this.level().addParticle(ParticleTypes.FLAME, start.x, start.y, start.z, speed.x, speed.y, speed.z);

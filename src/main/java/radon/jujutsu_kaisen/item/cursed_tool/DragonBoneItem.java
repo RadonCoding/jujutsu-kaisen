@@ -91,7 +91,7 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
         if (RotationUtil.getLookAtHit(pPlayer, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity entity) {
             pPlayer.teleportTo(entity.getX(), entity.getY(), entity.getZ());
 
-            Vec3 pos = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+            Vec3 pos = entity.position().add(0.0D, entity.getBbHeight() / 2, 0.0D);
 
             if (pPlayer.level() instanceof ServerLevel level) {
                 level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);

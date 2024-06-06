@@ -131,7 +131,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-            EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+            EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
                     .add(RotationUtil.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
                     .add(RotationUtil.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
                     .add(look));

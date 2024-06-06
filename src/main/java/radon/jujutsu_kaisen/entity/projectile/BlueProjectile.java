@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 
+import radon.jujutsu_kaisen.ParticleAnimator;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
@@ -40,8 +41,8 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final int DELAY = 20;
     private static final float DAMAGE = 3.0F;
     private static final int DURATION = 5 * 20;
-    private static final float RADIUS = 3.0F;
-    private static final float MAX_RADIUS = 5.0F;
+    private static final float RADIUS = 1.0F;
+    private static final float MAX_RADIUS = 3.0F;
     private static final double OFFSET = 8.0D;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pType, Level level) {
@@ -58,7 +59,7 @@ public class BlueProjectile extends JujutsuProjectile {
         this.entityData.set(DATA_MOTION, motion);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
     }
 
     @Override
@@ -73,7 +74,7 @@ public class BlueProjectile extends JujutsuProjectile {
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
 
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
@@ -87,7 +88,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private float getRadius() {
-        return Math.max(Mth.PI, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
+        return Math.max(RADIUS, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
     }
 
     private void breakBlocks() {
@@ -141,7 +142,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private void pullBlocks() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        float radius = this.getRadius() * 2.0F;
+        float radius = this.getRadius() * 2;
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
 
@@ -177,42 +178,35 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void spawnParticles() {
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         float radius = this.getRadius() * (this.getTime() < DELAY ? 0.25F : 1.0F);
         int count = (int) (radius * Math.PI * 2) * 2;
 
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
+        float scale = 1.0F + 0.25F * (float) Math.sin(2 * Math.PI * 0.05F * this.getTime());
 
-            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * Math.cos(phi);
+        ParticleAnimator.sphere(this.level(), center, () -> radius * scale * 0.25F, () -> 0.0F,
+                () -> radius * scale * 0.25F, count, 0.25F, true, true, 5, ParticleColors.LIGHT_BLUE);
 
-            double x = center.x + xOffset * (radius * 0.1F);
-            double y = center.y + yOffset * (radius * 0.1F);
-            double z = center.z + zOffset * (radius * 0.1F);
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+                90.0F, 0.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+                90.0F, 0.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
 
-            this.level().addParticle(new TravelParticle.Options(center.toVector3f(), ParticleColors.DARK_BLUE, radius * 0.075F, 1.0F, true, 5),
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+                0.0F, 0.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+                0.0F, 0.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
 
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+                90.0F, 90.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+                90.0F, 90.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
 
-            double xOffset = radius * 0.5F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.5F * Math.cos(phi);
-
-            double x = center.x + xOffset * (radius * 0.5F * 0.1F);
-            double y = center.y + yOffset * (radius * 0.5F * 0.1F);
-            double z = center.z + zOffset * (radius * 0.5F * 0.1F);
-
-            this.level().addParticle(new TravelParticle.Options(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.05F, 1.0F, true, 5),
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+                0.0F, 90.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+                0.0F, 90.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
     }
 
     @Override
@@ -241,7 +235,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-            EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET)));
+            EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look.scale(OFFSET)));
         }
     }
 
@@ -271,7 +265,7 @@ public class BlueProjectile extends JujutsuProjectile {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
                         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+                        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
                     }
                 } else {
                     if (this.getTime() == DELAY) {
@@ -281,7 +275,7 @@ public class BlueProjectile extends JujutsuProjectile {
                         HitResult result = RotationUtil.getHitResult(owner, start, end);
 
                         Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
-                        this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+                        this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2, 0.0D));
                     }
                     this.pullEntities();
                     this.hurtEntities();

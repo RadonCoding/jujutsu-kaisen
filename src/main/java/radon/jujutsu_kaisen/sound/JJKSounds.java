@@ -48,6 +48,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "red_explosion")));
     public static DeferredHolder<SoundEvent, SoundEvent> SLAM = SOUNDS.register("slam", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "slam")));
+    public static DeferredHolder<SoundEvent, SoundEvent> PURE_LOVE = SOUNDS.register("pure_love", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")));
     public static DeferredHolder<SoundEvent, SoundEvent> FLAME_EXPLOSION = SOUNDS.register("flame_explosion", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "flame_explosion")));
     public static DeferredHolder<SoundEvent, SoundEvent> SHOOT = SOUNDS.register("shoot", () ->

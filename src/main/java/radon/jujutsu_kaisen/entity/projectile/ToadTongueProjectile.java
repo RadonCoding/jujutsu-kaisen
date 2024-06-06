@@ -41,7 +41,7 @@ public class ToadTongueProjectile extends JujutsuProjectile {
 
         this.setOwner(owner);
 
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F) - 0.1D, owner.getZ());
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2) - 0.1D, owner.getZ());
         this.setPos(spawn);
 
         this.target = target;
@@ -110,7 +110,7 @@ public class ToadTongueProjectile extends JujutsuProjectile {
 
                 living.teleportTo(this.pos.x, this.pos.y, this.pos.z);
 
-                this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2.0F), living.getZ());
+                this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2), living.getZ());
             } else {
                 this.discard();
             }

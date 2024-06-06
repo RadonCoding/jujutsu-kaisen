@@ -1,11 +1,8 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -13,8 +10,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,31 +17,30 @@ import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import java.util.Locale;
-
-public class VaporParticle<T extends VaporParticle.Options> extends TextureSheetParticle {
+public class VaporParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final boolean glow;
+    private final float opacity;
 
-    protected VaporParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options, SpriteSet pSprites) {
+    protected VaporParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, Options options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
-
-        this.lifetime = options.lifetime();
 
         this.xd = pXSpeed;
         this.yd = pYSpeed;
         this.zd = pZSpeed;
 
-        Vector3f color = options.color();
+        Vector3f color = options.color;
         this.rCol = color.x;
         this.gCol = color.y;
         this.bCol = color.z;
 
-        this.alpha = options.opacity();
+        this.quadSize = Math.max(options.scalar, (this.random.nextFloat() - 0.5F) * options.scalar);
+
+        this.opacity = options.opacity;
 
         this.glow = options.glow();
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.lifetime = options.lifetime;
 
         this.sprites = pSprites;
         this.setSprite(this.sprites.get(this.random));
@@ -59,6 +53,8 @@ public class VaporParticle<T extends VaporParticle.Options> extends TextureSheet
         super.tick();
 
         this.setSprite(this.sprites.get(this.random));
+
+        this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
     }
 
     @Override
@@ -106,7 +102,7 @@ public class VaporParticle<T extends VaporParticle.Options> extends TextureSheet
 
         public Particle createParticle(@NotNull VaporParticle.Options pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
-            return new VaporParticle<>(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType, this.sprites);
+            return new VaporParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType, this.sprites);
         }
     }
 }

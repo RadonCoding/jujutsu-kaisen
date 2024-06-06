@@ -50,7 +50,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         super(JJKEntities.THROWN_CHAIN.get(), pShooter, pShooter.level(), stack);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter);
-        this.setPos(new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
+        this.setPos(new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2), pShooter.getZ()).add(look));
 
         this.entityData.set(DATA_ITEM, stack);
     }
@@ -208,7 +208,7 @@ public class ThrownChainProjectile extends AbstractArrow {
                             return;
                         }
                     } else {
-                        this.setPos(this.pulled.position().add(0.0D, this.pulled.getBbHeight() / 2.0F, 0.0D));
+                        this.setPos(this.pulled.position().add(0.0D, this.pulled.getBbHeight() / 2, 0.0D));
 
                         this.pulled.setDeltaMovement(owner.position().subtract(this.pulled.position()).normalize());
 
@@ -232,7 +232,7 @@ public class ThrownChainProjectile extends AbstractArrow {
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
             if (living.isUsingItem()) {
-                this.setPos(new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+                this.setPos(new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
 
                 if (this.random.nextInt(5) == 0) {
                     this.playSound(SoundEvents.CHAIN_PLACE);
@@ -240,7 +240,7 @@ public class ThrownChainProjectile extends AbstractArrow {
             } else {
                 this.setDeltaMovement(look.scale(previous.subtract(current).length()));
 
-                this.setPos(new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+                this.setPos(new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
 
                 Vec3 movement = this.getDeltaMovement();
                 double d0 = movement.horizontalDistance();

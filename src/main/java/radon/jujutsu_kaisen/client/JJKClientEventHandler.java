@@ -1,8 +1,7 @@
 package radon.jujutsu_kaisen.client;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import com.mojang.blaze3d.systems.RenderSystem;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.client.dimension.JJKDimensionSpecialEffects;
@@ -334,7 +333,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.BIG_DISMANTLE.get(), DismantleRenderer::new);
             event.registerEntityRenderer(JJKEntities.WORLD_SLASH.get(), WorldSlashRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), FireArrowRenderer::new);
-            event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), PureLoveRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIREBALL.get(), FireballRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);

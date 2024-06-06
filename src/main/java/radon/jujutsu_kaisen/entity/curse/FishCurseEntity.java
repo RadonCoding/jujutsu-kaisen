@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.world.entity.EntityType;
@@ -16,8 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
@@ -29,14 +27,25 @@ public class FishCurseEntity extends PackCursedSpirit {
 
     public FishCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+    }
+
+    public FishCurseEntity(FishCurseEntity leader) {
+        super(JJKEntities.FISH_CURSE.get(), leader.level());
+
+        this.setLeader(leader);
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
     }
 
-    public FishCurseEntity(FishCurseEntity leader) {
-        this(JJKEntities.FISH_CURSE.get(), leader.level());
+    @Override
+    protected float getFlyingSpeed() {
+        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
+    }
 
-        this.setLeader(leader);
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.FLYING_SPEED, 2.0F)
+                .add(Attributes.MAX_HEALTH, 5.0D);
     }
 
     @Override
@@ -82,12 +91,6 @@ public class FishCurseEntity extends PackCursedSpirit {
     @Override
     public boolean canChant() {
         return false;
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED)
-                .add(Attributes.MAX_HEALTH, 5.0D);
     }
 
     @Override

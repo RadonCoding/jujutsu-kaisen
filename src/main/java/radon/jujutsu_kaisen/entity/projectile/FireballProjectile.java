@@ -55,7 +55,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.FIREBALL.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
     }
 
     @Override
@@ -81,12 +81,12 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         Vec3 location = result.getLocation();
 
-        Vec3 center = new Vec3(location.x, location.y + (this.getBbHeight() / 2.0F), location.z);
+        Vec3 center = new Vec3(location.x, location.y + (this.getBbHeight() / 2), location.z);
 
         int pillarCount = (int) (this.getFlamePillarRadius() * Math.PI * 2) * 8;
 
         for (int i = 0; i < pillarCount; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double theta = this.random.nextDouble() * Math.PI * 2;
             double phi = this.random.nextDouble() * Math.PI;
 
             double xOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.cos(theta);
@@ -120,7 +120,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         int shockwaveCount = (int) (this.getFlamePillarRadius() * 2 * Math.PI * 2) * 8;
 
         for (int i = 0; i < shockwaveCount; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double theta = this.random.nextDouble() * Math.PI * 2;
             double phi = this.random.nextDouble() * Math.PI;
 
             double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
@@ -175,14 +175,14 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 double dy = dir.y + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dz = dir.z + ((this.random.nextDouble() - 0.5D) * 0.5D);
 
-                this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
+                this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ(), dx, dy, dz);
             }
             if (this.getTime() < DELAY) {
                 if (this.getTime() % 5 == 0) {
                     owner.swing(InteractionHand.MAIN_HAND);
                 }
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
                         .add(look));
             } else if (this.getTime() == DELAY) {
                 this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));

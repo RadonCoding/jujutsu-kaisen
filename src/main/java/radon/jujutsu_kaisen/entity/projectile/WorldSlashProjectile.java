@@ -49,7 +49,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         super(JJKEntities.WORLD_SLASH.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
 
         this.setRoll(roll);
     }
@@ -58,7 +58,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
         super(JJKEntities.WORLD_SLASH.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+        EntityUtil.offset(this, look, pos.subtract(0.0D, this.getBbHeight() / 2, 0.0D));
 
         this.setRoll(roll);
         this.setLength(length);
@@ -115,7 +115,7 @@ public class WorldSlashProjectile extends JujutsuProjectile {
     public Set<Entity> getHits() {
         if (!(this.getOwner() instanceof LivingEntity)) return Set.of();
 
-        Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+        Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
 
         float yaw = this.getYRot();
         float pitch = this.getXRot();
@@ -171,8 +171,8 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
                 if (living == owner) continue;
 
-                float distance = (float) Math.abs((living.getY() + living.getBbHeight() / 2.0F) -
-                        (this.getY() + (this.getBbHeight() / 2.0F)));
+                float distance = (float) Math.abs((living.getY() + living.getBbHeight() / 2) -
+                        (this.getY() + (this.getBbHeight() / 2)));
 
                 if (distance < this.getBbHeight()) {
                     distance = 0.0F;

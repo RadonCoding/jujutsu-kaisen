@@ -35,10 +35,10 @@ public class IdleTransfigurationVisual implements IVisual {
     }
 
     private static void spawn(Level level, Vec3 pos, Vector3f color) {
-        int count = (int) (RADIUS * Math.PI * 2);
+        int count = (int) (RADIUS * Math.PI * 2) * 2;
 
         for (int i = 0; i < count; i++) {
-            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2.0D;
+            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2;
             double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
 
             double xOffset = RADIUS * Math.sin(phi) * Math.cos(theta);
@@ -49,7 +49,7 @@ public class IdleTransfigurationVisual implements IVisual {
             double y = pos.y + yOffset * (RADIUS * 0.1F);
             double z = pos.z + zOffset * (RADIUS * 0.1F);
 
-            level.addParticle(new TravelParticle.Options(pos.toVector3f(), color, RADIUS * 0.15F, 0.2F, true, 20),
+            level.addParticle(new TravelParticle.Options(pos, color, RADIUS * 0.15F, 0.2F, true, true, 20),
                     x, y, z, 0.0D, 1.0D, 0.0D);
         }
     }

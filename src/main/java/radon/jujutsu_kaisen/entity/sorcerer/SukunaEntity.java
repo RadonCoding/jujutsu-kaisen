@@ -34,13 +34,12 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.ten_shadows.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
@@ -51,7 +50,7 @@ public class SukunaEntity extends SorcererEntity {
 
     private static final EntityDataAccessor<String> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Optional<GameProfile>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class,
-            EntityDataSerializer.forValueType(ByteBufCodecs.optional(ByteBufCodecs.GAME_PROFILE)));
+            JJKEntityDataSerializers.GAME_PROFILE.get());
 
     @Nullable
     private UUID ownerUUID;

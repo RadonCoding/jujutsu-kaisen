@@ -39,7 +39,7 @@ public class BlackFlashRenderer extends EntityRenderer<BlackFlashEntity> {
     @Override
     public void render(@NotNull BlackFlashEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
         Vec3 start = new Vec3(pEntity.getX(), pEntity.getY(), pEntity.getZ());
         Vec3 end = start.add(pEntity.getStart().subtract(start).scale(RANGE))

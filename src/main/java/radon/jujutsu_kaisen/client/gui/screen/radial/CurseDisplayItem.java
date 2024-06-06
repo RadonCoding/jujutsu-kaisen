@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -51,7 +52,8 @@ public class CurseDisplayItem extends DisplayItem {
 
         float height = instance.getBbHeight();
         int scale = Math.round(Math.max(3.0F, 10.0F - instance.getBbHeight()));
-        RenderUtil.renderEntityInInventoryFollowsAngle(graphics, x, (int) (y + (height * scale / 2.0F)), scale, 0.0F, -1.0F, -0.5F, instance);
+        InventoryScreen.renderEntityInInventoryFollowsAngle(graphics, x, y, Math.round(instance.getBbWidth()), Math.round(height),
+                scale, 0.0F, -1.0F, -0.5F, instance);
     }
 
     @Override

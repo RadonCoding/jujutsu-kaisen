@@ -174,7 +174,7 @@ public class LightningEntity extends JujutsuProjectile {
         if (owner == null) return Vec3.ZERO;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look);
     }
 
     protected void calculateEndPos() {

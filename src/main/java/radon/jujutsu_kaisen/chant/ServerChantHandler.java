@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
 import java.util.*;
@@ -148,6 +149,8 @@ public class ServerChantHandler {
         @SubscribeEvent
         public static void onServerChat(ServerChatEvent event) {
             onChant(event.getPlayer(), event.getRawText().toLowerCase());
+
+            event.getPlayer().level().addFreshEntity(new PureLoveBeamEntity(event.getPlayer(), 10.0F));
         }
     }
 }

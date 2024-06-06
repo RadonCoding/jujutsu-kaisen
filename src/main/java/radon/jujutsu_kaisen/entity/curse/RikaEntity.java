@@ -29,7 +29,6 @@ import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
@@ -37,7 +36,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.ICommandable;
 import radon.jujutsu_kaisen.entity.ISorcerer;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.entity.SummonEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animation.*;
@@ -69,26 +68,17 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                         .multiply(this.getBbWidth() / 2.0F, 0.0D, this.getBbWidth() / 2.0F));
         this.moveTo(pos.x, pos.y, pos.z);
 
-        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
-
         this.moveControl = new FlyingMoveControl(this, 20, true);
     }
 
     @Override
     protected float getFlyingSpeed() {
-        float speed = super.getFlyingSpeed();
-
-        if (this.getTarget() != null) {
-            speed *= 25.0F;
-        } else {
-            speed *= 5.0F;
-        }
-        return speed;
+        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED)
+                .add(Attributes.FLYING_SPEED, 2.0F)
                 .add(Attributes.MAX_HEALTH, 5 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE);

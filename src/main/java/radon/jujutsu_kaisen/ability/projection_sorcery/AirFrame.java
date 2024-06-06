@@ -55,7 +55,7 @@ public class AirFrame extends Ability implements IChanneled, IDurationable {
 
         AirFrameEntity frame = new AirFrameEntity(owner, this.getOutput(owner));
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (frame.getBbHeight() / 2.0F), owner.getZ())
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (frame.getBbHeight() / 2), owner.getZ())
                 .add(look.scale(charge * speed));
         frame.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 

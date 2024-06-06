@@ -24,7 +24,7 @@ public class WaterballRenderer extends GeoEntityRenderer<WaterballEntity> {
 
     @Override
     public void preRender(PoseStack poseStack, WaterballEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
+        poseStack.translate(0.0F, animatable.getBbHeight() / 2, 0.0F);
 
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
 

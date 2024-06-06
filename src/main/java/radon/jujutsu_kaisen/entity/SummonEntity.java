@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity;
 
 
+import net.minecraft.world.level.pathfinder.PathType;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -46,6 +47,8 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
     protected SummonEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+
+        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
     @Override

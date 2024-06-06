@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -17,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 import java.util.UUID;
@@ -50,9 +47,9 @@ public class BlackFlashEntity extends Entity {
         this.setOwner(owner);
         this.setVictim(target);
 
-        this.entityData.set(DATA_START, owner.position().add(0.0D, owner.getEyeHeight() - (this.getBbHeight() / 2.0F), 0.0D).toVector3f());
+        this.entityData.set(DATA_START, owner.position().add(0.0D, owner.getEyeHeight() - (this.getBbHeight() / 2), 0.0D).toVector3f());
 
-        this.setPos(target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D).add(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+        this.setPos(target.position().add(0.0D, target.getBbHeight() / 2, 0.0D).add(0.0D, this.getBbHeight() / 2, 0.0D));
     }
 
     @Override
@@ -131,7 +128,7 @@ public class BlackFlashEntity extends Entity {
             this.discard();
         } else {
             if (victim != null) {
-                this.setPos(victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D).add(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+                this.setPos(victim.position().add(0.0D, victim.getBbHeight() / 2, 0.0D).add(0.0D, this.getBbHeight() / 2, 0.0D));
             }
         }
     }

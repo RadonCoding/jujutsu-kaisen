@@ -43,7 +43,7 @@ public class BlastAway extends CursedSpeech {
 
         CursedSpeechUtil.attack(owner, entity -> {
             if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) {
-                Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+                Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2, 0.0D);
                 ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS,

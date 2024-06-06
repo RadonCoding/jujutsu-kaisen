@@ -57,7 +57,7 @@ public class WaterShield extends Ability implements IChanneled, IDurationable {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        for (double phi = 0.0D; phi < Math.PI * 2.0D; phi += X_STEP) {
+        for (double phi = 0.0D; phi < Math.PI * 2; phi += X_STEP) {
             for (int i = 0; i < RADIUS; i++) {
                 double x = owner.getX() + RADIUS * Math.cos(phi);
                 double y = owner.getY() + i;

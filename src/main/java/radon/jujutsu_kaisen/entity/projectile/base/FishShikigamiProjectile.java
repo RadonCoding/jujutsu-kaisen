@@ -165,7 +165,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
         this.applyRotation();
 
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
                 .subtract(look.multiply(this.getBbWidth() * 3.0D, 0.0D, this.getBbWidth() * 3.0D))
                 .add(look)
                 .add(look.yRot(-90.0F).scale(this.getOffsetX()))
@@ -241,7 +241,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                 LivingEntity target = this.getTarget();
 
                 if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
-                    this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D)
+                    this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2, 0.0D)
                             .subtract(this.position()).normalize().scale(SPEED));
                 } else {
                     this.discard();

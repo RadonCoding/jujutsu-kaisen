@@ -33,10 +33,10 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
     public void preRender(PoseStack poseStack, FerociousBodyRepelEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (!(animatable.getOwner() instanceof LivingEntity owner)) return;
 
-        poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
+        poseStack.translate(0.0F, animatable.getBbHeight() / 2, 0.0F);
 
         Vec3 ownerPos = getEyePosition(owner, animatable.getBbHeight(), partialTick);
-        Vec3 projectilePos = EntityUtil.getPosition(animatable, animatable.getBbHeight() / 2.0F, partialTick);
+        Vec3 projectilePos = EntityUtil.getPosition(animatable, animatable.getBbHeight() / 2, partialTick);
         Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
         relative = relative.normalize();

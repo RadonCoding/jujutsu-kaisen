@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -13,12 +12,13 @@ import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.command.argument.JJKCommandArgumentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.entity.registry.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.item.armor.registry.JJKArmorMaterials;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.tab.JJKCreativeTabs;
@@ -44,6 +44,8 @@ public class JujutsuKaisen {
         JJKPacts.PACTS.register(bus);
 
         JJKEntities.ENTITIES.register(bus);
+
+        JJKEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
 
         JJKParticles.PARTICLES.register(bus);
 

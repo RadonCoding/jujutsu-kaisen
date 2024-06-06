@@ -44,7 +44,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
     }
 
     private float getRadius() {
-        return Math.max(Mth.PI, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
+        return Math.max(RADIUS, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
     }
 
     @Override
@@ -83,10 +83,10 @@ public class ElectricBlastEntity extends JujutsuProjectile {
 
         float radius = this.getRadius();
 
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         for (int i = 0; i < radius; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double theta = this.random.nextDouble() * Math.PI * 2;
             double phi = this.random.nextDouble() * Math.PI;
 
             double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);

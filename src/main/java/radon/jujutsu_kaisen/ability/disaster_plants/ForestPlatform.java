@@ -33,7 +33,7 @@ public class ForestPlatform extends Ability implements IToggled {
         if (data.hasToggled(this)) {
             return owner.getBlockStateOn().getCollisionShape(owner.level(), owner.blockPosition()).isEmpty() && HelperMethods.RANDOM.nextInt(5) != 0;
         }
-        return owner.fallDistance > 2.0F && !owner.isInFluidType();
+        return owner.fallDistance > 4.0F && !owner.isInFluidType();
     }
 
     @Override

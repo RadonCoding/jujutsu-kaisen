@@ -1,14 +1,10 @@
-package radon.jujutsu_kaisen.client.particle;
+package radon.jujutsu_kaisen.client.particle.registry;
 
-
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,6 +13,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.particle.*;
 
 import java.util.function.Function;
 

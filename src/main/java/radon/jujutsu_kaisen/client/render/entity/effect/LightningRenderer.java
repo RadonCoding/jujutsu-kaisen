@@ -36,7 +36,7 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
         Vector3f color = ParticleColors.getCursedEnergyColor(owner);
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
         double collidePosX = pEntity.collidePosX;;
         double collidePosY = pEntity.collidePosY;

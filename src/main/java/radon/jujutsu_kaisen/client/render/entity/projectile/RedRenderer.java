@@ -38,7 +38,7 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
     @Override
     public void render(RedProjectile pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
+        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2, 0.0D);
 
         if (pEntity.getTime() < 20) {
             this.renderLight(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);

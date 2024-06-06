@@ -63,7 +63,7 @@ public class QuickDraw extends Ability implements IToggled {
     private static void attack(LivingEntity owner, LivingEntity entity) {
         if (entity.invulnerableTime > 0) return;
 
-        owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D));
+        owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2, 0.0D));
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -213,7 +213,7 @@ public class QuickDraw extends Ability implements IToggled {
 
             if (reduced > 0.0F) return;
 
-            victim.lookAt(EntityAnchorArgument.Anchor.EYES, projectile.position().add(0.0D, projectile.getBbHeight() / 2.0F, 0.0D));
+            victim.lookAt(EntityAnchorArgument.Anchor.EYES, projectile.position().add(0.0D, projectile.getBbHeight() / 2, 0.0D));
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 
@@ -248,7 +248,7 @@ public class QuickDraw extends Ability implements IToggled {
 
             int blocked = Math.min(remaining, amount);
 
-            victim.lookAt(EntityAnchorArgument.Anchor.EYES, projectile.position().add(0.0D, projectile.getBbHeight() / 2.0F, 0.0D));
+            victim.lookAt(EntityAnchorArgument.Anchor.EYES, projectile.position().add(0.0D, projectile.getBbHeight() / 2, 0.0D));
 
             victim.swing(InteractionHand.MAIN_HAND, true);
 

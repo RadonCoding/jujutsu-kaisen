@@ -24,12 +24,11 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.Summon;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.IRightClickInputListener;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -99,8 +98,6 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
     @Override

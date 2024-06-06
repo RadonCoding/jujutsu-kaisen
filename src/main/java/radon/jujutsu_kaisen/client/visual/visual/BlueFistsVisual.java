@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.visual.visual;
 
 
+import radon.jujutsu_kaisen.ParticleAnimator;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
@@ -23,8 +24,8 @@ import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueFistsVisual implements IVisual {
-    private static final float RADIUS = 1.5F;
-    private static final float PARTICLE_SIZE = RADIUS * 0.2F;
+    private static final float RADIUS = 0.25F;
+    private static final float PARTICLE_SIZE = RADIUS;
 
     private static Vec3 rotateRoll(Vec3 pos, float roll) {
         float f = Mth.cos(roll);
@@ -65,46 +66,19 @@ public class BlueFistsVisual implements IVisual {
 
     @Override
     public void tick(LivingEntity entity, ClientVisualHandler.ClientData client) {
-        Vec3 right = getArmPos(entity, HumanoidArm.RIGHT).add(0.0D, PARTICLE_SIZE / 2.0F, 0.0D);
+        Vec3 right = getArmPos(entity, HumanoidArm.RIGHT)
+                .add(0.0D, PARTICLE_SIZE / 2.0F, 0.0D);
         spawn(entity.level(), right);
 
-        Vec3 left = getArmPos(entity, HumanoidArm.LEFT).add(0.0D, PARTICLE_SIZE / 2.0F, 0.0D);
+        Vec3 left = getArmPos(entity, HumanoidArm.LEFT)
+                .add(0.0D, PARTICLE_SIZE / 2.0F, 0.0D);
         spawn(entity.level(), left);
     }
 
     public static void spawn(Level level, Vec3 pos) {
-        int count = (int) (RADIUS * Math.PI * 2);
+        int count = (int) (RADIUS * Math.PI * 2) * 2;
 
-        for (int i = 0; i < count; i++) {
-            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2.0D;
-            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
-
-            double xOffset = RADIUS * Math.sin(phi) * Math.cos(theta);
-            double yOffset = RADIUS * Math.sin(phi) * Math.sin(theta);
-            double zOffset = RADIUS * Math.cos(phi);
-
-            double x = pos.x + xOffset * (RADIUS * 0.1F);
-            double y = pos.y + yOffset * (RADIUS * 0.1F);
-            double z = pos.z + zOffset * (RADIUS * 0.1F);
-
-            level.addParticle(new TravelParticle.Options(pos.toVector3f(), ParticleColors.DARK_BLUE, PARTICLE_SIZE, 0.2F, true, 20),
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
-
-        for (int i = 0; i < count; i++) {
-            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2.0D;
-            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
-
-            double xOffset = RADIUS * 0.5F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = RADIUS * 0.5F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = RADIUS * 0.5F * Math.cos(phi);
-
-            double x = pos.x + xOffset * (RADIUS * 0.5F * 0.1F);
-            double y = pos.y + yOffset * (RADIUS * 0.5F * 0.1F);
-            double z = pos.z + zOffset * (RADIUS * 0.5F * 0.1F);
-
-            level.addParticle(new TravelParticle.Options(pos.toVector3f(), ParticleColors.LIGHT_BLUE, PARTICLE_SIZE / 2.0F, 0.2F, true, 20),
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
+        ParticleAnimator.sphere(level, pos, () -> RADIUS, () -> 0.0F,
+                () -> PARTICLE_SIZE, count, 0.2F, true, true, 20, ParticleColors.LIGHT_BLUE);
     }
 }

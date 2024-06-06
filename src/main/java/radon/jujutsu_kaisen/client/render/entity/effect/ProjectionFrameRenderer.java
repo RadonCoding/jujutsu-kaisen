@@ -89,8 +89,8 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
 
         pPoseStack.popPose();
 
-        pPoseStack.translate(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
-        float scale = Math.max(victim.getBbWidth(), victim.getBbHeight() / 2.0F + 0.3F);
+        pPoseStack.translate(0.0D, victim.getBbHeight() / 2, 0.0D);
+        float scale = Math.max(victim.getBbWidth(), victim.getBbHeight() / 2 + 0.3F);
         pPoseStack.scale(scale, scale, 1.0F);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 

@@ -57,7 +57,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         super(pType, owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
 
         this.setRoll(roll);
     }
@@ -70,7 +70,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+        EntityUtil.offset(this, look, pos.subtract(0.0D, this.getBbHeight() / 2, 0.0D));
 
         this.setRoll(roll);
         this.setLength(length);
@@ -163,7 +163,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public Set<Entity> getHits() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return Set.of();
 
-        Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+        Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
 
         float yaw = this.getYRot();
         float pitch = this.getXRot();
@@ -214,6 +214,11 @@ public class DismantleProjectile extends JujutsuProjectile {
     @Override
     public void tick() {
         super.tick();
+
+        if (!this.instant && this.getDeltaMovement().lengthSqr() <= 1.0E-7D) {
+            this.discard();
+            return;
+        }
 
         if (!this.level().isClientSide) {
             for (Entity entity : this.getHits()) {

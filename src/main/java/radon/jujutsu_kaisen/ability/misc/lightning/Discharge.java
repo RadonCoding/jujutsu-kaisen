@@ -58,7 +58,8 @@ public class Discharge extends Ability implements IChanneled, IDurationable {
 
         ISorcererData data = cap.getSorcererData();
 
-        return data.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(owner) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F;
+        return data.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(owner) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
+                owner.getHealth() / owner.getMaxHealth() < 0.4F;
     }
 
     @Override
@@ -79,14 +80,14 @@ public class Discharge extends Ability implements IChanneled, IDurationable {
         float radius = this.getRadius(owner);
         int count = (int) (radius * 0.1F * Math.PI * 2);
 
-        Vec3 center = owner.position().add(0.0D, owner.getBbHeight() / 2.0F, 0.0D);
+        Vec3 center = owner.position().add(0.0D, owner.getBbHeight() / 2, 0.0D);
 
         for (int i = 0; i < count; i++) {
-            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2.0D;
+            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2;
             double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
 
             Vec3 direction = new Vec3(Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), Math.cos(phi));
-            Vec3 offset = center.add(direction.multiply(owner.getBbWidth() / 2.0F, owner.getBbHeight() / 2.0F, owner.getBbWidth() / 2.0F));
+            Vec3 offset = center.add(direction.multiply(owner.getBbWidth() / 2.0F, owner.getBbHeight() / 2, owner.getBbWidth() / 2.0F));
 
             level.sendParticles(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner),
                             direction, radius, 4), offset.x, offset.y, offset.z, 0,
@@ -115,7 +116,7 @@ public class Discharge extends Ability implements IChanneled, IDurationable {
         if (data.getEnergy() >= data.getMaxEnergy() / 2.0F) {
             if (owner.isInWater() || owner.getBlockStateOn().getFluidState().is(Fluids.WATER)) {
                 owner.level().addFreshEntity(new ElectricBlastEntity(owner, Math.min(this.getOutput(owner), data.getEnergy() * 0.01F),
-                        owner.position().add(0.0F, owner.getBbHeight() / 2.0F, 0.0F)));
+                        owner.position().add(0.0F, owner.getBbHeight() / 2, 0.0F)));
 
                 data.setEnergy(0.0F);
 

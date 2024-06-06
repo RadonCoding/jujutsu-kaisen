@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.util.Mth;
@@ -26,9 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
-import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
@@ -279,14 +277,14 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
         return this.segments != null;
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED);
-    }
-
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 1.0F;
+        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.FLYING_SPEED, 2.0F);
     }
 
     @Override

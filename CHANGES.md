@@ -6,3 +6,5 @@
   - Added entity handling inside domain dimension
   - Added floors to domains (WIP)
 - Improved lightning visuals
+- Improved Hollow Purple visuals
+- Improved Pure Love visuals

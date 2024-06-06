@@ -52,7 +52,7 @@ public class RedProjectile extends JujutsuProjectile {
         this.chanted = chanted;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class RedProjectile extends JujutsuProjectile {
         this.playSound(JJKSounds.RED_EXPLOSION.get(), 3.0F, 1.0F);
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+            Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
             ExplosionHandler.spawn(this.level().dimension(), offset, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()), 2 * 20, this.getPower() * 0.1F, owner,
                     JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), false);
         }
@@ -109,53 +109,49 @@ public class RedProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
-                if (!owner.isAlive()) {
-                    this.discard();
-                } else {
-                    if (this.getTime() % 5 == 0) {
-                        owner.swing(InteractionHand.MAIN_HAND);
-                    }
-                    Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                    EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
-                }
-            } else if (this.getTime() >= DURATION) {
-                this.discard();
-            } else if (this.getTime() >= DELAY) {
-                if (!this.level().isClientSide) {
-                    if (this.chanted) {
-                        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-                        if (cap == null) return;
+        if (this.getTime() < DELAY) {
+            if (this.getTime() % 5 == 0) {
+                owner.swing(InteractionHand.MAIN_HAND);
+            }
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+            EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ()).add(look));
+        } else if (this.getTime() >= DURATION) {
+            this.discard();
+        } else if (this.getTime() >= DELAY) {
+            if (!this.level().isClientSide) {
+                if (this.chanted) {
+                    IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                        IAbilityData data = cap.getAbilityData();
+                    if (cap == null) return;
 
-                        for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
-                            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-                                if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner) != Ability.Status.SUCCESS) {
-                                    continue;
-                                }
-                                data.addCooldown(JJKAbilities.HOLLOW_PURPLE.get());
+                    IAbilityData data = cap.getAbilityData();
+
+                    for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
+                        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                            if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner) != Ability.Status.SUCCESS) {
+                                continue;
                             }
-
-                            if (owner instanceof ServerPlayer player) {
-                                PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(data.serializeNBT(player.registryAccess())));
-                            }
-                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
-                            this.level().addFreshEntity(explosion);
-
-                            blue.discard();
-                            this.discard();
-
-                            break;
+                            data.addCooldown(JJKAbilities.HOLLOW_PURPLE.get());
                         }
+
+                        if (owner instanceof ServerPlayer player) {
+                            PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(data.serializeNBT(player.registryAccess())));
+                        }
+                        HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2, 0.0D));
+                        this.level().addFreshEntity(explosion);
+
+                        blue.discard();
+                        this.discard();
+
+                        break;
                     }
                 }
+            }
 
-                if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
-                }
+            if (this.getTime() == DELAY) {
+                this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
             }
         }
     }

@@ -37,7 +37,7 @@ public class WorldSlashRenderer extends EntityRenderer<WorldSlashProjectile> {
         Minecraft mc = Minecraft.getInstance();
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());

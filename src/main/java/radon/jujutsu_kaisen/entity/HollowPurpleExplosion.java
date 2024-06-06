@@ -73,7 +73,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             float radius = this.getRadius();
             int duration = (int) (radius / 5.0F * 20);
 
-            Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+            Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
             ExplosionHandler.spawn(this.level().dimension(), offset, radius, duration, this.getPower() * 0.1F, owner,
                     JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
         }

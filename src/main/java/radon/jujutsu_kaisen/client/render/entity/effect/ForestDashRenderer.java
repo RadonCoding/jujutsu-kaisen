@@ -46,7 +46,7 @@ public class ForestDashRenderer extends EntityRenderer<ForestDashEntity> {
         Level level = pEntity.level();
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
         pPoseStack.scale(ForestDashEntity.SIZE, ForestDashEntity.SIZE, ForestDashEntity.SIZE);
 
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());

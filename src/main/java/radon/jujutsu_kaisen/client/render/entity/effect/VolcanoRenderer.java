@@ -29,7 +29,7 @@ public class VolcanoRenderer extends GeoEntityRenderer<VolcanoEntity> {
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
         float pitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
 
-        poseStack.translate(0.0D, animatable.getBbHeight() / 2.0F, 0.0D);
+        poseStack.translate(0.0D, animatable.getBbHeight() / 2, 0.0D);
         poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
 

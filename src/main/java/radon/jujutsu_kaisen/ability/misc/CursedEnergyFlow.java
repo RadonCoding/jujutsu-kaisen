@@ -226,7 +226,7 @@ public class CursedEnergyFlow extends Ability implements IToggled {
                 abilityData.delayTickEvent(() -> {
                     victim.invulnerableTime = 0;
 
-                    Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
+                    Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2, 0.0D);
 
                     if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), amount)) {
                         ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);

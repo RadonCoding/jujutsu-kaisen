@@ -1,14 +1,11 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import net.minecraft.world.phys.AABB;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,8 +18,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -35,9 +30,6 @@ import org.joml.Vector4f;
 import radon.jujutsu_kaisen.client.render.entity.effect.BoltEffect;
 import radon.jujutsu_kaisen.client.render.entity.effect.BoltRenderer;
 import radon.jujutsu_kaisen.network.codec.JJKByteBufCodecs;
-import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.Locale;
 
 public class EmittingLightningParticle extends TextureSheetParticle {
     private final Vector3f color;

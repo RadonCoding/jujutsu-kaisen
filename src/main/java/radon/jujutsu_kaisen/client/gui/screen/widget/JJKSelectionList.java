@@ -76,6 +76,11 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
     }
 
     @Override
+    protected void renderListSeparators(@NotNull GuiGraphics pGuiGraphics) {
+
+    }
+
+    @Override
     public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         pGuiGraphics.renderOutline(this.x0, this.y0, this.width, this.height, -16777216);
         pGuiGraphics.fill(this.x0, this.y0, this.x1, this.y1, -1072689136);
