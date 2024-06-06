@@ -44,7 +44,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
-import radon.jujutsu_kaisen.client.model.base.SkinModel;
+import radon.jujutsu_kaisen.client.model.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
@@ -333,7 +333,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.BIG_DISMANTLE.get(), DismantleRenderer::new);
             event.registerEntityRenderer(JJKEntities.WORLD_SLASH.get(), WorldSlashRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), FireArrowRenderer::new);
-            event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), PureLoveBeamRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIREBALL.get(), FireballRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);

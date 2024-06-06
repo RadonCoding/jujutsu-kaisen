@@ -72,7 +72,7 @@ public class FireBeamModel extends EntityModel<FireBeamEntity> {
 
     @Override
     public void setupAnim(@NotNull FireBeamEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        float fraction = Math.min(1.0F, pAgeInTicks / FireBeamEntity.CHARGE);
+        float fraction = Math.min(1.0F, pAgeInTicks / pEntity.getCharge());
         float scale = (float) (Math.pow(fraction, 0.5F) * 3 + 0.05F * Math.cos(pAgeInTicks * 3));
 
         this.setScale(this.body4, scale * 0.4F, scale * 0.4F, scale * 0.4F);

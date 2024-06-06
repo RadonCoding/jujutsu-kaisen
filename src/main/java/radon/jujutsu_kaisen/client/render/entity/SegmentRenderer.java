@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.render.entity.base;
+package radon.jujutsu_kaisen.client.render.entity;
 
 
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;

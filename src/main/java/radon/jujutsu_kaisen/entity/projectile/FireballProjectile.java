@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -24,7 +21,6 @@ import radon.jujutsu_kaisen.client.particle.BetterSmokeParticle;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.ParticleUtil;

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -15,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;

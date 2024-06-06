@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect.base;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -24,16 +21,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.IAttack;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ICharged;
-import radon.jujutsu_kaisen.ability.IDomainAttack;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;

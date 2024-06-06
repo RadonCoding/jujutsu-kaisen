@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 
 public class ParticleColors {
-    public static Vector3f DARK_BLUE = Vec3.fromRGB24(2896273).toVector3f();
+    public static Vector3f DARK_BLUE = Vec3.fromRGB24(6911).toVector3f();
     public static Vector3f LIGHT_BLUE = Vec3.fromRGB24(6199039).toVector3f();
     public static Vector3f DARK_RED = Vec3.fromRGB24(16721446).toVector3f();
     public static Vector3f LIGHT_RED = Vec3.fromRGB24(16735838).toVector3f();

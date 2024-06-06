@@ -1,20 +1,15 @@
 package radon.jujutsu_kaisen.ability.disaster_tides;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.*;
-import radon.jujutsu_kaisen.entity.projectile.base.FishShikigamiProjectile;
+import radon.jujutsu_kaisen.entity.projectile.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.PiranhaShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.SharkShikigamiProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FishShikigami extends Ability {
     public static final double RANGE = 30.0D;

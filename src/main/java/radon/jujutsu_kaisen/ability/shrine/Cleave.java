@@ -79,25 +79,25 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
 
         for (int i = 1; i <= 20; i++) {
             data.delayTickEvent(() -> {
-                if (!target.isDeadOrDying()) {
-                    level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
-                            0.0D, 0.0D, 2.0D);
+                if (target.isDeadOrDying()) return;
 
-                    Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2, 0.0D);
-                    Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbWidth(),
-                            (HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbHeight(),
-                            (HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbWidth());
-                    ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, offset.x, offset.y, offset.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                }
+                level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
+                        0.0D, 0.0D, 1.0D);
+
+                Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2, 0.0D);
+                Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbWidth(),
+                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbHeight(),
+                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbWidth());
+                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, offset.x, offset.y, offset.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             }, i);
         }
 
         for (int i = 1; i <= 10; i++) {
             data.delayTickEvent(() -> {
-                if (!target.isDeadOrDying()) {
-                    owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
-                            domain == null ? 1.0F : 0.05F / 10, 1.0F);
-                }
+                if (target.isDeadOrDying()) return;
+
+                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
+                        domain == null ? 1.0F : 0.05F / 10, 1.0F);
             }, i * 2);
         }
 

@@ -2,8 +2,6 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 
 import radon.jujutsu_kaisen.ParticleAnimator;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +9,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -26,10 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -44,6 +39,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final float RADIUS = 1.0F;
     private static final float MAX_RADIUS = 3.0F;
     private static final double OFFSET = 8.0D;
+    private static final int PULL_RARITY = 10;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pType, Level level) {
         super(pType, level);
@@ -70,7 +66,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void pullEntities() {
-        float radius = this.getRadius();
+        float radius = this.getRadius() * 2;
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
 
@@ -153,7 +149,7 @@ public class BlueProjectile extends JujutsuProjectile {
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                 for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                    if (this.random.nextInt(Math.round(radius * 2 * 20)) != 0) continue;
+                    if (this.random.nextInt(Math.round(radius * PULL_RARITY)) != 0) continue;
 
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState state = this.level().getBlockState(pos);
@@ -188,24 +184,24 @@ public class BlueProjectile extends JujutsuProjectile {
         ParticleAnimator.sphere(this.level(), center, () -> radius * scale * 0.25F, () -> 0.0F,
                 () -> radius * scale * 0.25F, count, 0.25F, true, true, 5, ParticleColors.LIGHT_BLUE);
 
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, (this.getTime() * 0.5F) % 360.0F,
                 90.0F, 0.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
                 90.0F, 0.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
 
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
                 0.0F, 0.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, (this.getTime() * 0.5F) % 360.0F,
                 0.0F, 0.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
 
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, (this.getTime() * 0.5F) % 360.0F,
                 90.0F, 90.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
-                90.0F, 90.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+                90.0F, 90.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.075F);
 
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
                 0.0F, 90.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
-        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale, (this.getTime() * 0.5F) % 360.0F,
+        ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, (this.getTime() * 0.5F) % 360.0F,
                 0.0F, 90.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
     }
 

@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.model.base;
+package radon.jujutsu_kaisen.client.model;
 
 
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;

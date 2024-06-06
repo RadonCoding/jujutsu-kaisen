@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FireBeamEntity extends BeamEntity {
     public static final double RANGE = 32.0D;
-    public static final int CHARGE = 20;
+    private static final int CHARGE = 20;
 
     public FireBeamEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);

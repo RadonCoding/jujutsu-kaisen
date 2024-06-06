@@ -1,10 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
@@ -14,10 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.EmittingLightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 

@@ -3,21 +3,25 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.world.entity.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ParticleAnimator;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.effect.base.BeamEntity;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class PureLoveBeamEntity extends JujutsuProjectile {
-    public static final double RANGE = 16.0D;
+public class PureLoveBeamEntity extends BeamEntity {
+    public static final double RANGE = 32.0D;
     public static final int CHARGE = (int) (2.5F * 20);
     public static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
@@ -29,11 +33,47 @@ public class PureLoveBeamEntity extends JujutsuProjectile {
     }
 
     public PureLoveBeamEntity(LivingEntity owner, float power) {
-        super(JJKEntities.PURE_LOVE.get(), owner.level(), owner, power);
+        super(JJKEntities.PURE_LOVE.get(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (owner.getBbHeight() * 0.1F) -
                 (this.getBbHeight() / 2), owner.getZ()).add(look));
+    }
+
+    @Override
+    public int getFrames() {
+        return 16;
+    }
+
+    @Override
+    public float getScale() {
+        return 1.0F;
+    }
+
+    @Override
+    protected double getRange() {
+        return RANGE;
+    }
+
+    @Override
+    protected float getDamage() {
+        return 30.0F;
+    }
+
+    @Override
+    public int getDuration() {
+        return DURATION;
+    }
+
+    @Override
+    public int getCharge() {
+        return CHARGE;
+    }
+
+    @Override
+    @Nullable
+    protected Ability getSource() {
+        return JJKAbilities.SHOOT_PURE_LOVE.get();
     }
 
     @Override

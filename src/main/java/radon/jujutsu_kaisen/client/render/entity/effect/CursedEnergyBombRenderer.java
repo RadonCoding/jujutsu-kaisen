@@ -34,7 +34,6 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
     private static final int TEXTURE_WIDTH = 128;
     private static final int TEXTURE_HEIGHT = 32;
     private static final float START_RADIUS = 1.3F;
-    private static final float BEAM_RADIUS = 1.0F;
     private boolean clearerView = false;
 
     public CursedEnergyBombRenderer(EntityRendererProvider.Context pContext) {
@@ -137,10 +136,10 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
         float offset = this.clearerView ? -1.0F : 0.0F;
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, offset, 0.0F, color, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, length, 0.0F, color, minU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, length, 0.0F, color, maxU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, offset, 0.0F, color, maxU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, 0.0F, color, minU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, 0.0F, color, minU, maxV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, 0.0F, color, maxU, maxV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, 0.0F, color, maxU, minV, 1.0F, packedLight);
     }
 
     private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, Vector3f color, int packedLight) {

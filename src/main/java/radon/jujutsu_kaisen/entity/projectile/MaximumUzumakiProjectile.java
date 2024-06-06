@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;

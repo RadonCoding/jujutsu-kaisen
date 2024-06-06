@@ -28,7 +28,6 @@ public class PiercingWaterRenderer extends EntityRenderer<PiercingWaterEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/piercing_water.png");
     private static final int TEXTURE_WIDTH = 16;
     private static final int TEXTURE_HEIGHT = 512;
-    private static final float BEAM_RADIUS = 0.1F;
     private static final float ALPHA = 0.5F;
     private boolean clearerView = false;
 
@@ -82,35 +81,35 @@ public class PiercingWaterRenderer extends EntityRenderer<PiercingWaterEntity> {
         Matrix4f matrix4f = pose.pose();
         float offset = this.clearerView ? -1.0F : 0.0F;
 
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, length, BEAM_RADIUS, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, 1.0F, minU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, 1.0F, minU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, 1.0F, maxU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, 1.0F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, -1.0F, minU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, -1.0F, minU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, -1.0F, maxU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, -1.0F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, length, BEAM_RADIUS, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, maxU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, -1.0F, minU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, 1.0F, minU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, 1.0F, maxU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, -1.0F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, -1.0F, minU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, 1.0F, minU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, 1.0F, maxU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, -1.0F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, -1.0F, minU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, length, 1.0F, minU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, 1.0F, maxU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, -1.0F, offset, -1.0F, maxU, minV, ALPHA, packedLight);
 
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, ALPHA, packedLight);
-        this.drawVertex(matrix4f, pose, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, -1.0F, minU, minV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, length, 1.0F, minU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, 1.0F, maxU, maxV, ALPHA, packedLight);
+        this.drawVertex(matrix4f, pose, consumer, 1.0F, offset, -1.0F, maxU, minV, ALPHA, packedLight);
     }
 
     private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {

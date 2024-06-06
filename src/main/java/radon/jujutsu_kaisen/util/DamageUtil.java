@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.util;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -13,7 +10,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 
 public class DamageUtil {

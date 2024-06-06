@@ -69,16 +69,15 @@ public class SlashParticle extends TextureSheetParticle {
 
         if (this.entity == null) {
             this.entity = this.level.getEntity(this.entityId);
-
-            if (this.entity != null) {
-                Vec3 center = this.entity.position().add(0.0D, this.entity.getBbHeight() / 2, 0.0D);
-                this.offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth(),
-                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbHeight(),
-                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth());
-            }
         } else {
-            this.quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * (this.entity.getBbWidth() + this.entity.getBbHeight()) * 10.0F;
+            this.quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * (this.entity.getBbWidth() + this.entity.getBbHeight()) * 20.0F;
+
+            Vec3 center = this.entity.position().add(0.0D, this.entity.getBbHeight() / 2, 0.0D);
+            this.offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth(),
+                    (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbHeight(),
+                    (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth());
         }
+
         if (this.entity == null || this.entity.isRemoved() || !this.entity.isAlive()) {
             this.remove();
         }
@@ -86,7 +85,7 @@ public class SlashParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
-        if (this.entity == null) return;
+        if (this.offset == null) return;
 
         Minecraft mc = Minecraft.getInstance();
 
