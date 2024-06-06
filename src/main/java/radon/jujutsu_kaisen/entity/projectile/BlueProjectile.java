@@ -63,7 +63,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityxata.@NotNull Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
 
         pBuilder.define(DATA_MOTION, false);
