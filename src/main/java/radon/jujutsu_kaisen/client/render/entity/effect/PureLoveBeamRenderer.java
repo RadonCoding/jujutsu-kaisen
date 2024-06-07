@@ -78,15 +78,15 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
         float radius = entity.getScale() * 2.0F;
 
         ParticleAnimator.sphere(entity.level(), start, () -> radius * HelperMethods.RANDOM.nextFloat() * 4.0F, () -> radius * 0.2F,
-                () -> radius * intensity * HelperMethods.RANDOM.nextFloat() * 0.3F, Math.round(radius * intensity * 4.0F),
+                () -> radius * intensity * HelperMethods.RANDOM.nextFloat() * 0.3F, Math.round(radius * intensity),
                 1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_DARK);
 
         ParticleAnimator.sphere(entity.level(), start, () -> radius * 0.1F, () -> radius * intensity * 0.25F,
-                () -> radius * intensity * 0.2F, Math.round(radius * intensity * 4.0F),
+                () -> radius * intensity * 0.2F, Math.round(radius * intensity),
                 1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_BRIGHT);
 
         ParticleAnimator.lightning(entity.level(), start, radius * intensity * 0.2F, () -> radius * (1.0F + intensity) * HelperMethods.RANDOM.nextFloat() * 4.0F,
-                Math.round(radius * intensity * 2.0F), 4, ParticleColors.PURE_LOVE_BRIGHT);
+                Math.round(radius * intensity * 0.5F), 4, ParticleColors.PURE_LOVE_BRIGHT);
     }
 
     private void renderEnd(PureLoveBeamEntity entity, Vec3 end, float partialTicks) {
@@ -97,11 +97,11 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
         float radius = entity.getScale() * 4.0F;
 
         ParticleAnimator.sphere(entity.level(), end, () -> radius * HelperMethods.RANDOM.nextFloat() * 4.0F, () -> radius * 0.2F,
-                () -> radius * intensity * HelperMethods.RANDOM.nextFloat() * 0.3F, Math.round(radius * intensity * 4.0F),
+                () -> radius * intensity * HelperMethods.RANDOM.nextFloat() * 0.3F, Math.round(radius * intensity),
                 1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_DARK);
 
         ParticleAnimator.sphere(entity.level(), end, () -> radius * 0.1F, () -> radius * intensity * 0.25F,
-                () -> radius * intensity * 0.2F, Math.round(radius * intensity * 4.0F),
+                () -> radius * intensity * 0.2F, Math.round(radius * intensity),
                 1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_BRIGHT);
     }
 
