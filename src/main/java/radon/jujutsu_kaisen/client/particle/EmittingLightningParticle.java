@@ -46,6 +46,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         this.direction = options.direction();
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+
         this.lifetime = options.lifetime();
 
         this.renderer = new BoltRenderer();

@@ -49,7 +49,6 @@ public class ParticleAnimator {
                     .zRot(roll * Mth.DEG_TO_RAD)
                     .xRot(pitch * Mth.DEG_TO_RAD)
                     .yRot(yaw * Mth.DEG_TO_RAD));
-
             level.addParticle(new TravelParticle.Options(pos, color, scale, 1.0F, true, true, 1),
                     true, pos.x, pos.y, pos.z, 0.0D, 0.0D, 0.0D);
         }

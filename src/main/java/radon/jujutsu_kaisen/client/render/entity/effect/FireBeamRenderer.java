@@ -55,8 +55,8 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
         this.clearerView = Minecraft.getInstance().player == pEntity.getOwner() &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
-        float yaw = (pEntity.prevYaw + (pEntity.renderYaw - pEntity.prevYaw) * pPartialTick) * Mth.RAD_TO_DEG;
-        float pitch = (pEntity.prevPitch + (pEntity.renderPitch - pEntity.prevPitch) * pPartialTick) * Mth.RAD_TO_DEG;
+        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
         if (!this.clearerView) {
             Vector3f color = ParticleColors.FIRE_YELLOW;
@@ -76,12 +76,12 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
         }
 
         if (pEntity.getTime() >= pEntity.getCharge()) {
-            double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
-            double collidePosY = pEntity.prevCollidePosY + (pEntity.collidePosY - pEntity.prevCollidePosY) * pPartialTick;
-            double collidePosZ = pEntity.prevCollidePosZ + (pEntity.collidePosZ - pEntity.prevCollidePosZ) * pPartialTick;
-            double posX = pEntity.xo + (pEntity.getX() - pEntity.xo) * pPartialTick;
-            double posY = pEntity.yo + (pEntity.getY() - pEntity.yo) * pPartialTick;
-            double posZ = pEntity.zo + (pEntity.getZ() - pEntity.zo) * pPartialTick;
+            double collidePosX = Mth.lerp(pPartialTick, pEntity.prevCollidePosX, pEntity.collidePosX);
+            double collidePosY = Mth.lerp(pPartialTick, pEntity.prevCollidePosY, pEntity.collidePosY);
+            double collidePosZ = Mth.lerp(pPartialTick, pEntity.prevCollidePosZ, pEntity.collidePosZ);
+            double posX = Mth.lerp(pPartialTick, pEntity.xo, pEntity.getX());
+            double posY = Mth.lerp(pPartialTick, pEntity.yo, pEntity.getY());
+            double posZ = Mth.lerp(pPartialTick, pEntity.zo, pEntity.getZ());
 
             float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
             int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);

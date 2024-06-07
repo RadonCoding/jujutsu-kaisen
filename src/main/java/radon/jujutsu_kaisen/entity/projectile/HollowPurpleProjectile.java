@@ -30,8 +30,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final float SPEED = 5.0F;
     private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 30.0F;
-    private static final float MAX_RADIUS = 6.0F;
-    private static final float RADIUS = 2.0F;
+    private static final float MAX_RADIUS = 10.0F;
+    private static final float RADIUS = 4.0F;
     private static final int ANIMATION = 20;
 
     public HollowPurpleProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
@@ -41,7 +41,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     public HollowPurpleProjectile(LivingEntity owner, float power) {
         super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
-        float radius = this.getRadius() * 2;
+        float radius = this.getRadius() * 0.5F;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
@@ -158,7 +158,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         float radius = this.getRadius();
-        int count = (int) (radius * Math.PI * 2) * 2;
+        int count = Math.round(radius * 10);;
 
         ParticleAnimator.sphere(this.level(), center, () -> radius * 0.5F, () -> 0.0F,
                 () -> radius * 0.25F, count, 1.0F, true, true, 5, ParticleColors.DARK_PURPLE);
@@ -192,9 +192,12 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                 if (this.getTime() % 5 == 0) {
                     owner.swing(InteractionHand.MAIN_HAND);
                 }
+
+                float radius = this.getRadius() * 0.5F;
+
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                 EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2), owner.getZ())
-                        .add(look.scale(this.getRadius())));
+                        .add(look.scale(radius)));
             }
         } else {
             if (!this.level().isClientSide) {

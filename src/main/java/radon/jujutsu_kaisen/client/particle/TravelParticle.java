@@ -36,6 +36,7 @@ public class TravelParticle extends TextureSheetParticle {
         super(pLevel, pX, pY, pZ);
 
         this.quadSize = Math.max(options.scalar, (this.random.nextFloat() - 0.5F) * options.scalar);
+
         this.lifetime = options.lifetime;
 
         this.target = options.target;

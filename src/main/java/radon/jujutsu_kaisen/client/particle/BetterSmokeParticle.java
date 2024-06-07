@@ -25,6 +25,7 @@ public class BetterSmokeParticle extends SmokeParticle {
         this.friction = 0.98F;
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+
         this.lifetime = options.lifetime();
 
         this.xd = pXSpeed;

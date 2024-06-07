@@ -28,7 +28,7 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
     private static final float TEXTURE_HEIGHT = 32.0F;
     private static final float BEAM_MIN_U = 176.0F / TEXTURE_WIDTH;
     private static final float BEAM_MAX_U = 1.0F;
-    private static final float PIXEL_SCALE = 1.0F / 16.0F;
+    private static final float PIXEL_SCALE = 1.0F / 16;
     private static final int MAX_HEIGHT = 256;
     private static final float DRAW_FADE_IN_RATE = 2.0F;
     private static final float DRAW_FADE_IN_POINT = 1.0F / DRAW_FADE_IN_RATE;

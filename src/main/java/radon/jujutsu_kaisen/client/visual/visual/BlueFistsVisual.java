@@ -76,7 +76,7 @@ public class BlueFistsVisual implements IVisual {
     }
 
     public static void spawn(Level level, Vec3 pos) {
-        int count = (int) (RADIUS * Math.PI * 2) * 2;
+        int count = Math.round(RADIUS * 10);
 
         ParticleAnimator.sphere(level, pos, () -> RADIUS, () -> 0.0F,
                 () -> PARTICLE_SIZE, count, 0.2F, true, true, 20, ParticleColors.LIGHT_BLUE);

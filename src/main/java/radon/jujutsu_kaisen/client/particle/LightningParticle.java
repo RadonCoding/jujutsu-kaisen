@@ -33,6 +33,7 @@ public class LightningParticle extends TextureSheetParticle {
         this.bCol = color.z;
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+
         this.lifetime = options.lifetime();
 
         this.sprites = pSprites;

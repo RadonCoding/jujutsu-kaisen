@@ -71,7 +71,7 @@ public class SlashParticle extends TextureSheetParticle {
             this.entity = this.level.getEntity(this.entityId);
         } else {
             this.quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * (this.entity.getBbWidth() + this.entity.getBbHeight()) * 20.0F;
-
+    
             Vec3 center = this.entity.position().add(0.0D, this.entity.getBbHeight() / 2, 0.0D);
             this.offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth(),
                     (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbHeight(),

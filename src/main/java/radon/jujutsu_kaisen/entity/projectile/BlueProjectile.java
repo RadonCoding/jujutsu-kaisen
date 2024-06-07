@@ -36,8 +36,8 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final int DELAY = 20;
     private static final float DAMAGE = 3.0F;
     private static final int DURATION = 5 * 20;
-    private static final float RADIUS = 1.0F;
-    private static final float MAX_RADIUS = 3.0F;
+    private static final float RADIUS = 2.0F;
+    private static final float MAX_RADIUS = 8.0F;
     private static final double OFFSET = 8.0D;
     private static final int PULL_RARITY = 10;
 
@@ -77,7 +77,7 @@ public class BlueProjectile extends JujutsuProjectile {
         for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
             if (!(entity instanceof LivingEntity) && !(entity instanceof FallingBlockEntity)) continue;
 
-            Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).normalize();
+            Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2), entity.getZ()).normalize();
             entity.setDeltaMovement(direction);
             entity.hurtMarked = true;
         }
@@ -177,9 +177,10 @@ public class BlueProjectile extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         float radius = this.getRadius() * (this.getTime() < DELAY ? 0.25F : 1.0F);
-        int count = (int) (radius * Math.PI * 2) * 2;
+        int count = Math.round(radius * 10);;
 
-        float scale = 1.0F + 0.25F * (float) Math.sin(2 * Math.PI * 0.05F * this.getTime());
+        float scale = (1.0F - ((float) this.getTime() / DURATION)) +
+                0.1F * (float) Math.sin(2 * Math.PI * 0.05F * this.getTime());
 
         ParticleAnimator.sphere(this.level(), center, () -> radius * scale * 0.25F, () -> 0.0F,
                 () -> radius * scale * 0.25F, count, 0.25F, true, true, 5, ParticleColors.LIGHT_BLUE);
@@ -197,7 +198,7 @@ public class BlueProjectile extends JujutsuProjectile {
         ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, (this.getTime() * 0.5F) % 360.0F,
                 90.0F, 90.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
         ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
-                90.0F, 90.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.075F);
+                90.0F, 90.0F, -45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);
 
         ParticleAnimator.ring(this.level(), center, count / 2, radius * scale * 0.75F, 180.0F + ((this.getTime() * 0.5F) % 180.0F),
                 0.0F, 90.0F, 45.0F, ParticleColors.DARK_BLUE, radius * scale * 0.1F);

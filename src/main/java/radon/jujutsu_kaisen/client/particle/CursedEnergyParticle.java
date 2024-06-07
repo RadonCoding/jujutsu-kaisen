@@ -28,6 +28,7 @@ public class CursedEnergyParticle extends TextureSheetParticle {
         this.zd = pZSpeed;
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+
         this.lifetime = options.lifetime();
 
         Vector3f color = options.color();

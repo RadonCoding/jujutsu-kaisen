@@ -327,7 +327,7 @@ public class JJKEntities {
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<RedProjectile>> RED = ENTITIES.register("red", () ->
             EntityType.Builder.<RedProjectile>of(RedProjectile::new, MobCategory.MISC)
-                    .sized(0.15F, 0.15F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "red")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<BlueProjectile>> BLUE = ENTITIES.register("blue", () ->

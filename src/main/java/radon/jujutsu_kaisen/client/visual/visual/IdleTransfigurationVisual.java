@@ -35,7 +35,7 @@ public class IdleTransfigurationVisual implements IVisual {
     }
 
     private static void spawn(Level level, Vec3 pos, Vector3f color) {
-        int count = (int) (RADIUS * Math.PI * 2) * 2;
+        int count = Math.round(RADIUS * 10);
 
         for (int i = 0; i < count; i++) {
             double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2;

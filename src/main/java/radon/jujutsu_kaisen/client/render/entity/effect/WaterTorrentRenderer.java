@@ -52,8 +52,8 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
         double posX = pEntity.xo + (pEntity.getX() - pEntity.xo) * pPartialTick;
         double posY = pEntity.yo + (pEntity.getY() - pEntity.yo) * pPartialTick;
         double posZ = pEntity.zo + (pEntity.getZ() - pEntity.zo) * pPartialTick;
-        float yaw = pEntity.prevYaw + (pEntity.renderYaw - pEntity.prevYaw) * pPartialTick;
-        float pitch = pEntity.prevPitch + (pEntity.renderPitch - pEntity.prevPitch) * pPartialTick;
+        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
         float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
         int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
@@ -68,7 +68,7 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
 
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
 
-        this.renderBeam(length, 180.0F / Mth.PI * yaw, 180.0F / Mth.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
+        this.renderBeam(length, yaw, pitch, frame, pPoseStack, consumer, pPackedLight);
 
         pPoseStack.popPose();
     }

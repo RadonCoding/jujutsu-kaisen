@@ -54,14 +54,14 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
         this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
-        double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
-        double collidePosY = pEntity.prevCollidePosY + (pEntity.collidePosY - pEntity.prevCollidePosY) * pPartialTick;
-        double collidePosZ = pEntity.prevCollidePosZ + (pEntity.collidePosZ - pEntity.prevCollidePosZ) * pPartialTick;
-        double posX = pEntity.xo + (pEntity.getX() - pEntity.xo) * pPartialTick;
-        double posY = pEntity.yo + (pEntity.getY() - pEntity.yo) * pPartialTick;
-        double posZ = pEntity.zo + (pEntity.getZ() - pEntity.zo) * pPartialTick;
-        float yaw = pEntity.prevYaw + (pEntity.renderYaw - pEntity.prevYaw) * pPartialTick;
-        float pitch = pEntity.prevPitch + (pEntity.renderPitch - pEntity.prevPitch) * pPartialTick;
+        double collidePosX = Mth.lerp(pPartialTick, pEntity.prevCollidePosX, pEntity.collidePosX);
+        double collidePosY = Mth.lerp(pPartialTick, pEntity.prevCollidePosY, pEntity.collidePosY);
+        double collidePosZ = Mth.lerp(pPartialTick, pEntity.prevCollidePosZ, pEntity.collidePosZ);
+        double posX = Mth.lerp(pPartialTick, pEntity.xo, pEntity.getX());
+        double posY = Mth.lerp(pPartialTick, pEntity.yo, pEntity.getY());
+        double posZ = Mth.lerp(pPartialTick, pEntity.zo, pEntity.getZ());
+        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
         float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
         int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
@@ -79,7 +79,7 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
         this.renderStart(frame, pPoseStack, consumer, color, pPackedLight);
 
         if (pEntity.getTime() > pEntity.getCharge()) {
-            this.renderBeam(length, 180.0F / Mth.PI * yaw, 180.0F / Mth.PI * pitch, frame, pPoseStack, consumer, color, pPackedLight);
+            this.renderBeam(length, yaw, pitch, frame, pPoseStack, consumer, color, pPackedLight);
 
             pPoseStack.pushPose();
             pPoseStack.translate(collidePosX - posX, collidePosY - posY, collidePosZ - posZ);

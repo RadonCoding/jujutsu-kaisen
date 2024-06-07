@@ -44,7 +44,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
         BlockRenderDispatcher renderer = mc.getBlockRenderer();
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0D, 0.0D);
+        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2, 0.0D);
 
         if (pEntity.getExplosionTime() < 10) {
             float time = (pEntity.getTime() + pPartialTick) * 10.0F;
