@@ -16,13 +16,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ParticleAnimator;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/pure_love.png");
@@ -37,8 +40,6 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
 
     @Override
     public void render(PureLoveBeamEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        if (pEntity.getTime() < pEntity.getCharge()) return;
-
         this.clearerView = Minecraft.getInstance().player == pEntity.getOwner() &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
@@ -54,12 +55,16 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
         float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
 
+        this.renderStart(pEntity, new Vec3(posX, posY + (pEntity.getBbHeight() / 2), posZ), pPartialTick);
+
         if (pEntity.getTime() > pEntity.getCharge()) {
             this.renderBeam(length, pEntity.getScale(), 180.0F / Mth.PI * yaw, 180.0F / Mth.PI * pitch, pPoseStack, consumer, pPackedLight);
+
+            this.renderEnd(pEntity, new Vec3(collidePosX, collidePosY, collidePosZ), pPartialTick);
         }
         pPoseStack.popPose();
     }
@@ -67,6 +72,41 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull PureLoveBeamEntity pEntity) {
         return TEXTURE;
+    }
+
+    private void renderStart(PureLoveBeamEntity entity, Vec3 start, float partialTicks) {
+        float time = entity.getTime() + partialTicks;
+
+        float intensity = Math.min(1.0F, time / entity.getCharge());
+
+        float radius = entity.getScale() * 2.0F;
+
+        ParticleAnimator.sphere(entity.level(), start, () -> radius * HelperMethods.RANDOM.nextFloat() * 4.0F, () -> radius * 0.2F,
+                () -> radius * intensity * HelperMethods.RANDOM.nextFloat() * 0.3F, Math.round(radius * intensity * 4.0F),
+                1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_DARK);
+
+        ParticleAnimator.sphere(entity.level(), start, () -> radius * 0.1F, () -> radius * intensity * 0.25F,
+                () -> radius * intensity * 0.2F, Math.round(radius * intensity * 4.0F),
+                1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_BRIGHT);
+
+        ParticleAnimator.lightning(entity.level(), start, radius * intensity * 0.2F, () -> radius * (1.0F + intensity) * HelperMethods.RANDOM.nextFloat() * 4.0F,
+                Math.round(radius * intensity * 2.0F), 4, ParticleColors.PURE_LOVE_BRIGHT);
+    }
+
+    private void renderEnd(PureLoveBeamEntity entity, Vec3 end, float partialTicks) {
+        float time = entity.getTime() + partialTicks;
+
+        float intensity = Math.min(1.0F, time / entity.getCharge());
+
+        float radius = entity.getScale() * 4.0F;
+
+        ParticleAnimator.sphere(entity.level(), end, () -> radius * HelperMethods.RANDOM.nextFloat() * 4.0F, () -> radius * 0.2F,
+                () -> radius * intensity * HelperMethods.RANDOM.nextFloat() * 0.3F, Math.round(radius * intensity * 4.0F),
+                1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_DARK);
+
+        ParticleAnimator.sphere(entity.level(), end, () -> radius * 0.1F, () -> radius * intensity * 0.25F,
+                () -> radius * intensity * 0.2F, Math.round(radius * intensity * 4.0F),
+                1.0F, true, true, (int) (entity.getCharge() - time), ParticleColors.PURE_LOVE_BRIGHT);
     }
 
     private void drawBeam(float length, float scale, PoseStack poseStack, VertexConsumer consumer, int packedLight) {

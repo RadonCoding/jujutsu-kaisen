@@ -149,8 +149,6 @@ public class ServerChantHandler {
         @SubscribeEvent
         public static void onServerChat(ServerChatEvent event) {
             onChant(event.getPlayer(), event.getRawText().toLowerCase());
-
-            event.getPlayer().level().addFreshEntity(new PureLoveBeamEntity(event.getPlayer(), 10.0F));
         }
     }
 }

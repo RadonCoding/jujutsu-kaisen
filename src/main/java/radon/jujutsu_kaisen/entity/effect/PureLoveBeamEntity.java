@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity.effect;
 
 
 import net.minecraft.world.entity.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ParticleAnimator;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -13,11 +12,9 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.entity.effect.base.BeamEntity;
-import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class PureLoveBeamEntity extends BeamEntity {
@@ -78,25 +75,6 @@ public class PureLoveBeamEntity extends BeamEntity {
                 .add(RotationUtil.getTargetAdjustedLookAngle(owner));
     }
 
-    private void spawnParticles() {
-        float intensity = Math.min(1.0F, (float) this.getTime() / CHARGE);
-
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
-
-        float radius = this.getScale() * 2.0F;
-
-        ParticleAnimator.sphere(this.level(), center, () -> radius * this.random.nextFloat() * 4.0F, () -> radius * 0.2F,
-                () -> radius * intensity * this.random.nextFloat() * 0.3F, Math.round(radius * intensity * 8.0F),
-                1.0F, true, true, CHARGE - this.getTime(), ParticleColors.PURE_LOVE_DARK);
-
-        ParticleAnimator.sphere(this.level(), center, () -> radius * 0.1F, () -> radius * intensity * 0.25F,
-                () -> radius * intensity * 0.2F, Math.round(radius * intensity * 8.0F),
-                1.0F, true, true, CHARGE - this.getTime(), ParticleColors.PURE_LOVE_BRIGHT);
-
-        ParticleAnimator.lightning(this.level(), center, radius * intensity * 0.2F, () -> radius * (1.0F + intensity) * this.random.nextFloat() * 4.0F,
-                Math.round(radius * intensity * 4.0F), 4, ParticleColors.PURE_LOVE_BRIGHT);
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -106,7 +84,5 @@ public class PureLoveBeamEntity extends BeamEntity {
         if (this.getTime() - 1 == 0) {
             this.playSound(JJKSounds.PURE_LOVE.get(), 3.0F, 1.0F);
         }
-
-        this.spawnParticles();
     }
 }
