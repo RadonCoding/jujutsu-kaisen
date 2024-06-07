@@ -110,7 +110,7 @@ public class OutputRCT extends Ability {
             }, i * 2);
         }
 
-        float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getOutput(owner) * 5 * 20.0F;
+        float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getOutput(owner) * 20.0F;
 
         IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

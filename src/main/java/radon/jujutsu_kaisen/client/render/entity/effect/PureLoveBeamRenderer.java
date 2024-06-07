@@ -32,7 +32,6 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
     private static final int TEXTURE_WIDTH = 16;
     private static final int TEXTURE_HEIGHT = 16;
     private static final float BEAM_RADIUS = 0.25F;
-    private boolean clearerView = false;
 
     public PureLoveBeamRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -40,9 +39,6 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
 
     @Override
     public void render(PureLoveBeamEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        this.clearerView = Minecraft.getInstance().player == pEntity.getOwner() &&
-                Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
-
         double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
         double collidePosY = pEntity.prevCollidePosY + (pEntity.collidePosY - pEntity.prevCollidePosY) * pPartialTick;
         double collidePosZ = pEntity.prevCollidePosZ + (pEntity.collidePosZ - pEntity.prevCollidePosZ) * pPartialTick;
@@ -116,11 +112,10 @@ public class PureLoveBeamRenderer extends EntityRenderer<PureLoveBeamEntity> {
         float maxV = minV + TEXTURE_HEIGHT / 16.0F;
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
-        float offset = this.clearerView ? -1.0F : 0.0F;
-        vertex(matrix4f, pose, consumer, -BEAM_RADIUS * scale, offset, 0.0F, minU, minV, 1.0F, packedLight);
+        vertex(matrix4f, pose, consumer, -BEAM_RADIUS * scale, 0.0F, 0.0F, minU, minV, 1.0F, packedLight);
         vertex(matrix4f, pose, consumer, -BEAM_RADIUS * scale, length, 0.0F, minU, maxV, 1.0F, packedLight);
         vertex(matrix4f, pose, consumer, BEAM_RADIUS * scale, length, 0.0F, maxU, maxV, 1.0F, packedLight);
-        vertex(matrix4f, pose, consumer, BEAM_RADIUS * scale, offset, 0.0F, maxU, minV, 1.0F, packedLight);
+        vertex(matrix4f, pose, consumer, BEAM_RADIUS * scale, 0.0F, 0.0F, maxU, minV, 1.0F, packedLight);
     }
 
     private void renderBeam(float length, float scale, float yaw, float pitch, PoseStack poseStack, VertexConsumer consumer, int packedLight) {

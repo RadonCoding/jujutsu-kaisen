@@ -8,3 +8,4 @@
 - Improved lightning visuals
 - Improved Hollow Purple visuals
 - Improved Pure Love visuals
+- Nerfed Output RCT
