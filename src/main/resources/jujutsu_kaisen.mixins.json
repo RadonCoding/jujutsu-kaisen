@@ -8,15 +8,12 @@
     "client.EntityRenderDispatcherMixin",
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
-    "client.IHumanoidModelAccessor",
+    "client.IAgeableListModelAccessor",
     "client.ILivingEntityRendererAccessor",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin"
-  ],
-  "server": [
-    "server.MinecraftServerMixin"
   ],
   "mixins": [
     "common.EnchantmentHelperMixin",

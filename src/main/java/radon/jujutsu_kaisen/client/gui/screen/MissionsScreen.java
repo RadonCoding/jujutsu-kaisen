@@ -215,7 +215,7 @@ public class MissionsScreen extends Screen {
         super.init();
 
         if (!this.initialized) {
-            PacketDistributor.sendToServer(new SearchForMissionsC2SPacket());
+            PacketDistributor.sendToServer(SearchForMissionsC2SPacket.INSTANCE);
             this.initialized = true;
         }
 
@@ -225,14 +225,14 @@ public class MissionsScreen extends Screen {
 
         Optional<IMissionLevelData> levelData = DataProvider.getDataIfPresent(this.minecraft.level, JJKAttachmentTypes.MISSION_LEVEL);
 
-        if (levelData.isEmpty()) return;
+        if (levelData.isPresent()) {
+            Set<Mission> missions = levelData.get().getMissions();
 
-        Set<Mission> missions = levelData.get().getMissions();
+            for (Mission mission : missions) {
+                if (levelData.get().isTaken(mission)) continue;
 
-        for (Mission mission : missions) {
-            if (levelData.get().isTaken(mission)) continue;
-
-            this.cards.add(new MissionCard(this.minecraft, mission));
+                this.cards.add(new MissionCard(this.minecraft, mission));
+            }
         }
 
         int windowOffsetX = WINDOW_OFFSET_X;
@@ -277,7 +277,8 @@ public class MissionsScreen extends Screen {
             this.onClose();
         }).pos(missionCardsOffsetX + (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2,
                         missionCardsOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
-                .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT).build();
+                .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT)
+                .build();
         this.addRenderableWidget(this.acceptButton);
     }
 

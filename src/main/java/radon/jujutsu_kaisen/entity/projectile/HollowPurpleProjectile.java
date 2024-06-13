@@ -114,18 +114,18 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     private void renderBlue(Vec3 center) {
         float radius = this.getRadius();
-        int count = (int) (radius * Math.PI * 2 * 0.5F);
+        int count = Math.round(radius * 2.5F);
 
         ParticleAnimator.sphere(this.level(), center, () -> radius * 0.1F, () -> radius * 0.01F,
-                () -> radius * 0.1F, count, 1.0F, true, true, 5, ParticleColors.LIGHT_BLUE);
+                () -> radius * 0.1F, count, 0.5F, true, true, 5, ParticleColors.LIGHT_BLUE);
     }
 
     private void renderRed(Vec3 center) {
         float radius = this.getRadius();
-        int count = (int) (radius * Math.PI * 2 * 0.5F);
+        int count = Math.round(radius * 2.5F);
 
         ParticleAnimator.sphere(this.level(), center, () -> radius * 0.1F, () -> radius * 0.01F,
-                () -> radius * 0.1F, count, 1.0F, true, true, 5, ParticleColors.DARK_RED);
+                () -> radius * 0.1F, count, 0.5F, true, true, 5, ParticleColors.DARK_RED);
     }
 
     private void animate() {
@@ -158,12 +158,12 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         float radius = this.getRadius();
-        int count = Math.round(radius * 10);;
+        int count = Math.round(radius * 5.0F);
 
         ParticleAnimator.sphere(this.level(), center, () -> radius * 0.5F, () -> 0.0F,
                 () -> radius * 0.25F, count, 1.0F, true, true, 5, ParticleColors.DARK_PURPLE);
 
-        ParticleAnimator.sphere(this.level(), center, () -> radius * 0.25F, () -> 0.0F,
+        ParticleAnimator.sphere(this.level(), center, () -> radius * 0.35F, () -> 0.0F,
                 () -> radius * 0.25F, count, 1.0F, true, true, 5, ParticleColors.LIGHT_PURPLE);
 
         ParticleAnimator.lightning(this.level(), center, radius * 0.25F, () -> radius,

@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.particle;
 
 
 import com.mojang.datafixers.util.Function7;
+import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 
 import com.mojang.serialization.Codec;
@@ -36,6 +37,7 @@ public class TravelParticle extends TextureSheetParticle {
         super(pLevel, pX, pY, pZ);
 
         this.quadSize = Math.max(options.scalar, (this.random.nextFloat() - 0.5F) * options.scalar);
+        this.setSize(this.quadSize, this.quadSize);
 
         this.lifetime = options.lifetime;
 

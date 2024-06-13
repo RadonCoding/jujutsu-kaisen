@@ -18,6 +18,7 @@ public class CursedSpeechParticle extends HugeExplosionParticle {
 
         this.lifetime = 16;
         this.quadSize = (float) pQuadSizeMultiplier;
+        this.setSize(this.quadSize, this.quadSize);
 
         this.setSpriteFromAge(pSprites);
     }

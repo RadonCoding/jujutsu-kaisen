@@ -72,18 +72,6 @@ public class StatsTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        ResourceLocation texture = this.minecraft.player.getSkin().texture();
-
-        pGuiGraphics.blit(texture, xOffset + 12, yOffset + 6, 48, 48, 8.0F, 8.0F, 8, 8, 64, 64);
-
-        RenderSystem.enableBlend();
-        pGuiGraphics.blit(texture, xOffset + 12, yOffset + 6, 48, 48, 40.0F, 8.0F, 8, 8, 64, 64);
-        RenderSystem.disableBlend();
-
-        pGuiGraphics.blit(texture, xOffset + 12, yOffset + 54, 48, 36, 20.0F, 20.0F, 8, 6, 64, 64);
-        pGuiGraphics.blit(texture, xOffset, yOffset + 54, 12, 36, 44.0F, 20.0F, 2, 6, 64, 64);
-        pGuiGraphics.blit(texture, xOffset + 60, yOffset + 54, 12, 36, 36.0F, 52.0F, 2, 6, 64, 64);
-
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
@@ -113,12 +101,12 @@ public class StatsTab extends JJKTab {
                 data.getTraits().stream().map(Trait::getName).map(Component::getString).collect(Collectors.joining(", "))));
         component.append("\n");
 
-        List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component, Style.EMPTY), WINDOW_INSIDE_WIDTH - 104));
+        List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component, Style.EMPTY), WINDOW_INSIDE_WIDTH));
 
         int offset = 0;
 
         for (FormattedCharSequence line : lines) {
-            pGuiGraphics.drawString(this.minecraft.font, line, xOffset + 80, yOffset + offset, 16777215);
+            pGuiGraphics.drawString(this.minecraft.font, line, xOffset, yOffset + offset, 16777215);
             offset += this.minecraft.font.lineHeight;
         }
     }

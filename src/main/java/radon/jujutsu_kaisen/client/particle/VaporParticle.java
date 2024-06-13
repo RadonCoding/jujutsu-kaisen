@@ -35,6 +35,7 @@ public class VaporParticle extends TextureSheetParticle {
         this.bCol = color.z;
 
         this.quadSize = Math.max(options.scalar, (this.random.nextFloat() - 0.5F) * options.scalar);
+        this.setSize(this.quadSize, this.quadSize);
 
         this.opacity = options.opacity;
 

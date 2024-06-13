@@ -44,6 +44,7 @@ public class FireParticle extends TextureSheetParticle {
         this.size = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
 
         this.quadSize = this.size * (1.0F - ((float) this.age / this.lifetime));
+        this.setSize(this.quadSize, this.quadSize);
 
         this.hasPhysics = false;
     }
@@ -53,6 +54,7 @@ public class FireParticle extends TextureSheetParticle {
         super.tick();
 
         this.quadSize = this.size * (1.0F - ((float) this.age / this.lifetime));
+        this.setSize(this.quadSize, this.quadSize);
     }
 
     private void fireVertex(PoseStack.Pose pMatrixEntry, VertexConsumer pBuffer, float pX, float pY, float pZ, float pTexU, float pTexV) {
@@ -67,35 +69,33 @@ public class FireParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
-        Minecraft mc = Minecraft.getInstance();
-
-        PoseStack stack = new PoseStack();
+        PoseStack poseStack = new PoseStack();
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
         double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
         double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
 
         Vec3 cam = pRenderInfo.getPosition();
-
-        stack.pushPose();
-        stack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
+        poseStack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         TextureAtlasSprite fire0 = ModelBakery.FIRE_0.sprite();
         TextureAtlasSprite fire1 = ModelBakery.FIRE_1.sprite();
         float f = this.quadSize * 1.4F;
-        stack.scale(f, f, f);
+        poseStack.scale(f, f, f);
         float f1 = 0.5F;
         float f3 = this.quadSize / f;
         float f4 = 0.0F;
-        stack.mulPose(Axis.YN.rotationDegrees(pRenderInfo.getYRot()));
-        stack.mulPose(Axis.XP.rotationDegrees(pRenderInfo.getXRot()));
-        stack.translate(0.0F, 0.0F, -0.3F + (float) ((int) f3) * 0.02F);
+        poseStack.mulPose(Axis.YN.rotationDegrees(pRenderInfo.getYRot()));
+        poseStack.mulPose(Axis.XP.rotationDegrees(pRenderInfo.getXRot()));
+        poseStack.translate(0.0F, 0.0F, -0.3F + (float) ((int) f3) * 0.02F);
         float f5 = 0.0F;
         int i = 0;
 
+        Minecraft mc = Minecraft.getInstance();
+
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(Sheets.cutoutBlockSheet());
 
-        for (PoseStack.Pose pose = stack.last(); f3 > 0.0F; ++i) {
+        for (PoseStack.Pose pose = poseStack.last(); f3 > 0.0F; ++i) {
             TextureAtlasSprite sprite = i % 2 == 0 ? fire0 : fire1;
             float f6 = sprite.getU0();
             float f7 = sprite.getV0();
@@ -118,7 +118,6 @@ public class FireParticle extends TextureSheetParticle {
             f1 *= 0.9F;
             f5 += 0.03F;
         }
-        stack.popPose();
 
         mc.renderBuffers().bufferSource().endBatch();
     }

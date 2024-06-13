@@ -97,12 +97,12 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
 
-        /*IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        /*IJujutsuCapability capDL = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+        if (capDL == null) return;
 
-        ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
+        ISorcererData sorcererData = capDL.getSorcererData();
+        IAbilityData abilityData = capDL.getAbilityData();
 
         abilityData.delayTickEvent(() -> {
             CursedTechnique technique = sorcererData.getTechnique();

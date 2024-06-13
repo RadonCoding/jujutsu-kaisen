@@ -45,7 +45,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class SearchForMissionsC2SPacket implements CustomPacketPayload {
-    private static final SearchForMissionsC2SPacket INSTANCE = new SearchForMissionsC2SPacket();
+    public static final SearchForMissionsC2SPacket INSTANCE = new SearchForMissionsC2SPacket();
 
     private static final int SEARCH_RADIUS = 8;
     private static final int LIMIT = 16;
@@ -54,6 +54,8 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
     public static final StreamCodec<? super RegistryFriendlyByteBuf, SearchForMissionsC2SPacket> STREAM_CODEC = StreamCodec.unit(
             INSTANCE
     );
+
+    private SearchForMissionsC2SPacket() {}
 
     private static boolean tryAddReference(StructureManager pStructureManager, StructureStart pStructureStart) {
         if (pStructureStart.canBeReferenced()) {

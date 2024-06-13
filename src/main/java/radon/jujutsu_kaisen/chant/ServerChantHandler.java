@@ -126,7 +126,7 @@ public class ServerChantHandler {
                     iter.remove();
 
                     if (owner instanceof ServerPlayer player) {
-                        PacketDistributor.sendToPlayer(player, new ClearChantsS2CPacket());
+                        PacketDistributor.sendToPlayer(player, ClearChantsS2CPacket.INSTANCE);
                     }
                 }
             }
@@ -141,7 +141,7 @@ public class ServerChantHandler {
                 MESSAGES.remove(owner.getUUID());
 
                 if (event.getEntity() instanceof ServerPlayer player) {
-                    PacketDistributor.sendToPlayer(player, new ClearChantsS2CPacket());
+                    PacketDistributor.sendToPlayer(player, ClearChantsS2CPacket.INSTANCE);
                 }
             }
         }

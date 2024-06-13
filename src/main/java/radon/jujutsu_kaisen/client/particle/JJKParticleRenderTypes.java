@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11C;
 
 public class JJKParticleRenderTypes {
     public static ParticleRenderType GLOW = new ParticleRenderType() {
@@ -36,8 +35,6 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator tesselator) {
             tesselator.end();
-
-            RenderSystem.defaultBlendFunc();
         }
     };
 
@@ -56,8 +53,6 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator tesselator) {
             tesselator.end();
-
-            RenderSystem.defaultBlendFunc();
         }
     };
 

@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -20,11 +20,13 @@ import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -212,8 +214,6 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     @Override
     public void tick() {
-        super.tick();
-
         if (!this.instant && this.getDeltaMovement().lengthSqr() <= 1.0E-7D) {
             this.discard();
             return;
@@ -234,11 +234,38 @@ public class DismantleProjectile extends JujutsuProjectile {
                 DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()),
                         this.getDamage() * this.getPower());
+
+                if (!entity.isAlive()) {
+                    Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
+
+                    float yaw = this.getYRot();
+                    float pitch = this.getXRot();
+                    float roll = this.getRoll();
+
+                    Vec3 forward = this.calculateViewVector(pitch, yaw);
+                    Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
+
+                    Quaternionf quaternion = new Quaternionf().rotateAxis((float) Math.toRadians(-roll), (float) forward.x, (float) forward.y, (float) forward.z);
+                    Vec3 side = new Vec3(quaternion.transform(forward.cross(up).toVector3f()));
+
+                    int length = this.getLength();
+                    Vec3 start = side.scale((double) length / 2);
+                    Vec3 end = forward.subtract(side.scale((double) length / 2));
+
+                    Vec3 plane = end.cross(start).normalize();
+
+                    float distance = -(float) plane.dot(center.subtract(entity.position()));
+
+                    ((ServerLevel) this.level()).sendParticles(new SlicedEntityParticle.Options(entity.getId(), plane.toVector3f(), distance, 1.0F),
+                            entity.getX(), entity.getY(), entity.getZ(), 0, 0.0D, 0.0D, 0.0D, 1.0D);
+                }
             }
         }
 
         if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {
             this.discard();
         }
+
+        super.tick();
     }
 }

@@ -117,8 +117,8 @@ public class JJKClientEventHandler {
             if (mc.player == null) return;
 
             if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
-                    CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
-                PacketDistributor.sendToServer(new OpenInventoryCurseC2SPacket());
+                    CuriosUtil.findSlot(mc.player, "bodyDL").is(JJKItems.INVENTORY_CURSE.get()))) {
+                PacketDistributor.sendToServer(OpenInventoryCurseC2SPacket.INSTANCE);
             }
         }
 
@@ -392,11 +392,12 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.MIRAGE.get(), MirageParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.PROJECTION.get(), ProjectionParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
-            event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
-            event.registerSpriteSet(JJKParticles.SLASH.get(), SlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.EMITTING_LIGHTNING.get(), EmittingLightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.FIRE.get(), FireParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SMOKE.get(), BetterSmokeParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.SLASH.get(), SlashParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.SLICE.get(), SlicedEntityParticle.Provider::new);
         }
 
         @SubscribeEvent

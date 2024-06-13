@@ -52,6 +52,7 @@ public class PacketHandler {
         registrar.playToClient(SyncDomainDataS2CPacket.TYPE, SyncDomainDataS2CPacket.STREAM_CODEC, SyncDomainDataS2CPacket::handle);
         registrar.playToClient(UpdateDomainInfoS2CPacket.TYPE, UpdateDomainInfoS2CPacket.STREAM_CODEC, UpdateDomainInfoS2CPacket::handle);
         registrar.playToClient(RemoveDomainInfoS2CPacket.TYPE, RemoveDomainInfoS2CPacket.STREAM_CODEC, RemoveDomainInfoS2CPacket::handle);
+        registrar.playToClient(ClearChantsS2CPacket.TYPE, ClearChantsS2CPacket.STREAM_CODEC, ClearChantsS2CPacket::handle);
 
         // Serverbound packets
         registrar.playToServer(TriggerAbilityC2SPacket.TYPE, TriggerAbilityC2SPacket.STREAM_CODEC, TriggerAbilityC2SPacket::handle);
@@ -82,7 +83,6 @@ public class PacketHandler {
         registrar.playToServer(NyoiStaffSummonLightningC2SPacket.TYPE, NyoiStaffSummonLightningC2SPacket.STREAM_CODEC, NyoiStaffSummonLightningC2SPacket::handle);
         registrar.playToServer(SetCursedEnergyColorC2SPacket.TYPE, SetCursedEnergyColorC2SPacket.STREAM_CODEC, SetCursedEnergyColorC2SPacket::handle);
         registrar.playToServer(UntriggerAbilityC2SPacket.TYPE, UntriggerAbilityC2SPacket.STREAM_CODEC, UntriggerAbilityC2SPacket::handle);
-        registrar.playToServer(ClearChantsS2CPacket.TYPE, ClearChantsS2CPacket.STREAM_CODEC, ClearChantsS2CPacket::handle);
         registrar.playToServer(TransformationRightClickC2SPacket.TYPE, TransformationRightClickC2SPacket.STREAM_CODEC, TransformationRightClickC2SPacket::handle);
         registrar.playToServer(IncreaseSkillC2SPacket.TYPE, IncreaseSkillC2SPacket.STREAM_CODEC, IncreaseSkillC2SPacket::handle);
         registrar.playToServer(SearchForMissionsC2SPacket.TYPE, SearchForMissionsC2SPacket.STREAM_CODEC, SearchForMissionsC2SPacket::handle);

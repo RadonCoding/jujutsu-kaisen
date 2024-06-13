@@ -217,7 +217,7 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
                     owner.level().addFreshEntity(new ProjectionFrameEntity(owner, owner, Ability.getOutput(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
 
                     if (owner instanceof ServerPlayer player) {
-                        PacketDistributor.sendToPlayer(player, new ScreenFlashS2CPacket());
+                        PacketDistributor.sendToPlayer(player, ScreenFlashS2CPacket.INSTANCE);
                     }
                     return;
                 }

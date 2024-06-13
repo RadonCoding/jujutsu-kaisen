@@ -85,7 +85,7 @@ public class TwentyFourFrameRule extends Ability implements IToggled, IAttack {
         owner.level().addFreshEntity(new ProjectionFrameEntity(owner, target, Ability.getOutput(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
 
         if (target instanceof ServerPlayer player) {
-            PacketDistributor.sendToPlayer(player, new ScreenFlashS2CPacket());
+            PacketDistributor.sendToPlayer(player, ScreenFlashS2CPacket.INSTANCE);
         }
         return true;
     }

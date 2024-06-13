@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
+import net.minecraft.client.particle.*;
 import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import net.minecraft.world.phys.AABB;
 
@@ -12,10 +13,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -31,10 +28,10 @@ import radon.jujutsu_kaisen.client.render.entity.effect.BoltEffect;
 import radon.jujutsu_kaisen.client.render.entity.effect.BoltRenderer;
 import radon.jujutsu_kaisen.network.codec.JJKByteBufCodecs;
 
-public class EmittingLightningParticle extends TextureSheetParticle {
+public class EmittingLightningParticle extends Particle {
     private final Vector3f color;
-
     private final Vec3 direction;
+    private final float scale;
 
     private final BoltRenderer renderer;
 
@@ -45,7 +42,8 @@ public class EmittingLightningParticle extends TextureSheetParticle {
 
         this.direction = options.direction();
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.scale = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.setSize(this.scale, this.scale);
 
         this.lifetime = options.lifetime();
 
@@ -53,24 +51,19 @@ public class EmittingLightningParticle extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull AABB getBoundingBox() {
-        return AABB.ofSize(this.getPos(), this.quadSize, this.quadSize, this.quadSize);
-    }
-
-    @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
         PoseStack poseStack = new PoseStack();
 
         Vec3 offset = this.getPos()
-                .add(this.direction.scale(this.random.nextFloat() * this.quadSize));
+                .add(this.direction.scale(this.random.nextFloat() * this.scale));
+
+        poseStack.pushPose();
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
         double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
         double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
 
         Vec3 cam = pRenderInfo.getPosition();
-
-        poseStack.pushPose();
         poseStack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         Vec3 start = new Vec3(this.x, this.y, this.z);

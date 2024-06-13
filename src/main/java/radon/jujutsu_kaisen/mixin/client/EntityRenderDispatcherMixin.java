@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.mixin.client;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -14,12 +13,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import radon.jujutsu_kaisen.client.FakeEntityRenderer;
 import radon.jujutsu_kaisen.client.JJKPartEntityRenderDispatcher;
-import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKPartEntity;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin<E extends Entity> {
@@ -38,7 +36,7 @@ public class EntityRenderDispatcherMixin<E extends Entity> {
 
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     public void shouldRender(E pEntity, Frustum pFrustum, double pCamX, double pCamY, double pCamZ, CallbackInfoReturnable<Boolean> cir) {
-        if (!MixinData.isFakeRender) {
+        if (!FakeEntityRenderer.isFakeRender) {
             if (pEntity instanceof LivingEntity living && living.hasEffect(JJKEffects.INVISIBILITY)) {
                 cir.setReturnValue(false);
                 return;

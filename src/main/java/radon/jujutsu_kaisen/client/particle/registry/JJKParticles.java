@@ -48,10 +48,12 @@ public class JJKParticles {
             type -> FireParticle.Options.CODEC, type -> FireParticle.Options.STREAM_CODEC);
     public static DeferredHolder<ParticleType<?>, ParticleType<BetterSmokeParticle.Options>> SMOKE = register("smoke", false,
             type -> BetterSmokeParticle.Options.CODEC, type -> BetterSmokeParticle.Options.STREAM_CODEC);
-    public static DeferredHolder<ParticleType<?>,SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
+    public static DeferredHolder<ParticleType<?>, SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
-    public static DeferredHolder<ParticleType<?>,SimpleParticleType> SLASH = PARTICLES.register("slash", () ->
+    public static DeferredHolder<ParticleType<?>, SimpleParticleType> SLASH = PARTICLES.register("slash", () ->
             new SimpleParticleType(true));
+    public static DeferredHolder<ParticleType<?>, ParticleType<SlicedEntityParticle.Options>> SLICE = register("slice", false,
+            type -> SlicedEntityParticle.Options.CODEC, type -> SlicedEntityParticle.Options.STREAM_CODEC);
 
     private static <T extends ParticleOptions> DeferredHolder<ParticleType<?>, ParticleType<T>> register(
             String pName,

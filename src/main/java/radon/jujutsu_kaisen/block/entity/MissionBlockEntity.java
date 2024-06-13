@@ -36,7 +36,7 @@ public class MissionBlockEntity extends BlockEntity {
         for (Player player : players) {
             if (pBlockEntity.active.contains(player.getUUID())) continue;
 
-            PacketDistributor.sendToPlayer((ServerPlayer) player, new OpenMissionScreenS2CPacket());
+            PacketDistributor.sendToPlayer((ServerPlayer) player, OpenMissionScreenS2CPacket.INSTANCE);
             pBlockEntity.active.add(player.getUUID());
         }
 

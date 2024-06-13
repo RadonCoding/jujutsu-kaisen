@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -11,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,13 +15,10 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.entity.effect.AirFrameEntity;
-import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 
 public class AirFrameRenderer extends EntityRenderer<AirFrameEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/block/glass.png");

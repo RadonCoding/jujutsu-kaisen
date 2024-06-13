@@ -67,7 +67,7 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
         int count = Math.round(radius * factor * 64);
 
         ParticleAnimator.sphere(entity.level(), center, () -> 0.0F, () -> radius * factor,
-                () -> radius * factor * 0.1F, count, 1.0F, true, true, 5, ParticleColors.LIGHT_RED);
+                () -> radius * factor * 0.25F, count, 1.0F, true, true, 5, ParticleColors.LIGHT_RED);
 
         ParticleAnimator.ring(entity.level(), center, count / 2, radius * 1.5F * factor, (time * 0.5F) % 360.0F,
                 90.0F, 0.0F, 45.0F, ParticleColors.LIGHT_RED, radius * 1.5F * factor * 0.05F);

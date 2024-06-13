@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.client;
 
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceKey;
@@ -22,6 +24,14 @@ public class ClientWrapper {
 
     public static @Nullable Player getPlayer() {
         return Minecraft.getInstance().player;
+    }
+
+    public static @Nullable Entity getEntity(int entityId) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.level == null) return null;
+
+        return mc.level.getEntity(entityId);
     }
 
     public static void setOverlayMessage(Component component, boolean animate) {

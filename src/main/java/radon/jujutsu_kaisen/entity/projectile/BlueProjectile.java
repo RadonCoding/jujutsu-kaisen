@@ -177,7 +177,7 @@ public class BlueProjectile extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
         float radius = this.getRadius() * (this.getTime() < DELAY ? 0.25F : 1.0F);
-        int count = Math.round(radius * 10);;
+        int count = Math.round(radius * 10.0F);
 
         float scale = (1.0F - ((float) this.getTime() / DURATION)) +
                 0.1F * (float) Math.sin(2 * Math.PI * 0.05F * this.getTime());

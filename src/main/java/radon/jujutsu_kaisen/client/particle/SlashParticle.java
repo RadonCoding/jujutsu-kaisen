@@ -55,13 +55,6 @@ public class SlashParticle extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull AABB getBoundingBox() {
-        if (this.offset == null) return super.getBoundingBox();
-
-        return AABB.ofSize(this.offset, this.quadSize, this.quadSize, this.quadSize);
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -71,11 +64,14 @@ public class SlashParticle extends TextureSheetParticle {
             this.entity = this.level.getEntity(this.entityId);
         } else {
             this.quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * (this.entity.getBbWidth() + this.entity.getBbHeight()) * 20.0F;
-    
+            this.setSize(this.quadSize, this.quadSize);
+
             Vec3 center = this.entity.position().add(0.0D, this.entity.getBbHeight() / 2, 0.0D);
             this.offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth(),
                     (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbHeight(),
                     (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth());
+
+            this.setPos(this.offset.x, this.offset.y, this.offset.z);
         }
 
         if (this.entity == null || this.entity.isRemoved() || !this.entity.isAlive()) {
@@ -89,22 +85,21 @@ public class SlashParticle extends TextureSheetParticle {
 
         Minecraft mc = Minecraft.getInstance();
 
-        PoseStack stack = new PoseStack();
+        PoseStack poseStack = new PoseStack();
 
         Vec3 cam = pRenderInfo.getPosition();
+        poseStack.translate(this.offset.x - cam.x, this.offset.y - cam.y, this.offset.z - cam.z);
 
-        stack.pushPose();
-        stack.translate(this.offset.x - cam.x, this.offset.y - cam.y, this.offset.z - cam.z);
-        stack.mulPose(Axis.YN.rotationDegrees(pRenderInfo.getYRot()));
-        stack.mulPose(Axis.XP.rotationDegrees(pRenderInfo.getXRot() - 90.0F));
-        stack.mulPose(Axis.YP.rotationDegrees(this.roll));
+        poseStack.mulPose(Axis.YN.rotationDegrees(pRenderInfo.getYRot()));
+        poseStack.mulPose(Axis.XP.rotationDegrees(pRenderInfo.getXRot() - 90.0F));
+        poseStack.mulPose(Axis.YP.rotationDegrees(this.roll));
 
-        stack.scale(1.0F, 1.0F, 0.2F);
+        poseStack.scale(1.0F, 1.0F, 0.2F);
 
         RenderType type = RenderType.entityTranslucent(TEXTURE);
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
-        Matrix4f pose = stack.last().pose();
+        Matrix4f pose = poseStack.last().pose();
 
         consumer.vertex(pose, -this.quadSize / 2.0F, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
@@ -134,8 +129,6 @@ public class SlashParticle extends TextureSheetParticle {
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-
-        stack.popPose();
     }
 
     @Override

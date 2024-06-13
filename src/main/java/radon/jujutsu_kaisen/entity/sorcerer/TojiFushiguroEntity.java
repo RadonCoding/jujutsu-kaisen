@@ -203,7 +203,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
         inventory.add(INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
         inventory.add(SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
 
-        CuriosUtil.setItemInSlot(this, "body", chest);
+        CuriosUtil.setItemInSlot(this, "bodyDL", chest);
     }
 
     private int getSlot(ItemStack stack) {
@@ -218,7 +218,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
     }
 
     private void pickWeapon(@Nullable LivingEntity target) {
-        ItemStack chest = CuriosUtil.findSlot(this, "body");
+        ItemStack chest = CuriosUtil.findSlot(this, "bodyDL");
 
         List<ItemStack> inventory = chest.get(JJKDataComponentTypes.HIDDEN_INVENTORY);
 

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -20,10 +17,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import radon.jujutsu_kaisen.client.FakeEntityRenderer;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 
 public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntity> {
@@ -48,44 +46,12 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
 
-        MixinData.isFakeRender = true;
-
         pPoseStack.pushPose();
         pPoseStack.scale(1.0F, 1.0F, 0.02F);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 
-        float yRot = victim.getYRot();
-        float yRotO = victim.yRotO;
-
-        float yHeadRot = victim.yHeadRot;
-        float yHeadRotO = victim.yHeadRotO;
-
-        float yBodyRot = victim.yBodyRot;
-        float yBodyRotO = victim.yBodyRotO;
-
-        victim.setYRot(yaw);
-        victim.yRotO = yaw;
-
-        victim.yHeadRot = yaw;
-        victim.yHeadRotO = yaw;
-
-        victim.yBodyRot = yaw;
-        victim.yBodyRotO = yaw;
-
-        EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
-        EntityRenderer<? super LivingEntity> renderer = manager.getRenderer(victim);
-        renderer.render(victim, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
-
-        victim.yBodyRotO = yBodyRotO;
-        victim.yBodyRot = yBodyRot;
-
-        victim.yHeadRotO = yHeadRotO;
-        victim.yHeadRot = yHeadRot;
-
-        victim.yRotO = yRotO;
-        victim.setYRot(yRot);
-
-        MixinData.isFakeRender = false;
+        FakeEntityRenderer renderer = new FakeEntityRenderer(victim);
+        renderer.setFullRotation(yaw, 0.0F);
+        renderer.render(pPoseStack, pPartialTick);
 
         pPoseStack.popPose();
 

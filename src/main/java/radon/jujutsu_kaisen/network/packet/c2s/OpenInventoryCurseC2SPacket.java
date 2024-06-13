@@ -18,12 +18,14 @@ import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 
 public class OpenInventoryCurseC2SPacket implements CustomPacketPayload {
-    private static final OpenInventoryCurseC2SPacket INSTANCE = new OpenInventoryCurseC2SPacket();
+    public static final OpenInventoryCurseC2SPacket INSTANCE = new OpenInventoryCurseC2SPacket();
 
     public static final CustomPacketPayload.Type<OpenInventoryCurseC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "open_inventory_curse_serverbound"));
     public static final StreamCodec<? super RegistryFriendlyByteBuf, OpenInventoryCurseC2SPacket> STREAM_CODEC = StreamCodec.unit(
             INSTANCE
     );
+
+    private OpenInventoryCurseC2SPacket() {}
 
     public void handle(IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
@@ -31,7 +33,7 @@ public class OpenInventoryCurseC2SPacket implements CustomPacketPayload {
 
             if (sender.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem item) {
                 sender.openMenu(item);
-            } else if (CuriosUtil.findSlot(sender, "body").getItem() instanceof InventoryCurseItem item) {
+            } else if (CuriosUtil.findSlot(sender, "bodyDL").getItem() instanceof InventoryCurseItem item) {
                 sender.openMenu(item);
             }
         });
