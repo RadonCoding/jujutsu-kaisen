@@ -210,6 +210,6 @@ public class FakeEntityRenderer {
 
         this.entity.setInvisible(invisible);
 
-        bufferSource.endBatch();
+        bufferSource.endLastBatch();
     }
 }
