@@ -17,6 +17,9 @@ import org.apache.logging.log4j.core.jmx.AppenderAdmin;
 import org.lwjgl.opengl.GL11;
 
 public class FakeEntityRenderer {
+    private static final int BUFFER_BUILDER_CAPACITY = 786432;
+    private static final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(BUFFER_BUILDER_CAPACITY));
+
     public static boolean isFakeRender;
     public static boolean isCustomWalkAnimation;
     public static float walkAnimationPosition;
@@ -161,8 +164,6 @@ public class FakeEntityRenderer {
 
         Minecraft mc = Minecraft.getInstance();
 
-        MultiBufferSource.BufferSource buffer = mc.renderBuffers().bufferSource();
-
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
         EntityRenderer<? super Entity> renderer = dispatcher.getRenderer(this.entity);
 
@@ -170,13 +171,13 @@ public class FakeEntityRenderer {
 
         isFakeRender = true;
 
-        renderer.render(this.entity, this.entity.getYRot(), partialTicks, poseStack, buffer,
+        renderer.render(this.entity, this.entity.getYRot(), partialTicks, poseStack, bufferSource,
                 dispatcher.getPackedLightCoords(this.entity, partialTicks));
 
         isFakeRender = false;
 
         // For some reason this makes transparency work
-        if (this.alpha < 1.0F) buffer.getBuffer(RenderType.translucent());
+        if (this.alpha < 1.0F) bufferSource.getBuffer(RenderType.translucent());
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -209,6 +210,6 @@ public class FakeEntityRenderer {
 
         this.entity.setInvisible(invisible);
 
-        buffer.endLastBatch();
+        bufferSource.endBatch();
     }
 }
