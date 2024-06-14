@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.ParticleOptions;
@@ -23,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 import radon.jujutsu_kaisen.client.FakeEntityRenderer;
@@ -66,9 +68,6 @@ public class SlicedEntityParticle extends TextureSheetParticle {
             if (this.entity == null) return;
 
             this.renderer = new FakeEntityRenderer(this.entity);
-
-            // Temporary
-            this.renderer.setFullRotation(0.0F, 0.0F);
         }
     }
 
@@ -79,16 +78,22 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         SlicedEntityPostEffect effect = new SlicedEntityPostEffect();
         SelectivePostChain postChain = effect.getPostChain();
 
+        Vec3 cam = pRenderInfo.getPosition();
+
+        double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
+        double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
+        double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
+
+        // Pass a uniform so the coordinates can be transformed to model relative ones
+        for (AbstractUniform uniform : postChain.getUniforms("Transform")) {
+            uniform.set(new float[] { (float) (d0 - cam.x), (float) (d1 - cam.y), (float) (d2 - cam.z) });
+        }
         for (AbstractUniform uniform : postChain.getUniforms("Plane")) {
             uniform.set(new float[] { this.plane.x, this.plane.y, this.plane.z, this.distance });
         }
         for (AbstractUniform uniform : postChain.getUniforms("Direction")) {
             uniform.set(this.direction);
         }
-
-        double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
-        double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
-        double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
 
         PostEffectHandler.bind(effect);
         this.renderer.render(new Vec3(d0, d1, d2), pPartialTicks);

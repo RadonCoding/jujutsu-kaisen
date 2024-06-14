@@ -252,9 +252,9 @@ public class DismantleProjectile extends JujutsuProjectile {
                     Vec3 start = side.scale((double) length / 2);
                     Vec3 end = forward.subtract(side.scale((double) length / 2));
 
-                    Vec3 plane = end.cross(start).normalize();
+                    Vec3 plane = end.cross(start);
 
-                    float distance = -(float) plane.dot(center.subtract(entity.position()));
+                    float distance = (float) plane.dot(center.subtract(entity.position()));
 
                     ((ServerLevel) this.level()).sendParticles(new SlicedEntityParticle.Options(entity.getId(), plane.toVector3f(), distance, 1.0F),
                             entity.getX(), entity.getY(), entity.getZ(), 0, 0.0D, 0.0D, 0.0D, 1.0D);

@@ -8,33 +8,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
+import radon.jujutsu_kaisen.util.MathUtil;
 
 import java.io.IOException;
 
 // Credit: https://github.com/M-Marvin/MCMOD-HoloStructures-V2/blob/main-1.20.4/HoloStructures-1.20/src/main/java/de/m_marvin/holostruct/client/rendering/posteffect/SelectivePostPass.java
 public class SelectivePostPass extends PostPass {
-    private Matrix4f realModelViewMatrix;
-    private Matrix4f realProjectionMatrix;
-
-    private float nearPlane, farPlane;
+    private Matrix4f invModelViewMat;
+    private Matrix4f invProjMat;
 
     public SelectivePostPass(ResourceProvider pResourceProvider, String pName, RenderTarget pInTarget, RenderTarget pOutTarget, boolean pUseLinearFilter) throws IOException {
         super(pResourceProvider, pName, pInTarget, pOutTarget, pUseLinearFilter);
     }
 
     public void setMatrices(Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
-        this.realModelViewMatrix = modelViewMatrix;
-        this.realProjectionMatrix = projectionMatrix;
-
-        float m22 = projectionMatrix.m22();
-        float m32 = projectionMatrix.m32();
-
-        float near = m32 / (m22 - 1.0F);
-        float far = m32 / (m22 + 1.0F);
-
-        this.nearPlane = near;
-        this.farPlane = far;
+        this.invModelViewMat = MathUtil.inverse(modelViewMatrix);
+        this.invProjMat = MathUtil.inverse(projectionMatrix);
     }
 
     @Override
@@ -57,23 +46,17 @@ public class SelectivePostPass extends PostPass {
         Minecraft mc = Minecraft.getInstance();
         this.effect.safeGetUniform("ScreenSize").set((float) mc.getWindow().getWidth(), (float) mc.getWindow().getHeight());
 
-        /* JJK Modification: Pass real model view matrix */
-        this.effect.safeGetUniform("RealModelViewMat").set(this.realModelViewMatrix);
+        /* JJK Modification: Pass inverse model view matrix */
+        this.effect.safeGetUniform("InvModelViewMat").set(this.invModelViewMat);
 
-        /* JJK Modification: Pass real projection matrix */
-        this.effect.safeGetUniform("RealProjMat").set(this.realProjectionMatrix);
-
-        /* JJK Modification: Pass real projection matrix near plane */
-        this.effect.safeGetUniform("NearPlane").set(this.nearPlane);
-
-        /* JJK Modification: Pass real projection matrix far plane */
-        this.effect.safeGetUniform("FarPlane").set(this.farPlane);
+        /* JJK Modification: Pass inverse projection matrix */
+        this.effect.safeGetUniform("InvProjMat").set(this.invProjMat);
 
         new BlendMode().apply();
 
         this.effect.apply();
         this.outTarget.bindWrite(false);
-
+        RenderSystem.depthFunc(519);
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         builder.vertex(0.0D, 0.0D, 500.0D).endVertex();
@@ -81,7 +64,7 @@ public class SelectivePostPass extends PostPass {
         builder.vertex(f, f1, 500.0D).endVertex();
         builder.vertex(0.0D, f1, 500.0D).endVertex();
         BufferUploader.draw(builder.end());
-
+        RenderSystem.depthFunc(515);
         this.effect.clear();
         this.outTarget.unbindWrite();
         this.inTarget.unbindRead();

@@ -16,6 +16,10 @@
       ],
       "uniforms": [
         {
+          "name": "Transform",
+          "values": [ 0.0, 0.0, 0.0 ]
+        },
+        {
           "name": "Plane",
           "values": [ 0.0, 0.0, 0.0, 0.0 ]
         },
