@@ -7,7 +7,6 @@ uniform mat4 RealModelViewMat;
 uniform mat4 RealProjMat;
 uniform float NearPlane;
 uniform float FarPlane;
-uniform vec3 Pos;
 uniform vec4 Plane;
 uniform float Direction;
 

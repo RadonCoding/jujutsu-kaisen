@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 public class FakeEntityRenderer {
     private static final int BUFFER_BUILDER_CAPACITY = 786432;
-    private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(BUFFER_BUILDER_CAPACITY));
+    private static final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(BUFFER_BUILDER_CAPACITY));
 
     public static boolean isFakeRender;
     public static boolean isCustomWalkAnimation;
