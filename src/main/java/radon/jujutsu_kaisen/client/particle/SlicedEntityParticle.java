@@ -23,6 +23,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
@@ -32,6 +33,11 @@ import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.client.post.PostEffectHandler;
 import radon.jujutsu_kaisen.client.post.SelectivePostChain;
 import radon.jujutsu_kaisen.client.post.SlicedEntityPostEffect;
+import radon.jujutsu_kaisen.util.MathUtil;
+
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL32C.*;
 
 public class SlicedEntityParticle extends TextureSheetParticle {
     private final int entityId;

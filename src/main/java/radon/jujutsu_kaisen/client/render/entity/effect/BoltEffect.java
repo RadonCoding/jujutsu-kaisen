@@ -93,7 +93,7 @@ public class BoltEffect {
             while (!drawQueue.isEmpty()) {
                 BoltInstructions data = drawQueue.poll();
                 Vec3 perpendicularDist = data.perpendicularDist;
-                float progress = data.progress + (1F / segments) * (1 - renderInfo.parallelNoise + random.nextFloat() * renderInfo.parallelNoise * 2);
+                float progress = data.progress + (1.0F / this.segments) * (1.0F - this.renderInfo.parallelNoise + this.random.nextFloat() * this.renderInfo.parallelNoise * 2);
                 Vec3 segmentEnd;
 
                 if (progress >= 1) {
@@ -101,7 +101,7 @@ public class BoltEffect {
                 } else {
                     float segmentDiffScale = this.renderInfo.spreadFunction.getMaxSpread(progress);
                     float maxDiff = this.renderInfo.spreadFactor * segmentDiffScale * totalDistance * this.renderInfo.randomFunction.getRandom(this.random);
-                    Vec3 randVec = findRandomOrthogonalVector(diff, random);
+                    Vec3 randVec = findRandomOrthogonalVector(diff, this.random);
                     perpendicularDist = this.renderInfo.segmentSpreader.getSegmentAdd(perpendicularDist, randVec, maxDiff, segmentDiffScale, progress);
                     // New vector is original + current progress through segments + perpendicular change
                     segmentEnd = this.start.add(diff.scale(progress)).add(perpendicularDist);
@@ -185,7 +185,6 @@ public class BoltEffect {
     }
 
     public interface SpreadFunction {
-
         /**
          * A steady linear increase in perpendicular noise.
          */
@@ -220,6 +219,7 @@ public class BoltEffect {
             return (perpendicularDist, randVec, maxDiff, spreadScale, progress) -> {
                 float nextDiff = maxDiff * (1 - memoryFactor);
                 Vec3 cur = randVec.scale(nextDiff);
+
                 if (progress > 0.5F) {
                     // Begin to come back to the center after we pass halfway mark
                     cur = cur.add(perpendicularDist.scale(-1 * (1 - spreadScale)));
@@ -234,6 +234,7 @@ public class BoltEffect {
     public interface SpawnFunction {
         /** Allow for bolts to be spawned each update call without any delay. */
         SpawnFunction NO_DELAY = (rand) -> Pair.of(0.0F, 0.0F);
+
         /** Will re-spawn a bolt each time one expires. */
         SpawnFunction CONSECUTIVE = new SpawnFunction() {
             @Override

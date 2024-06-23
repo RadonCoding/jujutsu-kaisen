@@ -12,6 +12,8 @@ import radon.jujutsu_kaisen.util.MathUtil;
 
 import java.io.IOException;
 
+import static org.lwjgl.opengl.GL11C.*;
+
 // Credit: https://github.com/M-Marvin/MCMOD-HoloStructures-V2/blob/main-1.20.4/HoloStructures-1.20/src/main/java/de/m_marvin/holostruct/client/rendering/posteffect/SelectivePostPass.java
 public class SelectivePostPass extends PostPass {
     private Matrix4f invModelViewMat;

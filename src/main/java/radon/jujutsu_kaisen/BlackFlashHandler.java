@@ -106,14 +106,14 @@ public class BlackFlashHandler {
             COMBOS.put(attacker.getUUID(), ++combo);
             TIMERS.put(attacker.getUUID(), CLEAR_INTERVAL);
 
-            if (HelperMethods.RANDOM.nextInt(Math.max(1, ConfigHolder.SERVER.blackFlashChance.get() / (sorcererData.isInZone() ? 2 : 1) - combo)) != 0) return;
+            //if (HelperMethods.RANDOM.nextInt(Math.max(1, ConfigHolder.SERVER.blackFlashChance.get() / (sorcererData.isInZone() ? 2 : 1) - combo)) != 0) return;
 
             COMBOS.remove(attacker.getUUID());
 
             long lastBlackFlashTime = sorcererData.getLastBlackFlashTime();
             int seconds = (int) (attacker.level().getGameTime() - lastBlackFlashTime) / 20;
 
-            if (lastBlackFlashTime != 0 && seconds <= 1) return;
+            //if (lastBlackFlashTime != 0 && seconds <= 1) return;
 
             sorcererData.onBlackFlash();
 

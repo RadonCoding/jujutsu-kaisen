@@ -2,6 +2,9 @@ package radon.jujutsu_kaisen.entity.effect;
 
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -23,7 +26,7 @@ public class BlackFlashEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Vector3f> DATA_START = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.VECTOR3);
 
-    private static final int DURATION = 10;
+    public static final int DURATION = 10;
 
     @Nullable
     private UUID victimUUID;
@@ -140,8 +143,7 @@ public class BlackFlashEntity extends Entity {
         }
     }
 
-    @Nullable
-    public LivingEntity getVictim() {
+    public @Nullable LivingEntity getVictim() {
         if (this.cachedVictim != null && !this.cachedVictim.isRemoved()) {
             return this.cachedVictim;
         } else if (this.victimUUID != null && this.level() instanceof ServerLevel) {
@@ -159,8 +161,7 @@ public class BlackFlashEntity extends Entity {
         }
     }
 
-    @Nullable
-    public LivingEntity getOwner() {
+    public @Nullable LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
         } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {

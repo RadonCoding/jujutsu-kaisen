@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
+import com.mojang.math.Axis;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
@@ -41,18 +42,23 @@ public class BlackFlashRenderer extends EntityRenderer<BlackFlashEntity> {
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
+        pPoseStack.translate(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ());
+
         Vec3 start = new Vec3(pEntity.getX(), pEntity.getY(), pEntity.getZ());
         Vec3 end = start.add(pEntity.getStart().subtract(start).scale(RANGE))
-                .add(OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D), OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D), OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D));
-        BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(1.0F, 0.1F, 0.1F, 0.1F,
-                new Vector4f(ParticleColors.BLACK_FLASH.x, ParticleColors.BLACK_FLASH.y, ParticleColors.BLACK_FLASH.z, 0.8F), 1.4F);
+                .add(
+                        OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D),
+                        OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D),
+                        OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D)
+                );
+        BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(0.0F, 0.075F, 0.0F, 0.0F,
+                new Vector4f(ParticleColors.BLACK_FLASH.x, ParticleColors.BLACK_FLASH.y, ParticleColors.BLACK_FLASH.z, 0.8F), 1.8F);
         BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end))) * 10)
-                .size(0.2F)
+                .size(0.1F)
                 .lifespan(1)
                 .fade(BoltEffect.FadeFunction.NONE)
                 .spawn(BoltEffect.SpawnFunction.CONSECUTIVE);
         this.renderer.update(null, bolt, pPartialTick);
-        pPoseStack.translate(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ());
         this.renderer.render(pPartialTick, pPoseStack, pBuffer);
 
         pPoseStack.popPose();
