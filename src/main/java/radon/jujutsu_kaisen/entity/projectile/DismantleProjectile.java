@@ -256,7 +256,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                     float distance = (float) plane.dot(center.subtract(entity.position()));
 
-                    ((ServerLevel) this.level()).sendParticles(new SlicedEntityParticle.Options(entity.getId(), plane.toVector3f(), distance, 1.0F),
+                    ((ServerLevel) this.level()).sendParticles(new SlicedEntityParticle.Options(entity.getId(), plane.toVector3f(), distance),
                             entity.getX(), entity.getY(), entity.getZ(), 0, 0.0D, 0.0D, 0.0D, 1.0D);
                 }
             }

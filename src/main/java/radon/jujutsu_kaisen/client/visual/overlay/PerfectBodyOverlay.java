@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.visual.overlay;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -23,14 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.IAttack;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ICharged;
-import radon.jujutsu_kaisen.ability.IDomainAttack;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.ability.ITransformation;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
@@ -156,7 +146,7 @@ public class PerfectBodyOverlay implements IOverlay {
         if (!(Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity) instanceof LivingEntityRenderer<?, ?> renderer))
             return;
 
-        float f7 = ((ILivingEntityRendererAccessor<?, ?>) renderer).invokeGetBob(entity, partialTicks);
+        float f7 = ((ILivingEntityRendererAccessor) renderer).invokeGetBob(entity, partialTicks);
         float f8 = 0.0F;
         float f5 = 0.0F;
 

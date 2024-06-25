@@ -34,10 +34,10 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class SlashParticle extends TextureSheetParticle {
     private final int entityId;
 
+    private float roll;
+
     @Nullable
     private Entity entity;
-
-    private float roll;
 
     @Nullable
     private Vec3 offset;
@@ -99,30 +99,30 @@ public class SlashParticle extends TextureSheetParticle {
         RenderType type = RenderType.entityTranslucent(TEXTURE);
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
-        Matrix4f pose = poseStack.last().pose();
+        Matrix4f matrix4f = poseStack.last().pose();
 
-        consumer.vertex(pose, -this.quadSize / 2.0F, 0.0F, -1.0F)
+        consumer.vertex(matrix4f, -this.quadSize / 2.0F, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, -this.quadSize / 2.0F, 0.0F, 1.0F)
+        consumer.vertex(matrix4f, -this.quadSize / 2.0F, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, this.quadSize / 2.0F, 0.0F, 1.0F)
+        consumer.vertex(matrix4f, this.quadSize / 2.0F, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, this.quadSize / 2.0F, 0.0F, -1.0F)
+        consumer.vertex(matrix4f, this.quadSize / 2.0F, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)

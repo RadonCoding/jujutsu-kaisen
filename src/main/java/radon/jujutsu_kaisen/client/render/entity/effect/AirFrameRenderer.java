@@ -43,30 +43,30 @@ public class AirFrameRenderer extends EntityRenderer<AirFrameEntity> {
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch - 90.0F));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
-        Matrix4f pose = pPoseStack.last().pose();
+        Matrix4f matrix4f = pPoseStack.last().pose();
 
-        consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
+        consumer.vertex(matrix4f, -SIZE, 0.0F, -SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, -SIZE, 0.0F, SIZE)
+        consumer.vertex(matrix4f, -SIZE, 0.0F, SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, SIZE)
+        consumer.vertex(matrix4f, SIZE, 0.0F, SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, -SIZE)
+        consumer.vertex(matrix4f, SIZE, 0.0F, -SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)

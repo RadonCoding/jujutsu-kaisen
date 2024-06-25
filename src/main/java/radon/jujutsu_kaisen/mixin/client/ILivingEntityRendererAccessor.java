@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.mixin.client;
 
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
@@ -15,7 +16,16 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.List;
 
 @Mixin(LivingEntityRenderer.class)
-public interface ILivingEntityRendererAccessor<T extends LivingEntity, M extends EntityModel<T>> {
+public interface ILivingEntityRendererAccessor {
+    @Invoker
+    void invokeSetupRotations(LivingEntity pEntity, PoseStack pPoseStack, float pBob, float pYBodyRot, float pPartialTick, float pScale);
+
+    @Invoker
+    void invokeScale(LivingEntity pLivingEntity, PoseStack pPoseStack, float pPartialTickTime);
+
+    @Invoker
+    float invokeGetAttackAnim(LivingEntity pLivingBase, float pPartialTickTime);
+
     @Invoker
     float invokeGetBob(LivingEntity pLivingBase, float pPartialTick);
 }

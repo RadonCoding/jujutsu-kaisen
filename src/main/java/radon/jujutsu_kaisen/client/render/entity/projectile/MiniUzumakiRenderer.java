@@ -97,30 +97,30 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
 
             RenderType type = RenderType.entityCutoutNoCull(STILL);
             VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
-            Matrix4f pose = pPoseStack.last().pose();
+            Matrix4f matrix4f = pPoseStack.last().pose();
 
-            consumer.vertex(pose, -STILL_SIZE, 0.0F, -STILL_SIZE)
+            consumer.vertex(matrix4f, -STILL_SIZE, 0.0F, -STILL_SIZE)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(0.0F, 0.0F)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, -STILL_SIZE, 0.0F, STILL_SIZE)
+            consumer.vertex(matrix4f, -STILL_SIZE, 0.0F, STILL_SIZE)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(0.0F, 1.0F)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, STILL_SIZE, 0.0F, STILL_SIZE)
+            consumer.vertex(matrix4f, STILL_SIZE, 0.0F, STILL_SIZE)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(1.0F, 1.0F)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, STILL_SIZE, 0.0F, -STILL_SIZE)
+            consumer.vertex(matrix4f, STILL_SIZE, 0.0F, -STILL_SIZE)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(1.0F, 0.0F)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)

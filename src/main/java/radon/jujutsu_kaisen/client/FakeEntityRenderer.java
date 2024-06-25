@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.core.jmx.AppenderAdmin;
 import org.lwjgl.opengl.GL11;
@@ -42,8 +43,10 @@ public class FakeEntityRenderer {
     private float position = 0.0F;
     private float speed = 0.0F;
 
+    private boolean baby;
+
     private float alpha = 1.0F;
-    
+
     public FakeEntityRenderer(Entity entity) {
         this.entity = entity;
 
@@ -63,6 +66,10 @@ public class FakeEntityRenderer {
             this.position = living.walkAnimation.position();
             this.speed = living.walkAnimation.speed();
         }
+
+        if (entity instanceof Mob mob) {
+            this.baby = mob.isBaby();
+        }
     }
 
     public void setFullRotation(float yaw, float pitch) {
@@ -76,9 +83,7 @@ public class FakeEntityRenderer {
         this.alpha = alpha;
     }
 
-    public void render(Vec3 pos, float partialTicks) {
-        PoseStack poseStack = new PoseStack();
-
+    public void translate(PoseStack poseStack, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
 
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
@@ -88,12 +93,17 @@ public class FakeEntityRenderer {
 
         Vec3 cam = mc.gameRenderer.getMainCamera().getPosition();
 
-        poseStack.translate((pos.x - cam.x) + offset.x, (pos.y - cam.y) + offset.y, (pos.z - cam.z) + offset.z);
+        poseStack.translate(-cam.x + offset.x, -cam.y + offset.y, -cam.z + offset.z);
+    }
 
+    public void render(Vec3 pos, float partialTicks) {
+        PoseStack poseStack = new PoseStack();
+        poseStack.translate(pos.x, pos.y, pos.z);
+        this.translate(poseStack, partialTicks);
         this.render(poseStack, partialTicks);
     }
-    
-    public void render(PoseStack poseStack, float partialTicks) {
+
+    public void setup(Runnable runnable) {
         boolean invisible = this.entity.isInvisible();
 
         this.entity.setInvisible(false);
@@ -162,24 +172,19 @@ public class FakeEntityRenderer {
             walkAnimationSpeed = this.speed;
         }
 
-        Minecraft mc = Minecraft.getInstance();
+        boolean baby = false;
 
-        EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
-        EntityRenderer<? super Entity> renderer = dispatcher.getRenderer(this.entity);
+        if (this.entity instanceof Mob mob) {
+            baby = mob.isBaby();
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+            mob.setBaby(this.baby);
+        }
 
-        isFakeRender = true;
+        runnable.run();
 
-        renderer.render(this.entity, this.entity.getYRot(), partialTicks, poseStack, bufferSource,
-                dispatcher.getPackedLightCoords(this.entity, partialTicks));
-
-        isFakeRender = false;
-
-        // For some reason this makes transparency work
-        if (this.alpha < 1.0F) bufferSource.getBuffer(RenderType.translucent());
-
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        if (this.entity instanceof Mob mob) {
+            mob.setBaby(baby);
+        }
 
         if (this.entity instanceof LivingEntity living) {
             isCustomWalkAnimation = false;
@@ -209,7 +214,30 @@ public class FakeEntityRenderer {
         this.entity.tickCount = tickCount;
 
         this.entity.setInvisible(invisible);
+    }
 
-        bufferSource.endBatch();
+    public void render(PoseStack poseStack, float partialTicks) {
+        this.setup(() -> {
+            Minecraft mc = Minecraft.getInstance();
+
+            EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
+            EntityRenderer<? super Entity> renderer = dispatcher.getRenderer(this.entity);
+
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+
+            isFakeRender = true;
+
+            renderer.render(this.entity, this.entity.getYRot(), partialTicks, poseStack, bufferSource,
+                    dispatcher.getPackedLightCoords(this.entity, partialTicks));
+
+            isFakeRender = false;
+
+            // For some reason this makes transparency work
+            if (this.alpha < 1.0F) bufferSource.getBuffer(RenderType.translucent());
+
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+            bufferSource.endBatch();
+        });
     }
 }

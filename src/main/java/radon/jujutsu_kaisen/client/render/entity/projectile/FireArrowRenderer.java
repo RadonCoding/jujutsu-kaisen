@@ -56,7 +56,7 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         RenderType type = JJKRenderTypes.glow(still ? STILL : STARTUP);
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
-        Matrix4f pose = pPoseStack.last().pose();
+        Matrix4f matrix4f = pPoseStack.last().pose();
 
         int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
 
@@ -69,28 +69,28 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         float maxU = minU + 32.0F / TEXTURE_WIDTH;
         float maxV = minV + 32.0F / (still ? STILL_TEXTURE_HEIGHT : STARTUP_TEXTURE_HEIGHT);
 
-        consumer.vertex(pose, -1.0F, 0.0F, -1.0F)
+        consumer.vertex(matrix4f, -1.0F, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(minU, minV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, -1.0F, 0.0F, 1.0F)
+        consumer.vertex(matrix4f, -1.0F, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(minU, maxV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, 1.0F, 0.0F, 1.0F)
+        consumer.vertex(matrix4f, 1.0F, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(maxU, maxV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, 1.0F, 0.0F, -1.0F)
+        consumer.vertex(matrix4f, 1.0F, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(maxU, minV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)

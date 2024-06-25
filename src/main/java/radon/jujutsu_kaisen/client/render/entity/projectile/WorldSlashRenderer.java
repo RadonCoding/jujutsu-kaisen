@@ -53,32 +53,32 @@ public class WorldSlashRenderer extends EntityRenderer<WorldSlashProjectile> {
         RenderType type = JJKRenderTypes.glow(this.getTextureLocation(pEntity));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
-        Matrix4f pose = pPoseStack.last().pose();
+        Matrix4f matrix4f = pPoseStack.last().pose();
 
         float length = pEntity.getLength() / 2.0F;
 
-        consumer.vertex(pose, -length, 0.0F, -1.0F)
+        consumer.vertex(matrix4f, -length, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, -length, 0.0F, 1.0F)
+        consumer.vertex(matrix4f, -length, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, length, 0.0F, 1.0F)
+        consumer.vertex(matrix4f, length, 0.0F, 1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, length, 0.0F, -1.0F)
+        consumer.vertex(matrix4f, length, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)

@@ -37,10 +37,10 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 public class ProjectionParticle extends TextureSheetParticle {
     private final int entityId;
 
+    private final float yaw;
+
     @Nullable
     private Entity entity;
-
-    private final float yaw;
 
     @Nullable
     private FakeEntityRenderer renderer;
