@@ -1,10 +1,6 @@
 package radon.jujutsu_kaisen.world.gen.processor;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,16 +24,13 @@ import radon.jujutsu_kaisen.item.CursedToolItem;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 public class CursedToolItemFrameProcessor extends StructureProcessor {
     public static final MapCodec<CursedToolItemFrameProcessor> CODEC = MapCodec.unit(CursedToolItemFrameProcessor::new);
-
-    @Override
-    protected @NotNull StructureProcessorType<?> getType() {
-        return JJKProcessors.CURSED_TOOL_ITEM_FRAME_PROCESSOR.get();
-    }
 
     private static ItemStack getRandomCursedTool(RandomSource random) {
         Map<ItemStack, Double> pool = new HashMap<>();
@@ -52,6 +45,11 @@ public class CursedToolItemFrameProcessor extends StructureProcessor {
             }
         }
         return HelperMethods.getWeightedRandom(pool, random);
+    }
+
+    @Override
+    protected @NotNull StructureProcessorType<?> getType() {
+        return JJKProcessors.CURSED_TOOL_ITEM_FRAME_PROCESSOR.get();
     }
 
     @Override

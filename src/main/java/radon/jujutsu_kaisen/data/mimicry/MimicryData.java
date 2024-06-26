@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.mimicry;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -12,6 +9,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
@@ -21,10 +19,9 @@ import java.util.Set;
 
 public class MimicryData implements IMimicryData {
     private final LinkedHashSet<CursedTechnique> copied;
+    private final LivingEntity owner;
     @Nullable
     private CursedTechnique currentCopied;
-
-    private final LivingEntity owner;
 
     public MimicryData(LivingEntity owner) {
         this.owner = owner;

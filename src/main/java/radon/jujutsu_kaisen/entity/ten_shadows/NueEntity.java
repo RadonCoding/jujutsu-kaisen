@@ -18,17 +18,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 import java.util.List;
@@ -61,6 +58,13 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
         this.yHeadRotO = this.yHeadRot;
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.FLYING_SPEED, 2.0F)
+                .add(Attributes.MAX_HEALTH, 2 * 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 
     @Override
@@ -101,13 +105,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
     @Override
     protected float getFlyingSpeed() {
         return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED, 2.0F)
-                .add(Attributes.MAX_HEALTH, 2 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 
     @Override
@@ -249,7 +246,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
 
         Vec3 movement = this.getDeltaMovement();
-        
+
         if (this.jump) {
             this.setDeltaMovement(movement.add(0.0D, this.getFlyingSpeed(), 0.0D));
         }

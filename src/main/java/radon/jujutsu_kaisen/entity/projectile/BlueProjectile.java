@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 
-import radon.jujutsu_kaisen.ParticleAnimator;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -21,6 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ParticleAnimator;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -30,9 +29,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class BlueProjectile extends JujutsuProjectile {
-    private static final EntityDataAccessor<Boolean> DATA_MOTION = SynchedEntityData.defineId(BlueProjectile.class, EntityDataSerializers.BOOLEAN);
-
     public static final double RANGE = 15.0D;
+    private static final EntityDataAccessor<Boolean> DATA_MOTION = SynchedEntityData.defineId(BlueProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final int DELAY = 20;
     private static final float DAMAGE = 3.0F;
     private static final int DURATION = 5 * 20;

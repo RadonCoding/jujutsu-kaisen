@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
-import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -28,6 +26,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 
 public class FireParticle extends TextureSheetParticle {
     private final float size;

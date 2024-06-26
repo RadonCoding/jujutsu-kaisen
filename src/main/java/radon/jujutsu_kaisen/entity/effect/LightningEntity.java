@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -35,18 +35,13 @@ import java.util.Optional;
 public class LightningEntity extends JujutsuProjectile {
     public static final float SCALE = 1.0F;
     public static final double RANGE = 20;
-
-    public double endPosX, endPosY, endPosZ;
-    public double collidePosX, collidePosY, collidePosZ;
-
-    public int life;
-
-    @Nullable
-    public Direction side = null;
-
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(LightningEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(LightningEntity.class, EntityDataSerializers.FLOAT);
-
+    public double endPosX, endPosY, endPosZ;
+    public double collidePosX, collidePosY, collidePosZ;
+    public int life;
+    @Nullable
+    public Direction side = null;
     public int animation;
 
     public LightningEntity(EntityType<? extends Projectile> pType, Level pLevel) {

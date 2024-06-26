@@ -1,16 +1,13 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
 
 public class ClearChantsS2CPacket implements CustomPacketPayload {
@@ -21,7 +18,8 @@ public class ClearChantsS2CPacket implements CustomPacketPayload {
             INSTANCE
     );
 
-    private ClearChantsS2CPacket() {}
+    private ClearChantsS2CPacket() {
+    }
 
     public void handle(IPayloadContext ctx) {
         ctx.enqueueWork(() -> ClientChantHandler.remove());

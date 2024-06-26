@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,9 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.entity.ConnectedLightningEntity;
 import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 
@@ -36,9 +35,9 @@ public record NyoiStaffSummonLightningC2SPacket(UUID identifier) implements Cust
 
             IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return;
+            if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             sender.level().addFreshEntity(new ConnectedLightningEntity(sender, data.getAbilityOutput(), sender.position().add(0.0D, sender.getBbHeight() / 2, 0.0D),
                     staff.position()));

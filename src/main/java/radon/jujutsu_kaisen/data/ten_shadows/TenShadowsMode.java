@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.network.chat.Component;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 

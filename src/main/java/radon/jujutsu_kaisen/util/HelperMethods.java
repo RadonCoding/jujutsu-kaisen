@@ -5,9 +5,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -19,7 +21,10 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class HelperMethods {
     public static final RandomSource RANDOM = RandomSource.createThreadSafe();
@@ -31,7 +36,8 @@ public class HelperMethods {
     public static boolean isDestroyable(ServerLevel level, Entity direct, @Nullable LivingEntity source, BlockPos pos) {
         if (!ConfigHolder.SERVER.destruction.get()) return false;
 
-        if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return false;
+        if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))
+            return false;
 
         Vec3 center = pos.getCenter();
 
@@ -93,7 +99,7 @@ public class HelperMethods {
 
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
-                cost = x.charAt(i - 1) == y.charAt(j - 1) ? 0: 1;
+                cost = x.charAt(i - 1) == y.charAt(j - 1) ? 0 : 1;
                 T[i][j] = Integer.min(Integer.min(T[i - 1][j] + 1, T[i][j - 1] + 1),
                         T[i - 1][j - 1] + cost);
             }

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -24,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
@@ -120,13 +118,6 @@ public class MimicryKatanaEntity extends Entity {
         this.entityData.set(DATA_TECHNIQUE, JJKCursedTechniques.getKey(technique).toString());
     }
 
-    public void setDomain(@Nullable DomainExpansionEntity domain) {
-        if (domain != null) {
-            this.domainUUID = domain.getUUID();
-            this.cachedDomain = domain;
-        }
-    }
-
     @Nullable
     public DomainExpansionEntity getDomain() {
         if (this.cachedDomain != null && !this.cachedDomain.isRemoved()) {
@@ -136,6 +127,13 @@ public class MimicryKatanaEntity extends Entity {
             return this.cachedDomain;
         } else {
             return null;
+        }
+    }
+
+    public void setDomain(@Nullable DomainExpansionEntity domain) {
+        if (domain != null) {
+            this.domainUUID = domain.getUUID();
+            this.cachedDomain = domain;
         }
     }
 

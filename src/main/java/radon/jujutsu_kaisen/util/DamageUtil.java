@@ -8,9 +8,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.projectile.WorldSlashProjectile;
-import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 
 public class DamageUtil {
@@ -29,7 +29,8 @@ public class DamageUtil {
     }
 
     public static boolean isBlockable(LivingEntity target, DamageSource source) {
-        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) || source.is(DamageTypes.STARVE) || source.is(JJKDamageSources.SOUL)) return false;
+        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) || source.is(DamageTypes.STARVE) || source.is(JJKDamageSources.SOUL))
+            return false;
 
         if (source.getDirectEntity() instanceof Projectile projectile && !isBlockable(target, projectile)) return false;
 

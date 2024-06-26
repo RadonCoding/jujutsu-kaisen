@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
-import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,6 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 
 public class CursedEnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
@@ -54,7 +53,7 @@ public class CursedEnergyParticle extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return  JJKParticleRenderTypes.GLOW;
+        return JJKParticleRenderTypes.GLOW;
     }
 
     public record Options(Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {

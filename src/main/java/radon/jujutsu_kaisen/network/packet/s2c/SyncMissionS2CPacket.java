@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -18,12 +15,9 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
-import radon.jujutsu_kaisen.data.DataProvider;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
-
-import java.util.Optional;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 
 public record SyncMissionS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncMissionS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "sync_mission_clientbound"));

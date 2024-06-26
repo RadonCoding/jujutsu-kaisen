@@ -1,13 +1,9 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 
 public enum JJKTabType {
     ABOVE(28, 32, 8),
@@ -15,6 +11,7 @@ public enum JJKTabType {
     LEFT(32, 28, 5),
     RIGHT(32, 28, 5);
 
+    public static final int MAX_TABS = java.util.Arrays.stream(values()).mapToInt(e -> e.max).sum();
     private static final ResourceLocation[] SELECTED = {
             new ResourceLocation("advancements/tab_above_left_selected"),
             new ResourceLocation("advancements/tab_above_middle_selected"),
@@ -25,8 +22,6 @@ public enum JJKTabType {
             new ResourceLocation("advancements/tab_above_middle"),
             new ResourceLocation("advancements/tab_above_right")
     };
-
-    public static final int MAX_TABS = java.util.Arrays.stream(values()).mapToInt(e -> e.max).sum();
     private final int width;
     private final int height;
     private final int max;

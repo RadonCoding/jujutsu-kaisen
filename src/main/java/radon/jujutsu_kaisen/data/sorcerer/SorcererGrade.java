@@ -1,16 +1,11 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.serialization.Codec;
-import net.minecraft.advancements.AdvancementType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 
 
 public enum SorcererGrade implements StringRepresentable {

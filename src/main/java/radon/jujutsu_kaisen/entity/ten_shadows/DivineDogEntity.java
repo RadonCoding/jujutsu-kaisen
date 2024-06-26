@@ -19,10 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 public abstract class DivineDogEntity extends TenShadowsSummon implements PlayerRideable {
@@ -52,6 +49,13 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.33D)
+                .add(Attributes.MAX_HEALTH, 2 * 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 2.0D)
+                .add(Attributes.STEP_HEIGHT, 1.0F);
     }
 
     @Override
@@ -87,10 +91,6 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
     @Override
     public boolean canChant() {
         return false;
-    }
-
-    protected void setVariant(Variant variant) {
-        this.entityData.set(DATA_VARIANT, variant.ordinal());
     }
 
     public int getRitual() {
@@ -155,13 +155,6 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
         return false;
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.33D)
-                .add(Attributes.MAX_HEALTH, 2 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 2.0D)
-                .add(Attributes.STEP_HEIGHT, 1.0F);
-    }
-
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
@@ -210,6 +203,10 @@ public abstract class DivineDogEntity extends TenShadowsSummon implements Player
 
     public Variant getVariant() {
         return Variant.values()[this.entityData.get(DATA_VARIANT)];
+    }
+
+    protected void setVariant(Variant variant) {
+        this.entityData.set(DATA_VARIANT, variant.ordinal());
     }
 
     @Override

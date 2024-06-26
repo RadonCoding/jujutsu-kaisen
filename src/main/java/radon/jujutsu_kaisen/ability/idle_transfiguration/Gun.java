@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;

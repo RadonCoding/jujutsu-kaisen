@@ -22,14 +22,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -44,11 +40,8 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
     private static final int DURATION = 5 * 20;
     private static final double SPEED = 2.5D;
     private static final double RANGE = 3.0D;
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     private static final RawAnimation CUT = RawAnimation.begin().thenPlay("misc.cut");
-
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     @Nullable
     private UUID victimUUID;
     @Nullable
@@ -117,13 +110,6 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
         this.setActive(pCompound.getInt("active"));
     }
 
-    public void setVictim(@Nullable LivingEntity victim) {
-        if (victim != null) {
-            this.victimUUID = victim.getUUID();
-            this.cachedVictim = victim;
-        }
-    }
-
     @Nullable
     public LivingEntity getVictim() {
         if (this.cachedVictim != null && !this.cachedVictim.isRemoved()) {
@@ -133,6 +119,13 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
             return this.cachedVictim;
         } else {
             return null;
+        }
+    }
+
+    public void setVictim(@Nullable LivingEntity victim) {
+        if (victim != null) {
+            this.victimUUID = victim.getUUID();
+            this.cachedVictim = victim;
         }
     }
 

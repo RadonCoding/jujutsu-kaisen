@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -117,13 +114,6 @@ public class AirFrameEntity extends Entity {
         }
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
     @Nullable
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
@@ -133,6 +123,13 @@ public class AirFrameEntity extends Entity {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 }

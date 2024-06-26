@@ -1,18 +1,22 @@
 package radon.jujutsu_kaisen.item.veil.modifier;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.NotNull;
 
-public class Modifier{
+public class Modifier {
     private final Modifier.Type type;
     private final Modifier.Action action;
+
+    public Modifier(Modifier.Type type, Action action) {
+        this.type = type;
+        this.action = action;
+    }
+
+    public Modifier(CompoundTag nbt) {
+        this.type = Modifier.Type.values()[nbt.getInt("type")];
+        this.action = Modifier.Action.values()[nbt.getInt("action")];
+    }
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
@@ -33,14 +37,17 @@ public class Modifier{
         return Component.empty();
     }
 
-    public Modifier(Modifier.Type type, Action action) {
-        this.type = type;
-        this.action = action;
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Modifier other)) {
+            return false;
+        }
+        return this.type == other.type;
     }
 
-    public Modifier(CompoundTag nbt) {
-        this.type = Modifier.Type.values()[nbt.getInt("type")];
-        this.action = Modifier.Action.values()[nbt.getInt("action")];
+    @Override
+    public int hashCode() {
+        return this.type.hashCode();
     }
 
     public enum Type {
@@ -58,18 +65,5 @@ public class Modifier{
         NONE,
         ALLOW,
         DENY
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Modifier other)) {
-            return false;
-        }
-        return this.type == other.type;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.type.hashCode();
     }
 }

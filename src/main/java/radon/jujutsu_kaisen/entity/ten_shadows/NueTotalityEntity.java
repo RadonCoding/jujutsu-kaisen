@@ -18,18 +18,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
 import radon.jujutsu_kaisen.ability.Summon;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 import java.util.List;
@@ -62,6 +59,12 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         this.yHeadRotO = this.yHeadRot;
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.FLYING_SPEED, 2.0F)
+                .add(Attributes.MAX_HEALTH, 4 * 20.0D);
     }
 
     @Override
@@ -128,12 +131,6 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     protected float getFlyingSpeed() {
         return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED, 2.0F)
-                .add(Attributes.MAX_HEALTH, 4 * 20.0D);
     }
 
     @Override

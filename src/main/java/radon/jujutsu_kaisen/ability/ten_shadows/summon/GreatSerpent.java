@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;

@@ -1,17 +1,16 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IDurationable;
+import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.radial.MeleeScreen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -25,6 +24,28 @@ import java.util.List;
 public class AbilityOverlay {
     private static int selected;
     private static List<Ability> abilities = new ArrayList<>();
+    public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null) return;
+
+        if (mc.player.isSpectator()) return;
+
+        if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.SCROLL) {
+            abilities = JJKAbilities.getAbilities(mc.player);
+            abilities.removeIf(ability -> ability.getMenuType(mc.player) != MenuType.MELEE);
+
+            if (!abilities.isEmpty()) {
+                renderScroll(pGuiGraphics, getIndex());
+            }
+        } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE) {
+            Ability selected = MeleeScreen.getSelected();
+
+            if (selected == null) return;
+
+            renderToggle(pGuiGraphics, selected);
+        }
+    };
 
     public static boolean scroll(int direction) {
         int i = -(int) Math.signum(direction);
@@ -200,27 +221,4 @@ public class AbilityOverlay {
             y += mc.font.lineHeight;
         }
     }
-
-    public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
-        Minecraft mc = Minecraft.getInstance();
-
-        if (mc.player == null) return;
-
-        if (mc.player.isSpectator()) return;
-
-        if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.SCROLL) {
-            abilities = JJKAbilities.getAbilities(mc.player);
-            abilities.removeIf(ability -> ability.getMenuType(mc.player) != MenuType.MELEE);
-
-            if (!abilities.isEmpty()) {
-                renderScroll(pGuiGraphics, getIndex());
-            }
-        } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE) {
-            Ability selected = MeleeScreen.getSelected();
-
-            if (selected == null) return;
-
-            renderToggle(pGuiGraphics, selected);
-        }
-    };
 }

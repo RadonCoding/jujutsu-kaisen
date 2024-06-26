@@ -58,12 +58,12 @@ public class JujutsuProjectile extends Projectile {
         this.entityData.set(DATA_TIME, time);
     }
 
-    protected void setPower(float power) {
-        this.entityData.set(DATA_POWER, power);
-    }
-
     public float getPower() {
         return this.entityData.get(DATA_POWER);
+    }
+
+    protected void setPower(float power) {
+        this.entityData.set(DATA_POWER, power);
     }
 
     public boolean isDomain() {

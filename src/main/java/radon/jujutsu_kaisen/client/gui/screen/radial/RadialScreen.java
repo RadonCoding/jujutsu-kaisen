@@ -1,20 +1,15 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.network.packet.c2s.ShadowInventoryTakeC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -25,13 +20,10 @@ public abstract class RadialScreen extends Screen {
     protected static final int RADIUS_OUT = RADIUS_IN * 2;
 
     protected static final int MAX_ITEMS = 12;
-
+    protected static int page;
     private final List<List<? extends DisplayItem>> pages = new ArrayList<>();
-
     private int hovered = -1;
     private int hover;
-
-    protected static int page;
 
     public RadialScreen() {
         super(Component.nullToEmpty(null));

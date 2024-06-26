@@ -1,11 +1,11 @@
 package radon.jujutsu_kaisen.item.registry;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -15,12 +15,11 @@ import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.item.*;
 import radon.jujutsu_kaisen.item.armor.*;
 import radon.jujutsu_kaisen.item.armor.registry.JJKArmorMaterials;
-import radon.jujutsu_kaisen.item.cursed_object.*;
+import radon.jujutsu_kaisen.item.cursed_object.SukunaFingerItem;
 import radon.jujutsu_kaisen.item.cursed_tool.*;
 import radon.jujutsu_kaisen.item.veil.VeilRodItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class JJKItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, JujutsuKaisen.MOD_ID);
@@ -64,9 +63,9 @@ public class JJKItems {
     public static DeferredHolder<Item, SwordItem> RED_HANDLE_KATANA = ITEMS.register("red_handle_katana",
             () -> new KatanaItem(JJKTiers.GRADE_4, new Item.Properties()));
     public static DeferredHolder<Item, SwordItem> MIMICRY_KATANA_BLACK = ITEMS.register("mimicry_katana_black",
-            () -> new MimicryKatanaItem(JJKTiers.GRADE_4,  new Item.Properties()));
+            () -> new MimicryKatanaItem(JJKTiers.GRADE_4, new Item.Properties()));
     public static DeferredHolder<Item, SwordItem> MIMICRY_KATANA_WHITE = ITEMS.register("mimicry_katana_white",
-            () -> new MimicryKatanaItem(JJKTiers.GRADE_4,  new Item.Properties()));
+            () -> new MimicryKatanaItem(JJKTiers.GRADE_4, new Item.Properties()));
     public static DeferredHolder<Item, SwordItem> JET_BLACK_SHADOW_SWORD = ITEMS.register("jet_black_shadow_sword",
             () -> new JetBlackShadowSwordItem(JJKTiers.GRADE_3, new Item.Properties()));
 

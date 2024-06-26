@@ -1,10 +1,6 @@
 package radon.jujutsu_kaisen.client.visual.visual;
 
 
-import radon.jujutsu_kaisen.ParticleAnimator;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -16,12 +12,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.ParticleAnimator;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueFistsVisual implements IVisual {
     private static final float RADIUS = 0.25F;
@@ -59,6 +54,13 @@ public class BlueFistsVisual implements IVisual {
         return Vec3.ZERO;
     }
 
+    public static void spawn(Level level, Vec3 pos) {
+        int count = Math.round(RADIUS * 10.0F);
+
+        ParticleAnimator.sphere(level, pos, () -> RADIUS, () -> 0.0F,
+                () -> PARTICLE_SIZE, count, 0.2F, true, true, 20, ParticleColors.LIGHT_BLUE);
+    }
+
     @Override
     public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
         return client.toggled.contains(JJKAbilities.BLUE_FISTS.get());
@@ -73,12 +75,5 @@ public class BlueFistsVisual implements IVisual {
         Vec3 left = getArmPos(entity, HumanoidArm.LEFT)
                 .add(0.0D, PARTICLE_SIZE / 2.0F, 0.0D);
         spawn(entity.level(), left);
-    }
-
-    public static void spawn(Level level, Vec3 pos) {
-        int count = Math.round(RADIUS * 10.0F);
-
-        ParticleAnimator.sphere(level, pos, () -> RADIUS, () -> 0.0F,
-                () -> PARTICLE_SIZE, count, 0.2F, true, true, 20, ParticleColors.LIGHT_BLUE);
     }
 }

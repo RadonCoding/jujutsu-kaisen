@@ -27,8 +27,8 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -36,12 +36,11 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public class MeteorEntity extends JujutsuProjectile {
-    private static final EntityDataAccessor<Integer> DATA_EXPLOSION_TIME = SynchedEntityData.defineId(MeteorEntity.class, EntityDataSerializers.INT);
-
     public static final int SIZE = 5;
     public static final int HEIGHT = 30;
-    private static final int MAX_SIZE = 15;
     public static final int DELAY = 3 * 20;
+    private static final EntityDataAccessor<Integer> DATA_EXPLOSION_TIME = SynchedEntityData.defineId(MeteorEntity.class, EntityDataSerializers.INT);
+    private static final int MAX_SIZE = 15;
     private static final double SPEED = 3.0D;
     private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 10.0F;
@@ -65,6 +64,10 @@ public class MeteorEntity extends JujutsuProjectile {
         owner.setPos(owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.getSize(power), 0.0D));
 
         this.applyOffset();
+    }
+
+    public static int getSize(float power) {
+        return Math.min(MAX_SIZE, Math.round(SIZE * power));
     }
 
     @Override
@@ -233,10 +236,6 @@ public class MeteorEntity extends JujutsuProjectile {
         this.pushEntities();
     }
 
-    public static int getSize(float power) {
-        return Math.min(MAX_SIZE, Math.round(SIZE * power));
-    }
-
     public int getSize() {
         return Math.round(getSize(this.getPower()) * ((float) Math.min(DELAY, this.getTime()) / DELAY));
     }
@@ -253,8 +252,10 @@ public class MeteorEntity extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds)) {
-                if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ())) >= this.getSize()) continue;
-                if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower())) continue;
+                if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ())) >= this.getSize())
+                    continue;
+                if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower()))
+                    continue;
                 entity.setRemainingFireTicks(10 * 20);
             }
         }

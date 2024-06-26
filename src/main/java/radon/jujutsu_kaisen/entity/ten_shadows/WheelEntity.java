@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -57,11 +56,11 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         this.startRiding(owner);
     }
-    
+
     public int getSpin() {
         return this.entityData.get(DATA_SPIN);
     }
-    
+
     public void setSpin(int spin) {
         this.entityData.set(DATA_SPIN, spin);
     }
@@ -77,13 +76,6 @@ public class WheelEntity extends Entity implements GeoEntity {
         this.playSound(JJKSounds.WHEEL.get(), 3.0F, 1.0F);
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
     @Nullable
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
@@ -93,6 +85,13 @@ public class WheelEntity extends Entity implements GeoEntity {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 

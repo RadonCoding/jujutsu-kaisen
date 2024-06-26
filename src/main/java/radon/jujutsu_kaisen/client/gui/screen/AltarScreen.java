@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,8 +11,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.menu.AltarMenu;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
+import radon.jujutsu_kaisen.menu.AltarMenu;
 
 public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/container/altar.png");

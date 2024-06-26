@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -15,21 +14,24 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.ICharged;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Slam extends Ability implements ICharged {
     private static final double RANGE = 30.0D;
@@ -37,6 +39,22 @@ public class Slam extends Ability implements ICharged {
     private static final float MAX_EXPLOSION = 5.0F;
 
     public static Map<UUID, Float> TARGETS = new HashMap<>();
+
+    public static void onHitGround(LivingEntity owner, float distance) {
+        if (owner.level().isClientSide) return;
+
+        float radius = Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID()));
+
+        owner.swing(InteractionHand.MAIN_HAND);
+
+        if (!owner.level().isClientSide) {
+            ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getOutput(JJKAbilities.SLAM.get(), owner) * 0.25F,
+                    owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
+        }
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLAM.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
+        TARGETS.remove(owner.getUUID());
+    }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -121,22 +139,6 @@ public class Slam extends Ability implements ICharged {
     @Override
     public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
-    }
-
-    public static void onHitGround(LivingEntity owner, float distance) {
-        if (owner.level().isClientSide) return;
-
-        float radius = Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID()));
-
-        owner.swing(InteractionHand.MAIN_HAND);
-
-        if (!owner.level().isClientSide) {
-            ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getOutput(JJKAbilities.SLAM.get(), owner) * 0.25F,
-                    owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
-        }
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLAM.get(), SoundSource.MASTER, 1.0F, 1.0F);
-
-        TARGETS.remove(owner.getUUID());
     }
 
     @Override

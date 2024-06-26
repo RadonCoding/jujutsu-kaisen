@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,8 +17,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.menu.BountyMenu;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestBountyCostC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.SetTojiBountyC2SPacket;
 

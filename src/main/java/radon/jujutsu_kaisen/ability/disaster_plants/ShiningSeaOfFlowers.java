@@ -1,20 +1,15 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import net.minecraft.world.level.block.Blocks;
-import radon.jujutsu_kaisen.ability.IClosedDomain;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
-import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 
 import java.util.List;
 

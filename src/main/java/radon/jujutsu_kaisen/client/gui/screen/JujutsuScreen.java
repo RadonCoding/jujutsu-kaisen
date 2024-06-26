@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameNarrator;
@@ -23,23 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JujutsuScreen extends Screen {
-    private static final ResourceLocation WINDOW = new ResourceLocation("textures/gui/advancements/window.png");
-
     public static final int WINDOW_WIDTH = 252;
     public static final int WINDOW_HEIGHT = 140;
-    private static final int WINDOW_INSIDE_X = 9;
-    private static final int WINDOW_INSIDE_Y = 18;
     public static final int WINDOW_INSIDE_WIDTH = 234;
     public static final int WINDOW_INSIDE_HEIGHT = 113;
     public static final int BACKGROUND_TILE_WIDTH = 16;
     public static final int BACKGROUND_TILE_HEIGHT = 16;
-
+    private static final ResourceLocation WINDOW = new ResourceLocation("textures/gui/advancements/window.png");
+    private static final int WINDOW_INSIDE_X = 9;
+    private static final int WINDOW_INSIDE_Y = 18;
+    private static int tabPage, maxPages;
     private final List<JJKTab> tabs = new ArrayList<>();
-
     @Nullable
     private JJKTab selectedTab;
-    private static int tabPage, maxPages;
-
     private boolean isScrolling;
 
     public JujutsuScreen() {

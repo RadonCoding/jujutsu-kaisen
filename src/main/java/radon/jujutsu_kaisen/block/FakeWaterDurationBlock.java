@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.block;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -17,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-
-import java.util.function.Supplier;
 
 public class FakeWaterDurationBlock extends LiquidBlock implements EntityBlock {
     public FakeWaterDurationBlock(FlowingFluid pFluid, Properties pProperties) {

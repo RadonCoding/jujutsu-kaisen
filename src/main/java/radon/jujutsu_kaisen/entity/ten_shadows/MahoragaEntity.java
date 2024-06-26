@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -14,12 +13,12 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
@@ -30,30 +29,23 @@ import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 import java.util.List;
 
 public class MahoragaEntity extends TenShadowsSummon {
-    public static EntityDataAccessor<Integer> DATA_SLASH = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.INT);
-    public static EntityDataAccessor<Boolean> DATA_BATTLE = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.BOOLEAN);
-
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation IDLE_BATTLE = RawAnimation.begin().thenLoop("misc.idle_battle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation SLASH = RawAnimation.begin().thenPlay("attack.slash");
-
     private static final double SLASH_LAUNCH = 5.0D;
-
     private static final int SLASH_DURATION = 20;
     private static final int RITUAL_DURATION = 3 * 20;
-
+    public static EntityDataAccessor<Integer> DATA_SLASH = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.INT);
+    public static EntityDataAccessor<Boolean> DATA_BATTLE = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.BOOLEAN);
     private boolean healing;
 
     public MahoragaEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
@@ -73,6 +65,13 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D)
+                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     @Override
@@ -113,13 +112,6 @@ public class MahoragaEntity extends TenShadowsSummon {
     @Override
     public boolean canChant() {
         return false;
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D)
-                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     @Override
@@ -215,34 +207,34 @@ public class MahoragaEntity extends TenShadowsSummon {
                 }
             }
         }
-     }
+    }
 
-     private void setRitualOffset(Mob entity, int index, double padding) {
-         entity.setNoAi(true);
+    private void setRitualOffset(Mob entity, int index, double padding) {
+        entity.setNoAi(true);
 
-         double x = entity.getX();
-         double y = entity.getY();
-         double z = entity.getZ();
+        double x = entity.getX();
+        double y = entity.getY();
+        double z = entity.getZ();
 
-         double distance = entity.getBbWidth() * 2;
-         Vec3 look = RotationUtil.calculateViewVector(0.0F, entity.getYRot());
-         Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
-         Vec3 side = look.cross(up);
-         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
-                 .add(look.scale(padding + (index % 3) * 3.0D));
-         entity.setPos(x + offset.x, y, z + offset.z);
+        double distance = entity.getBbWidth() * 2;
+        Vec3 look = RotationUtil.calculateViewVector(0.0F, entity.getYRot());
+        Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
+        Vec3 side = look.cross(up);
+        Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
+                .add(look.scale(padding + (index % 3) * 3.0D));
+        entity.setPos(x + offset.x, y, z + offset.z);
 
-         float yRot = entity.getYRot();
+        float yRot = entity.getYRot();
 
-         if (index < 3) {
-             yRot -= 90.0F;
-         } else {
-             yRot += 90.0F;
-         }
-         entity.setYRot(yRot);
-         entity.yHeadRot = entity.getYRot();
-         entity.yHeadRotO = entity.yHeadRot;
-     }
+        if (index < 3) {
+            yRot -= 90.0F;
+        } else {
+            yRot += 90.0F;
+        }
+        entity.setYRot(yRot);
+        entity.yHeadRot = entity.getYRot();
+        entity.yHeadRotO = entity.yHeadRot;
+    }
 
     @Override
     public void onAddedToWorld() {

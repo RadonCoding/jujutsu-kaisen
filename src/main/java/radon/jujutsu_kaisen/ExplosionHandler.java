@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -32,17 +29,14 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
-import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 
@@ -112,7 +106,8 @@ public class ExplosionHandler {
                 EventHooks.onExplosionDetonate(level, current, entities, diameter);
 
                 for (Entity entity : entities) {
-                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && entity == explosion.instigator) continue;
+                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && entity == explosion.instigator)
+                        continue;
 
                     if (entity.ignoreExplosion(current)) continue;
 
@@ -175,7 +170,7 @@ public class ExplosionHandler {
                                 BlockPos pos = new BlockPos(x, y, z);
                                 Vec3 center = pos.getCenter();
 
-                                if (!VeilHandler.canDestroy(explosion.instigator, (ServerLevel) level, center.x, center.y, center.z)) {
+                                if (!VeilHandler.canDestroy(explosion.instigator, level, center.x, center.y, center.z)) {
                                     continue;
                                 }
 
@@ -197,19 +192,19 @@ public class ExplosionHandler {
                                         if (block.canDropFromExplosion(level, pos, current)) {
                                             BlockEntity be = block.hasBlockEntity() ? level.getBlockEntity(pos) : null;
 
-                                            LootParams.Builder params = (new LootParams.Builder((ServerLevel) level))
+                                            LootParams.Builder params = (new LootParams.Builder(level))
                                                     .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                                                     .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                                                     .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
                                                     .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
                                                     .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
-                                            block.spawnAfterBreak((ServerLevel) level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
+                                            block.spawnAfterBreak(level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
                                             block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
                                         }
                                         block.onBlockExploded(level, pos, current);
 
                                         if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                                            ParticleUtil.sendParticles((ServerLevel) level, ParticleTypes.EXPLOSION, true, x, y, z,
+                                            ParticleUtil.sendParticles(level, ParticleTypes.EXPLOSION, true, x, y, z,
                                                     0.0D, 0.0D, 0.0D);
                                         }
 
@@ -250,10 +245,10 @@ public class ExplosionHandler {
         private final float radius;
         private final int duration;
         private final float output;
-        private int age;
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
         private final boolean fire;
+        private int age;
 
         public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float output, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
             this.calculator = instigator == null ? new ExplosionDamageCalculator() : new EntityBasedExplosionDamageCalculator(instigator);

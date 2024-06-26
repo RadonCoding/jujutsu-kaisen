@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,19 +14,20 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.curse.PackCursedSpirit;
 import radon.jujutsu_kaisen.entity.ten_shadows.TenShadowsSummon;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.*;
@@ -144,14 +144,6 @@ public class ExperienceHandler {
             this.targetUUID = targetUUID;
         }
 
-        public UUID getOwnerUUID() {
-            return this.ownerUUID;
-        }
-
-        public UUID getTargetUUID() {
-            return targetUUID;
-        }
-
         private static float calculateStrength(LivingEntity target) {
             float strength = target.getMaxHealth() * 0.1F;
 
@@ -206,8 +198,17 @@ public class ExperienceHandler {
             return strength;
         }
 
+        public UUID getOwnerUUID() {
+            return this.ownerUUID;
+        }
+
+        public UUID getTargetUUID() {
+            return targetUUID;
+        }
+
         public void end(ServerLevel level) {
-            if (!(level.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !(level.getEntity(this.targetUUID) instanceof LivingEntity target)) return;
+            if (!(level.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !(level.getEntity(this.targetUUID) instanceof LivingEntity target))
+                return;
             if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
             if (this.damageDealtByOwner == 0.0F) return;
 

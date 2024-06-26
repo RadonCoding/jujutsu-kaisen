@@ -1,16 +1,16 @@
 package radon.jujutsu_kaisen.cursed_technique;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.Holder;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CursedTechnique {
     private final Set<Holder<Ability>> abilities;
@@ -31,7 +31,7 @@ public class CursedTechnique {
         }
         return abilities;
     }
-    
+
     @Nullable
     public Ability getDomain() {
         return this.domain == null ? null : this.domain.value();

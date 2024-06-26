@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.widget;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -11,14 +8,7 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.IAttack;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ICharged;
-import radon.jujutsu_kaisen.ability.IDomainAttack;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.IToggled;
 
 public class AbilityListWidget extends JJKSelectionList<Ability, AbilityListWidget.Entry> {
     public AbilityListWidget(IBuilder<Ability, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y) {

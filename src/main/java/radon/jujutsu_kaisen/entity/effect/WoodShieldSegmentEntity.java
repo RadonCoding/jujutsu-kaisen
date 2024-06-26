@@ -1,13 +1,11 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -61,13 +59,6 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
         this.pos = segment.position();
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
     @Nullable
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
@@ -77,6 +68,13 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -12,8 +9,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.MenuType;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -25,6 +22,16 @@ public class TeleportOthers extends Ability {
     private static final int EXPIRATION = 5 * 20;
 
     private static final Map<UUID, AbstractMap.SimpleEntry<UUID, Long>> TARGETS = new HashMap<>();
+
+    private static boolean hasTarget(LivingEntity owner) {
+        if (!TARGETS.containsKey(owner.getUUID())) return false;
+
+        AbstractMap.SimpleEntry<UUID, Long> entry = TARGETS.get(owner.getUUID());
+
+        if (owner.level().getGameTime() - entry.getValue() >= EXPIRATION) return false;
+
+        return ((ServerLevel) owner.level()).getEntity(entry.getKey()) != null;
+    }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -39,16 +46,6 @@ public class TeleportOthers extends Ability {
     @Nullable
     private Entity getEntityTarget(LivingEntity owner) {
         return TeleportSelf.getTarget(owner) instanceof EntityHitResult hit ? hit.getEntity() : null;
-    }
-
-    private static boolean hasTarget(LivingEntity owner) {
-        if (!TARGETS.containsKey(owner.getUUID())) return false;
-
-        AbstractMap.SimpleEntry<UUID, Long> entry = TARGETS.get(owner.getUUID());
-
-        if (owner.level().getGameTime() - entry.getValue() >= EXPIRATION) return false;
-
-        return ((ServerLevel) owner.level()).getEntity(entry.getKey()) != null;
     }
 
     @Override

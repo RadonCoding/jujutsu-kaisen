@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.cursed_technique.registry;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -13,9 +10,9 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 public class JJKCursedTechniques {
     public static ResourceKey<Registry<CursedTechnique>> CURSED_TECHNIQUE_KEY = ResourceKey.createRegistryKey(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_technique"));

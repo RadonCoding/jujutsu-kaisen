@@ -1,21 +1,14 @@
 package radon.jujutsu_kaisen.block.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
@@ -50,6 +43,16 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
         this.modifiers = new ArrayList<>();
     }
 
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
+        if (pBlockEntity.parentUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.parentUUID) instanceof VeilEntity veil) || veil.isRemoved() || !veil.isAlive()) {
+            --pBlockEntity.death;
+        }
+
+        if (pBlockEntity.death <= 0) {
+            pBlockEntity.destroy();
+        }
+    }
+
     @Nullable
     public UUID getParentUUID() {
         return this.parentUUID;
@@ -62,16 +65,6 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
 
     public boolean isAllowed(Entity entity) {
         return VeilUtil.isAllowed(entity, this.ownerUUID, this.modifiers);
-    }
-
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
-        if (pBlockEntity.parentUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.parentUUID) instanceof VeilEntity veil) || veil.isRemoved() || !veil.isAlive()) {
-            --pBlockEntity.death;
-        }
-
-        if (pBlockEntity.death <= 0) {
-            pBlockEntity.destroy();
-        }
     }
 
     public void create(UUID parentUUID, UUID ownerUUID, int delay, int size, List<Modifier> modifiers, BlockState state, CompoundTag saved) {
@@ -95,7 +88,7 @@ public class VeilBlockEntity extends TemporaryBlockEntity {
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider pRegistries) {
         return this.saveWithoutMetadata(pRegistries);
     }
-    
+
     private void markUpdated() {
         this.setChanged();
 

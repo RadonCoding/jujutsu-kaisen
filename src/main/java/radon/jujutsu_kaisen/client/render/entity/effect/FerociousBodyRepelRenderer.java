@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -29,6 +26,15 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
         super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "ferocious_body_repel")));
     }
 
+    private static Vec3 getEyePosition(Entity entity, double yOffset, float pPartialTick) {
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(entity);
+        return new Vec3(
+                Mth.lerp(pPartialTick, entity.xOld, entity.getX()),
+                Mth.lerp(pPartialTick, entity.yOld, entity.getY()) + entity.getEyeHeight() - yOffset,
+                Mth.lerp(pPartialTick, entity.zOld, entity.getZ())
+        ).add(look);
+    }
+
     @Override
     public void preRender(PoseStack poseStack, FerociousBodyRepelEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (!(animatable.getOwner() instanceof LivingEntity owner)) return;
@@ -49,15 +55,6 @@ public class FerociousBodyRepelRenderer extends GeoEntityRenderer<FerociousBodyR
         tail.setScaleZ(f0);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    private static Vec3 getEyePosition(Entity entity, double yOffset, float pPartialTick) {
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(entity);
-        return new Vec3(
-                Mth.lerp(pPartialTick, entity.xOld, entity.getX()),
-                Mth.lerp(pPartialTick, entity.yOld, entity.getY()) + entity.getEyeHeight() - yOffset,
-                Mth.lerp(pPartialTick, entity.zOld, entity.getZ())
-        ).add(look);
     }
 
     @Override

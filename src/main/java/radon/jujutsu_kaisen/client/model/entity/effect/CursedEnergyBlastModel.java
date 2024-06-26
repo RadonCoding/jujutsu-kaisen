@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.model.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -36,20 +33,20 @@ public class CursedEnergyBlastModel extends EntityModel<CursedEnergyBlastEntity>
         PartDefinition part = mesh.getRoot();
 
         part.addOrReplaceChild("body1", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
+                        .texOffs(0, 0)
+                        .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 16.0F, 0.0F));
         part.addOrReplaceChild("body2", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
+                        .texOffs(0, 0)
+                        .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 16.0F, 0.0F));
         part.addOrReplaceChild("body3", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
+                        .texOffs(0, 0)
+                        .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 16.0F, 0.0F));
         part.addOrReplaceChild("body4", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
+                        .texOffs(0, 0)
+                        .addBox(-32.0F, -32.0F, -32.0F, 64, 64, 64, CubeDeformation.NONE),
                 PartPose.offset(0.0F, 16.0F, 0.0F));
 
         return LayerDefinition.create(mesh, 64, 64);

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -16,18 +13,15 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBombEntity;
-import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 
 public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/cursed_energy_bomb.png");
@@ -38,6 +32,16 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
 
     public CursedEnergyBombRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
+    }
+
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, Vector3f color, float u, float v, float alpha, int packedLight) {
+        consumer.vertex(matrix4f, x, y, z)
+                .color(color.x, color.y, color.z, alpha)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(packedLight)
+                .normal(pose, 0.0F, 1.0F, 0.0F)
+                .endVertex();
     }
 
     @Override
@@ -159,15 +163,5 @@ public class CursedEnergyBombRenderer extends EntityRenderer<CursedEnergyBombEnt
         poseStack.popPose();
 
         poseStack.popPose();
-    }
-
-    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, Vector3f color, float u, float v, float alpha, int packedLight) {
-        consumer.vertex(matrix4f, x, y, z)
-                .color(color.x, color.y, color.z, alpha)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(packedLight)
-                .normal(pose, 0.0F, 1.0F, 0.0F)
-                .endVertex();
     }
 }

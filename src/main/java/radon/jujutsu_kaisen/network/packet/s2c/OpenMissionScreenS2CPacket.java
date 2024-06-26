@@ -1,10 +1,6 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -22,7 +18,8 @@ public class OpenMissionScreenS2CPacket implements CustomPacketPayload {
             INSTANCE
     );
 
-    private OpenMissionScreenS2CPacket() {}
+    private OpenMissionScreenS2CPacket() {
+    }
 
     public void handle(IPayloadContext ctx) {
         ctx.enqueueWork(ClientWrapper::openMissions);

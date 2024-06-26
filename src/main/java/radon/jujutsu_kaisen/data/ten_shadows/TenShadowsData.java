@@ -1,15 +1,15 @@
 package radon.jujutsu_kaisen.data.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -20,13 +20,14 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.IAdditionalAdaptation;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 
@@ -105,14 +106,14 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public void setTamed(Set<ResourceLocation> tamed) {
-        this.tamed.clear();
-        this.tamed.addAll(tamed);
+    public Set<ResourceLocation> getTamed() {
+        return this.tamed;
     }
 
     @Override
-    public Set<ResourceLocation> getTamed() {
-        return this.tamed;
+    public void setTamed(Set<ResourceLocation> tamed) {
+        this.tamed.clear();
+        this.tamed.addAll(tamed);
     }
 
     @Override
@@ -311,7 +312,8 @@ public class TenShadowsData implements ITenShadowsData {
     public void tryAdapt(Ability ability) {
         Adaptation adaptation = new Adaptation(JJKDamageSources.JUJUTSU.location(), ability);
 
-        if (this.isAdaptedTo(ability) && (!(ability instanceof IAdditionalAdaptation additional) || this.adapted.get(adaptation) >= additional.getAdditional() + 1)) return;
+        if (this.isAdaptedTo(ability) && (!(ability instanceof IAdditionalAdaptation additional) || this.adapted.get(adaptation) >= additional.getAdditional() + 1))
+            return;
 
         if (!this.adapting.containsKey(adaptation)) {
             this.adapting.put(adaptation, 0);

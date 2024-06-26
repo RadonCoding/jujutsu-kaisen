@@ -25,18 +25,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
-import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
+import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 import java.util.UUID;
@@ -85,6 +82,11 @@ public class ToadEntity extends TenShadowsSummon {
         this(type, owner, leader.isTame(), false);
 
         this.setLeader(leader);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.MAX_HEALTH, 10.0D);
     }
 
     @Override
@@ -148,13 +150,6 @@ public class ToadEntity extends TenShadowsSummon {
         }
     }
 
-    public void setLeader(@Nullable ToadEntity leader) {
-        if (leader != null) {
-            this.leaderUUID = leader.getUUID();
-            this.cachedLeader = leader;
-        }
-    }
-
     @Nullable
     public ToadEntity getLeader() {
         if (this.cachedLeader != null && !this.cachedLeader.isRemoved()) {
@@ -164,6 +159,13 @@ public class ToadEntity extends TenShadowsSummon {
             return this.cachedLeader;
         } else {
             return null;
+        }
+    }
+
+    public void setLeader(@Nullable ToadEntity leader) {
+        if (leader != null) {
+            this.leaderUUID = leader.getUUID();
+            this.cachedLeader = leader;
         }
     }
 
@@ -294,11 +296,6 @@ public class ToadEntity extends TenShadowsSummon {
         this.original = pCompound.getBoolean("original");
 
         this.setRitual(pCompound.getInt("ritual"));
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 10.0D);
     }
 
     private PlayState walkPredicate(AnimationState<ToadEntity> animationState) {

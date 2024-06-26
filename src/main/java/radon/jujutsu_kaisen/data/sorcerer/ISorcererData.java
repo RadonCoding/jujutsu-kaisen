@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -112,9 +109,9 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void setTraits(Set<Trait> traits);
 
-    void setType(JujutsuType type);
-
     JujutsuType getType();
+
+    void setType(JujutsuType type);
 
     void increaseBrainDamage();
 
@@ -122,9 +119,9 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     void resetBrainDamage();
 
-    void setBurnout(int duration);
-
     int getBurnout();
+
+    void setBurnout(int duration);
 
     boolean hasBurnout();
 
@@ -136,11 +133,11 @@ public interface ISorcererData extends INBTSerializable<CompoundTag> {
 
     float getEnergy();
 
+    void setEnergy(float energy);
+
     void addEnergy(float amount);
 
     void useEnergy(float amount);
-
-    void setEnergy(float energy);
 
     float getExtraEnergy();
 

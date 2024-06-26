@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.event;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.ability.IOpenDomain;
-
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -12,19 +9,21 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.event.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IOpenDomain;
+import radon.jujutsu_kaisen.ability.event.LivingHitByDomainEvent;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -67,7 +66,8 @@ public class AdaptationEventHandler {
             IAbilityData victimAbilityData = victimCap.getAbilityData();
             ITenShadowsData victimTenShadowsData = victimCap.getTenShadowsData();
 
-            if (victimAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !victimAbilityData.hasToggled(JJKAbilities.WHEEL.get())) return;
+            if (victimAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !victimAbilityData.hasToggled(JJKAbilities.WHEEL.get()))
+                return;
 
             if (source.getEntity() instanceof LivingEntity attacker) {
                 IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);

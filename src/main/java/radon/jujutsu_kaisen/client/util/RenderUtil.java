@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.util;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexBuffer;

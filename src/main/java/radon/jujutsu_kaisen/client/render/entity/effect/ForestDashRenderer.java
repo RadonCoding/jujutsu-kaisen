@@ -1,13 +1,8 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -26,9 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
-import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
-
-import static net.neoforged.neoforge.client.model.data.ModelData.EMPTY;
 
 public class ForestDashRenderer extends EntityRenderer<ForestDashEntity> {
     private final BlockRenderDispatcher dispatcher;

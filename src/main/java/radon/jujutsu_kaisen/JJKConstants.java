@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 public class JJKConstants {
     public static final int REQUIRED_ADAPTATION = 60 * 20;
     public static final int ADAPTATION_STEP = 5 * 20;

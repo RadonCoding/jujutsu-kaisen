@@ -1,51 +1,57 @@
 package radon.jujutsu_kaisen.ability.registry;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.registries.*;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.mimicry.*;
-import radon.jujutsu_kaisen.ability.projection_sorcery.*;
-import radon.jujutsu_kaisen.ability.shockwave.Shockwave;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.ai.dino_curse.BlueFire;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
-import radon.jujutsu_kaisen.ability.scissor.Scissors;
-import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
-import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
-import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.cursed_speech.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
-import radon.jujutsu_kaisen.ability.shrine.*;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
 import radon.jujutsu_kaisen.ability.limitless.*;
+import radon.jujutsu_kaisen.ability.mimicry.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
+import radon.jujutsu_kaisen.ability.projection_sorcery.AirFrame;
+import radon.jujutsu_kaisen.ability.projection_sorcery.ProjectionSorcery;
+import radon.jujutsu_kaisen.ability.projection_sorcery.TimeCellMoonPalace;
+import radon.jujutsu_kaisen.ability.projection_sorcery.TwentyFourFrameRule;
+import radon.jujutsu_kaisen.ability.scissor.Scissors;
+import radon.jujutsu_kaisen.ability.shockwave.Shockwave;
+import radon.jujutsu_kaisen.ability.shrine.*;
+import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.ten_shadows.*;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class JJKAbilities {
     public static ResourceKey<Registry<Ability>> ABILITY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(JujutsuKaisen.MOD_ID, "technique"));
@@ -240,7 +246,7 @@ public class JJKAbilities {
         if (owner instanceof JogoatEntity) {
             for (DeferredHolder<CursedTechnique, ? extends CursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
                 CursedTechnique technique = entry.get();
-                
+
                 abilities.addAll(technique.getAbilities());
 
                 Ability domain = technique.getDomain();

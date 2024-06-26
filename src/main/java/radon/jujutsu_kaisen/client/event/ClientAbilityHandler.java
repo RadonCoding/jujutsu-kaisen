@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.event;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.client.gui.screen.radial.AbilityScreen;
-
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -14,36 +11,37 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.ITransformation;
-import radon.jujutsu_kaisen.client.gui.screen.radial.DomainScreen;
-import radon.jujutsu_kaisen.client.gui.screen.radial.MeleeScreen;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
-import radon.jujutsu_kaisen.client.gui.screen.*;
+import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
+import radon.jujutsu_kaisen.client.gui.screen.radial.AbilityScreen;
+import radon.jujutsu_kaisen.client.gui.screen.radial.DomainScreen;
+import radon.jujutsu_kaisen.client.gui.screen.radial.MeleeScreen;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
-import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 import radon.jujutsu_kaisen.entity.IRightClickInputListener;
-import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -55,6 +53,41 @@ public class ClientAbilityHandler {
     private static @Nullable KeyMapping current;
     private static boolean isChanneling;
     private static boolean isRightDown;
+
+    public static Ability.Status trigger(Ability ability) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer owner = mc.player;
+
+        if (owner == null) return Ability.Status.FAILURE;
+
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return Ability.Status.FAILURE;
+
+        IAbilityData data = cap.getAbilityData();
+
+        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
+            ability.charge(owner);
+            ability.addDuration(owner);
+
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            ability.run(owner);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
+            ability.addDuration(owner);
+
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            data.toggle(ability);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
+            ability.addDuration(owner);
+
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            data.channel(ability);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+        }
+        return Ability.Status.SUCCESS;
+    }
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
     public static class ForgeEvents {
@@ -262,40 +295,5 @@ public class ClientAbilityHandler {
                 }
             }
         }
-    }
-
-    public static Ability.Status trigger(Ability ability) {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer owner = mc.player;
-
-        if (owner == null) return Ability.Status.FAILURE;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return Ability.Status.FAILURE;
-
-        IAbilityData data = cap.getAbilityData();
-
-        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
-            ability.charge(owner);
-            ability.addDuration(owner);
-
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-            ability.run(owner);
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            ability.addDuration(owner);
-
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-            data.toggle(ability);
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            ability.addDuration(owner);
-
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-            data.channel(ability);
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-        }
-        return Ability.Status.SUCCESS;
     }
 }

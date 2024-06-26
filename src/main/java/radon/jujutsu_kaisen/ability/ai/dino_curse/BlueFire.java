@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.ai.dino_curse;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -16,14 +15,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.curse.DinoCurseEntity;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -37,6 +37,11 @@ public class BlueFire extends Ability implements IChanneled, IDurationable {
     public static final double RANGE = 32;
     private static final float SCALE = 5.0F;
     private static final float DAMAGE = 2.5F;
+
+    private static Vec3 calculateSpawnPos(LivingEntity owner) {
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        return new Vec3(owner.getX(), owner.getEyeY() - (SCALE * 0.25F), owner.getZ()).add(look);
+    }
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -60,11 +65,6 @@ public class BlueFire extends Ability implements IChanneled, IDurationable {
             return data.isChanneling(this);
         }
         return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && RotationUtil.hasLineOfSight(owner, calculateSpawnPos(owner), target);
-    }
-
-    private static Vec3 calculateSpawnPos(LivingEntity owner) {
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        return new Vec3(owner.getX(), owner.getEyeY() - (SCALE * 0.25F), owner.getZ()).add(look);
     }
 
     @Override

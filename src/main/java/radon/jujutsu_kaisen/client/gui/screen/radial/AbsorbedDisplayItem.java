@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;

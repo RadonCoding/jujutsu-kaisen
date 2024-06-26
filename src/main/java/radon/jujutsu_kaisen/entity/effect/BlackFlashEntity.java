@@ -2,9 +2,6 @@ package radon.jujutsu_kaisen.entity.effect;
 
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -23,11 +20,9 @@ import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import java.util.UUID;
 
 public class BlackFlashEntity extends Entity {
+    public static final int DURATION = 10;
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Vector3f> DATA_START = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.VECTOR3);
-
-    public static final int DURATION = 10;
-
     @Nullable
     private UUID victimUUID;
     @Nullable
@@ -136,13 +131,6 @@ public class BlackFlashEntity extends Entity {
         }
     }
 
-    public void setVictim(@Nullable LivingEntity victim) {
-        if (victim != null) {
-            this.victimUUID = victim.getUUID();
-            this.cachedVictim = victim;
-        }
-    }
-
     public @Nullable LivingEntity getVictim() {
         if (this.cachedVictim != null && !this.cachedVictim.isRemoved()) {
             return this.cachedVictim;
@@ -154,10 +142,10 @@ public class BlackFlashEntity extends Entity {
         }
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
+    public void setVictim(@Nullable LivingEntity victim) {
+        if (victim != null) {
+            this.victimUUID = victim.getUUID();
+            this.cachedVictim = victim;
         }
     }
 
@@ -169,6 +157,13 @@ public class BlackFlashEntity extends Entity {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 }

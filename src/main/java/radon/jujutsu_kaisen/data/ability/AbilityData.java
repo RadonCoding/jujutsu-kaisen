@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.ability;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -15,16 +12,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForge;
-import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.AbilityStopEvent;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.IAttack;
-import radon.jujutsu_kaisen.ability.IChanneled;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ICharged;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.IToggled;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.*;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
@@ -33,17 +24,14 @@ import java.util.*;
 
 public class AbilityData implements IAbilityData {
     private final Set<Ability> toggled;
-
-    @Nullable
-    private Ability channeled;
-    private int charge;
-
     private final List<DelayedTickEvent> delayedTickEvents;
     private final Map<Ability, Integer> cooldowns;
     private final Map<Ability, Integer> disrupted;
     private final Map<Ability, Integer> durations;
-
     private final LivingEntity owner;
+    @Nullable
+    private Ability channeled;
+    private int charge;
 
     public AbilityData(LivingEntity owner) {
         this.owner = owner;

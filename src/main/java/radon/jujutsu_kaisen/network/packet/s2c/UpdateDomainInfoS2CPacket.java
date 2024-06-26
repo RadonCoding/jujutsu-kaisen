@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,7 +16,6 @@ import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.domain.DomainInfo;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
-import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 
 import java.util.Optional;

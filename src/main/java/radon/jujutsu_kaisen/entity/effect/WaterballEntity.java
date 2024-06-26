@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.InteractionHand;
@@ -16,11 +15,12 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -32,14 +32,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
     private static final RawAnimation SPIN = RawAnimation.begin().thenLoop("misc.spin");
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     private static final int DURATION = 3 * 20;
     private static final int INTERVAL = 20;
     private static final int WIDTH = 16;
     private static final int HEIGHT = 8;
     private static final float DAMAGE = 10.0F;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public WaterballEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,31 +13,36 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 public class DomainAmplification extends Ability implements IToggled {
     @Override
@@ -53,7 +55,8 @@ public class DomainAmplification extends Ability implements IToggled {
 
         IAbilityData data = cap.getAbilityData();
 
-        if ((data.hasActive(JJKAbilities.INFINITY.get()) || data.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) && owner.distanceTo(target) <= 3.0D) return true;
+        if ((data.hasActive(JJKAbilities.INFINITY.get()) || data.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) && owner.distanceTo(target) <= 3.0D)
+            return true;
 
         return owner.getHealth() / owner.getMaxHealth() < 0.5F;
     }
@@ -122,10 +125,8 @@ public class DomainAmplification extends Ability implements IToggled {
     }
 
     public static class DomainAmplificationData extends SavedData {
-        private static final SavedData.Factory<DomainAmplificationData> FACTORY = new SavedData.Factory<>(DomainAmplificationData::new, DomainAmplificationData::new, null);
-
         public static final String IDENTIFIER = "domain_amplification_data";
-
+        private static final SavedData.Factory<DomainAmplificationData> FACTORY = new SavedData.Factory<>(DomainAmplificationData::new, DomainAmplificationData::new, null);
         private final Map<UUID, HitsNBT> hits;
 
         public DomainAmplificationData() {
@@ -255,7 +256,7 @@ public class DomainAmplification extends Ability implements IToggled {
             }
         }
     }
-    
+
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static class ForgeEvents {
         @SubscribeEvent

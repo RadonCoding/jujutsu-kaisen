@@ -1,13 +1,13 @@
 package radon.jujutsu_kaisen.util;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
@@ -51,10 +51,12 @@ public class VeilUtil {
             for (Modifier modifier : modifiers) {
                 if (modifier.getAction() == Modifier.Action.ALLOW) {
                     if (modifier.getType() == Modifier.Type.CURSE && data.getType() == JujutsuType.CURSE) return true;
-                    if (modifier.getType() == Modifier.Type.SORCERER && data.getType() == JujutsuType.SORCERER) return true;
+                    if (modifier.getType() == Modifier.Type.SORCERER && data.getType() == JujutsuType.SORCERER)
+                        return true;
                 } else if (modifier.getAction() == Modifier.Action.DENY) {
                     if (modifier.getType() == Modifier.Type.CURSE && data.getType() == JujutsuType.CURSE) return false;
-                    if (modifier.getType() == Modifier.Type.SORCERER && data.getType() == JujutsuType.SORCERER) return false;
+                    if (modifier.getType() == Modifier.Type.SORCERER && data.getType() == JujutsuType.SORCERER)
+                        return false;
                 }
             }
         }
@@ -63,7 +65,8 @@ public class VeilUtil {
 
     public static boolean canDamage(List<Modifier> modifiers) {
         for (Modifier modifier : modifiers) {
-            if (modifier.getType() == Modifier.Type.VIOLENCE && modifier.getAction() == Modifier.Action.DENY) return false;
+            if (modifier.getType() == Modifier.Type.VIOLENCE && modifier.getAction() == Modifier.Action.DENY)
+                return false;
         }
         return true;
     }
@@ -72,10 +75,12 @@ public class VeilUtil {
         if (entity.level().getBlockState(target).is(JJKBlocks.VEIL_ROD)) return true;
 
         // If the block is a veil block and the block is owned by the barrier
-        if (entity.level().getBlockEntity(target) instanceof VeilBlockEntity be && be.getParentUUID() != null && be.getParentUUID().equals(parentUUID)) return true;
+        if (entity.level().getBlockEntity(target) instanceof VeilBlockEntity be && be.getParentUUID() != null && be.getParentUUID().equals(parentUUID))
+            return true;
 
         for (Modifier modifier : modifiers) {
-            if (modifier.getType() == Modifier.Type.GRIEFING && modifier.getAction() == Modifier.Action.DENY) return false;
+            if (modifier.getType() == Modifier.Type.GRIEFING && modifier.getAction() == Modifier.Action.DENY)
+                return false;
         }
         return true;
     }

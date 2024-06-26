@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -17,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.effect.LightningEntity;
 
 public class LightningRenderer extends EntityRenderer<LightningEntity> {
@@ -38,7 +34,7 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2, 0.0F);
 
-        double collidePosX = pEntity.collidePosX;;
+        double collidePosX = pEntity.collidePosX;
         double collidePosY = pEntity.collidePosY;
         double collidePosZ = pEntity.collidePosZ;
 

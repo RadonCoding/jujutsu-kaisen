@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -71,7 +70,7 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
 
         boolean destroy = false;
 
-        for (BlockPos target : BlockPos.betweenClosed((int) bounds.minX, (int)  bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
+        for (BlockPos target : BlockPos.betweenClosed((int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
             if (!(owner.level().getBlockEntity(target) instanceof DomainBlockEntity)) continue;
 
             destroy = true;

@@ -11,20 +11,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 import java.util.List;
@@ -53,6 +48,13 @@ public class AgitoEntity extends TenShadowsSummon {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D)
+                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     @Override
@@ -99,13 +101,6 @@ public class AgitoEntity extends TenShadowsSummon {
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D)
-                .add(Attributes.STEP_HEIGHT, 2.0F);
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<AgitoEntity> animationState) {

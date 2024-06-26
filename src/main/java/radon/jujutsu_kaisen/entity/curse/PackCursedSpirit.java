@@ -88,13 +88,6 @@ public abstract class PackCursedSpirit extends CursedSpirit {
         }
     }
 
-    public void setLeader(@Nullable PackCursedSpirit leader) {
-        if (leader != null) {
-            this.leaderUUID = leader.getUUID();
-            this.cachedLeader = leader;
-        }
-    }
-
     @Nullable
     public PackCursedSpirit getLeader() {
         if (this.cachedLeader != null && !this.cachedLeader.isRemoved()) {
@@ -104,6 +97,13 @@ public abstract class PackCursedSpirit extends CursedSpirit {
             return this.cachedLeader;
         } else {
             return null;
+        }
+    }
+
+    public void setLeader(@Nullable PackCursedSpirit leader) {
+        if (leader != null) {
+            this.leaderUUID = leader.getUUID();
+            this.cachedLeader = leader;
         }
     }
 

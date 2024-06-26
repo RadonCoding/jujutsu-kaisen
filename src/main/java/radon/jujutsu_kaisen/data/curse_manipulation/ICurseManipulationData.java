@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.curse_manipulation;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -24,9 +21,9 @@ public interface ICurseManipulationData extends INBTSerializable<CompoundTag> {
 
     Set<CursedTechnique> getAbsorbed();
 
-    void setCurrentAbsorbed(@Nullable CursedTechnique technique);
-
     @Nullable CursedTechnique getCurrentAbsorbed();
+
+    void setCurrentAbsorbed(@Nullable CursedTechnique technique);
 
     void addCurse(AbsorbedCurse curse);
 

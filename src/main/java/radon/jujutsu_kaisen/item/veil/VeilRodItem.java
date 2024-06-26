@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.item.veil;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -33,6 +30,21 @@ public class VeilRodItem extends BlockItem {
         super(pBlock, pProperties);
     }
 
+    public static List<Modifier> getModifiers(ItemStack stack) {
+        CustomData data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+
+        if (data.isEmpty()) return List.of();
+
+        return ModifierUtils.getModifiers(data.copyTag());
+    }
+
+    public static void setModifier(ItemStack stack, int index, Modifier modifier) {
+        CustomData data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
+        CompoundTag nbt = data.isEmpty() ? new CompoundTag() : data.copyTag();
+        ModifierUtils.setModifier(nbt, index, modifier);
+        stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
+    }
+
     @Override
     public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
         super.appendHoverText(pStack, pContext, pTooltip, pFlag);
@@ -52,21 +64,6 @@ public class VeilRodItem extends BlockItem {
         if (success) {
             pTooltip.addAll(modifiers);
         }
-    }
-
-    public static List<Modifier> getModifiers(ItemStack stack) {
-        CustomData data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
-
-        if (data.isEmpty()) return List.of();
-
-        return ModifierUtils.getModifiers(data.copyTag());
-    }
-
-    public static void setModifier(ItemStack stack, int index, Modifier modifier) {
-        CustomData data = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
-        CompoundTag nbt = data.isEmpty() ? new CompoundTag() : data.copyTag();
-        ModifierUtils.setModifier(nbt, index, modifier);
-        stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
     }
 
     @Override

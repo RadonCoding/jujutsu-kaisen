@@ -1,10 +1,11 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,18 +13,18 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.IAttack;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IAttack;
 import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.shrine.Cleave;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
@@ -34,21 +35,6 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class IdleTransfiguration extends Ability implements IToggled, IAttack {
     public static final double RANGE = 32.0D;
-
-    @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
-    }
-
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
-    }
-
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
-    }
 
     public static float calculateStrength(LivingEntity entity) {
         float strength = entity.getHealth();
@@ -84,6 +70,39 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
         Cleave.perform(target, owner, null, JJKDamageSources.soulAttack(owner), false);
 
         return true;
+    }
+
+    public static void absorb(LivingEntity owner, LivingEntity target) {
+        ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
+
+        if (owner instanceof Player player) {
+            player.addItem(stack);
+        } else {
+            owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        }
+
+        EntityUtil.makePoofParticles(target);
+
+        if (!(target instanceof Player)) {
+            target.discard();
+        } else {
+            target.kill();
+        }
+    }
+
+    @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return target != null;
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.TOGGLED;
     }
 
     private void run(LivingEntity owner, LivingEntity target) {
@@ -132,24 +151,6 @@ public class IdleTransfiguration extends Ability implements IToggled, IAttack {
     @Override
     public void onDisabled(LivingEntity owner) {
 
-    }
-
-    public static void absorb(LivingEntity owner, LivingEntity target) {
-        ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
-
-        if (owner instanceof Player player) {
-            player.addItem(stack);
-        } else {
-            owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
-        }
-
-        EntityUtil.makePoofParticles(target);
-
-        if (!(target instanceof Player)) {
-            target.discard();
-        } else {
-            target.kill();
-        }
     }
 
     @Override

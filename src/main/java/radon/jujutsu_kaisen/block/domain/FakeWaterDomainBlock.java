@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.block.domain;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -18,8 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-
-import java.util.function.Supplier;
 
 public class FakeWaterDomainBlock extends LiquidBlock implements EntityBlock {
     public FakeWaterDomainBlock(FlowingFluid pFluid, Properties pProperties) {

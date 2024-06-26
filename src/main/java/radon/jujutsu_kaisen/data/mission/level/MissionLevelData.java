@@ -1,8 +1,8 @@
 package radon.jujutsu_kaisen.data.mission.level;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
@@ -19,9 +20,8 @@ import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
-import net.neoforged.neoforge.network.PacketDistributor;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
 
 import java.util.*;
 

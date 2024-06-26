@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -14,12 +13,13 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 import java.util.UUID;
 
@@ -49,13 +49,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         this.setPos(owner.getX(), owner.getY() + (owner.getBbHeight() / 2) - (this.getBbHeight() / 2), owner.getZ());
     }
 
-    public void setTarget(@Nullable LivingEntity target) {
-        if (target != null) {
-            this.targetUUID = target.getUUID();
-            this.cachedTarget = target;
-        }
-    }
-
     @Nullable
     public LivingEntity getTarget() {
         if (this.cachedTarget != null && !this.cachedTarget.isRemoved()) {
@@ -65,6 +58,13 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
             return this.cachedTarget;
         } else {
             return null;
+        }
+    }
+
+    public void setTarget(@Nullable LivingEntity target) {
+        if (target != null) {
+            this.targetUUID = target.getUUID();
+            this.cachedTarget = target;
         }
     }
 

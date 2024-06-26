@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.particle;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -33,8 +34,9 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.client.FakeEntityRenderer;
-import radon.jujutsu_kaisen.client.RigidBody;
 import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
+import radon.jujutsu_kaisen.client.slice.ConvexMeshCollider;
+import radon.jujutsu_kaisen.client.slice.RigidBody;
 import radon.jujutsu_kaisen.mixin.client.IAgeableListModelAccessor;
 import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+// https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/blob/Custom-1.12.2/src/main/java/com/hbm/render/util/ModelRendererUtil.java
 public class SlicedEntityParticle extends TextureSheetParticle {
     private final int entityId;
     private final Vector3f plane;
@@ -64,27 +67,6 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         this.entityId = options.entityId;
         this.plane = options.plane;
         this.distance = options.distance;
-    }
-
-    @Override
-    public @NotNull AABB getRenderBoundingBox(float partialTicks) {
-        if (this.entity == null) return super.getRenderBoundingBox(partialTicks);
-
-        return AABB.ofSize(this.getPos(), this.entity.getBbWidth(), this.entity.getBbHeight(), this.entity.getBbWidth());
-    }
-
-    @Override
-    public void tick() {
-        if (this.entity == null) {
-            if (!(this.level.getEntity(this.entityId) instanceof LivingEntity living)) return;
-
-            this.entity = living;
-
-            this.renderer = new FakeEntityRenderer(this.entity);
-        }
-
-        if (this.top != null) this.top.tick();
-        if (this.bottom != null) this.bottom.tick();
     }
 
     public static RigidBody.VertexData compress(RigidBody.Triangle[] triangles) {
@@ -136,23 +118,23 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         return data;
     }
 
-    public static boolean epsilonEquals(Vec3 a, Vec3 b, double eps){
+    public static boolean epsilonEquals(Vec3 a, Vec3 b, double eps) {
         double dx = Math.abs(a.x - b.x);
         double dy = Math.abs(a.y - b.y);
         double dz = Math.abs(a.z - b.z);
         return dx < eps && dy < eps && dz < eps;
     }
 
-    private static int epsIndexOf(List<Vec3> l, Vec3 vec, double eps){
-        for (int i = 0; i < l.size(); i++){
-            if (epsilonEquals(vec, l.get(i), eps)){
+    private static int epsIndexOf(List<Vec3> l, Vec3 vec, double eps) {
+        for (int i = 0; i < l.size(); i++) {
+            if (epsilonEquals(vec, l.get(i), eps)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public static double rayPlaneIntercept(Vec3 start, Vec3 ray, float[] plane){
+    public static double rayPlaneIntercept(Vec3 start, Vec3 ray, float[] plane) {
         double num = -(plane[0] * start.x + plane[1] * start.y + plane[2] * start.z + plane[3]);
         double denom = plane[0] * ray.x + plane[1] * ray.y + plane[2] * ray.z;
         return num / denom;
@@ -219,22 +201,22 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         return new Vec3(yaw, pitch - 90.0F, 0);
     }
 
-    public static Matrix3f normalToMatrix(Vec3 normal, float roll){
+    public static Matrix3f normalToMatrix(Vec3 normal, float roll) {
         Vec3 euler = getEulerAngles(normal);
         return eulerToMat((float) Math.toRadians(euler.x), (float) Math.toRadians(euler.y + 90.0F), roll);
     }
 
-    private static Vec3 getNext(List<Vec3[]> edges, Vec3 first){
+    private static Vec3 getNext(List<Vec3[]> edges, Vec3 first) {
         Iterator<Vec3[]> iter = edges.iterator();
 
-        while (iter.hasNext()){
+        while (iter.hasNext()) {
             Vec3[] v = iter.next();
             double eps = 0.00001D;
 
-            if (epsilonEquals(v[0], first, eps)){
+            if (epsilonEquals(v[0], first, eps)) {
                 iter.remove();
                 return v[1];
-            } else if (epsilonEquals(v[1], first, eps)){
+            } else if (epsilonEquals(v[1], first, eps)) {
                 iter.remove();
                 return v[0];
             }
@@ -243,7 +225,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
     }
 
     public static RigidBody.VertexData[] cutAndCapConvex(RigidBody.Triangle[] triangles, float[] plane) {
-        RigidBody.VertexData[] result = new RigidBody.VertexData[] { null, null, new RigidBody.VertexData() };
+        RigidBody.VertexData[] result = new RigidBody.VertexData[]{null, null, new RigidBody.VertexData()};
         List<RigidBody.Triangle> side1 = new ArrayList<>();
         List<RigidBody.Triangle> side2 = new ArrayList<>();
         List<Vec3[]> clippedEdges = new ArrayList<>();
@@ -285,10 +267,10 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 deTex[2] = a.u + (c.u - a.u) * interceptAC;
                 deTex[3] = a.v + (c.v - a.v) * interceptAC;
 
-                side2.add(new RigidBody.Triangle(d, b.pos, e, new float[] { deTex[0], deTex[1], b.u, b.v, deTex[2], deTex[3] }));
-                side2.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deTex[2], deTex[3] }));
-                side1.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deTex[0], deTex[1], deTex[2], deTex[3] }));
-                clippedEdges.add(new Vec3[] { d, e});
+                side2.add(new RigidBody.Triangle(d, b.pos, e, new float[]{deTex[0], deTex[1], b.u, b.v, deTex[2], deTex[3]}));
+                side2.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[]{b.u, b.v, c.u, c.v, deTex[2], deTex[3]}));
+                side1.add(new RigidBody.Triangle(a.pos, d, e, new float[]{a.u, a.v, deTex[0], deTex[1], deTex[2], deTex[3]}));
+                clippedEdges.add(new Vec3[]{d, e});
             } else { // Else one is negative, clip and add 2 triangles to side 1, 1 to side 2.
                 RigidBody.Triangle.TexVertex a, b, c;
 
@@ -321,7 +303,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 side1.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deTex[2], deTex[3] }));
                 side2.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deTex[0], deTex[1], deTex[2], deTex[3] }));
 
-                clippedEdges.add(new Vec3[] { e, d } );
+                clippedEdges.add(new Vec3[]{e, d});
             }
         }
 
@@ -344,7 +326,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 Vector3f uv3 = new Vector3f((float) orderedClipVertices.get(i + 1).x, (float) orderedClipVertices.get(i + 1).y, (float) orderedClipVertices.get(i + 1).z);
                 matrix3f.transform(uv3);
                 cap[i] = new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 2), orderedClipVertices.get(i + 1),
-                        new float[] { uv1.x, uv1.y, uv2.x, uv2.y, uv3.x, uv3.y});
+                        new float[]{uv1.x, uv1.y, uv2.x, uv2.y, uv3.x, uv3.y});
                 side1.add(new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 2), orderedClipVertices.get(i + 1), new float[6]));
                 side2.add(new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 1), orderedClipVertices.get(i + 2), new float[6]));
             }
@@ -353,6 +335,25 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         result[0] = compress(side1.toArray(new RigidBody.Triangle[0]));
         result[1] = compress(side2.toArray(new RigidBody.Triangle[0]));
         return result;
+    }
+
+    @Override
+    public @NotNull AABB getRenderBoundingBox(float partialTicks) {
+        return AABB.INFINITE;
+    }
+
+    @Override
+    public void tick() {
+        if (this.entity == null) {
+            if (this.level.getEntity(this.entityId) instanceof LivingEntity living) {
+                this.entity = living;
+
+                this.renderer = new FakeEntityRenderer(this.entity);
+            }
+        }
+
+        if (this.top != null) this.top.tick();
+        if (this.bottom != null) this.bottom.tick();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -438,22 +439,31 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                     for (ModelPart part : ((IAgeableListModelAccessor) ageable).invokeBodyParts()) boxes.add(part);
                 }
 
-                this.top = new RigidBody();
-                this.bottom = new RigidBody();
+                double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
+                double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
+                double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
+
+                this.top = new RigidBody(this.level, d0, d1, d2);
+                this.bottom = new RigidBody(this.level, d0, d1, d2);
+
+                List<RigidBody.CutModelData> top = new ArrayList<>();
+                List<RigidBody.CutModelData> bottom = new ArrayList<>();
 
                 for (ModelPart part : boxes) {
                     for (ModelPart.Cube cube : part.cubes) {
-                        RigidBody.VertexData[] data = cutAndCapModelBox(poseStack, part, cube, new float[]{this.plane.x, this.plane.y, this.plane.z, -this.distance});
+                        RigidBody.VertexData[] data = cutAndCapModelBox(poseStack, part, cube, new float[] { this.plane.x, this.plane.y, this.plane.z, -this.distance });
                         RigidBody.CutModelData tp = null;
                         RigidBody.CutModelData bt = null;
 
                         if (data[0].indices != null && data[0].indices.length > 0) {
-                            tp = new RigidBody.CutModelData(data[0], null, false);
-                            this.top.add(tp);
+                            tp = new RigidBody.CutModelData(data[0], null, false,
+                                    new ConvexMeshCollider(data[0].indices, data[0].vertices(), 1.0F));
+                            top.add(tp);
                         }
                         if (data[1].indices != null && data[1].indices.length > 0) {
-                            bt = new RigidBody.CutModelData(data[1], null, true);
-                            this.bottom.add(bt);
+                            bt = new RigidBody.CutModelData(data[1], null, true,
+                                    new ConvexMeshCollider(data[1].indices, data[1].vertices(), 1.0F));
+                            bottom.add(bt);
                         }
                         if (data[2].indices != null && data[2].indices.length > 0) {
                             tp.cap = data[2];
@@ -461,26 +471,26 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                         }
                     }
                 }
+
+                this.top.addChunk(top);
+                this.top.impulseVelocityDirect(new Vec3(this.plane.x * this.top.getScale(),
+                        this.plane.y * this.top.getScale(),
+                        this.plane.z * this.top.getScale()), this.top.globalCentroid);
+
+                this.bottom.addChunk(bottom);
+                this.bottom.impulseVelocityDirect(new Vec3(this.plane.x * this.bottom.getScale(),
+                        this.plane.y * this.bottom.getScale(),
+                        this.plane.z * this.bottom.getScale()), this.bottom.globalCentroid);
             });
         }
 
         if (this.top == null || this.bottom == null) return;
 
-        PoseStack poseStack = new PoseStack();
-
-        double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
-        double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
-        double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
-
-        poseStack.translate(d0, d1, d2);
-
-        this.renderer.translate(poseStack, pPartialTicks);
-
         ResourceLocation texture = living.getTextureLocation(this.entity);
         int packedLight = dispatcher.getPackedLightCoords(this.entity, pPartialTicks);
 
-        this.top.render(poseStack, texture, packedLight);
-        this.bottom.render(poseStack, texture, packedLight);
+        this.top.render(texture, packedLight, pPartialTicks);
+        this.bottom.render(texture, packedLight, pPartialTicks);
     }
 
     @Override

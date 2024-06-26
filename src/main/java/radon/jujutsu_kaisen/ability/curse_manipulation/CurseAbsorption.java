@@ -1,26 +1,28 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
@@ -28,29 +30,6 @@ import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 public class CurseAbsorption extends Ability implements IToggled {
-    @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
-    }
-
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-
-        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData data = cap.getSorcererData();
-
-        return data.getType() == JujutsuType.CURSE;
-    }
-
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
-    }
-
     private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
         if (target.isRemoved()) return false;
 
@@ -70,26 +49,6 @@ public class CurseAbsorption extends Ability implements IToggled {
 
         return (targetData.getType() == JujutsuType.CURSE && (!(target instanceof TamableAnimal tamable) || !tamable.isTame())) &&
                 (ownerData.getExperience() / targetData.getExperience() >= 2 || target.isDeadOrDying());
-    }
-
-    @Override
-    public void run(LivingEntity owner) {
-
-    }
-
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 0;
-    }
-
-    @Override
-    public void onEnabled(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onDisabled(LivingEntity owner) {
-
     }
 
     private static void check(LivingEntity victim, DamageSource source) {
@@ -137,6 +96,49 @@ public class CurseAbsorption extends Ability implements IToggled {
         } else {
             victim.kill();
         }
+    }
+
+    @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target == null) return false;
+
+        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return false;
+
+        ISorcererData data = cap.getSorcererData();
+
+        return data.getType() == JujutsuType.CURSE;
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.TOGGLED;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+
+    }
+
+    @Override
+    public float getCost(LivingEntity owner) {
+        return 0;
+    }
+
+    @Override
+    public void onEnabled(LivingEntity owner) {
+
+    }
+
+    @Override
+    public void onDisabled(LivingEntity owner) {
+
     }
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)

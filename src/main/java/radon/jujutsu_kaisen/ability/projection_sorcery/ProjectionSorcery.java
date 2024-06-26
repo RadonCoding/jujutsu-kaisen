@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.projection_sorcery;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -17,27 +16,30 @@ import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.client.particle.ProjectionParticle;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -51,6 +53,18 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ProjectionSorcery extends Ability implements IChanneled, IDurationable {
     private static final double LAUNCH_POWER = 2.0D;
+
+    private static float getYaw(Vec3 from, Vec3 to) {
+        Vec3 delta = to.subtract(from);
+        double dx = delta.x;
+        double dz = delta.z;
+        return -(float) Math.toDegrees(Math.atan2(dx, dz));
+    }
+
+    private static boolean isGrounded(Level level, BlockPos pos) {
+        BlockHitResult hit = level.clip(new ClipContext(pos.getCenter(), pos.below(24).getCenter(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty()));
+        return hit.getType() == HitResult.Type.BLOCK;
+    }
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -90,13 +104,6 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
     @Override
     public int getRealDuration(LivingEntity owner) {
         return 12;
-    }
-
-    private static float getYaw(Vec3 from, Vec3 to) {
-        Vec3 delta = to.subtract(from);
-        double dx = delta.x;
-        double dz = delta.z;
-        return -(float) Math.toDegrees(Math.atan2(dx, dz));
     }
 
     @Override
@@ -169,11 +176,6 @@ public class ProjectionSorcery extends Ability implements IChanneled, IDurationa
     @Override
     public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
-    }
-
-    private static boolean isGrounded(Level level, BlockPos pos) {
-        BlockHitResult hit = level.clip(new ClipContext(pos.getCenter(), pos.below(24).getCenter(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty()));
-        return hit.getType() == HitResult.Type.BLOCK;
     }
 
     @Override

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.block;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,18 +34,17 @@ import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.VeilEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.WindowEntity;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 
 import javax.annotation.Nullable;
 
 public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterloggedBlock {
-    private static final MapCodec<VeilRodBlock> CODEC = simpleCodec(VeilRodBlock::new);
-
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty SPAWN_VEIL_MASTER = BooleanProperty.create("spawn_veil_master");
+    private static final MapCodec<VeilRodBlock> CODEC = simpleCodec(VeilRodBlock::new);
 
     public VeilRodBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);

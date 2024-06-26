@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.block.domain;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,8 +26,6 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
-
-import java.util.function.Supplier;
 
 public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock {
     public ChimeraShadowGardenBlock(FlowingFluid pFluid, Properties pProperties) {

@@ -1,16 +1,12 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -18,21 +14,14 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.client.model.entity.effect.CursedEnergyBlastModel;
 import radon.jujutsu_kaisen.client.model.entity.effect.FireBeamModel;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
 import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
-import radon.jujutsu_kaisen.entity.effect.WaterTorrentEntity;
-import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 
 public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/fire_beam.png");
@@ -40,14 +29,23 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
     private static final int TEXTURE_WIDTH = 16;
     private static final int TEXTURE_HEIGHT = 512;
     private static final float BEAM_RADIUS = 0.5F;
-    private boolean clearerView = false;
-
     private final FireBeamModel model;
+    private boolean clearerView = false;
 
     public FireBeamRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
 
         this.model = new FireBeamModel(pContext.bakeLayer(FireBeamModel.LAYER));
+    }
+
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float brightness, int packedLight) {
+        consumer.vertex(matrix4f, x, y, z)
+                .color(brightness, brightness, brightness, 1.0F)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(packedLight)
+                .normal(pose, 0.0F, 1.0F, 0.0F)
+                .endVertex();
     }
 
     @Override
@@ -154,16 +152,6 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
         this.drawCube(length, frame, poseStack, consumer, brightness, packedLight);
 
         poseStack.popPose();
-    }
-
-    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float brightness, int packedLight) {
-        consumer.vertex(matrix4f, x, y, z)
-                .color(brightness, brightness, brightness, 1.0F)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(packedLight)
-                .normal(pose, 0.0F, 1.0F, 0.0F)
-                .endVertex();
     }
 
     @Override

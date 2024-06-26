@@ -11,8 +11,8 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.EmittingLightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
@@ -89,7 +89,7 @@ public class ElectricBlastEntity extends JujutsuProjectile {
             double zOffset = radius * 0.75F * Math.cos(phi);
 
             this.level().addParticle(new EmittingLightningParticle.Options(ParticleColors.getCursedEnergyColorBright(owner),
-                    new Vec3(xOffset * 0.1F, yOffset * 0.1F, zOffset * 0.1F), radius * this.random.nextFloat(), 8),
+                            new Vec3(xOffset * 0.1F, yOffset * 0.1F, zOffset * 0.1F), radius * this.random.nextFloat(), 8),
                     center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
     }

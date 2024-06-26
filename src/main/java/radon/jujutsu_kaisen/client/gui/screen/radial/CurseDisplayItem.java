@@ -1,15 +1,13 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
-import radon.jujutsu_kaisen.client.util.RenderUtil;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 
 import java.util.ArrayList;
@@ -48,7 +46,8 @@ public class CurseDisplayItem extends DisplayItem {
 
     @Override
     public void draw(GuiGraphics graphics, int x, int y) {
-        if (!(CurseManipulationUtil.createCurse(this.minecraft.player, this.curse) instanceof LivingEntity instance)) return;
+        if (!(CurseManipulationUtil.createCurse(this.minecraft.player, this.curse) instanceof LivingEntity instance))
+            return;
 
         float height = instance.getBbHeight();
         int scale = Math.round(Math.max(3.0F, 10.0F - instance.getBbHeight()));

@@ -1,10 +1,12 @@
 package radon.jujutsu_kaisen.data.domain;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -24,14 +26,11 @@ import radon.jujutsu_kaisen.network.packet.s2c.UpdateDomainInfoS2CPacket;
 import java.util.*;
 
 public class DomainData implements IDomainData {
+    private final Set<DomainInfo> domains;
+    private final Map<UUID, Vec3> spawns;
+    private final Level level;
     @Nullable
     private ResourceKey<Level> original;
-
-    private final Set<DomainInfo> domains;
-
-    private final Map<UUID, Vec3> spawns;
-
-    private final Level level;
 
     public DomainData(Level level) {
         this.level = level;

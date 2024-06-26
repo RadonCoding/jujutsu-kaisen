@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -145,13 +142,6 @@ public class ProjectionFrameEntity extends Entity {
         }
     }
 
-    public void setVictim(@Nullable LivingEntity victim) {
-        if (victim != null) {
-            this.victimUUID = victim.getUUID();
-            this.cachedVictim = victim;
-        }
-    }
-
     @Nullable
     public LivingEntity getVictim() {
         if (this.cachedVictim != null && !this.cachedVictim.isRemoved()) {
@@ -164,10 +154,10 @@ public class ProjectionFrameEntity extends Entity {
         }
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
+    public void setVictim(@Nullable LivingEntity victim) {
+        if (victim != null) {
+            this.victimUUID = victim.getUUID();
+            this.cachedVictim = victim;
         }
     }
 
@@ -180,6 +170,13 @@ public class ProjectionFrameEntity extends Entity {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 

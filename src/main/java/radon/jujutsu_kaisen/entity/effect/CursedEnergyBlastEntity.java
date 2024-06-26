@@ -8,15 +8,15 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class CursedEnergyBlastEntity extends JujutsuProjectile {
     public static final int DURATION = 20;
-    private static final float DAMAGE = 10.0F;
     public static final float RANGE = (float) Math.pow(DURATION, 0.5F) * 5.0F;
+    private static final float DAMAGE = 10.0F;
 
     public CursedEnergyBlastEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -52,7 +52,8 @@ public class CursedEnergyBlastEntity extends JujutsuProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, this.getBoundingBox())) {
-            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CURSED_ENERGY_BLAST.get()), DAMAGE * this.getPower())) continue;
+            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CURSED_ENERGY_BLAST.get()), DAMAGE * this.getPower()))
+                continue;
 
             entity.setRemainingFireTicks(5 * 20);
         }

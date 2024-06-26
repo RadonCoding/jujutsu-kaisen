@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.config;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
@@ -94,13 +91,13 @@ public class ServerConfig {
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.05F, 0.0F, 1.0F);
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
-                        .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
+                .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
                 .defineInRange("blackFlashChance", 100, 1, 1000);
         this.realisticCurses = builder.comment("When enabled curses and shikigami only take damage from cursed energy attacks")
                 .define("realisticCurses", true);
         this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into a weapon")
-                        .defineInRange("requiredImbuementAmount", 1000, 1, 100000);
+                .defineInRange("requiredImbuementAmount", 1000, 1, 100000);
         builder.pop();
 
         builder.comment("Difficulty").push("difficulty");
@@ -158,7 +155,7 @@ public class ServerConfig {
 
         builder.comment("Barriers").push("barriers");
         this.domainStrength = builder.comment("The percentage of how much domain barriers are stronger than veil barriers (defaults to 150%)")
-                        .defineInRange("domainStrength", 1.5F, 1.0F, 100000.0F);
+                .defineInRange("domainStrength", 1.5F, 1.0F, 100000.0F);
         builder.pop();
 
         builder.comment("Chants").push("chants");

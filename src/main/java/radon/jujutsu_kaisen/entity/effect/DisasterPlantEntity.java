@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
-import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -27,10 +27,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity {
-    private static final EntityDataAccessor<Integer> DATA_BUD_COUNT = SynchedEntityData.defineId(DisasterPlantEntity.class, EntityDataSerializers.INT);
-
     public static final int DEFAULT_BUD_COUNT = 20;
-
+    private static final EntityDataAccessor<Integer> DATA_BUD_COUNT = SynchedEntityData.defineId(DisasterPlantEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Nullable
@@ -61,13 +59,6 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
         return this.entityData.get(DATA_BUD_COUNT);
     }
 
-    public void setTarget(@Nullable LivingEntity target) {
-        if (target != null) {
-            this.targetUUID = target.getUUID();
-            this.cachedTarget = target;
-        }
-    }
-
     @Nullable
     public LivingEntity getTarget() {
         if (this.cachedTarget != null && !this.cachedTarget.isRemoved()) {
@@ -77,6 +68,13 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
             return this.cachedTarget;
         } else {
             return null;
+        }
+    }
+
+    public void setTarget(@Nullable LivingEntity target) {
+        if (target != null) {
+            this.targetUUID = target.getUUID();
+            this.cachedTarget = target;
         }
     }
 

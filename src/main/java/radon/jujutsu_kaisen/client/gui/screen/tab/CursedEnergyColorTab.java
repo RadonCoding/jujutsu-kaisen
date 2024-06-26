@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -9,13 +8,13 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
 
 public class CursedEnergyColorTab extends JJKTab {
@@ -43,9 +42,9 @@ public class CursedEnergyColorTab extends JJKTab {
 
                 IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+                if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 PacketDistributor.sendToServer(new SetCursedEnergyColorC2SPacket(color));
                 data.setCursedEnergyColor(color);
@@ -79,9 +78,9 @@ ISorcererData data = cap.getSorcererData();
 
         IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
 
         Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();

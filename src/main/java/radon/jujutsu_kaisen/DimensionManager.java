@@ -1,36 +1,33 @@
 package radon.jujutsu_kaisen;
 
 
-import com.mojang.serialization.Lifecycle;
-import net.minecraft.server.RegistryLayer;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.core.*;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.border.BorderChangeListener;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.flat.FlatLayerInfo;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.storage.DerivedLevelData;
 import net.minecraft.world.level.storage.WorldData;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.network.packet.s2c.AddDimensionS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.RemoveDimensionS2CPacket;
-import radon.jujutsu_kaisen.world.level.biome.JJKBiomes;
-import radon.jujutsu_kaisen.world.level.dimension.JJKDimensionTypes;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class DimensionManager {
     private static final Set<ResourceKey<Level>> temporary = new HashSet<>();

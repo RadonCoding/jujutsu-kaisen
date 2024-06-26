@@ -1,37 +1,26 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
-import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.mojang.blaze3d.platform.Window;
-import net.minecraft.client.renderer.RenderType;
-import radon.jujutsu_kaisen.client.FakeEntityRenderer;
-import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.FakeEntityRenderer;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 public class ProjectionParticle extends TextureSheetParticle {
@@ -111,7 +100,8 @@ public class ProjectionParticle extends TextureSheetParticle {
     }
 
     public static class Provider implements ParticleProvider<Options> {
-        public Provider(SpriteSet ignored) {}
+        public Provider(SpriteSet ignored) {
+        }
 
         public Particle createParticle(@NotNull Options pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {

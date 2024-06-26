@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.mixin.common;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
@@ -18,19 +17,21 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.IFlight;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
-    @Shadow public abstract void remove(Entity.RemovalReason pReason);
+    @Shadow
+    public abstract void remove(Entity.RemovalReason pReason);
 
-    @Shadow public abstract boolean hasEffect(Holder<MobEffect> pEffect);
+    @Shadow
+    public abstract boolean hasEffect(Holder<MobEffect> pEffect);
 
     @Inject(method = "isFallFlying", at = @At("HEAD"), cancellable = true)
     public void isFallFlying(CallbackInfoReturnable<Boolean> cir) {

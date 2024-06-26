@@ -1,12 +1,6 @@
 package radon.jujutsu_kaisen.entity.domain.base;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import net.minecraft.world.level.ChunkPos;
-import net.neoforged.neoforge.common.world.chunk.TicketController;
-import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.DomainHandler;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -23,7 +18,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.DomainHandler;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -35,31 +34,26 @@ import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.ISimpleDomain;
-import net.neoforged.neoforge.network.PacketDistributor;
-import radon.jujutsu_kaisen.network.packet.s2c.RemoveDomainInfoS2CPacket;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-import java.util.*;
+import java.util.Set;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public static final int RADIUS = 20;
-
-    public static TicketController CONTROLLER = new TicketController(JJKEntities.CLOSED_DOMAIN_EXPANSION.getId());
-
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
-
+    public static TicketController CONTROLLER = new TicketController(JJKEntities.CLOSED_DOMAIN_EXPANSION.getId());
     private int total;
 
     @Nullable
     private Level inside;
 
-    public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
+    public ClosedDomainExpansionEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
@@ -67,7 +61,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         this(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
     }
 
-    public ClosedDomainExpansionEntity(EntityType<? > pType, LivingEntity owner, DomainExpansion ability) {
+    public ClosedDomainExpansionEntity(EntityType<?> pType, LivingEntity owner, DomainExpansion ability) {
         super(pType, owner, ability);
 
         float yaw = RotationUtil.getTargetAdjustedYRot(owner);

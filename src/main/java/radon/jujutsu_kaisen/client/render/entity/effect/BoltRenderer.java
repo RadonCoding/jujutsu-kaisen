@@ -1,16 +1,12 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
@@ -21,13 +17,10 @@ import java.util.*;
 public class BoltRenderer {
     private static final float REFRESH_TIME = 3F;
     private static final double MAX_OWNER_TRACK_TIME = 100;
-
-    private Timestamp refreshTimestamp = new Timestamp();
-
     private final Random random = new Random();
     private final Minecraft minecraft = Minecraft.getInstance();
-
     private final Map<Object, BoltOwnerData> boltOwners = new Object2ObjectOpenHashMap<>();
+    private Timestamp refreshTimestamp = new Timestamp();
 
     public void render(float partialTicks, PoseStack pose, MultiBufferSource buffer) {
         if (this.minecraft.level == null) return;
@@ -69,20 +62,6 @@ public class BoltRenderer {
             data.addBolt(new BoltInstance(newBoltData, timestamp), timestamp);
         }
         data.lastUpdateTimestamp = timestamp;
-    }
-
-    public class BoltOwnerData {
-        private final Set<BoltInstance> bolts = new ObjectOpenHashSet<>();
-        private BoltEffect lastBolt;
-        private Timestamp lastBoltTimestamp = new Timestamp();
-        private Timestamp lastUpdateTimestamp = new Timestamp();
-        private double lastBoltDelay;
-
-        private void addBolt(BoltInstance instance, Timestamp timestamp) {
-            this.bolts.add(instance);
-            this.lastBoltDelay = instance.bolt.getSpawnFunction().getSpawnDelay(BoltRenderer.this.random);
-            this.lastBoltTimestamp = timestamp;
-        }
     }
 
     public static class BoltInstance {
@@ -150,6 +129,20 @@ public class BoltRenderer {
             if (duration >= 1) return false;
 
             return (this.partial - prev.partial) >= duration;
+        }
+    }
+
+    public class BoltOwnerData {
+        private final Set<BoltInstance> bolts = new ObjectOpenHashSet<>();
+        private BoltEffect lastBolt;
+        private Timestamp lastBoltTimestamp = new Timestamp();
+        private Timestamp lastUpdateTimestamp = new Timestamp();
+        private double lastBoltDelay;
+
+        private void addBolt(BoltInstance instance, Timestamp timestamp) {
+            this.bolts.add(instance);
+            this.lastBoltDelay = instance.bolt.getSpawnFunction().getSpawnDelay(BoltRenderer.this.random);
+            this.lastBoltTimestamp = timestamp;
         }
     }
 }

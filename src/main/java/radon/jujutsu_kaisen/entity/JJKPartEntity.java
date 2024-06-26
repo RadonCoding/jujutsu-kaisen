@@ -1,16 +1,14 @@
 package radon.jujutsu_kaisen.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
@@ -18,21 +16,29 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
-    private EntityDimensions size;
-
+    public float renderYawOffset;
+    public float prevRenderYawOffset;
     protected int newPosRotationIncrements;
     protected double interpTargetX;
     protected double interpTargetY;
     protected double interpTargetZ;
     protected double interpTargetYaw;
     protected double interpTargetPitch;
-    public float renderYawOffset;
-    public float prevRenderYawOffset;
+    private EntityDimensions size;
 
     public JJKPartEntity(T parent) {
         super(parent);
 
         this.setPos(parent.getX(), parent.getY(), parent.getZ());
+    }
+
+    public static void assignPartIDs(Entity parent) {
+        PartEntity<?>[] parts = parent.getParts();
+
+        for (int i = 0, length = parts.length; i < length; i++) {
+            PartEntity<?> part = parts[i];
+            part.setId(parent.getId() + i);
+        }
     }
 
     @Override
@@ -128,15 +134,6 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
     @Override
     public boolean isInvisible() {
         return this.getParent().isInvisible();
-    }
-
-    public static void assignPartIDs(Entity parent) {
-        PartEntity<?>[] parts = parent.getParts();
-
-        for (int i = 0, length = parts.length; i < length; i++) {
-            PartEntity<?> part = parts[i];
-            part.setId(parent.getId() + i);
-        }
     }
 
     @Override

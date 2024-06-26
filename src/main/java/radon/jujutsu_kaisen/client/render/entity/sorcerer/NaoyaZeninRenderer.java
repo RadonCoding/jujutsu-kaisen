@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.sorcerer;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
@@ -12,9 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
-import radon.jujutsu_kaisen.client.model.entity.MegumiFushiguroModel;
 import radon.jujutsu_kaisen.client.model.entity.NaoyaZeninModel;
-import radon.jujutsu_kaisen.entity.sorcerer.MegumiFushiguroEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.NaoyaZeninEntity;
 
 public class NaoyaZeninRenderer extends HumanoidMobRenderer<NaoyaZeninEntity, NaoyaZeninModel> {

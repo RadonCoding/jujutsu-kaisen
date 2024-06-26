@@ -1,14 +1,12 @@
 package radon.jujutsu_kaisen.ability.disaster_tides;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.*;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.projectile.EelGrappleProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -16,7 +14,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class EelGrapple extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || !owner.hasLineOfSight(target) || owner.distanceTo(target) > EelGrappleProjectile.RANGE) return false;
+        if (target == null || !owner.hasLineOfSight(target) || owner.distanceTo(target) > EelGrappleProjectile.RANGE)
+            return false;
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 

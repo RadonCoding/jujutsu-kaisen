@@ -1,16 +1,9 @@
 package radon.jujutsu_kaisen.menu;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -26,7 +19,6 @@ import radon.jujutsu_kaisen.item.veil.VeilRodItem;
 import radon.jujutsu_kaisen.item.veil.modifier.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
@@ -39,6 +31,25 @@ public class AltarMenu extends ItemCombinerMenu {
 
     public AltarMenu(int pContainerId, Inventory pPlayerInventory) {
         this(pContainerId, pPlayerInventory, ContainerLevelAccess.NULL);
+    }
+
+    private static Modifier getModifier(ItemStack stack, Modifier.Action action) {
+        if (stack.is(Items.NAME_TAG)) {
+            return new PlayerModifier(stack.getHoverName().getString(), action);
+        } else if (stack.getItem() instanceof DyeItem dye) {
+            return new ColorModifier(dye.getDyeColor(), action);
+        } else if (stack.is(Items.GLASS)) {
+            return new TransparentModifier(action);
+        } else if (stack.is(JJKItemTags.CURSED_OBJECT)) {
+            return new CurseModifier(action);
+        } else if (stack.is(JJKItemTags.CURSED_TOOL)) {
+            return new SorcererModifier(action);
+        } else if (stack.is(Items.TNT)) {
+            return new GriefingModifier(action);
+        } else if (stack.is(ItemTags.SWORDS)) {
+            return new ViolenceModifier(action);
+        }
+        throw new NotImplementedException();
     }
 
     @Override
@@ -78,25 +89,6 @@ public class AltarMenu extends ItemCombinerMenu {
     @Override
     protected boolean isValidBlock(@NotNull BlockState pState) {
         return true;
-    }
-
-    private static Modifier getModifier(ItemStack stack, Modifier.Action action) {
-        if (stack.is(Items.NAME_TAG)) {
-            return new PlayerModifier(stack.getHoverName().getString(), action);
-        } else if (stack.getItem() instanceof DyeItem dye) {
-            return new ColorModifier(dye.getDyeColor(), action);
-        } else if (stack.is(Items.GLASS)) {
-            return new TransparentModifier(action);
-        } else if (stack.is(JJKItemTags.CURSED_OBJECT)) {
-            return new CurseModifier(action);
-        } else if (stack.is(JJKItemTags.CURSED_TOOL)) {
-            return new SorcererModifier(action);
-        } else if (stack.is(Items.TNT)) {
-            return new GriefingModifier(action);
-        } else if (stack.is(ItemTags.SWORDS)) {
-            return new ViolenceModifier(action);
-        }
-        throw new NotImplementedException();
     }
 
     @Override

@@ -12,8 +12,6 @@ import radon.jujutsu_kaisen.util.MathUtil;
 
 import java.io.IOException;
 
-import static org.lwjgl.opengl.GL11C.*;
-
 // Credit: https://github.com/M-Marvin/MCMOD-HoloStructures-V2/blob/main-1.20.4/HoloStructures-1.20/src/main/java/de/m_marvin/holostruct/client/rendering/posteffect/SelectivePostPass.java
 public class SelectivePostPass extends PostPass {
     private Matrix4f invModelViewMat;
@@ -36,7 +34,7 @@ public class SelectivePostPass extends PostPass {
         RenderSystem.viewport(0, 0, (int) f, (int) f1);
         this.effect.setSampler("DiffuseSampler", this.inTarget::getColorTextureId);
 
-        for(int i = 0; i < this.auxAssets.size(); ++i) {
+        for (int i = 0; i < this.auxAssets.size(); ++i) {
             this.effect.setSampler(this.auxNames.get(i), this.auxAssets.get(i));
             this.effect.safeGetUniform("AuxSize" + i).set((float) this.auxWidths.get(i), (float) this.auxHeights.get(i));
         }

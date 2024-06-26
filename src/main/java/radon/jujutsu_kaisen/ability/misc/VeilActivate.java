@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -17,15 +14,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.IAttack;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ICharged;
-import radon.jujutsu_kaisen.ability.IDomainAttack;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.entity.VeilEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -56,7 +46,8 @@ public class VeilActivate extends Ability {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         for (ServerPlayer player : level.players()) {
-            if (owner instanceof Mob && player.distanceTo(owner) > owner.getAttributeValue(Attributes.FOLLOW_RANGE)) continue;
+            if (owner instanceof Mob && player.distanceTo(owner) > owner.getAttributeValue(Attributes.FOLLOW_RANGE))
+                continue;
 
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.veil", JujutsuKaisen.MOD_ID), owner.getName().getString()));
         }

@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Cursor3D;
 import net.minecraft.core.particles.ParticleTypes;
@@ -21,15 +20,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -41,50 +40,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class Dash extends Ability {
-    private static final List<UUID> JUMPED = new ArrayList<>();
-
     public static final double RANGE = 32.0D;
+    private static final List<UUID> JUMPED = new ArrayList<>();
     private static final float DASH = 1.5F;
     private static final float MAX_DASH = 4.0F;
 
-    @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
-    }
-
-    @Override
-    public boolean isPhysical() {
-        return true;
-    }
-
-    @Override
-    public boolean isTechnique() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying()) return false;
-        if (!owner.hasLineOfSight(target)) return false;
-        return HelperMethods.RANDOM.nextInt(10) == 0 && owner.distanceTo(target) <= getRange(owner);
-    }
-
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
-    }
-
-    @Override
-    public Status isTriggerable(LivingEntity owner) {
-        if (!canDash(owner) && !canAirJump(owner)) {
-            return Status.FAILURE;
-        }
-        return super.isTriggerable(owner);
-    }
-
     private static boolean canAirJump(LivingEntity owner) {
         if (owner.hasEffect(JJKEffects.STUN)) return false;
-        
+
         return JJKAbilities.AIR_JUMP.get().isUnlocked(owner) && (!JUMPED.contains(owner.getUUID()) || owner.getXRot() >= 15.0F);
     }
 
@@ -127,6 +90,41 @@ public class Dash extends Ability {
         ISorcererData data = cap.getSorcererData();
 
         return (float) (RANGE * (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 2.0F : 1.0F));
+    }
+
+    @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
+    @Override
+    public boolean isPhysical() {
+        return true;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
+        return HelperMethods.RANDOM.nextInt(10) == 0 && owner.distanceTo(target) <= getRange(owner);
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.INSTANT;
+    }
+
+    @Override
+    public Status isTriggerable(LivingEntity owner) {
+        if (!canDash(owner) && !canAirJump(owner)) {
+            return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
     }
 
     @Override
@@ -223,7 +221,7 @@ public class Dash extends Ability {
         if (cap == null) return 0;
 
         ISorcererData data = cap.getSorcererData();
-        
+
         if (data == null) return 0;
 
         if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {

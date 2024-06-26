@@ -20,12 +20,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity {
     public static final float SPEED = 2.0F;
-    private static final int DURATION = 5 * 20;
     public static final double RANGE = 16.0D;
-
-    private LivingEntity pulled;
-
+    private static final int DURATION = 5 * 20;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private LivingEntity pulled;
 
     public EelGrappleProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);

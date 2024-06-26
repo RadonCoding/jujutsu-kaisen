@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -21,15 +18,15 @@ import java.util.EnumSet;
 
 public class BetterFollowOwnerGoal extends Goal {
     private final TamableAnimal tamable;
-    private LivingEntity owner;
     private final LevelReader level;
     private final double speedModifier;
     private final PathNavigation navigation;
-    private int timeToRecalcPath;
     private final float stopDistance;
     private final float startDistance;
-    private float oldWaterCost;
     private final boolean canFly;
+    private LivingEntity owner;
+    private int timeToRecalcPath;
+    private float oldWaterCost;
 
     public BetterFollowOwnerGoal(TamableAnimal pTamable, double pSpeedModifier, float pStartDistance, float pStopDistance, boolean pCanFly) {
         this.tamable = pTamable;

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -23,13 +20,11 @@ import java.util.UUID;
 
 public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionCenterEntity.class, EntityDataSerializers.INT);
-
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     @Nullable
     private UUID domainUUID;
     @Nullable
     private DomainExpansionEntity cachedDomain;
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public DomainExpansionCenterEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
@@ -54,13 +49,6 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
         }
     }
 
-    public void setDomain(@Nullable DomainExpansionEntity domain) {
-        if (domain != null) {
-            this.domainUUID = domain.getUUID();
-            this.cachedDomain = domain;
-        }
-    }
-
     @Nullable
     public DomainExpansionEntity getDomain() {
         if (this.cachedDomain != null && !this.cachedDomain.isRemoved()) {
@@ -70,6 +58,13 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
             return this.cachedDomain;
         } else {
             return null;
+        }
+    }
+
+    public void setDomain(@Nullable DomainExpansionEntity domain) {
+        if (domain != null) {
+            this.domainUUID = domain.getUUID();
+            this.cachedDomain = domain;
         }
     }
 

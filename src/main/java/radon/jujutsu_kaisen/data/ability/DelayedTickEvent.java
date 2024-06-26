@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.ability;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 public class DelayedTickEvent {
     private final Runnable task;
     private int delay;

@@ -1,16 +1,9 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemStackDisplayItem extends DisplayItem {
     private final ItemStack stack;

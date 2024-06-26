@@ -1,26 +1,27 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
 
-import net.minecraft.world.level.pathfinder.PathType;
-
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.ISorcerer;
+import radon.jujutsu_kaisen.entity.ai.goal.*;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.*;
+import java.util.Arrays;
 
 public abstract class SorcererEntity extends PathfinderMob implements GeoEntity, ISorcerer {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -32,6 +33,14 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         Arrays.fill(this.armorDropChances, 1.0F);
         Arrays.fill(this.handDropChances, 1.0F);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 64.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.33D)
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     @Override
@@ -56,11 +65,17 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     protected abstract boolean isCustom();
 
-    protected boolean canFly() { return false; }
+    protected boolean canFly() {
+        return false;
+    }
 
-    protected boolean targetsCurses() { return true; }
+    protected boolean targetsCurses() {
+        return true;
+    }
 
-    protected boolean targetsSorcerers() { return false; }
+    protected boolean targetsSorcerers() {
+        return false;
+    }
 
     private void createGoals() {
         int target = 1;
@@ -118,14 +133,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         } else {
             this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
         }
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createMobAttributes()
-                .add(Attributes.FOLLOW_RANGE, 64.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.33D)
-                .add(Attributes.ATTACK_DAMAGE)
-                .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     @Override

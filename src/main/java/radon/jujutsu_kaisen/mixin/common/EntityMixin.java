@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.mixin.common;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -23,11 +22,15 @@ import javax.annotation.Nullable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Shadow public abstract AABB getBoundingBox();
+    @Shadow
+    public abstract AABB getBoundingBox();
 
-    @Shadow public abstract Level level();
+    @Shadow
+    public abstract Level level();
 
-    @Shadow @Nullable public abstract <T> T getCapability(EntityCapability<T, Void> capability);
+    @Shadow
+    @Nullable
+    public abstract <T> T getCapability(EntityCapability<T, Void> capability);
 
     @Inject(method = "getTeamColor", at = @At("TAIL"), cancellable = true)
     public void getTeamColor(CallbackInfoReturnable<Integer> cir) {

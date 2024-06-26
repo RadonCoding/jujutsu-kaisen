@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -13,10 +12,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
@@ -24,8 +23,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class JujutsuLightningEntity extends LightningBolt {
-    private int life;
     public long seed;
+    private int life;
     private int flashes;
     private float damage;
 
@@ -53,13 +52,6 @@ public class JujutsuLightningEntity extends LightningBolt {
         this.damage = damage;
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
     @Nullable
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
@@ -69,6 +61,13 @@ public class JujutsuLightningEntity extends LightningBolt {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 
@@ -106,8 +105,8 @@ public class JujutsuLightningEntity extends LightningBolt {
                 LivingEntity owner = this.getOwner();
 
                 if (owner != null) {
-                List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D,
-                        this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D));
+                    List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D,
+                            this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D));
 
                     IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

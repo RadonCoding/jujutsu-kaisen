@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.shrine;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -12,15 +11,16 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.IAttack;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.IAttack;
 import radon.jujutsu_kaisen.ability.IDomainAttack;
 import radon.jujutsu_kaisen.ability.IToggled;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.DamageUtil;
@@ -31,38 +31,8 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
     public static final double RANGE = 30.0D;
     private static final float DAMAGE = 30.0F;
 
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
-    }
-
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
-    }
-
-    @Override
-    public void run(LivingEntity owner) {
-
-    }
-
     private static DamageSource getSource(LivingEntity owner, @Nullable DomainExpansionEntity domain) {
         return domain == null ? JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CLEAVE.get()) : JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.CLEAVE.get());
-    }
-
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 100.0F;
-    }
-
-    @Override
-    public int getCooldown() {
-        return 5 * 20;
-    }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.SLASHING;
     }
 
     public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain, DamageSource source, boolean instant) {
@@ -120,6 +90,36 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
     public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain, boolean instant) {
         DamageSource source = getSource(owner, domain);
         perform(owner, target, domain, source, instant);
+    }
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return target != null;
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.TOGGLED;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+
+    }
+
+    @Override
+    public float getCost(LivingEntity owner) {
+        return 100.0F;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 5 * 20;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.SLASHING;
     }
 
     @Override

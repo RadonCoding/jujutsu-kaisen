@@ -11,16 +11,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 import java.util.UUID;
@@ -69,6 +66,13 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
         this.setLeader(leader);
     }
 
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 2 * 0.33D)
+                .add(Attributes.MAX_HEALTH, 10.0D)
+                .add(Attributes.ATTACK_DAMAGE, 1.0D);
+    }
+
     @Override
     public boolean canAttack(@NotNull LivingEntity pTarget) {
         if (this.getLeader() == pTarget || pTarget instanceof RabbitEscapeEntity rabbit && rabbit.getLeader() == pTarget) {
@@ -105,13 +109,6 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
         }
     }
 
-    public void setLeader(@Nullable RabbitEscapeEntity leader) {
-        if (leader != null) {
-            this.leaderUUID = leader.getUUID();
-            this.cachedLeader = leader;
-        }
-    }
-
     @Nullable
     public RabbitEscapeEntity getLeader() {
         if (this.cachedLeader != null && !this.cachedLeader.isRemoved()) {
@@ -121,6 +118,13 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
             return this.cachedLeader;
         } else {
             return null;
+        }
+    }
+
+    public void setLeader(@Nullable RabbitEscapeEntity leader) {
+        if (leader != null) {
+            this.leaderUUID = leader.getUUID();
+            this.cachedLeader = leader;
         }
     }
 
@@ -232,12 +236,5 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.RABBIT_ESCAPE.get();
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 2 * 0.33D)
-                .add(Attributes.MAX_HEALTH, 10.0D)
-                .add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 }

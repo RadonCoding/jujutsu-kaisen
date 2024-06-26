@@ -33,15 +33,13 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
+    public static final int DELAY = 20;
     private static final RawAnimation SPIN = RawAnimation.begin().thenLoop("misc.spin");
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     private static final float DAMAGE = 20.0F;
     private static final float EXPLOSIVE_POWER = 2.5F;
     private static final float MAX_EXPLOSION = 15.0F;
     private static final float SPEED = 5.0F;
-    public static final int DELAY = 20;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public FireballProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);

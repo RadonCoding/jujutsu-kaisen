@@ -1,14 +1,61 @@
 package radon.jujutsu_kaisen.util;
 
+import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 public class MathUtil {
-    public static Matrix4f inverse(Matrix4f m) {
+    public static int absMaxIdx(double... numbers){
+        int idx = 0;
+        double max = -Double.MAX_VALUE;
+
+        for(int i = 0; i < numbers.length; i ++){
+            double num = Math.abs(numbers[i]);
+            if (num > max){
+                idx = i;
+                max = num;
+            }
+        }
+        return idx;
+    }
+
+    public static void matrixFromQuaterionf(Matrix3f matrix3f, Quaternionf quaternionf) {
+        matrix3f.m00 = 1 - 2 * quaternionf.y * quaternionf.y - 2 * quaternionf.z * quaternionf.z;
+        matrix3f.m01 = 2 * quaternionf.x * quaternionf.y - 2 * quaternionf.z * quaternionf.w;
+        matrix3f.m02 = 2 * quaternionf.x * quaternionf.z + 2 * quaternionf.y * quaternionf.w;
+
+        matrix3f.m10 = 2 * quaternionf.x * quaternionf.y + 2 * quaternionf.z * quaternionf.w;
+        matrix3f.m11 = 1 - 2 * quaternionf.x * quaternionf.x - 2 * quaternionf.z * quaternionf.z;
+        matrix3f.m12 = 2 * quaternionf.y * quaternionf.z - 2 * quaternionf.x * quaternionf.w;
+
+        matrix3f.m20 = 2 * quaternionf.x * quaternionf.z - 2 * quaternionf.y * quaternionf.w;
+        matrix3f.m21 = 2 * quaternionf.y * quaternionf.z + 2 * quaternionf.x * quaternionf.w;
+        matrix3f.m22 = 1 - 2 * quaternionf.x * quaternionf.x - 2 * quaternionf.y * quaternionf.y;
+    }
+
+    // https://en.wikipedia.org/wiki/Outer_product
+    public static Matrix3f outer(Vec3 a, Vec3 b) {
+        return new Matrix3f(
+                (float) (a.x * b.x), (float) (a.x * b.y), (float) (a.x * b.z),
+                (float) (a.y * b.x), (float) (a.y * b.y), (float) (a.y * b.z),
+                (float) (a.z * b.x), (float) (a.z * b.y), (float) (a.z * b.z)
+        );
+    }
+
+    public static Vec3 transform(Vec3 vec, Matrix3f matrix3f) {
+        double x = matrix3f.m00 * vec.x + matrix3f.m01 * vec.y + matrix3f.m02 * vec.z;
+        double y = matrix3f.m10 * vec.x + matrix3f.m11 * vec.y + matrix3f.m12 * vec.z;
+        double z = matrix3f.m20 * vec.x + matrix3f.m21 * vec.y + matrix3f.m22 * vec.z;
+        return new Vec3(x, y, z);
+    }
+
+    public static Matrix4f inverse(Matrix4f matrix4f) {
         float
-                a00 = m.m00(), a01 = m.m01(), a02 = m.m02(), a03 = m.m03(),
-                a10 = m.m10(), a11 = m.m11(), a12 = m.m12(), a13 = m.m13(),
-                a20 = m.m20(), a21 = m.m21(), a22 = m.m22(), a23 = m.m23(),
-                a30 = m.m30(), a31 = m.m31(), a32 = m.m32(), a33 = m.m33(),
+                a00 = matrix4f.m00(), a01 = matrix4f.m01(), a02 = matrix4f.m02(), a03 = matrix4f.m03(),
+                a10 = matrix4f.m10(), a11 = matrix4f.m11(), a12 = matrix4f.m12(), a13 = matrix4f.m13(),
+                a20 = matrix4f.m20(), a21 = matrix4f.m21(), a22 = matrix4f.m22(), a23 = matrix4f.m23(),
+                a30 = matrix4f.m30(), a31 = matrix4f.m31(), a32 = matrix4f.m32(), a33 = matrix4f.m33(),
 
                 b00 = a00 * a11 - a01 * a10,
                 b01 = a00 * a12 - a02 * a10,

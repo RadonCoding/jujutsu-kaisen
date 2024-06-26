@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,21 +24,21 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.render.item.KamutokeDaggerRenderer;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.client.render.item.KamutokeDaggerRenderer;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.item.CursedToolItem;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -52,11 +51,11 @@ import java.util.function.Consumer;
 
 public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     public static final double RANGE = 30.0D;
+    public static final float MELEE_DAMAGE = 5.0F;
+    public static final int STUN = 10;
     private static final int COUNT = 16;
     private static final float RANGE_COST = 500.0F;
-    public static final float MELEE_DAMAGE = 5.0F;
     private static final float RANGE_DAMAGE = 15.0F;
-    public static final int STUN = 10;
     private static final int DURATION = 3 * 20;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -73,7 +72,8 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
 
         ISorcererData data = cap.getSorcererData();
 
-        if (!victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * data.getAbilityOutput())) return false;
+        if (!victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * data.getAbilityOutput()))
+            return false;
 
         if (victim.isDeadOrDying()) return true;
 

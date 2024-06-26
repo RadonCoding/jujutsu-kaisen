@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation.util;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -9,18 +8,19 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
-import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -86,7 +86,8 @@ public class CurseManipulationUtil {
         IAbilityData ownerAbilityData = ownerCap.getAbilityData();
         ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
 
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID) || ownerAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return null;
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID) || ownerAbilityData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
+            return null;
 
         List<AbsorbedCurse> curses = ownerCurseManipulationData.getCurses();
 
@@ -129,7 +130,7 @@ public class CurseManipulationUtil {
 
         ISorcererData curseData = curseCap.getSorcererData();
         curseData.deserializeNBT(entity.registryAccess(), curse.getData());
-        
+
         return entity;
     }
 }

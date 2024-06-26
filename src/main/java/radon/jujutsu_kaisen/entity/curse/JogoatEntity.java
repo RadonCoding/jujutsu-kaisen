@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -13,29 +11,23 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 import java.util.List;
 
 public class JogoatEntity extends CursedSpirit {
-    public static EntityDataAccessor<Integer> DATA_SMASH = SynchedEntityData.defineId(JogoatEntity.class, EntityDataSerializers.INT);
-
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation SMASH = RawAnimation.begin().thenPlay("attack.smash");
-
     private static final double SMASH_LAUNCH = 5.0D;
     private static final float SMASH_EXPLOSION = 2.5F;
-
     private static final int SMASH_DURATION = 20;
+    public static EntityDataAccessor<Integer> DATA_SMASH = SynchedEntityData.defineId(JogoatEntity.class, EntityDataSerializers.INT);
 
     public JogoatEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);

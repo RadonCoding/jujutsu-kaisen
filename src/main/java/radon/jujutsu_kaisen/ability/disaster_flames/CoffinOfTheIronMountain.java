@@ -1,20 +1,14 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import net.minecraft.world.level.block.Blocks;
-import radon.jujutsu_kaisen.ability.IClosedDomain;
-
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.block.Blocks;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
-import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.LavaRockProjectile;
 
 import java.util.List;

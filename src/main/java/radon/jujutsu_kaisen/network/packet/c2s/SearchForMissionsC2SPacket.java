@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -19,7 +16,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
-
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
@@ -27,15 +23,15 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.DataProvider;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
-import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -46,16 +42,15 @@ import java.util.Set;
 
 public class SearchForMissionsC2SPacket implements CustomPacketPayload {
     public static final SearchForMissionsC2SPacket INSTANCE = new SearchForMissionsC2SPacket();
-
-    private static final int SEARCH_RADIUS = 8;
-    private static final int LIMIT = 16;
-
     public static final CustomPacketPayload.Type<SearchForMissionsC2SPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "search_for_missions_serverbound"));
     public static final StreamCodec<? super RegistryFriendlyByteBuf, SearchForMissionsC2SPacket> STREAM_CODEC = StreamCodec.unit(
             INSTANCE
     );
+    private static final int SEARCH_RADIUS = 8;
+    private static final int LIMIT = 16;
 
-    private SearchForMissionsC2SPacket() {}
+    private SearchForMissionsC2SPacket() {
+    }
 
     private static boolean tryAddReference(StructureManager pStructureManager, StructureStart pStructureStart) {
         if (pStructureStart.canBeReferenced()) {
@@ -150,7 +145,8 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
                                         ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
                                         StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
 
-                                        if (start == null || !start.isValid() || !tryAddReference(sender.serverLevel().structureManager(), start)) continue;
+                                        if (start == null || !start.isValid() || !tryAddReference(sender.serverLevel().structureManager(), start))
+                                            continue;
 
                                         BlockPos pos = spread.getLocatePos(start.getChunkPos());
 

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.ability.sky_strike;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,15 +9,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.IAttack;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ICharged;
-import radon.jujutsu_kaisen.ability.IDomainAttack;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -48,7 +38,8 @@ public class SkyStrike extends Ability {
     private HitResult getTarget(LivingEntity owner) {
         HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
         if (hit.getType() == HitResult.Type.MISS) return null;
-        if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN) return null;
+        if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN)
+            return null;
         return hit;
     }
 

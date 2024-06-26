@@ -35,14 +35,12 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
     private static final EntityDataAccessor<Float> DATA_OFFSET_Y = SynchedEntityData.defineId(EmberInsectProjectile.class, EntityDataSerializers.FLOAT);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     private static final float DAMAGE = 5.0F;
     private static final float SPEED = 3.0F;
     private static final float EXPLOSIVE_POWER = 1.0F;
     private static final float MAX_EXPLOSION = 5.0F;
     private static final int DELAY = 20;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public EmberInsectProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);

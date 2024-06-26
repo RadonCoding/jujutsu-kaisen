@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.util;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +36,7 @@ public class RotationUtil {
 
                 double d3 = Math.sqrt(offset.x * offset.x + offset.z * offset.z);
 
-                float yaw = Mth.wrapDegrees((float) (Mth.atan2(offset.z,offset.x) * (double) (180.0F / Mth.PI)) - 90.0F);
+                float yaw = Mth.wrapDegrees((float) (Mth.atan2(offset.z, offset.x) * (double) (180.0F / Mth.PI)) - 90.0F);
                 float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(offset.y, d3) * (double) (180.0F / Mth.PI))));
 
                 entity.setYRot(yaw);

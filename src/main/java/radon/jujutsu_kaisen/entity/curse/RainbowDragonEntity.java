@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,28 +22,22 @@ import net.neoforged.neoforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.IControllableFlyingRide;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable, IControllableFlyingRide {
-    private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
-
-    private static final int MAX_IDLE_Y = 16;
-    private static final int MAX_SEGMENTS = 12;
-
     public static final int ARMS = 1;
     public static final int LEGS = 7;
     public static final int TAIL = 12;
-
-    private boolean jump;
-
+    private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
+    private static final int MAX_IDLE_Y = 16;
+    private static final int MAX_SEGMENTS = 12;
     private final RainbowDragonSegmentEntity[] segments;
+    private boolean jump;
 
     public RainbowDragonEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -58,6 +50,11 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
             this.segments[i] = new RainbowDragonSegmentEntity(this, i);
         }
         this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes()
+                .add(Attributes.FLYING_SPEED, 2.0F);
     }
 
     @Override
@@ -280,11 +277,6 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     @Override
     protected float getFlyingSpeed() {
         return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED, 2.0F);
     }
 
     @Override

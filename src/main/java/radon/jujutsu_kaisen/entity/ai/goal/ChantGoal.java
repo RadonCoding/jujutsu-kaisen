@@ -1,12 +1,12 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.entity.ISorcerer;
@@ -22,16 +22,6 @@ public class ChantGoal<T extends PathfinderMob & ISorcerer> extends Goal {
         this.mob = pMob;
     }
 
-    @Override
-    public boolean canUse() {
-        return true;
-    }
-
-    @Override
-    public boolean requiresUpdateEveryTick() {
-        return true;
-    }
-
     private static LinkedHashSet<String> getRandomChantCombo() {
         List<? extends String> chants = ConfigHolder.SERVER.chants.get();
 
@@ -41,6 +31,16 @@ public class ChantGoal<T extends PathfinderMob & ISorcerer> extends Goal {
             combo.add(chants.get(HelperMethods.RANDOM.nextInt(chants.size())));
         }
         return combo;
+    }
+
+    @Override
+    public boolean canUse() {
+        return true;
+    }
+
+    @Override
+    public boolean requiresUpdateEveryTick() {
+        return true;
     }
 
     @Override

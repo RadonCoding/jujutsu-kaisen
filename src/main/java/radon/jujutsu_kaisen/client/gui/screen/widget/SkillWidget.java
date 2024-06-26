@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.widget;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.client.Minecraft;
@@ -14,15 +13,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.DisplayInfo;
 import radon.jujutsu_kaisen.client.gui.screen.tab.SkillsTab;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.IncreaseSkillC2SPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
@@ -30,17 +30,17 @@ import java.util.List;
 
 public class SkillWidget {
     private static final ResourceLocation TITLE_BOX_SPRITE = new ResourceLocation("advancements/title_box");
-    private static final int[] TEST_SPLIT_OFFSETS = new int[] {0, 10, -10, 25, -25};
+    private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
 
     private final SkillsTab tab;
     private final Skill skill;
     private final DisplayInfo display;
     private final FormattedCharSequence title;
-    private int width;
-    private List<FormattedCharSequence> description;
     private final Minecraft minecraft;
     private final int x;
     private final int y;
+    private int width;
+    private List<FormattedCharSequence> description;
 
     public SkillWidget(SkillsTab tab, Minecraft minecraft, Skill skill, float x, float y) {
         this.tab = tab;
@@ -52,6 +52,10 @@ public class SkillWidget {
         this.y = Mth.floor(this.display.getY() * 27.0F);
 
         this.update();
+    }
+
+    private static float getMaxWidth(StringSplitter pManager, List<FormattedText> pText) {
+        return (float) pText.stream().mapToDouble(pManager::stringWidth).max().orElse(0.0D);
     }
 
     public void update() {
@@ -80,10 +84,6 @@ public class SkillWidget {
 
     public Skill getSkill() {
         return this.skill;
-    }
-
-    private static float getMaxWidth(StringSplitter pManager, List<FormattedText> pText) {
-        return (float) pText.stream().mapToDouble(pManager::stringWidth).max().orElse(0.0D);
     }
 
     private List<FormattedText> findOptimalLines(Component pComponent, int pMaxWidth) {

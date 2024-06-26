@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -18,7 +15,10 @@ import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +27,7 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -34,23 +35,23 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
-import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.*;
@@ -60,52 +61,37 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class SorcererData implements ISorcererData {
-    private boolean initialized;
-
-    private int cursedEnergyColor;
-
-    private int abilityPoints;
-    private int skillPoints;
-
-    private final Set<Ability> unlocked;
-
-    @Nullable
-    private CursedTechnique technique;
-
-    private final Set<CursedTechnique> additional;
-    @Nullable
-    private CursedTechnique currentAdditional;
-
-    private CursedEnergyNature nature;
-
-    private float experience;
-    private float current;
-    private float output;
-
-    private float energy;
-    private float maxEnergy;
-    private float extraEnergy;
-
-    private JujutsuType type;
-
-    private int burnout;
-    private int brainDamage;
-    private int brainDamageTimer;
-
-    private long lastBlackFlashTime;
-
-    private final Set<Trait> traits;
-    private final Set<SummonData> summons;
-
-    private int fingers;
-
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
     private static final UUID HEALTH_UUID = UUID.fromString("7d1ab920-e9ff-11ee-bd3d-0242ac120002");
     private static final UUID SCALE_UUID = UUID.fromString("aa26da0f-46bf-4214-887e-ed3aca9d465a");
-
+    private final Set<Ability> unlocked;
+    private final Set<CursedTechnique> additional;
+    private final Set<Trait> traits;
+    private final Set<SummonData> summons;
     private final LivingEntity owner;
+    private boolean initialized;
+    private int cursedEnergyColor;
+    private int abilityPoints;
+    private int skillPoints;
+    @Nullable
+    private CursedTechnique technique;
+    @Nullable
+    private CursedTechnique currentAdditional;
+    private CursedEnergyNature nature;
+    private float experience;
+    private float current;
+    private float output;
+    private float energy;
+    private float maxEnergy;
+    private float extraEnergy;
+    private JujutsuType type;
+    private int burnout;
+    private int brainDamage;
+    private int brainDamageTimer;
+    private long lastBlackFlashTime;
+    private int fingers;
 
     public SorcererData(LivingEntity owner) {
         this.owner = owner;
@@ -174,7 +160,8 @@ public class SorcererData implements ISorcererData {
 
     private void checkAdvancements(ServerPlayer player) {
         if (this.traits.contains(Trait.SIX_EYES)) PlayerUtil.giveAdvancement(player, "six_eyes");
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY) || this.traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY)) PlayerUtil.giveAdvancement(player, "heavenly_restriction");
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY) || this.traits.contains(Trait.HEAVENLY_RESTRICTION_SORCERY))
+            PlayerUtil.giveAdvancement(player, "heavenly_restriction");
         if (this.traits.contains(Trait.VESSEL)) PlayerUtil.giveAdvancement(player, "vessel");
         if (this.unlocked.contains(JJKAbilities.RCT1.get()))
             PlayerUtil.giveAdvancement(player, "reverse_cursed_technique");
@@ -211,7 +198,7 @@ public class SorcererData implements ISorcererData {
             EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADD_VALUE);
 
             double movement = this.getBaseOutput() * 0.05D;
-            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADD_VALUE);
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2, movement), AttributeModifier.Operation.ADD_VALUE);
 
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(1.0F / 20);
@@ -221,7 +208,7 @@ public class SorcererData implements ISorcererData {
             EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.5D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
             EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, HEALTH_UUID, "Health", -14, AttributeModifier.Operation.ADD_VALUE);
         }
-        
+
         if (this.traits.contains(Trait.PERFECT_BODY)) {
             EntityUtil.applyModifier(this.owner, Attributes.SCALE, SCALE_UUID, "Scale", 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
@@ -577,14 +564,14 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setType(JujutsuType type) {
-        this.type = type;
-        ServerVisualHandler.sync(this.owner);
+    public JujutsuType getType() {
+        return this.type;
     }
 
     @Override
-    public JujutsuType getType() {
-        return this.type;
+    public void setType(JujutsuType type) {
+        this.type = type;
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -603,13 +590,13 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setBurnout(int duration) {
-        this.burnout = duration;
+    public int getBurnout() {
+        return this.burnout;
     }
 
     @Override
-    public int getBurnout() {
-        return this.burnout;
+    public void setBurnout(int duration) {
+        this.burnout = duration;
     }
 
     @Override
@@ -628,6 +615,11 @@ public class SorcererData implements ISorcererData {
             return 0.0F;
         }
         return Math.min(this.getMaxEnergy(), this.energy);
+    }
+
+    @Override
+    public void setEnergy(float energy) {
+        this.energy = energy;
     }
 
     @Override
@@ -670,11 +662,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void useEnergy(float amount) {
         this.energy -= amount;
-    }
-
-    @Override
-    public void setEnergy(float energy) {
-        this.energy = energy;
     }
 
     @Override

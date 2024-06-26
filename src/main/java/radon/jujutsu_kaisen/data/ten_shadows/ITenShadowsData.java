@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -11,8 +8,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface ITenShadowsData extends INBTSerializable<CompoundTag> {
     void tick();
@@ -21,9 +21,9 @@ public interface ITenShadowsData extends INBTSerializable<CompoundTag> {
 
     void tame(EntityType<?> entity);
 
-    void setTamed(Set<ResourceLocation> tamed);
-
     Set<ResourceLocation> getTamed();
+
+    void setTamed(Set<ResourceLocation> tamed);
 
     boolean isDead(EntityType<?> entity);
 

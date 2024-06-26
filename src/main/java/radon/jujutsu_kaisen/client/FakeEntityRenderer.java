@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -9,13 +8,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.core.jmx.AppenderAdmin;
-import org.lwjgl.opengl.GL11;
 
 public class FakeEntityRenderer {
     private static final int BUFFER_BUILDER_CAPACITY = 786432;
@@ -29,15 +25,11 @@ public class FakeEntityRenderer {
     private final Entity entity;
 
     private final int tickCount;
-
+    private final boolean sneak;
+    public float yBodyRot;
     private float yRot;
     private float xRot;
-
-    private final boolean sneak;
-
     private float yHeadRot;
-    public float yBodyRot;
-
     private float attackAnim;
 
     private float position = 0.0F;

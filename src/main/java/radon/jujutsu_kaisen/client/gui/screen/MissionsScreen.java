@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameNarrator;
@@ -12,6 +11,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -20,16 +20,18 @@ import radon.jujutsu_kaisen.client.gui.screen.widget.VerticalSlider;
 import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
-import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
-import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
+import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.network.packet.c2s.AcceptMissionC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.SearchForMissionsC2SPacket;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class MissionsScreen extends Screen {
     private static final ResourceLocation WINDOW = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/window.png");
@@ -258,24 +260,24 @@ public class MissionsScreen extends Screen {
         this.addRenderableWidget(this.missionCardsSlider);
 
         this.acceptButton = Button.builder(Component.translatable(String.format("gui.%s.missions.accept", JujutsuKaisen.MOD_ID)), pButton -> {
-            if (this.minecraft.level == null || this.minecraft.player == null) return;
+                    if (this.minecraft.level == null || this.minecraft.player == null) return;
 
-            if (this.selected == null) return;
+                    if (this.selected == null) return;
 
-            Mission mission = this.selected.getMission();
+                    Mission mission = this.selected.getMission();
 
-            PacketDistributor.sendToServer(new AcceptMissionC2SPacket(mission.getPos()));
+                    PacketDistributor.sendToServer(new AcceptMissionC2SPacket(mission.getPos()));
 
-            IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return;
+                    if (cap == null) return;
 
-            IMissionEntityData entityData = cap.getMissionData();
+                    IMissionEntityData entityData = cap.getMissionData();
 
-            entityData.setMission(mission);
+                    entityData.setMission(mission);
 
-            this.onClose();
-        }).pos(missionCardsOffsetX + (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2,
+                    this.onClose();
+                }).pos(missionCardsOffsetX + (this.width - missionCardsOffsetX - MISSION_CARDS_OFFSET_X - ACCEPT_BUTTON_WIDTH) / 2,
                         missionCardsOffsetY + MissionCard.WINDOW_HEIGHT + MissionCard.OUTER_PADDING + 10)
                 .size(ACCEPT_BUTTON_WIDTH, ACCEPT_BUTTON_HEIGHT)
                 .build();

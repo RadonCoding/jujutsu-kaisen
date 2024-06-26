@@ -1,17 +1,19 @@
 package radon.jujutsu_kaisen.chant;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ChantHandler {
     public static boolean isChanted(LivingEntity owner, Ability ability) {
@@ -24,7 +26,7 @@ public class ChantHandler {
         if (cap == null) return 0.0F;
 
         ISorcererData data = cap.getSorcererData();
-        
+
         if (data == null) return 0.0F;
 
         return data.getOutput() + getChant(owner, ability);

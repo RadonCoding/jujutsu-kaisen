@@ -1,17 +1,16 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
-import radon.jujutsu_kaisen.client.FakeEntityRenderer;
-import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
-
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,6 +19,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.client.FakeEntityRenderer;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 
 public class MirageParticle extends Particle {
     private final int entityId;
@@ -91,7 +92,8 @@ public class MirageParticle extends Particle {
     }
 
     public static class Provider implements ParticleProvider<Options> {
-        public Provider(SpriteSet ignored) {}
+        public Provider(SpriteSet ignored) {
+        }
 
         public Particle createParticle(@NotNull MirageParticle.Options pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {

@@ -22,9 +22,9 @@ import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.ITransformation;
-import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
@@ -77,7 +77,8 @@ public class PerfectBodyOverlay implements IOverlay {
     }
 
     public static boolean shouldRenderExtraArms(LivingEntity entity, ClientVisualHandler.ClientData client) {
-        if (Minecraft.getInstance().player == entity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) return false;
+        if (Minecraft.getInstance().player == entity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON)
+            return false;
 
         for (Ability ability : client.toggled) {
             if (!(ability instanceof ITransformation transformation)) continue;

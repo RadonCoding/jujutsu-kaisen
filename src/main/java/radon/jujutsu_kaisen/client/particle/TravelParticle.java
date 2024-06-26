@@ -2,9 +2,6 @@ package radon.jujutsu_kaisen.client.particle;
 
 
 import com.mojang.datafixers.util.Function7;
-import net.minecraft.world.phys.AABB;
-import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -22,6 +19,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.network.codec.JJKByteBufCodecs;
 
 import java.util.function.Function;
@@ -83,7 +81,8 @@ public class TravelParticle extends TextureSheetParticle {
         return this.glow ? JJKParticleRenderTypes.GLOW : JJKParticleRenderTypes.TRANSLUCENT;
     }
 
-    public record Options(Vec3 target, Vector3f color, float scalar, float opacity, boolean glow, boolean fade, int lifetime) implements ParticleOptions {
+    public record Options(Vec3 target, Vector3f color, float scalar, float opacity, boolean glow, boolean fade,
+                          int lifetime) implements ParticleOptions {
         public static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec(
                 builder -> builder.group(
                                 Vec3.CODEC.fieldOf("target").forGetter(options -> options.target),

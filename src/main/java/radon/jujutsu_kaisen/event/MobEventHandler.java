@@ -1,25 +1,32 @@
 package radon.jujutsu_kaisen.event;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import radon.jujutsu_kaisen.ability.event.LivingInsideDomainEvent;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.chant.ServerChantHandler;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.*;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
+import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
+import radon.jujutsu_kaisen.ability.event.LivingInsideDomainEvent;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.chant.ServerChantHandler;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.chant.IChantData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -38,7 +45,8 @@ public class MobEventHandler {
         public static void onLivingInsideDomain(LivingInsideDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (victim instanceof ISorcerer && victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
+            if (victim instanceof ISorcerer && victim instanceof Mob mob && mob.canAttack(event.getAttacker()))
+                mob.setTarget(event.getAttacker());
         }
 
         @SubscribeEvent
@@ -143,7 +151,8 @@ public class MobEventHandler {
                             ServerChantHandler.onChant(owner, chants.get(i));
 
                             for (ServerPlayer player : level.players()) {
-                                if (player.distanceTo(owner) > owner.getAttributeValue(Attributes.FOLLOW_RANGE)) continue;
+                                if (player.distanceTo(owner) > owner.getAttributeValue(Attributes.FOLLOW_RANGE))
+                                    continue;
 
                                 player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
                             }

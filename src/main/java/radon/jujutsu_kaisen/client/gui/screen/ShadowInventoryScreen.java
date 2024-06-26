@@ -1,16 +1,14 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.client.gui.screen.radial.DisplayItem;
 import radon.jujutsu_kaisen.client.gui.screen.radial.ItemStackDisplayItem;
 import radon.jujutsu_kaisen.client.gui.screen.radial.RadialScreen;
-
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.c2s.ShadowInventoryTakeC2SPacket;
 
 import java.util.List;

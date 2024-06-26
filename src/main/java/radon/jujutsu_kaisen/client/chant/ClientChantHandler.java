@@ -1,10 +1,8 @@
 package radon.jujutsu_kaisen.client.chant;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientChantHandler {
     private static final List<String> messages = new ArrayList<>();

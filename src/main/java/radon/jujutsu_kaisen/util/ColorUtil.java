@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.util;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import org.joml.Vector3f;
 
 public class ColorUtil {

@@ -1,21 +1,16 @@
 package radon.jujutsu_kaisen.data.projection_sorcery;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
-import javax.annotation.Nullable;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +22,9 @@ public class ProjectionSorceryData implements IProjectionSorceryData {
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
 
     private final List<AbstractMap.SimpleEntry<Vec3, Float>> frames;
+    private final LivingEntity owner;
     private int speedStacks;
     private int noMotionTime;
-
-    private final LivingEntity owner;
 
     public ProjectionSorceryData(LivingEntity owner) {
         this.owner = owner;

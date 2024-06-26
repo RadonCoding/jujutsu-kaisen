@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -10,9 +9,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
@@ -91,7 +90,8 @@ public class VeilHandler {
 
         IBarrier owner = getOwner(level, target);
 
-        if (owner instanceof IVeil veil && veil.isAllowed(attacker) && veil.isAllowed(victim)) return veil.canDamage(victim);
+        if (owner instanceof IVeil veil && veil.isAllowed(attacker) && veil.isAllowed(victim))
+            return veil.canDamage(victim);
 
         return true;
     }

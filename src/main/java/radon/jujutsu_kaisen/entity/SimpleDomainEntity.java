@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
@@ -21,11 +20,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
@@ -35,15 +34,13 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class SimpleDomainEntity extends Entity implements ISimpleDomain {
+    public static final float RADIUS = 2.0F;
+    public static final float MAX_RADIUS = 4.0F;
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_ENLARGEMENT = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_MAX_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_HEALTH = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
-
     private static final double X_STEP = 0.025D;
-    public static final float RADIUS = 2.0F;
-    public static final float MAX_RADIUS = 4.0F;
-
     @Nullable
     private UUID ownerUUID;
     @Nullable
@@ -71,15 +68,6 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
         this.setHealth(this.getMaxHealth());
     }
 
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        if (!this.level().isClientSide) {
-            VeilHandler.barrier(this.level().dimension(), this.getUUID());
-        }
-    }
-
     public static float getRadius(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -88,6 +76,15 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
         ISkillData data = cap.getSkillData();
 
         return Math.min(MAX_RADIUS, RADIUS * (1.0F + (data.getSkill(Skill.BARRIER) * 0.1F)));
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        if (!this.level().isClientSide) {
+            VeilHandler.barrier(this.level().dimension(), this.getUUID());
+        }
     }
 
     public float getRadius() {
@@ -236,13 +233,6 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
         }
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
     @Override
     @Nullable
     public LivingEntity getOwner() {
@@ -253,6 +243,13 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 

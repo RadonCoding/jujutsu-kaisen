@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.domain;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,20 +13,20 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 import java.util.*;
 
 public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
+    private final Map<BlockPos, CursedTechnique> offsets = new HashMap<>();
     @Nullable
     private CursedTechnique technique;
-
-    private final Map<BlockPos, CursedTechnique> offsets = new HashMap<>();
 
     public AuthenticMutualLoveEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);

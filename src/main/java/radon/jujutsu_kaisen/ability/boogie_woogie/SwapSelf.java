@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -14,10 +13,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.CursedEnergyImbuedItemProjectile;
+import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.item.CursedToolItem;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -25,23 +25,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SwapSelf extends Ability {
     public static final double RANGE = 30.0D;
-
-    @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
-    }
-
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || target.isDeadOrDying()) return false;
-        if (!owner.hasLineOfSight(target)) return false;
-        return this.getTarget(owner) == target && HelperMethods.RANDOM.nextInt(20) == 0;
-    }
-
-    @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
-    }
 
     public static boolean canSwap(LivingEntity owner, Entity target) {
         if (!owner.hasLineOfSight(target)) return false;
@@ -74,6 +57,23 @@ public class SwapSelf extends Ability {
 
         first.setYRot(targetRot.y);
         first.setXRot(targetRot.x);
+    }
+
+    @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target)) return false;
+        return this.getTarget(owner) == target && HelperMethods.RANDOM.nextInt(20) == 0;
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.INSTANT;
     }
 
     @Nullable

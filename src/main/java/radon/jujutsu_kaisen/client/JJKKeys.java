@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import radon.jujutsu_kaisen.JujutsuKaisen;

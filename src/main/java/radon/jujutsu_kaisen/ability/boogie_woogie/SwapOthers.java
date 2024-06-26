@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -11,15 +8,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.IAttack;
-import radon.jujutsu_kaisen.ability.IChanneled;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.ICharged;
-import radon.jujutsu_kaisen.ability.IDomainAttack;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.ITenShadowsAttack;
-import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.AbstractMap;
@@ -32,6 +22,10 @@ public class SwapOthers extends Ability {
     private static final int EXPIRATION = 5 * 20;
 
     private static final Map<UUID, AbstractMap.SimpleEntry<UUID, Long>> TARGETS = new HashMap<>();
+
+    public static void setTarget(LivingEntity owner, Entity target) {
+        TARGETS.put(owner.getUUID(), new AbstractMap.SimpleEntry<>(target.getUUID(), owner.level().getGameTime()));
+    }
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -57,10 +51,6 @@ public class SwapOthers extends Ability {
         return null;
     }
 
-    public static void setTarget(LivingEntity owner, Entity target) {
-        TARGETS.put(owner.getUUID(), new AbstractMap.SimpleEntry<>(target.getUUID(), owner.level().getGameTime()));
-    }
-    
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);

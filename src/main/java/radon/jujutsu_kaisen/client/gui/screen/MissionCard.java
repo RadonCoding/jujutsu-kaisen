@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,19 +9,12 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.mission.Mission;
-import radon.jujutsu_kaisen.data.mission.MissionGrade;
 
 import java.util.List;
 
 public class MissionCard {
-    private static final ResourceLocation MISSION_CARD = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/mission_card.png");
-    private static final ResourceLocation OUTLINE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/outline.png");
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
-
     public static final int WINDOW_WIDTH = 104;
     public static final int WINDOW_HEIGHT = 128;
     public static final int WINDOW_INSIDE_X = 9;
@@ -35,10 +25,12 @@ public class MissionCard {
     public static final int WINDOW_INSIDE_HEIGHT = 101;
     public static final int TITLE_X = 8;
     public static final int TITLE_Y = 6;
-    
+    private static final ResourceLocation MISSION_CARD = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/mission_card.png");
+    private static final ResourceLocation OUTLINE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/missions/outline.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
     private static final int BACKGROUND_TILE_WIDTH = 16;
     private static final int BACKGROUND_TILE_HEIGHT = 16;
-    
+
     private final Minecraft minecraft;
     private final Mission mission;
     private final List<FormattedCharSequence> description;

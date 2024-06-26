@@ -1,11 +1,9 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 
 public abstract class CursedTechniqueDisplayItem extends DisplayItem {
     private final CursedTechnique technique;

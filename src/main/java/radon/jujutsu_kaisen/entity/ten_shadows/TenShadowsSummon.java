@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -29,22 +26,23 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.ICommandable;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.entity.SummonEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
+import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
@@ -117,10 +115,6 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
-    public void setClone(boolean clone) {
-        this.entityData.set(DATA_CLONE, clone);
-    }
-
     @Override
     public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
         return super.getDefaultDimensions(pPose).scale(this.getScale());
@@ -173,7 +167,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
             for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
                 if (participant == this) continue;
-                if (participant instanceof TenShadowsSummon summon && summon.getOwner() == this.getOwner() && !summon.isTame()) continue;
+                if (participant instanceof TenShadowsSummon summon && summon.getOwner() == this.getOwner() && !summon.isTame())
+                    continue;
 
                 this.participants.add(participant.getUUID());
             }
@@ -182,6 +177,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     public boolean isClone() {
         return this.entityData.get(DATA_CLONE);
+    }
+
+    public void setClone(boolean clone) {
+        this.entityData.set(DATA_CLONE, clone);
     }
 
     @Override

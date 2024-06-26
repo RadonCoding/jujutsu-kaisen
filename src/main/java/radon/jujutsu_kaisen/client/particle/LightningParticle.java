@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
 
-import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -20,6 +18,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 
 public class LightningParticle extends TextureSheetParticle {
     private final SpriteSet sprites;

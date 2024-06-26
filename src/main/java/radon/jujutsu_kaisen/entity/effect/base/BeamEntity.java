@@ -33,19 +33,15 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class BeamEntity extends JujutsuProjectile {
+    private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);
     public double endPosX, endPosY, endPosZ;
     public double collidePosX, collidePosY, collidePosZ;
     public double prevCollidePosX, prevCollidePosY, prevCollidePosZ;
     public float renderYaw, renderPitch;
-
     public boolean on = true;
-
     @Nullable
     public Direction side = null;
-
-    private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);
-
     public float prevYaw;
     public float prevPitch;
 
@@ -162,7 +158,8 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
             for (Entity entity : entities) {
                 if (entity == owner) continue;
-                if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.getSource()), this.getDamage() * this.getPower())) continue;
+                if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.getSource()), this.getDamage() * this.getPower()))
+                    continue;
 
                 if (this.causesFire()) {
                     entity.setRemainingFireTicks(5 * 20);

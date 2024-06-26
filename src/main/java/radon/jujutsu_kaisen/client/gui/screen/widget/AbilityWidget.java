@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.widget;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.advancements.AdvancementType;
@@ -16,16 +15,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayInfo;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.client.gui.screen.tab.AbilityTab;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.client.gui.screen.tab.AbilityTab;
-import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.network.packet.c2s.UnlockAbilityC2SPacket;
 
 import javax.annotation.Nullable;
@@ -42,12 +41,11 @@ public class AbilityWidget {
     private final int width;
     private final List<FormattedCharSequence> description;
     private final Minecraft minecraft;
-    @Nullable
-    private AbilityWidget parent;
     private final List<AbilityWidget> children = Lists.newArrayList();
     private final int x;
     private final int y;
-
+    @Nullable
+    private AbilityWidget parent;
     private boolean unlocked;
     private boolean unlockable;
     private boolean blocked;
@@ -81,6 +79,10 @@ public class AbilityWidget {
         this.update();
     }
 
+    private static float getMaxWidth(StringSplitter pManager, List<FormattedText> pText) {
+        return (float) pText.stream().mapToDouble(pManager::stringWidth).max().orElse(0.0D);
+    }
+
     public void update() {
         if (this.minecraft.player == null) return;
 
@@ -91,10 +93,6 @@ public class AbilityWidget {
         for (AbilityWidget widget : this.children) {
             widget.update();
         }
-    }
-
-    private static float getMaxWidth(StringSplitter pManager, List<FormattedText> pText) {
-        return (float) pText.stream().mapToDouble(pManager::stringWidth).max().orElse(0.0D);
     }
 
     private List<FormattedText> findOptimalLines(Component pComponent, int pMaxWidth) {

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.data.mission.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -11,18 +8,17 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.DataProvider;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class MissionEntityData implements IMissionEntityData {
+    private final LivingEntity owner;
     @Nullable
     private BlockPos pos;
-
-    private final LivingEntity owner;
 
     public MissionEntityData(LivingEntity owner) {
         this.owner = owner;

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.ability;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -11,9 +8,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
-import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.chant.ChantHandler;
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -28,33 +26,6 @@ import java.util.Locale;
 
 
 public abstract class Ability {
-    public enum ActivationType {
-        INSTANT,
-        TOGGLED,
-        CHANNELED
-    }
-
-    public enum Status {
-        FAILURE,
-        UNUSUABLE,
-        SUCCESS,
-        ENERGY,
-        COOLDOWN,
-        THROAT
-    }
-
-    public enum Classification {
-        NONE,
-        CURSED_SPEECH,
-        SLASHING,
-        FIRE,
-        WATER,
-        PLANTS,
-        BLUE,
-        LIGHTNING,
-        PROJECTION
-    }
-
     public static float getOutput(Ability ability, LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -404,5 +375,32 @@ public abstract class Ability {
 
         float output = this.isScalable(owner) ? this.isChantable() ? ChantHandler.getOutput(owner, this) : sorcererData.getOutput() : 1.0F;
         return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * output));
+    }
+
+    public enum ActivationType {
+        INSTANT,
+        TOGGLED,
+        CHANNELED
+    }
+
+    public enum Status {
+        FAILURE,
+        UNUSUABLE,
+        SUCCESS,
+        ENERGY,
+        COOLDOWN,
+        THROAT
+    }
+
+    public enum Classification {
+        NONE,
+        CURSED_SPEECH,
+        SLASHING,
+        FIRE,
+        WATER,
+        PLANTS,
+        BLUE,
+        LIGHTNING,
+        PROJECTION
     }
 }

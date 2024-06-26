@@ -1,20 +1,19 @@
 package radon.jujutsu_kaisen.event;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
-import radon.jujutsu_kaisen.data.contract.IContractData;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.data.contract.IContractData;
 import radon.jujutsu_kaisen.pact.JJKPacts;
 
 public class PactEventHandler {
@@ -35,7 +34,7 @@ public class PactEventHandler {
                 IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
                 if (cap == null) return;
-                
+
                 IContractData data = cap.getContractData();
 
                 if (data.hasBindingVow(JJKBindingVows.RECOIL.get())) {
@@ -73,7 +72,7 @@ public class PactEventHandler {
             if (victimCap == null) return;
 
             IContractData victimData = victimCap.getContractData();
-            
+
             IJujutsuCapability attackerCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (attackerCap == null) return;

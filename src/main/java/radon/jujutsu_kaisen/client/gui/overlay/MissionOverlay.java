@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
@@ -31,7 +30,7 @@ public class MissionOverlay {
         if (mission == null) return;
 
         List<Component> lines = new ArrayList<>();
-        
+
         Component experienceText = Component.translatable(String.format("gui.%s.mission_overlay.remaining", JujutsuKaisen.MOD_ID),
                 mission.getCurses().size(), mission.getTotal());
         lines.add(experienceText);

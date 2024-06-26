@@ -7,8 +7,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 public class ForestDashEntity extends JujutsuProjectile {
     public static final float SIZE = 3.0F;
@@ -41,8 +41,8 @@ public class ForestDashEntity extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-       if (this.getTime() >= DURATION) {
-           this.discard();
-       }
+        if (this.getTime() >= DURATION) {
+            this.discard();
+        }
     }
 }

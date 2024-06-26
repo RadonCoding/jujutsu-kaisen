@@ -1,13 +1,9 @@
 package radon.jujutsu_kaisen.data.idle_transfiguration;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 public class IdleTransfigurationData implements IIdleTransfigurationData {
     private int transfiguredSouls;

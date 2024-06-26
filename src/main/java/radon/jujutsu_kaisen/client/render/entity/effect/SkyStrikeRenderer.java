@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -15,10 +12,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
 
 public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
@@ -43,6 +38,16 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
 
     public SkyStrikeRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
+    }
+
+    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
+        consumer.vertex(matrix4f, x, y, z)
+                .color(1.0F, 1.0F, 1.0F, alpha)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(packedLight)
+                .normal(pose, 0.0F, 1.0F, 0.0F)
+                .endVertex();
     }
 
     @Override
@@ -123,15 +128,5 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
         vertex(matrix4f, pose, builder, -radius, maxY, 0.0F, BEAM_MIN_U, maxV, opacity, packedLight);
         vertex(matrix4f, pose, builder, radius, maxY, 0.0F, BEAM_MAX_U, maxV, opacity, packedLight);
         vertex(matrix4f, pose, builder, radius, 0.0F, 0.0F, BEAM_MAX_U, minV, opacity, packedLight);
-    }
-
-    private static void vertex(Matrix4f matrix4f, PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
-        consumer.vertex(matrix4f, x, y, z)
-                .color(1.0F, 1.0F, 1.0F, alpha)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(packedLight)
-                .normal(pose, 0.0F, 1.0F, 0.0F)
-                .endVertex();
     }
 }

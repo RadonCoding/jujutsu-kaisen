@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.projectile;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -17,14 +14,12 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -45,6 +40,16 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
         super(pContext);
 
         this.itemRenderer = pContext.getItemRenderer();
+    }
+
+    private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, PoseStack.Pose pose, float x, float y, float z, int r, int g, int b, float u, float v, int packedLight) {
+        consumer.vertex(matrix4f, x, y, z)
+                .color(r, g, b, 255)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(packedLight)
+                .normal(pose, 0.0F, 1.0F, 0.0F)
+                .endVertex();
     }
 
     @Override
@@ -140,16 +145,6 @@ public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainPro
         vertex(consumer, matrix4f, pose, f10, 0.0F, f11, j, k, l, 0.0F, f14, pPackedLight);
         vertex(consumer, matrix4f, pose, f10, f0, f11, j, k, l, 0.0F, f15, pPackedLight);
         pPoseStack.popPose();
-    }
-
-    private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, PoseStack.Pose pose, float x, float y, float z, int r, int g, int b, float u, float v, int packedLight) {
-        consumer.vertex(matrix4f, x, y, z)
-                .color(r, g, b, 255)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(packedLight)
-                .normal(pose, 0.0F, 1.0F, 0.0F)
-                .endVertex();
     }
 
     @Override

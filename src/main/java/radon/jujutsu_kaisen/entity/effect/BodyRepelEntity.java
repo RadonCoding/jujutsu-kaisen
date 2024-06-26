@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -43,12 +40,9 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
     private static final int DURATION = 3 * 20;
 
     private static final int MAX_SEGMENTS = 24;
-
-    private int souls;
-
     private final BodyRepelSegmentEntity[] segments;
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private int souls;
 
     public BodyRepelEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

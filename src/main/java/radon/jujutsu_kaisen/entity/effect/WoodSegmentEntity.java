@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -87,21 +84,21 @@ public class WoodSegmentEntity extends Entity {
         return new Vec2(this.entityData.get(DATA_PITCH), this.entityData.get(DATA_YAW));
     }
 
-    protected void setParent(@Nullable Entity entity) {
-        this.entityData.set(DATA_PARENT, entity == null ? -1 : entity.getId());
-    }
-
     @Nullable
     protected Entity getParent() {
         return this.level().getEntity(this.entityData.get(DATA_PARENT));
     }
 
-    protected void setIndex(int i) {
-        this.entityData.set(DATA_INDEX, i);
+    protected void setParent(@Nullable Entity entity) {
+        this.entityData.set(DATA_PARENT, entity == null ? -1 : entity.getId());
     }
 
     public int getIndex() {
         return this.entityData.get(DATA_INDEX);
+    }
+
+    protected void setIndex(int i) {
+        this.entityData.set(DATA_INDEX, i);
     }
 
     protected void setPositionAndRotationFromParent() {

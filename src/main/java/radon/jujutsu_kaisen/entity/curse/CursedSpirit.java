@@ -1,15 +1,15 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 
-import net.minecraft.world.level.pathfinder.PathType;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -22,28 +22,28 @@ import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.ICommandable;
 import radon.jujutsu_kaisen.entity.ISorcerer;
 import radon.jujutsu_kaisen.entity.SummonEntity;
+import radon.jujutsu_kaisen.entity.ai.goal.*;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 public abstract class CursedSpirit extends SummonEntity implements GeoEntity, ISorcerer, ICommandable {
     private static final double HUNGRY_RANGE = 128.0D;
     private static final int HUNGRY_CHANCE = 50;
     private static final int UPDATE_INTERVAL = 5 * 20;
-
-    private boolean hungry;
-
     private static final EntityDataAccessor<Boolean> DATA_HIDING = SynchedEntityData.defineId(CursedSpirit.class, EntityDataSerializers.BOOLEAN);
+    private boolean hungry;
 
     protected CursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -94,11 +94,17 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
 
     protected abstract boolean isCustom();
 
-    protected boolean canFly() { return false; }
+    protected boolean canFly() {
+        return false;
+    }
 
-    protected boolean targetsCurses() { return false; }
+    protected boolean targetsCurses() {
+        return false;
+    }
 
-    protected boolean targetsSorcerers() { return true; }
+    protected boolean targetsSorcerers() {
+        return true;
+    }
 
     private void createGoals() {
         int target = 1;

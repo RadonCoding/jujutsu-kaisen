@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.item.armor;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
@@ -16,12 +13,9 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.client.render.item.armor.ArmBladeRenderer;
 import radon.jujutsu_kaisen.client.render.item.armor.GunRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -43,7 +37,7 @@ public class GunItem extends ArmorItem implements GeoItem {
             private static final HumanoidModel.ArmPose POSE = HumanoidModel.ArmPose.create("gun", true, (model, entity, arm) -> {
                 model.leftArm.yRot = 0.8F + model.head.yRot;
                 model.rightArm.yRot = model.head.yRot;
-                model.leftArm.xRot = (-(float)Math.PI / 2.0F) + model.head.xRot + 0.1F;
+                model.leftArm.xRot = (-(float) Math.PI / 2.0F) + model.head.xRot + 0.1F;
                 model.rightArm.xRot = -1.5F + model.head.xRot;
             });
 

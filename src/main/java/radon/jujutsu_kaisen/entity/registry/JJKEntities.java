@@ -3,27 +3,23 @@ package radon.jujutsu_kaisen.entity.registry;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.*;
-import radon.jujutsu_kaisen.entity.domain.ChimeraShadowGardenEntity;
-import radon.jujutsu_kaisen.entity.domain.SelfEmbodimentOfPerfectionEntity;
-import radon.jujutsu_kaisen.entity.domain.AuthenticMutualLoveEntity;
-import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
-import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
+import radon.jujutsu_kaisen.entity.domain.*;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.effect.*;
-import radon.jujutsu_kaisen.entity.effect.WoodSegmentEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulNormalEntity;
@@ -66,22 +62,22 @@ public class JJKEntities {
                             .toString()));
 
     public static DeferredHolder<EntityType<?>, EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->
-            EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(JogoEntity::new, MobCategory.CREATURE)
                     .sized(0.9F, 1.9F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<JogoatEntity>> JOGOAT = ENTITIES.register("jogoat", () ->
-            EntityType.Builder.<JogoatEntity>of(JogoatEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(JogoatEntity::new, MobCategory.CREATURE)
                     .sized(0.6F, 2.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogoat")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<DagonEntity>> DAGON = ENTITIES.register("dagon", () ->
-            EntityType.Builder.<DagonEntity>of(DagonEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(DagonEntity::new, MobCategory.CREATURE)
                     .sized(1.4F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dagon")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<HanamiEntity>> HANAMI = ENTITIES.register("hanami", () ->
-            EntityType.Builder.<HanamiEntity>of(HanamiEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(HanamiEntity::new, MobCategory.CREATURE)
                     .sized(1.4F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hanami")
                             .toString()));
@@ -97,21 +93,21 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fish_curse")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<CyclopsCurseEntity>> CYCLOPS_CURSE = ENTITIES.register("cyclops_curse", () ->
-            EntityType.Builder.<CyclopsCurseEntity>of(CyclopsCurseEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(CyclopsCurseEntity::new, MobCategory.CREATURE)
                     .sized(1.6F, 6.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cyclops_curse")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<KuchisakeOnnaEntity>> KUCHISAKE_ONNA = ENTITIES.register("kuchisake_onna", () ->
-            EntityType.Builder.<KuchisakeOnnaEntity>of(KuchisakeOnnaEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(KuchisakeOnnaEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "kuchisake_onna")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<ZombaCurseEntity>> ZOMBA_CURSE = ENTITIES.register("zomba_curse", () ->
-            EntityType.Builder.<ZombaCurseEntity>of(ZombaCurseEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(ZombaCurseEntity::new, MobCategory.CREATURE)
                     .sized(1.2F, 2.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "zomba_curse")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<WormCurseEntity>> WORM_CURSE = ENTITIES.register("worm_curse", () ->
-            EntityType.Builder.<WormCurseEntity>of(WormCurseEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(WormCurseEntity::new, MobCategory.CREATURE)
                     .sized(1.1875F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "worm_curse")
                             .toString()));
@@ -121,37 +117,37 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "feline_curse")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<FuglyCurseEntity>> FUGLY_CURSE = ENTITIES.register("fugly_curse", () ->
-            EntityType.Builder.<FuglyCurseEntity>of(FuglyCurseEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(FuglyCurseEntity::new, MobCategory.CREATURE)
                     .sized(1.6F, 2.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fugly_curse")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<BirdCurseEntity>> BIRD_CURSE = ENTITIES.register("bird_curse", () ->
-            EntityType.Builder.<BirdCurseEntity>of(BirdCurseEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(BirdCurseEntity::new, MobCategory.CREATURE)
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "bird_curse")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<FingerBearerEntity>> FINGER_BEARER = ENTITIES.register("finger_bearer", () ->
-            EntityType.Builder.<FingerBearerEntity>of(FingerBearerEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(FingerBearerEntity::new, MobCategory.CREATURE)
                     .sized(1.4F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "finger_bearer")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<RainbowDragonEntity>> RAINBOW_DRAGON = ENTITIES.register("rainbow_dragon", () ->
-            EntityType.Builder.<RainbowDragonEntity>of(RainbowDragonEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(RainbowDragonEntity::new, MobCategory.CREATURE)
                     .sized(1.5F, 1.125F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<DinoCurseEntity>> DINO_CURSE = ENTITIES.register("dino_curse", () ->
-            EntityType.Builder.<DinoCurseEntity>of(DinoCurseEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(DinoCurseEntity::new, MobCategory.CREATURE)
                     .sized(4.0F, 3.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dino_curse")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<KoGuyEntity>> KO_GUY = ENTITIES.register("ko_guy", () ->
-            EntityType.Builder.<KoGuyEntity>of(KoGuyEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.of(KoGuyEntity::new, MobCategory.CREATURE)
                     .sized(2.0F, 2.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "ko_guy")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<AbsorbedPlayerEntity>> ABSORBED_PLAYER = ENTITIES.register("absorbed_player", () ->
-            EntityType.Builder.<AbsorbedPlayerEntity>of(AbsorbedPlayerEntity::new, MobCategory.MISC)
+            EntityType.Builder.of(AbsorbedPlayerEntity::new, MobCategory.MISC)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "absorbed_player")
                             .toString()));
 
@@ -166,55 +162,55 @@ public class JJKEntities {
                             .toString()));
 
     public static DeferredHolder<EntityType<?>, EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
-            EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(TojiFushiguroEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_fushiguro")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<SatoruGojoEntity>> SATORU_GOJO = ENTITIES.register("satoru_gojo", () ->
-            EntityType.Builder.<SatoruGojoEntity>of(SatoruGojoEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(SatoruGojoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "satoru_gojo")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<YutaOkkotsuEntity>> YUTA_OKKOTSU = ENTITIES.register("yuta_okkotsu", () ->
-            EntityType.Builder.<YutaOkkotsuEntity>of(YutaOkkotsuEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(YutaOkkotsuEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuta_okkotsu")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<MegumiFushiguroEntity>> MEGUMI_FUSHIGURO = ENTITIES.register("megumi_fushiguro", () ->
-            EntityType.Builder.<MegumiFushiguroEntity>of(MegumiFushiguroEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(MegumiFushiguroEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "megumi_fushiguro")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<YujiItadoriEntity>> YUJI_ITADORI = ENTITIES.register("yuji_itadori", () ->
-            EntityType.Builder.<YujiItadoriEntity>of(YujiItadoriEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(YujiItadoriEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuji_itadori")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<TogeInumakiEntity>> TOGE_INUMAKI = ENTITIES.register("toge_inumaki", () ->
-            EntityType.Builder.<TogeInumakiEntity>of(TogeInumakiEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(TogeInumakiEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toge_inumaki")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<SuguruGetoEntity>> SUGURU_GETO = ENTITIES.register("suguru_geto", () ->
-            EntityType.Builder.<SuguruGetoEntity>of(SuguruGetoEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(SuguruGetoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "suguru_geto")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<NaoyaZeninEntity>> NAOYA_ZENIN = ENTITIES.register("naoya_zenin", () ->
-            EntityType.Builder.<NaoyaZeninEntity>of(NaoyaZeninEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(NaoyaZeninEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "naoya_zenin")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<HajimeKashimoEntity>> HAJIME_KASHIMO = ENTITIES.register("hajime_kashimo", () ->
-            EntityType.Builder.<HajimeKashimoEntity>of(HajimeKashimoEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(HajimeKashimoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hajime_kashimo")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<MakiZeninEntity>> MAKI_ZENIN = ENTITIES.register("maki_zenin", () ->
-            EntityType.Builder.<MakiZeninEntity>of(MakiZeninEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(MakiZeninEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maki_zenin")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<AoiTodoEntity>> AOI_TODO = ENTITIES.register("aoi_todo", () ->
-            EntityType.Builder.<AoiTodoEntity>of(AoiTodoEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(AoiTodoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "aoi_todo")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<MiwaKasumiEntity>> MIWA_KASUMI = ENTITIES.register("miwa_kasumi", () ->
-            EntityType.Builder.<MiwaKasumiEntity>of(MiwaKasumiEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(MiwaKasumiEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "miwa_kasumi")
                             .toString()));
     public static DeferredHolder<EntityType<?>, EntityType<WindowEntity>> WINDOW = ENTITIES.register("window", () ->
-            EntityType.Builder.<WindowEntity>of(WindowEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(WindowEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "window")
                             .toString()));
 

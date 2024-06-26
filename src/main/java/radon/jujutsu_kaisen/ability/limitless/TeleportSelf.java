@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +21,21 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class TeleportSelf extends Ability {
     private static final double RANGE = 32.0D;
 
+    public static @Nullable HitResult getTarget(LivingEntity owner) {
+        HitResult hit = RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator());
+        //if (hit.getType() == HitResult.Type.MISS) return null;
+        if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN)
+            return null;
+        return hit;
+    }
+
+    public static void teleport(Entity entity, Vec3 pos) {
+        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
+        entity.setPos(pos.x, pos.y, pos.z);
+        entity.fallDistance = 0.0F;
+        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
+    }
+
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -38,20 +50,6 @@ public class TeleportSelf extends Ability {
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
-    }
-
-    public static @Nullable HitResult getTarget(LivingEntity owner) {
-        HitResult hit = RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator());
-        //if (hit.getType() == HitResult.Type.MISS) return null;
-        if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN) return null;
-        return hit;
-    }
-
-    public static void teleport(Entity entity, Vec3 pos) {
-        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
-        entity.setPos(pos.x, pos.y, pos.z);
-        entity.fallDistance = 0.0F;
-        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
     }
 
     @Override

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
@@ -14,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.JJKSelectionList;
 
@@ -32,18 +28,14 @@ public abstract class JJKTab {
     private final Component title;
     private final int page;
     private final boolean scrollable;
-
+    private final List<GuiEventListener> widgets = new ArrayList<>();
     protected double scrollX;
     protected double scrollY;
-
     protected int minX = Integer.MAX_VALUE;
     protected int minY = Integer.MAX_VALUE;
     protected int maxX = Integer.MIN_VALUE;
     protected int maxY = Integer.MIN_VALUE;
-
     private boolean centered;
-
-    private final List<GuiEventListener> widgets = new ArrayList<>();
 
     public JJKTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page, ItemStack icon, Component title, boolean scrollable) {
         this.minecraft = minecraft;

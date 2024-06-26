@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
@@ -38,6 +35,11 @@ public class BoltEffect {
         this.start = start;
         this.end = end;
         this.segments = segments;
+    }
+
+    private static Vec3 findRandomOrthogonalVector(Vec3 vec, Random rand) {
+        Vec3 newVec = new Vec3(-0.5 + rand.nextDouble(), -0.5 + rand.nextDouble(), -0.5 + rand.nextDouble());
+        return vec.cross(newVec).normalize();
     }
 
     public BoltEffect count(int count) {
@@ -129,11 +131,6 @@ public class BoltEffect {
         return quads;
     }
 
-    private static Vec3 findRandomOrthogonalVector(Vec3 vec, Random rand) {
-        Vec3 newVec = new Vec3(-0.5 + rand.nextDouble(), -0.5 + rand.nextDouble(), -0.5 + rand.nextDouble());
-        return vec.cross(newVec).normalize();
-    }
-
     private Pair<BoltQuads, QuadCache> createQuads(QuadCache cache, Vec3 startPos, Vec3 end, float size) {
         Vec3 diff = end.subtract(startPos);
         Vec3 rightAdd = diff.cross(new Vec3(0.5D, 0.5D, 0.5D)).normalize().scale(size);
@@ -152,36 +149,6 @@ public class BoltEffect {
         quads.addQuad(startBack, endBack, endRight, startRight);
 
         return Pair.of(quads, new QuadCache(end, endRight, endBack));
-    }
-
-    private record QuadCache(Vec3 prevEnd, Vec3 prevEndRight, Vec3 prevEndBack) { }
-
-    protected static class BoltInstructions {
-        private final Vec3 start;
-        private final Vec3 perpendicularDist;
-        private final QuadCache cache;
-        private final float progress;
-        private final boolean isBranch;
-
-        private BoltInstructions(Vec3 start, float progress, Vec3 perpendicularDist, QuadCache cache, boolean isBranch) {
-            this.start = start;
-            this.perpendicularDist = perpendicularDist;
-            this.progress = progress;
-            this.cache = cache;
-            this.isBranch = isBranch;
-        }
-    }
-
-    public static class BoltQuads {
-        private final List<Vec3> vecs = new ArrayList<>();
-
-        protected void addQuad(Vec3... quadVecs) {
-            vecs.addAll(Arrays.asList(quadVecs));
-        }
-
-        public List<Vec3> getVecs() {
-            return vecs;
-        }
     }
 
     public interface SpreadFunction {
@@ -211,10 +178,14 @@ public class BoltEffect {
     }
 
     public interface SegmentSpreader {
-        /** Don't remember where the last segment left off, just randomly move from the straight-line vector. */
+        /**
+         * Don't remember where the last segment left off, just randomly move from the straight-line vector.
+         */
         SegmentSpreader NO_MEMORY = (perpendicularDist, randVec, maxDiff, scale, progress) -> randVec.scale(maxDiff);
 
-        /** Move from where the previous segment ended by a certain memory factor. Higher memory will restrict perpendicular movement. */
+        /**
+         * Move from where the previous segment ended by a certain memory factor. Higher memory will restrict perpendicular movement.
+         */
         static SegmentSpreader memory(float memoryFactor) {
             return (perpendicularDist, randVec, maxDiff, spreadScale, progress) -> {
                 float nextDiff = maxDiff * (1 - memoryFactor);
@@ -232,10 +203,14 @@ public class BoltEffect {
     }
 
     public interface SpawnFunction {
-        /** Allow for bolts to be spawned each update call without any delay. */
+        /**
+         * Allow for bolts to be spawned each update call without any delay.
+         */
         SpawnFunction NO_DELAY = (rand) -> Pair.of(0.0F, 0.0F);
 
-        /** Will re-spawn a bolt each time one expires. */
+        /**
+         * Will re-spawn a bolt each time one expires.
+         */
         SpawnFunction CONSECUTIVE = new SpawnFunction() {
             @Override
             public Pair<Float, Float> getSpawnDelayBounds(Random rand) {
@@ -248,7 +223,9 @@ public class BoltEffect {
             }
         };
 
-        /** Spawn bolts with a specified constant delay. */
+        /**
+         * Spawn bolts with a specified constant delay.
+         */
         static SpawnFunction delay(float delay) {
             return (rand) -> Pair.of(delay, delay);
         }
@@ -273,10 +250,14 @@ public class BoltEffect {
     }
 
     public interface FadeFunction {
-        /** No fade; render the bolts entirely throughout their lifespan. */
+        /**
+         * No fade; render the bolts entirely throughout their lifespan.
+         */
         FadeFunction NONE = (totalBolts, lifeScale) -> Pair.of(0, totalBolts);
 
-        /** Render bolts with a segment-by-segment 'fade' in and out, with a specified fade duration (applied to start and finish). */
+        /**
+         * Render bolts with a segment-by-segment 'fade' in and out, with a specified fade duration (applied to start and finish).
+         */
         static FadeFunction fade(float fade) {
             return (totalBolts, lifeScale) -> {
                 int start = lifeScale > (1 - fade) ? (int) (totalBolts * (lifeScale - (1 - fade)) / fade) : 0;
@@ -288,31 +269,58 @@ public class BoltEffect {
         Pair<Integer, Integer> getRenderBounds(int totalBolts, float lifeScale);
     }
 
+    private record QuadCache(Vec3 prevEnd, Vec3 prevEndRight, Vec3 prevEndBack) {
+    }
+
+    protected static class BoltInstructions {
+        private final Vec3 start;
+        private final Vec3 perpendicularDist;
+        private final QuadCache cache;
+        private final float progress;
+        private final boolean isBranch;
+
+        private BoltInstructions(Vec3 start, float progress, Vec3 perpendicularDist, QuadCache cache, boolean isBranch) {
+            this.start = start;
+            this.perpendicularDist = perpendicularDist;
+            this.progress = progress;
+            this.cache = cache;
+            this.isBranch = isBranch;
+        }
+    }
+
+    public static class BoltQuads {
+        private final List<Vec3> vecs = new ArrayList<>();
+
+        protected void addQuad(Vec3... quadVecs) {
+            vecs.addAll(Arrays.asList(quadVecs));
+        }
+
+        public List<Vec3> getVecs() {
+            return vecs;
+        }
+    }
+
     public static class BoltRenderInfo {
         public static final BoltRenderInfo DEFAULT = new BoltRenderInfo();
-
-        /** How much variance is allowed in segment lengths (parallel to straight line). */
+        private final RandomFunction randomFunction = RandomFunction.GAUSSIAN;
+        private final SpreadFunction spreadFunction = SpreadFunction.SINE;
+        /**
+         * How much variance is allowed in segment lengths (parallel to straight line).
+         */
         private float parallelNoise = 0.1F;
-
         /**
          * How much variance is allowed perpendicular to the straight line vector. Scaled by distance and spread function.
          */
         private float spreadFactor = 0.1F;
-
         /**
          * The chance of creating an additional branch after a certain segment.
          */
         private float branchInitiationFactor = 0.0F;
-
         /**
          * The chance of a branch continuing (post-initiation).
          */
         private float branchContinuationFactor = 0.0F;
-
         private Vector4f color = new Vector4f(0.45F, 0.45F, 0.5F, 0.8F);
-
-        private final RandomFunction randomFunction = RandomFunction.GAUSSIAN;
-        private final SpreadFunction spreadFunction = SpreadFunction.SINE;
         private SegmentSpreader segmentSpreader = SegmentSpreader.NO_MEMORY;
 
         public BoltRenderInfo() {

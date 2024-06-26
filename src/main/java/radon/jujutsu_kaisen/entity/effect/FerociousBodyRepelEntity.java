@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -39,10 +36,8 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     private static final float DAMAGE = 5.0F;
     private static final int MAX_VARIANTS = 4;
     private static final int DURATION = 3 * 20;
-
-    private int souls;
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private int souls;
 
     public FerociousBodyRepelEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

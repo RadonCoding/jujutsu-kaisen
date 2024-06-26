@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.mixin.client;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
@@ -14,7 +11,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -22,7 +18,6 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.neoforge.client.ClientHooks;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -51,7 +46,8 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
     @Shadow
     protected abstract boolean usesInnerModel(EquipmentSlot pSlot);
 
-    @Shadow protected abstract void renderModel(PoseStack p_289664_, MultiBufferSource p_289689_, int p_289681_, Model p_289658_, float p_289678_, float p_289674_, float p_289693_, ResourceLocation p_324344_);
+    @Shadow
+    protected abstract void renderModel(PoseStack p_289664_, MultiBufferSource p_289689_, int p_289681_, Model p_289658_, float p_289678_, float p_289674_, float p_289693_, ResourceLocation p_324344_);
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"))
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
@@ -76,7 +72,8 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
             if (transformation.isReplacement()) {
                 for (Map.Entry<Ability, ITransformation.Part> entry : parts.entrySet()) {
-                    if (entry.getKey() == ability || (entry.getValue() != ITransformation.Part.BODY && entry.getValue() != transformation.getBodyPart())) continue;
+                    if (entry.getKey() == ability || (entry.getValue() != ITransformation.Part.BODY && entry.getValue() != transformation.getBodyPart()))
+                        continue;
                     hidden.add(transformation.getBodyPart().getSlot());
                     break;
                 }
@@ -123,8 +120,8 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
                     if (layer.dyeable() && i != -1) {
                         r = (float) FastColor.ARGB32.red(i) / 255.0F;
-                        g = (float)FastColor.ARGB32.green(i) / 255.0F;
-                        b = (float)FastColor.ARGB32.blue(i) / 255.0F;
+                        g = (float) FastColor.ARGB32.green(i) / 255.0F;
+                        b = (float) FastColor.ARGB32.blue(i) / 255.0F;
                     } else {
                         r = 1.0F;
                         g = 1.0F;

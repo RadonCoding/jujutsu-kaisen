@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -81,7 +80,6 @@ public class ForestPlatform extends Ability implements IToggled {
     public float getCost(LivingEntity owner) {
         return 1.0F;
     }
-
 
 
     @Override

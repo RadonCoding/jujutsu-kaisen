@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.block.base;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -28,14 +25,6 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
 
     public TemporaryBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
-    }
-
-    public void setOriginal(@Nullable BlockState original) {
-        this.original = original;
-    }
-
-    public void setSaved(@Nullable CompoundTag saved) {
-        this.saved = saved;
     }
 
     public void destroy() {
@@ -75,10 +64,18 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
         return this.original;
     }
 
+    public void setOriginal(@Nullable BlockState original) {
+        this.original = original;
+    }
+
     @Override
     @Nullable
     public CompoundTag getSaved() {
         return this.saved;
+    }
+
+    public void setSaved(@Nullable CompoundTag saved) {
+        this.saved = saved;
     }
 
     @Override

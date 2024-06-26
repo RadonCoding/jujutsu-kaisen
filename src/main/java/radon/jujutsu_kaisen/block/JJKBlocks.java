@@ -1,12 +1,14 @@
 package radon.jujutsu_kaisen.block;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.MagmaBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,7 +18,6 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.domain.*;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
@@ -24,25 +25,7 @@ import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 import javax.annotation.Nullable;
 
 public class JJKBlocks {
-    private static boolean always(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return false;
-    }
-
-    private static boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return false;
-    }
-
-    private static Boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos, EntityType<?> pType) {
-        return false;
-    }
-
-    @Nullable
-    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
-        return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
-    }
-
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, JujutsuKaisen.MOD_ID);
-
     public static final DeferredHolder<Block, Block> METEOR = BLOCKS.register("meteor", () -> new MagmaBlock(BlockBehaviour.Properties.of()
             .mapColor(MapColor.NETHER)
             .instrument(NoteBlockInstrument.BASEDRUM)
@@ -50,7 +33,6 @@ public class JJKBlocks {
             .lightLevel(pState -> 3)
             .hasPostProcess(JJKBlocks::always)
             .emissiveRendering(JJKBlocks::always)));
-
     public static DeferredHolder<Block, DomainBlock> DOMAIN = BLOCKS.register("domain", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 12.0F)
@@ -78,10 +60,8 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel(pState -> 14)
                     .noLootTable()));
-
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
-
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of()
                     .mapColor(state -> state.getValue(VeilBlock.COLOR).getMapColor())
@@ -109,17 +89,14 @@ public class JJKBlocks {
                     .lightLevel(state -> 3)
                     .emissiveRendering(JJKBlocks::always)
                     .strength(50.0F, 1200.0F)));
-
     public static DeferredHolder<Block, Block> CURSE_SPAWNER = BLOCKS.register("curse_spawner", () ->
             new CurseSpawnerBlock(BlockBehaviour.Properties.of().noCollission()));
     public static DeferredHolder<Block, Block> CURSE_BOSS_SPAWNER = BLOCKS.register("curse_boss_spawner", () ->
             new CurseSpawnerBlock(BlockBehaviour.Properties.of().noCollission()));
-
     public static DeferredHolder<Block, FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
             new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
     public static DeferredHolder<Block, FakeWaterDomainBlock> FAKE_WATER_DOMAIN = BLOCKS.register("fake_water_domain", () ->
             new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
-
     public static DeferredHolder<Block, FakeWoodBlock> FAKE_WOOD = BLOCKS.register("fake_wood", () ->
             new FakeWoodBlock(BlockBehaviour.Properties.of()
                     .instrument(NoteBlockInstrument.BASS)
@@ -127,4 +104,21 @@ public class JJKBlocks {
                     .sound(SoundType.WOOD)
                     .isSuffocating(JJKBlocks::never)
                     .ignitedByLava()));
+
+    private static boolean always(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+        return false;
+    }
+
+    private static boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+        return false;
+    }
+
+    private static Boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos, EntityType<?> pType) {
+        return false;
+    }
+
+    @Nullable
+    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
+        return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
+    }
 }

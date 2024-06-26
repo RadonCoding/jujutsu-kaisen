@@ -1,16 +1,15 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 
 
 public class RCT3 extends RCT2 {
@@ -37,7 +36,7 @@ public class RCT3 extends RCT2 {
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
-        
+
 
         int burnout = data.getBurnout();
 
@@ -59,7 +58,7 @@ public class RCT3 extends RCT2 {
         if (cap == null) return 0.0F;
 
         ISorcererData data = cap.getSorcererData();
-        
+
         if (data == null) return 0.0F;
 
         if (data.getBurnout() > 0) {

@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -11,14 +10,14 @@ import net.minecraft.client.player.Input;
 import net.minecraft.client.player.KeyboardInput;
 import radon.jujutsu_kaisen.client.gui.screen.radial.RadialScreen;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class InvMove {
+    private static final Map<ToggleKeyMapping, Boolean> wasToggleKeyDown = new HashMap<>();
     private static boolean wasSneaking = false;
 
-    private static final Map<ToggleKeyMapping, Boolean> wasToggleKeyDown = new HashMap<>();
-
-    public static void onInputUpdate(Input input){
+    public static void onInputUpdate(Input input) {
         if (Minecraft.getInstance().player == null) {
             return;
         }
@@ -33,7 +32,7 @@ public abstract class InvMove {
 
         boolean canMove = allowMovementInScreen(Minecraft.getInstance().screen);
 
-        if (canMove){
+        if (canMove) {
             for (KeyMapping k : KeyMapping.ALL.values()) {
                 if (k.getKey().getType() == InputConstants.Type.KEYSYM && k.getKey().getValue() != InputConstants.UNKNOWN.getValue()) {
                     boolean raw = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), k.getKey().getValue());
@@ -62,7 +61,7 @@ public abstract class InvMove {
                 }
             }
             manualTickMovement(input, Minecraft.getInstance().player.isMovingSlowly(), Minecraft.getInstance().player.isSpectator());
-        } else if (Minecraft.getInstance().screen != null){
+        } else if (Minecraft.getInstance().screen != null) {
             KeyMapping.releaseAll();
 
             if (!Minecraft.getInstance().options.toggleCrouch().get()) {
@@ -95,7 +94,7 @@ public abstract class InvMove {
         }
     }
 
-    public static boolean rawIsKeyDown(KeyMapping key){
+    public static boolean rawIsKeyDown(KeyMapping key) {
         return key.isDown;
     }
 }

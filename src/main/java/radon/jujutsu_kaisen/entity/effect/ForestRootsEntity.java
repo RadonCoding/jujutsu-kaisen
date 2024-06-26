@@ -11,8 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -70,13 +70,6 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         }
     }
 
-    public void setVictim(@Nullable Entity victim) {
-        if (victim != null) {
-            this.victimUUID = victim.getUUID();
-            this.cachedVictim = victim;
-        }
-    }
-
     @Nullable
     public Entity getVictim() {
         if (this.cachedVictim != null && !this.cachedVictim.isRemoved()) {
@@ -86,6 +79,13 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
             return this.cachedVictim;
         } else {
             return null;
+        }
+    }
+
+    public void setVictim(@Nullable Entity victim) {
+        if (victim != null) {
+            this.victimUUID = victim.getUUID();
+            this.cachedVictim = victim;
         }
     }
 

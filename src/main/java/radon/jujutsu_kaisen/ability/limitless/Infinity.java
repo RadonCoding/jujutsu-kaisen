@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -17,32 +16,30 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.IChanneled;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.IDurationable;
-import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.ability.IAdditionalAdaptation;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 public class Infinity extends Ability implements IToggled, IChanneled, IDurationable, IAdditionalAdaptation {
     private static final double SLOWING_FACTOR = 0.0001D;
@@ -65,7 +62,7 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
         if (cap == null) return ActivationType.CHANNELED;
 
         ISorcererData data = cap.getSorcererData();
-        
+
         return data.hasTrait(Trait.SIX_EYES) ? ActivationType.TOGGLED : ActivationType.CHANNELED;
     }
 
@@ -110,10 +107,8 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
     }
 
     public static class FrozenProjectileData extends SavedData {
-        private static final SavedData.Factory<FrozenProjectileData> FACTORY = new SavedData.Factory<>(FrozenProjectileData::new, FrozenProjectileData::new, null);
-
         public static final String IDENTIFIER = "frozen_projectile_data";
-
+        private static final SavedData.Factory<FrozenProjectileData> FACTORY = new SavedData.Factory<>(FrozenProjectileData::new, FrozenProjectileData::new, null);
         private final Map<UUID, FrozenProjectileNBT> frozen;
 
         public FrozenProjectileData() {

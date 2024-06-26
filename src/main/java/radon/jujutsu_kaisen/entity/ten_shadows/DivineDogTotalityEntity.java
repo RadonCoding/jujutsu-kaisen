@@ -8,15 +8,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Summon;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.*;
 
 public class DivineDogTotalityEntity extends TenShadowsSummon {
@@ -27,6 +23,27 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
 
     public DivineDogTotalityEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+    }
+
+    public DivineDogTotalityEntity(LivingEntity owner) {
+        super(JJKEntities.DIVINE_DOG_TOTALITY.get(), owner.level());
+
+        this.setTame(true, false);
+        this.setOwner(owner);
+
+        Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
+        Vec3 pos = owner.position()
+                .subtract(direction.multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.33D)
+                .add(Attributes.MAX_HEALTH, 3 * 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 
     @Override
@@ -57,27 +74,6 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
     @Override
     public boolean canJump() {
         return true;
-    }
-
-    public DivineDogTotalityEntity(LivingEntity owner) {
-        super(JJKEntities.DIVINE_DOG_TOTALITY.get(), owner.level());
-
-        this.setTame(true, false);
-        this.setOwner(owner);
-
-        Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
-        Vec3 pos = owner.position()
-                .subtract(direction.multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.33D)
-                .add(Attributes.MAX_HEALTH, 3 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<DivineDogTotalityEntity> animationState) {

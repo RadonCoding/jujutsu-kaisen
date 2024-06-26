@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.domain;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.entity.DomainExpansionCenterEntity;

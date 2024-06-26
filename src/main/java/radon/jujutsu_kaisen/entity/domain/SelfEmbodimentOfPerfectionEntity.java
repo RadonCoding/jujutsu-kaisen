@@ -1,18 +1,11 @@
 package radon.jujutsu_kaisen.entity.domain;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.RawAnimation;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import software.bernie.geckolib.animation.*;
 
 public class SelfEmbodimentOfPerfectionEntity extends DomainExpansionCenterEntity {

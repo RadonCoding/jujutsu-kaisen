@@ -1,20 +1,19 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.FishCurseEntity;
+import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -29,8 +28,7 @@ public class FishSwarm extends Ability {
     }
 
     @Override
-    public boolean isValid(LivingEntity owner)
-    {
+    public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
@@ -41,8 +39,7 @@ public class FishSwarm extends Ability {
 
         int amount = 0;
 
-        for (int i = 0; i < data.getCurses().size(); i++)
-        {
+        for (int i = 0; i < data.getCurses().size(); i++) {
             if (data.getCurses().get(i).getType() != JJKEntities.FISH_CURSE.get()) continue;
 
             amount++;
@@ -51,8 +48,7 @@ public class FishSwarm extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType(LivingEntity owner)
-    {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -65,8 +61,7 @@ public class FishSwarm extends Ability {
     }
 
     @Override
-    public void run(LivingEntity owner)
-    {
+    public void run(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) return;
@@ -77,8 +72,7 @@ public class FishSwarm extends Ability {
 
         ICurseManipulationData data = cap.getCurseManipulationData();
 
-        for (int i = 0; i < 5; i++)
-        {
+        for (int i = 0; i < 5; i++) {
             AbsorbedCurse curse = data.getCurse(JJKEntities.FISH_CURSE.get());
 
             if (!(CurseManipulationUtil.summonCurse(owner, curse, false) instanceof FishCurseEntity fish)) continue;
@@ -96,6 +90,7 @@ public class FishSwarm extends Ability {
         }
         return super.isTriggerable(owner);
     }
+
     @Override
     public float getCost(LivingEntity owner) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);

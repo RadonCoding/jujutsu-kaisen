@@ -2,20 +2,16 @@ package radon.jujutsu_kaisen.client.post;
 
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.platform.GlConst;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.PostChain;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 // Credit: https://github.com/M-Marvin/MCMOD-HoloStructures-V2/blob/main-1.20.4/HoloStructures-1.20/src/main/java/de/m_marvin/holostruct/client/rendering/posteffect/PostEffectUtil.java
@@ -58,7 +54,7 @@ public class PostEffectHandler {
 
                 iter.remove();
             }
-         } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
+        } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
             for (PostEffect effect : active) {
                 effect.getPostChain().process(event.getPartialTick());
                 mc.getMainRenderTarget().bindWrite(false);

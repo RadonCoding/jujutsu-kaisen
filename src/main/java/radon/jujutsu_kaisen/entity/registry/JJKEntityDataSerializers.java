@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class JJKEntityDataSerializers {
     public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, JujutsuKaisen.MOD_ID);
-    
+
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Optional<GameProfile>>> GAME_PROFILE = ENTITY_DATA_SERIALIZERS.register("game_profile", () ->
             EntityDataSerializer.forValueType(ByteBufCodecs.optional(ByteBufCodecs.GAME_PROFILE)));
 }

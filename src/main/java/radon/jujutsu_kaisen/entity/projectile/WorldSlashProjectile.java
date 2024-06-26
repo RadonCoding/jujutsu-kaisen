@@ -29,12 +29,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class WorldSlashProjectile extends JujutsuProjectile {
-    private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.INT);
-
-    private static final int DURATION = 10;
     public static final int MIN_LENGTH = 6;
     public static final int MAX_LENGTH = 24;
+    private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(WorldSlashProjectile.class, EntityDataSerializers.INT);
+    private static final int DURATION = 10;
     private static final int SCALAR = 6;
 
     public WorldSlashProjectile(EntityType<? extends Projectile> pType, Level pLevel) {

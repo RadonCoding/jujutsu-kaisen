@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,25 +20,25 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IToggled;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.LightningParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.damage.JJKDamageTypeTags;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.LightningParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
-import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -53,6 +52,117 @@ public class CursedEnergyFlow extends Ability implements IToggled {
 
     private static final double SPEED = 0.02D;
     private static final double MAX_SPEED = 0.5D;
+
+    public static void attack(LivingHurtEvent event) {
+        LivingEntity victim = event.getEntity();
+
+        if (victim.level().isClientSide) return;
+
+        DamageSource source = event.getSource();
+
+        if (source.is(JJKDamageTypeTags.SOUL)) return;
+
+        float amount = event.getAmount();
+
+        if (!DamageUtil.isMelee(source)) return;
+
+        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+        IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
+
+        if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+
+        float increase = sorcererData.getAbilityOutput() * 0.5F;
+
+        switch (sorcererData.getNature()) {
+            case ROUGH -> increase *= 1.5F;
+            case LIGHTNING -> {
+                increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 1.5F : 1.0F);
+
+                victim.addEffect(new MobEffectInstance(JJKEffects.STUN, 5 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF) ? 2 : 1), 0, false, false, false));
+                victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+
+                for (int i = 0; i < 8; i++) {
+                    double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2);
+                    double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * (victim.getBbHeight() * 1.25F);
+                    double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2);
+                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.Options(ParticleColors.getCursedEnergyColor(attacker), 0.5F, 1),
+                            x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                }
+            }
+            case DIVERGENT -> {
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
+
+                abilityData.delayTickEvent(() -> {
+                    victim.invulnerableTime = 0;
+
+                    Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2, 0.0D);
+
+                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), amount)) {
+                        ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                        victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER, 1.0F, 1.0F);
+
+                        victim.setDeltaMovement(look.scale(1.0F + (sorcererData.getAbilityOutput() * 0.1F)));
+                        victim.hurtMarked = true;
+                    }
+                }, 5);
+            }
+        }
+
+        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
+            float cost = increase * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+
+            if (sorcererData.getEnergy() < cost) return;
+
+            sorcererData.useEnergy(cost);
+
+            if (attacker instanceof ServerPlayer player) {
+                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
+            }
+        }
+        event.setAmount(amount + increase);
+    }
+
+    public static void shield(LivingHurtEvent event) {
+        LivingEntity victim = event.getEntity();
+
+        if (victim.level().isClientSide) return;
+
+        DamageSource source = event.getSource();
+
+        if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
+
+        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+        IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData sorcererData = cap.getSorcererData();
+        IAbilityData abilityData = cap.getAbilityData();
+
+        if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+
+        if (sorcererData.getNature() == CursedEnergyNature.LIGHTNING) {
+            if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
+                    jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
+                event.setCanceled(true);
+            }
+        }
+
+        if (DamageUtil.isMelee(source)) {
+            if (sorcererData.getNature() == CursedEnergyNature.ROUGH) {
+                if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
+                    attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
+                }
+            }
+        }
+    }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -176,117 +286,6 @@ public class CursedEnergyFlow extends Ability implements IToggled {
         if (data == null) return Status.FAILURE;
 
         return data.getEnergy() == 0.0F ? Status.FAILURE : super.isStillUsable(owner);
-    }
-
-    public static void attack(LivingHurtEvent event) {
-        LivingEntity victim = event.getEntity();
-
-        if (victim.level().isClientSide) return;
-
-        DamageSource source = event.getSource();
-
-        if (source.is(JJKDamageTypeTags.SOUL)) return;
-
-        float amount = event.getAmount();
-
-        if (!DamageUtil.isMelee(source)) return;
-
-        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
-        IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
-
-        if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
-
-        float increase = sorcererData.getAbilityOutput() * 0.5F;
-
-        switch (sorcererData.getNature()) {
-            case ROUGH -> increase *= 1.5F;
-            case LIGHTNING -> {
-                increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 1.5F : 1.0F);
-
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN, 5 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF) ? 2 : 1), 0, false, false, false));
-                victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-                for (int i = 0; i < 8; i++) {
-                    double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2);
-                    double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * (victim.getBbHeight() * 1.25F);
-                    double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2);
-                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.Options(ParticleColors.getCursedEnergyColor(attacker), 0.5F, 1),
-                            x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-                }
-            }
-            case DIVERGENT -> {
-                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
-
-                abilityData.delayTickEvent(() -> {
-                    victim.invulnerableTime = 0;
-
-                    Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2, 0.0D);
-
-                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), amount)) {
-                        ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                        victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.MASTER, 1.0F, 1.0F);
-
-                        victim.setDeltaMovement(look.scale(1.0F + (sorcererData.getAbilityOutput() * 0.1F)));
-                        victim.hurtMarked = true;
-                    }
-                }, 5);
-            }
-        };
-
-        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-            float cost = increase * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-
-            if (sorcererData.getEnergy() < cost) return;
-
-            sorcererData.useEnergy(cost);
-
-            if (attacker instanceof ServerPlayer player) {
-                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
-            }
-        }
-        event.setAmount(amount + increase);
-    }
-
-    public static void shield(LivingHurtEvent event) {
-        LivingEntity victim = event.getEntity();
-
-        if (victim.level().isClientSide) return;
-
-        DamageSource source = event.getSource();
-
-        if (source.is(DamageTypeTags.BYPASSES_RESISTANCE)) return;
-
-        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
-        IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData sorcererData = cap.getSorcererData();
-        IAbilityData abilityData = cap.getAbilityData();
-
-        if (!abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
-
-        if (sorcererData.getNature() == CursedEnergyNature.LIGHTNING) {
-            if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
-                    jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
-                event.setCanceled(true);
-            }
-        }
-
-        if (DamageUtil.isMelee(source)) {
-            if (sorcererData.getNature() == CursedEnergyNature.ROUGH) {
-                if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
-                    attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
-                }
-            }
-        }
     }
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)

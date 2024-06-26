@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,7 +16,8 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SkillsTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.skills", JujutsuKaisen.MOD_ID));

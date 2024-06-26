@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity.sorcerer;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
@@ -13,9 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.entity.HajimeKashimoModel;
-import radon.jujutsu_kaisen.client.model.entity.YutaOkkotsuModel;
 import radon.jujutsu_kaisen.entity.sorcerer.HajimeKashimoEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.YutaOkkotsuEntity;
 
 public class HajimeKashimoRenderer extends HumanoidMobRenderer<HajimeKashimoEntity, HajimeKashimoModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hajime_kashimo.png");

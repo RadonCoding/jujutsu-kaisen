@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.command;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
@@ -20,7 +17,7 @@ public class SetVeilOwnerCommand {
                 .requires((player) -> player.hasPermission(2))
                 .then(Commands.argument("pos", BlockPosArgument.blockPos())
                         .then(Commands.argument("owner", EntityArgument.entity())
-                        .executes((ctx) -> setVeilOwner(BlockPosArgument.getBlockPos(ctx, "pos"), EntityArgument.getEntity(ctx, "owner"))))));
+                                .executes((ctx) -> setVeilOwner(BlockPosArgument.getBlockPos(ctx, "pos"), EntityArgument.getEntity(ctx, "owner"))))));
 
         dispatcher.register(Commands.literal("jjksetveilowner").requires((player) -> player.hasPermission(2)).redirect(node));
     }

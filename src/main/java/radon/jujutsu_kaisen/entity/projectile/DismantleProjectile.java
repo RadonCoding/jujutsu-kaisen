@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,7 +15,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
@@ -36,12 +36,10 @@ import java.util.List;
 import java.util.Set;
 
 public class DismantleProjectile extends JujutsuProjectile {
-    private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
-
     public static final int MIN_LENGTH = 4;
     public static final int MAX_LENGTH = 12;
-
+    private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
     private boolean instant;
     private boolean destroy = true;
     private int destroyed;
@@ -221,9 +219,10 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (!this.level().isClientSide) {
             for (Entity entity : this.getHits()) {
+                if (!(entity instanceof LivingEntity living)) continue;
                 if (!(this.getOwner() instanceof LivingEntity owner)) continue;
 
-                if (entity == owner) continue;
+                if (living == owner) continue;
 
                 IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -232,40 +231,40 @@ public class DismantleProjectile extends JujutsuProjectile {
                 ISorcererData data = cap.getSorcererData();
 
                 DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()),
+                living.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()),
                         this.getDamage() * this.getPower());
 
-                if (!entity.isAlive()) {
-                    Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
+                if (!living.isDeadOrDying()) continue;
 
-                    float yaw = this.getYRot();
-                    float pitch = this.getXRot();
-                    float roll = this.getRoll();
+                living.deathTime = 0;
 
-                    Vec3 forward = this.calculateViewVector(pitch, yaw);
-                    Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
+                Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
 
-                    Quaternionf quaternion = new Quaternionf().rotateAxis((float) Math.toRadians(-roll), (float) forward.x, (float) forward.y, (float) forward.z);
-                    Vec3 side = new Vec3(quaternion.transform(forward.cross(up).toVector3f()));
+                float yaw = this.getYRot();
+                float pitch = this.getXRot();
+                float roll = this.getRoll();
 
-                    int length = this.getLength();
-                    Vec3 start = side.scale((double) length / 2);
-                    Vec3 end = forward.subtract(side.scale((double) length / 2));
+                Vec3 forward = this.calculateViewVector(pitch, yaw);
+                Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
 
-                    Vec3 plane = end.cross(start);
+                Quaternionf quaternion = new Quaternionf().rotateAxis((float) Math.toRadians(-roll), (float) forward.x, (float) forward.y, (float) forward.z);
+                Vec3 side = new Vec3(quaternion.transform(forward.cross(up).toVector3f()));
 
-                    float distance = (float) plane.dot(center.subtract(entity.position()));
+                int length = this.getLength();
+                Vec3 start = side.scale((double) length / 2);
+                Vec3 end = forward.subtract(side.scale((double) length / 2));
 
-                    ((ServerLevel) this.level()).sendParticles(new SlicedEntityParticle.Options(entity.getId(), plane.toVector3f(), distance),
-                            entity.getX(), entity.getY(), entity.getZ(), 0, 0.0D, 0.0D, 0.0D, 1.0D);
-                }
+                Vec3 plane = end.cross(start).normalize();
+
+                float distance = (float) plane.dot(center.subtract(living.position()));
+
+                ((ServerLevel) this.level()).sendParticles(new SlicedEntityParticle.Options(living.getId(), plane.toVector3f(), distance),
+                        living.getX(), living.getY(), living.getZ(), 0, 0.0D, 0.0D, 0.0D, 1.0D);
             }
         }
-
         if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {
             this.discard();
         }
-
         super.tick();
     }
 }

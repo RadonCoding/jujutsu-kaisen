@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.NeoForge;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -10,7 +9,7 @@ import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 
 public class AbilityHandler {
-    public static void untrigger(LivingEntity owner,Ability ability) {
+    public static void untrigger(LivingEntity owner, Ability ability) {
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;

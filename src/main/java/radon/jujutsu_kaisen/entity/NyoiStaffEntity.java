@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
 
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -60,12 +57,12 @@ public class NyoiStaffEntity extends Entity {
         this.entityData.set(DATA_CHARGED, charged);
     }
 
-    private void setItem(ItemStack stack) {
-        this.entityData.set(DATA_ITEM_STACK, stack.copyWithCount(1));
-    }
-
     public ItemStack getItem() {
         return this.entityData.get(DATA_ITEM_STACK);
+    }
+
+    private void setItem(ItemStack stack) {
+        this.entityData.set(DATA_ITEM_STACK, stack.copyWithCount(1));
     }
 
     @Override
@@ -120,13 +117,6 @@ public class NyoiStaffEntity extends Entity {
         pBuilder.define(DATA_CHARGED, false);
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
     @Nullable
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
@@ -136,6 +126,13 @@ public class NyoiStaffEntity extends Entity {
             return this.cachedOwner;
         } else {
             return null;
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
         }
     }
 

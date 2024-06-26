@@ -1,19 +1,18 @@
 package radon.jujutsu_kaisen.ability.disaster_tides;
 
 
-import net.minecraft.world.level.block.Blocks;
-import radon.jujutsu_kaisen.ability.IClosedDomain;
-
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
+import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
+import radon.jujutsu_kaisen.entity.projectile.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.PiranhaShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.SharkShikigamiProjectile;
-import radon.jujutsu_kaisen.entity.projectile.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
