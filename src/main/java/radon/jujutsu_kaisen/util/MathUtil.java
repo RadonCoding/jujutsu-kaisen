@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.util;
 
 import net.minecraft.world.phys.Vec3;
+import org.joml.Math;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -20,7 +21,7 @@ public class MathUtil {
         return idx;
     }
 
-    public static void matrixFromQuaterionf(Matrix3f matrix3f, Quaternionf quaternionf) {
+    public static void matrix3fFromQuaterionf(Matrix3f matrix3f, Quaternionf quaternionf) {
         matrix3f.m00 = 1 - 2 * quaternionf.y * quaternionf.y - 2 * quaternionf.z * quaternionf.z;
         matrix3f.m01 = 2 * quaternionf.x * quaternionf.y - 2 * quaternionf.z * quaternionf.w;
         matrix3f.m02 = 2 * quaternionf.x * quaternionf.z + 2 * quaternionf.y * quaternionf.w;
@@ -34,6 +35,45 @@ public class MathUtil {
         matrix3f.m22 = 1 - 2 * quaternionf.x * quaternionf.x - 2 * quaternionf.y * quaternionf.y;
     }
 
+    public static void quaternionfFromMatrix3f(Quaternionf quaternionf, Matrix3f matrix3f) {
+        float s;
+        float tr = matrix3f.m00 + matrix3f.m11 + matrix3f.m22;
+
+        if (tr >= 0.0F) {
+            s = Math.sqrt(tr + 1.0F);
+            quaternionf.w = s * 0.5F;
+            s = 0.5F / s;
+            quaternionf.x = (matrix3f.m21 - matrix3f.m12) * s;
+            quaternionf.y = (matrix3f.m02 - matrix3f.m20) * s;
+            quaternionf.z = (matrix3f.m10 - matrix3f.m01) * s;
+        } else {
+            float max = Math.max(Math.max(matrix3f.m00, matrix3f.m11), matrix3f.m22);
+
+            if (max == matrix3f.m00) {
+                s = Math.sqrt(matrix3f.m00 - (matrix3f.m11 + matrix3f.m22) + 1.0F);
+                quaternionf.x = s * 0.5F;
+                s = 0.5F / s;
+                quaternionf.y = (matrix3f.m01 + matrix3f.m10) * s;
+                quaternionf.z = (matrix3f.m20 + matrix3f.m02) * s;
+                quaternionf.w = (matrix3f.m21 - matrix3f.m12) * s;
+            } else if (max == matrix3f.m11) {
+                s = Math.sqrt(matrix3f.m11 - (matrix3f.m22 + matrix3f.m00) + 1.0F);
+                quaternionf.y = s * 0.5F;
+                s = 0.5F / s;
+                quaternionf.z = (matrix3f.m12 + matrix3f.m21) * s;
+                quaternionf.x = (matrix3f.m01 + matrix3f.m10) * s;
+                quaternionf.w = (matrix3f.m02 - matrix3f.m20) * s;
+            } else {
+                s = Math.sqrt(matrix3f.m22 - (matrix3f.m00 + matrix3f.m11) + 1.0F);
+                quaternionf.z = s * 0.5F;
+                s = 0.5F / s;
+                quaternionf.x = (matrix3f.m20 + matrix3f.m02) * s;
+                quaternionf.y = (matrix3f.m12 + matrix3f.m21) * s;
+                quaternionf.w = (matrix3f.m10 - matrix3f.m01) * s;
+            }
+        }
+    }
+
     // https://en.wikipedia.org/wiki/Outer_product
     public static Matrix3f outer(Vec3 a, Vec3 b) {
         return new Matrix3f(
@@ -44,9 +84,9 @@ public class MathUtil {
     }
 
     public static Vec3 transform(Vec3 vec, Matrix3f matrix3f) {
-        double x = matrix3f.m00 * vec.x + matrix3f.m01 * vec.y + matrix3f.m02 * vec.z;
-        double y = matrix3f.m10 * vec.x + matrix3f.m11 * vec.y + matrix3f.m12 * vec.z;
-        double z = matrix3f.m20 * vec.x + matrix3f.m21 * vec.y + matrix3f.m22 * vec.z;
+        double x = Math.fma(matrix3f.m00(), vec.x, Math.fma(matrix3f.m01(), vec.y, matrix3f.m02() * vec.z));
+        double y = Math.fma(matrix3f.m10(), vec.x, Math.fma(matrix3f.m11(), vec.y, matrix3f.m12() * vec.z));
+        double z = Math.fma(matrix3f.m20(), vec.x, Math.fma(matrix3f.m21(), vec.y, matrix3f.m22() * vec.z));
         return new Vec3(x, y, z);
     }
 

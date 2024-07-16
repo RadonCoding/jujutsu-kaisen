@@ -4,10 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -15,15 +12,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import org.joml.AxisAngle4f;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
+import org.joml.*;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.util.MathUtil;
 
+import java.lang.Math;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 // https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/blob/Custom-1.12.2/src/main/java/com/hbm/physics/RigidBody.java
@@ -134,7 +128,6 @@ public class RigidBody {
 
     public RigidBody(Level level) {
         this.level = level;
-        this.rotation.identity();
     }
 
     public RigidBody(Level level, double x, double y, double z) {
@@ -145,50 +138,6 @@ public class RigidBody {
 
     public float getScale() {
         return SCALE * (!this.chunk.isEmpty() && this.chunk.getFirst().flip ? -1.0F : 1.0F);
-    }
-
-    public static void setFromMat(Quaternionf quaternionf, Matrix3f matrix3f) {
-        setFromMat(quaternionf, matrix3f.m00, matrix3f.m01, matrix3f.m02, matrix3f.m10, matrix3f.m11, matrix3f.m12, matrix3f.m20, matrix3f.m21, matrix3f.m22);
-    }
-
-    public static void setFromMat(Quaternionf q, float m00, float m01, float m02, float m10,
-                                  float m11, float m12, float m20, float m21, float m22) {
-        float s;
-        float tr = m00 + m11 + m22;
-
-        if (tr >= 0.0F) {
-            s = (float) Math.sqrt(tr + 1.0F);
-            q.w = s * 0.5F;
-            s = 0.5F / s;
-            q.x = (m21 - m12) * s;
-            q.y = (m02 - m20) * s;
-            q.z = (m10 - m01) * s;
-        } else {
-            float max = Math.max(Math.max(m00, m11), m22);
-
-            if (max == m00) {
-                s = (float) Math.sqrt(m00 - (m11 + m22) + 1.0F);
-                q.x = s * 0.5F;
-                s = 0.5F / s;
-                q.y = (m01 + m10) * s;
-                q.z = (m20 + m02) * s;
-                q.w = (m21 - m12) * s;
-            } else if (max == m11) {
-                s = (float) Math.sqrt(m11 - (m22 + m00) + 1.0F);
-                q.y = s * 0.5F;
-                s = 0.5F / s;
-                q.z = (m12 + m21) * s;
-                q.x = (m01 + m10) * s;
-                q.w = (m02 - m20) * s;
-            } else {
-                s = (float) Math.sqrt(m22 - (m00 + m11) + 1.0F);
-                q.z = s * 0.5F;
-                s = 0.5F / s;
-                q.x = (m20 + m02) * s;
-                q.y = (m12 + m21) * s;
-                q.w = (m10 - m01) * s;
-            }
-        }
     }
 
     public void addChunk(List<CutModelData> chunk) {
@@ -208,7 +157,7 @@ public class RigidBody {
         this.invMass = 1.0F / this.mass;
         this.localCentroid = this.localCentroid.scale(this.invMass);
 
-        this.localInertiaTensor = new Matrix3f();
+        this.localInertiaTensor = new Matrix3f().zero();
 
         for (Collider collider : this.colliders) {
             // https://en.wikipedia.org/wiki/Parallel_axis_theorem
@@ -226,10 +175,8 @@ public class RigidBody {
             this.localInertiaTensor.add(cLocalIT);
         }
 
-        this.invLocalInertiaTensor = new Matrix3f();
-        this.invLocalInertiaTensor.set(this.localInertiaTensor);
+        this.invLocalInertiaTensor = new Matrix3f(this.localInertiaTensor).invert();
 
-        this.invLocalInertiaTensor.invert();
         this.invGlobalInertiaTensor = new Matrix3f();
         this.updateOrientation();
         this.updateGlobalCentroidFromPosition();
@@ -251,7 +198,7 @@ public class RigidBody {
     public void step(float step) {
         this.contacts.update();
 
-        for (VoxelShape shape : this.level.getBlockCollisions(null, this.bounds)) {
+        for (VoxelShape shape : this.level.getCollisions(null, this.bounds)) {
             for (int i = 0; i < this.colliders.size(); i++) {
                 Collider a = this.colliders.get(i);
 
@@ -287,9 +234,9 @@ public class RigidBody {
             Vec3 axis = this.angularVelocity.normalize();
             double angle = this.angularVelocity.length() * step;
             Matrix3f turn = new Matrix3f();
-            turn.set(new AxisAngle4f((float) axis.x, (float) axis.y, (float) axis.z, (float) angle));
+            turn.set(new AxisAngle4f((float) angle, axis.toVector3f()));
             turn.mul(this.rotation);
-            //this.rotation = turn;
+            this.rotation = turn;
             this.updateOrientation();
         }
         this.updatePositionFromGlobalCentroid();
@@ -299,7 +246,7 @@ public class RigidBody {
 
     public void setPrevData() {
         this.prevPosition = this.position;
-        setFromMat(this.prevRotation, this.rotation);
+        MathUtil.quaternionfFromMatrix3f(this.prevRotation, this.rotation);
     }
 
     public void addContact(Contact contact) {
@@ -307,8 +254,8 @@ public class RigidBody {
     }
 
     public void solveContacts(float step) {
-        for (int j = 0; j < this.contacts.contactCount; j++) {
-            this.contacts.contacts[j].init(step);
+        for (int i = 0; i < this.contacts.contactCount; i++) {
+            this.contacts.contacts[i].init(step);
         }
 
         int velocityIterations = 4;
@@ -361,9 +308,9 @@ public class RigidBody {
 
     public void updateOrientation() {
         Quaternionf quaternionf = new Quaternionf();
-        setFromMat(quaternionf, this.rotation);
+        MathUtil.quaternionfFromMatrix3f(quaternionf, this.rotation);
         quaternionf.normalize();
-        MathUtil.matrixFromQuaterionf(this.rotation, quaternionf);
+        MathUtil.matrix3fFromQuaterionf(this.rotation, quaternionf);
 
         this.invRotation = new Matrix3f(this.rotation).transpose();
 
@@ -417,7 +364,7 @@ public class RigidBody {
         poseStack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         Quaternionf quaternionf = new Quaternionf();
-        setFromMat(quaternionf, this.rotation);
+        MathUtil.quaternionfFromMatrix3f(quaternionf, this.rotation);
         quaternionf.nlerp(this.prevRotation, 1.0F - partialTicks);
         quaternionf.normalize();
 
@@ -471,7 +418,7 @@ public class RigidBody {
 
     public static class VertexData {
         public Vec3[] positions;
-        public int[] indices;
+        public int @Nullable[] indices;
         public float[] uv;
 
         public void tessellate(BufferBuilder builder, Matrix4f matrix4f, int packedLight) {

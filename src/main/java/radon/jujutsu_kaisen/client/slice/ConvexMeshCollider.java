@@ -36,7 +36,6 @@ public class ConvexMeshCollider extends Collider {
         this.fromData(indices, vertices);
     }
 
-
     public ConvexMeshCollider(RigidBody.Triangle[] triangles, float density) {
         this(triangles);
 

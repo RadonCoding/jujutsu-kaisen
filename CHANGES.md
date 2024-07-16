@@ -9,3 +9,4 @@
 - Improved Hollow Purple visuals
 - Improved Pure Love visuals
 - Nerfed Output RCT
+- Slicing entities with dismantle

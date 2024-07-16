@@ -9,6 +9,7 @@
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
     "client.IAgeableListModelAccessor",
+    "client.IGeoEntityRendererAccessor",
     "client.ILivingEntityRendererAccessor",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",

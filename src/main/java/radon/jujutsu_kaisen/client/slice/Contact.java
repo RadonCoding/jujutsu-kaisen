@@ -133,9 +133,9 @@ public class Contact {
 			lambda = this.totalLambda - oldTotalLambda;
 
 			contact.bodyA.addLinearVelocity(this.jVa.scale(contact.bodyA.invMass * lambda));
-			contact.bodyA.addAngularVelocity(MathUtil.transform(this.jWa, contact.bodyA.invGlobalInertiaTensor).scale(lambda));
+			//contact.bodyA.addAngularVelocity(MathUtil.transform(this.jWa, contact.bodyA.invGlobalInertiaTensor).scale(lambda));
 			contact.bodyB.addLinearVelocity(this.jVb.scale(contact.bodyB.invMass * lambda));
-			contact.bodyB.addAngularVelocity(MathUtil.transform(this.jWb, contact.bodyB.invGlobalInertiaTensor).scale(lambda));
+			//contact.bodyB.addAngularVelocity(MathUtil.transform(this.jWb, contact.bodyB.invGlobalInertiaTensor).scale(lambda));
 		}
 	}
 }

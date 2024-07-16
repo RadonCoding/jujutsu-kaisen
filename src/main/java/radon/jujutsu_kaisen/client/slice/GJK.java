@@ -167,21 +167,21 @@ public class GJK {
         return localSupport(bodyA, a, dir).subtract(localSupport(bodyB, b, dir.reverse()));
     }
 
-    public static Vec3 localSupport(RigidBody body, Collider c, Vec3 worldDir) {
+    public static Vec3 localSupport(RigidBody body, Collider collider, Vec3 worldDir) {
         if (body != null) {
             Vec3 localDir = body.globalToLocalVec(worldDir);
 
             if (margin != 0.0F) {
                 localDir = localDir.normalize();
-                return body.localToGlobalPos(c.support(localDir).add(localDir.scale(margin)));
+                return body.localToGlobalPos(collider.support(localDir).add(localDir.scale(margin)));
             }
-            return body.localToGlobalPos(c.support(localDir));
+            return body.localToGlobalPos(collider.support(localDir));
         } else {
             if (margin != 0.0F) {
                 worldDir = worldDir.normalize();
-                return c.support(worldDir).add(worldDir.scale(margin));
+                return collider.support(worldDir).add(worldDir.scale(margin));
             }
-            return c.support(worldDir);
+            return collider.support(worldDir);
         }
     }
 
@@ -211,6 +211,7 @@ public class GJK {
                 Vec3 separation = planeProjectOrigin(closestFace);
                 info.normal = separation.normalize();
                 info.depth = (float) separation.length();
+
                 for (int j = 0; j < 3; j++) {
                     features[0][j] = localSupport(bodyA, a, closestFace[j].r);
                     features[1][j] = localSupport(bodyB, b, closestFace[j].r.reverse());
@@ -308,10 +309,11 @@ public class GJK {
         Vec3 ac = c.v.subtract(a.v);
         Vec3 ao = a.v.reverse();
         Vec3 normal = ab.cross(ac).normalize();
+
         if (normal.dot(ao) < 0) {
-            return new Mkv[]{a, b, c, new Mkv(normal, null)};
+            return new Mkv[] { a, b, c, new Mkv(normal, null) };
         } else {
-            return new Mkv[]{a, c, b, new Mkv(normal.reverse(), null)};
+            return new Mkv[] { a, c, b, new Mkv(normal.reverse(), null) };
         }
     }
 

@@ -188,7 +188,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             for (int x = 0; x < length; x++) {
                 BlockPos current = BlockPos.containing(start.add(end.subtract(start).scale((1.0D / length) * x).add(forward.scale(z))));
 
-                AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
+                AABB bounds = AABB.ofSize(current.getCenter(), 0.5D, 0.5D, 0.5D);
 
                 for (Entity entity : entities) {
                     if (entity.getBoundingBox().intersects(bounds)) {
@@ -235,8 +235,6 @@ public class DismantleProjectile extends JujutsuProjectile {
                         this.getDamage() * this.getPower());
 
                 if (!living.isDeadOrDying()) continue;
-
-                living.deathTime = 0;
 
                 Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
 
