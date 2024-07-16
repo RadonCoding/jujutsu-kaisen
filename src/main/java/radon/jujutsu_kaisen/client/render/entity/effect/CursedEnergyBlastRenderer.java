@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
 
 public class CursedEnergyBlastRenderer extends EntityRenderer<CursedEnergyBlastEntity> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/cursed_energy_beam.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/cursed_energy_blast.png");
 
     private final CursedEnergyBlastModel model;
 

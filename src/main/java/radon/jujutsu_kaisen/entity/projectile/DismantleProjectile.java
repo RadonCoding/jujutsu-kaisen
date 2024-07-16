@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
+import radon.jujutsu_kaisen.client.slice.Plane;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -236,7 +237,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 if (!living.isDeadOrDying()) continue;
 
-                Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2, 0.0D);
+                Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
                 float yaw = this.getYRot();
                 float pitch = this.getXRot();
@@ -250,7 +251,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 int length = this.getLength();
                 Vec3 start = side.scale((double) length / 2);
-                Vec3 end = forward.subtract(side.scale((double) length / 2));
+                Vec3 end = forward.subtract(start);
 
                 Vec3 plane = end.cross(start).normalize();
 

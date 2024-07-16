@@ -156,11 +156,22 @@ public class CutModelUtil {
 
         PoseStack poseStack = new PoseStack();
         poseStack.mulPose(matrix4f);
-        RenderUtil.translateMatrixToBone(poseStack, part);
-        RenderUtil.translateToPivotPoint(poseStack, part);
-        RenderUtil.rotateMatrixAroundBone(poseStack, part);
-        RenderUtil.scaleMatrixForBone(poseStack, part);
-        RenderUtil.translateAwayFromPivotPoint(poseStack, part);
+
+        List<GeoBone> roots = new ArrayList<>();
+
+        GeoBone parent = part.getParent();
+
+        while (parent != null) {
+            roots.add(parent);
+
+            parent = parent.getParent();
+        }
+
+        for (GeoBone root : roots.reversed()) {
+            RenderUtil.prepMatrixForBone(poseStack, root);
+        }
+
+        RenderUtil.prepMatrixForBone(poseStack, part);
 
         matrix4f = poseStack.last().pose();
 

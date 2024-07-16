@@ -185,6 +185,11 @@ public class RigidBody {
     }
 
     public void tick() {
+        // Clear contacts because if for example blocks have been destroyed
+        for (int i = 0; i < this.contacts.contactCount; i++) {
+            this.contacts.removeContact(i);
+        }
+
         this.setPrevData();
 
         int time = 8;

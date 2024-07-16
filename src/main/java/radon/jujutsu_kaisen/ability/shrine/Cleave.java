@@ -11,21 +11,29 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.IAttack;
 import radon.jujutsu_kaisen.ability.IDomainAttack;
 import radon.jujutsu_kaisen.ability.IToggled;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
 import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
+import radon.jujutsu_kaisen.client.slice.Plane;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled {
     public static final double RANGE = 30.0D;
