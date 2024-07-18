@@ -511,10 +511,10 @@ public class RigidBody {
                 this.pos = pos;
             }
 
-            public TexVertex(Vec3 pos, float x, float y) {
+            public TexVertex(Vec3 pos, float u, float v) {
                 this.pos = pos;
-                this.u = x;
-                this.v = y;
+                this.u = u;
+                this.v = v;
             }
         }
     }
