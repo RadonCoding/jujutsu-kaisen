@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.HashSet;
@@ -257,8 +258,8 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 float distance = (float) plane.dot(center.subtract(living.position()));
 
-                ((ServerLevel) this.level()).sendParticles(new SlicedEntityParticle.Options(living.getId(), plane.toVector3f(), distance),
-                        living.getX(), living.getY(), living.getZ(), 0, 0.0D, 0.0D, 0.0D, 1.0D);
+                ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.Options(living.getId(), plane.toVector3f(), distance),
+                        true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
         if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {
