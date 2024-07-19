@@ -17,8 +17,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class WormCurseSegmentEntity extends JJKPartEntity<WormCurseEntity> implements GeoEntity, Attackable {
-    public static final ResourceLocation RENDERER = new ResourceLocation(JujutsuKaisen.MOD_ID, "worm_curse_segment");
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public WormCurseSegmentEntity(WormCurseEntity parent) {

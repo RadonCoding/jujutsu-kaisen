@@ -45,6 +45,8 @@ public class MissionLevelData implements IMissionLevelData {
         Set<Mission> remove = new HashSet<>();
 
         for (Mission mission : new LinkedHashSet<>(this.missions)) {
+            if (!mission.isInitialized()) continue;
+
             Set<BlockPos> spawns = mission.getSpawns();
             spawns.removeIf(pos -> !(this.level.getBlockEntity(pos) instanceof CurseSpawnerBlockEntity));
 
@@ -57,7 +59,7 @@ public class MissionLevelData implements IMissionLevelData {
                 continue;
             }
 
-            Iterator<UUID> cursesIter = curses.iterator();
+            /*Iterator<UUID> cursesIter = curses.iterator();
 
             while (cursesIter.hasNext()) {
                 UUID identifier = cursesIter.next();
@@ -69,13 +71,10 @@ public class MissionLevelData implements IMissionLevelData {
 
                     PacketDistributor.sendToAllPlayers(new SyncMissionS2CPacket(this.level.dimension(), mission.serializeNBT()));
                 }
-            }
+            }*/
         }
 
-        // Remove missions that need to be removed
-        this.missions.removeAll(remove);
-
-        if (!remove.isEmpty()) {
+        /*if (!remove.isEmpty()) {
             Iterator<Map.Entry<Mission, UUID>> iter = this.taken.entrySet().iterator();
 
             // Find missions that were removed
@@ -103,7 +102,10 @@ public class MissionLevelData implements IMissionLevelData {
                 iter.remove();
             }
             PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT(this.level.registryAccess())));
-        }
+        }*/
+
+        // Remove missions that need to be removed
+        this.missions.removeAll(remove);
     }
 
     @Override
@@ -113,7 +115,6 @@ public class MissionLevelData implements IMissionLevelData {
 
     @Override
     public void register(Mission mission) {
-        this.missions.remove(mission);
         this.missions.add(mission);
 
         if (!this.level.isClientSide) {

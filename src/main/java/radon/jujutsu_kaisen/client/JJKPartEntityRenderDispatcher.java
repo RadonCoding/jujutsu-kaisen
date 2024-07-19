@@ -20,7 +20,7 @@ public class JJKPartEntityRenderDispatcher {
 
     public static void bake(EntityRendererProvider.Context ctx) {
         renderers.put(JJKEntities.GREAT_SERPENT.getId(), new GreatSerpentSegmentRenderer(ctx));
-        renderers.put(JJKEntities.WOOD_SEGMENT.getId(), new WormCurseSegmentRenderer(ctx));
+        renderers.put(JJKEntities.WORM_CURSE.getId(), new WormCurseSegmentRenderer(ctx));
         renderers.put(JJKEntities.RAINBOW_DRAGON.getId(), new RainbowDragonSegmentRenderer(ctx));
         renderers.put(JJKEntities.BODY_REPEL.getId(), new BodyRepelSegmentRenderer(ctx));
     }

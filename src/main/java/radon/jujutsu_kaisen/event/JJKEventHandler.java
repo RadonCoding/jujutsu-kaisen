@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -118,6 +119,19 @@ public class JJKEventHandler {
 
             DamageSource source = event.getSource();
 
+            if (source.is(NeoForgeMod.POISON_DAMAGE)) {
+                IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (cap != null) {
+                    ISorcererData sorcererData = cap.getSorcererData();
+
+                    if (sorcererData.getType() == JujutsuType.CURSE) {
+                        event.setCanceled(true);
+                        return;
+                    }
+                }
+            }
+
             // We don't want to increase/decrease soul damage
             if (source.is(JJKDamageTypeTags.SOUL)) return;
 
@@ -145,48 +159,48 @@ public class JJKEventHandler {
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return;
+            if (cap != null) {
+                ISorcererData sorcererData = cap.getSorcererData();
+                IAbilityData abilityData = cap.getAbilityData();
+                ISkillData skillData = cap.getSkillData();
 
-            ISorcererData sorcererData = cap.getSorcererData();
-            IAbilityData abilityData = cap.getAbilityData();
-            ISkillData skillData = cap.getSkillData();
+                float armor = skillData.getSkill(sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? Skill.SHIELDING : Skill.REINFORCEMENT) * 0.25F;
 
-            float armor = skillData.getSkill(sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? Skill.SHIELDING : Skill.REINFORCEMENT) * 0.25F;
+                if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
+                    armor *= 10.0F;
+                }
 
-            if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                armor *= 10.0F;
-            }
+                if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                    float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 10.0F : 5.0F);
 
-            if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 10.0F : 5.0F);
+                    float toughness = shielded * 0.1F;
 
-                float toughness = shielded * 0.1F;
+                    float f = 2.0F + toughness / 4.0F;
+                    float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
+                    float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
+
+                    if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
+                        float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+
+                        if (sorcererData.getEnergy() >= cost) {
+                            sorcererData.useEnergy(cost);
+
+                            if (victim instanceof ServerPlayer player) {
+                                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
+                            }
+                        }
+                    }
+                    armor = shielded;
+                }
+
+                float toughness = armor * 0.1F;
 
                 float f = 2.0F + toughness / 4.0F;
                 float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
                 float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
 
-                if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
-                    float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-
-                    if (sorcererData.getEnergy() >= cost) {
-                        sorcererData.useEnergy(cost);
-
-                        if (victim instanceof ServerPlayer player) {
-                            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
-                        }
-                    }
-                }
-                armor = shielded;
+                event.setAmount(blocked);
             }
-
-            float toughness = armor * 0.1F;
-
-            float f = 2.0F + toughness / 4.0F;
-            float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
-            float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
-
-            event.setAmount(blocked);
         }
 
         @SubscribeEvent
@@ -205,15 +219,6 @@ public class JJKEventHandler {
                 data.setEnergy(data.getMaxEnergy());
 
                 PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(data.serializeNBT(player.registryAccess())));
-            }
-        }
-
-        @SubscribeEvent
-        public static void onAttackEntity(AttackEntityEvent event) {
-            if (event.getTarget() instanceof JJKPartEntity<?>) {
-                Entity parent = ((JJKPartEntity<?>) event.getTarget()).getParent();
-                event.getEntity().attack(parent);
-                event.setCanceled(true);
             }
         }
 

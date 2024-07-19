@@ -14,6 +14,10 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import software.bernie.geckolib.animation.*;
 
 import java.util.Set;
@@ -72,8 +76,11 @@ public class HanamiEntity extends DisasterCurse {
         if (target == null) {
             wear = true;
         } else {
-            if (target.getMaxHealth() / this.getMaxHealth() >= 2) {
-                wear = true;
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
+                wear = data.getExperience() >= SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
             }
         }
         this.entityData.set(DATA_CAST, wear);

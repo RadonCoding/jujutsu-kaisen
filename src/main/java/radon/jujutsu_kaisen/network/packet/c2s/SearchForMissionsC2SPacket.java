@@ -65,9 +65,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
         ctx.enqueueWork(() -> {
             if (!(ctx.player() instanceof ServerPlayer sender)) return;
 
-            Optional<IMissionLevelData> data = DataProvider.getDataIfPresent(sender.level(), JJKAttachmentTypes.MISSION_LEVEL);
-
-            if (data.isEmpty()) return;
+            IMissionLevelData data = sender.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
 
             Optional<HolderSet.Named<Structure>> optional = sender.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION);
 
@@ -105,10 +103,10 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
                             if (start == null) continue;
 
-                            if (data.get().isRegistered(pos)) continue;
+                            if (data.isRegistered(pos)) continue;
 
                             RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                            data.get().register(HelperMethods.randomEnum(MissionType.class, random),
+                            data.register(HelperMethods.randomEnum(MissionType.class, random),
                                     HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
                                     new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
                             found++;
@@ -150,10 +148,10 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
                                         BlockPos pos = spread.getLocatePos(start.getChunkPos());
 
-                                        if (data.get().isRegistered(pos)) continue;
+                                        if (data.isRegistered(pos)) continue;
 
                                         RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                                        data.get().register(HelperMethods.randomEnum(MissionType.class, random),
+                                        data.register(HelperMethods.randomEnum(MissionType.class, random),
                                                 HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
                                                 new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
                                         found++;
@@ -166,7 +164,7 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
             }
 
             if (found > 0) {
-                PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), data.get().serializeNBT(sender.registryAccess())));
+                PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), data.serializeNBT(sender.registryAccess())));
             }
         });
     }

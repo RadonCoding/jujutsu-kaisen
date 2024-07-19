@@ -21,6 +21,7 @@ public class Mission {
     private final Set<UUID> curses;
     private final CopyOnWriteArraySet<BlockPos> spawns;
     private int total;
+    private boolean initialized;
 
     public Mission(ResourceKey<Level> dimension, MissionType type, MissionGrade grade, BlockPos pos) {
         this.dimension = dimension;
@@ -51,6 +52,7 @@ public class Mission {
         }
 
         this.total = nbt.getInt("total");
+        this.initialized = nbt.getBoolean("initialized");
     }
 
     public ResourceKey<Level> getDimension() {
@@ -91,6 +93,14 @@ public class Mission {
         return this.total;
     }
 
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    public boolean isInitialized() {
+        return this.initialized;
+    }
+
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("dimension", this.dimension.location().toString());
@@ -113,6 +123,7 @@ public class Mission {
         nbt.put("spawns", spawnsTag);
 
         nbt.putInt("total", this.total);
+        nbt.putBoolean("initialized", this.initialized);
 
         return nbt;
     }

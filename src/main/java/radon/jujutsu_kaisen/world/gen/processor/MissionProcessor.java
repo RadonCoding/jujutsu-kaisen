@@ -62,7 +62,20 @@ public class MissionProcessor extends StructureProcessor {
     }
 
     @Override
-    public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(@NotNull ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
+    public @NotNull List<StructureTemplate.StructureBlockInfo> finalizeProcessing(@NotNull ServerLevelAccessor pServerLevel, @NotNull BlockPos pOffset, @NotNull BlockPos pPos, @NotNull List<StructureTemplate.StructureBlockInfo> pOriginalBlockInfos, @NotNull List<StructureTemplate.StructureBlockInfo> pProcessedBlockInfos, @NotNull StructurePlaceSettings pSettings) {
+        IMissionLevelData data = pServerLevel.getLevel().getData(JJKAttachmentTypes.MISSION_LEVEL);
+
+        RandomSource random = RandomSource.create(Mth.getSeed(pPos));
+
+        if (!data.isRegistered(pPos)) data.register(HelperMethods.randomEnum(MissionType.class, random),
+                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), pPos);
+
+        Mission mission = data.getMission(pPos);
+
+        if (mission == null) return pProcessedBlockInfos;
+
+        mission.setInitialized(true);
+
         for (StructureTemplate.StructureBlockInfo info : pProcessedBlockInfos) {
             if (!(info.state().getBlock() instanceof CurseSpawnerBlock)) continue;
 

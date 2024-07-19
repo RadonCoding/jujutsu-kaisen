@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -12,6 +13,9 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -21,15 +25,12 @@ import java.util.List;
 import java.util.Set;
 
 public class SatoruGojoEntity extends SorcererEntity {
+    private final ItemStack blindfold;
+
     public SatoruGojoEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
-    }
 
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.BLINDFOLD.get()));
+        this.blindfold = new ItemStack(JJKItems.BLINDFOLD.get());
     }
 
     @Override
@@ -62,5 +63,26 @@ public class SatoruGojoEntity extends SorcererEntity {
     @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        LivingEntity target = this.getTarget();
+
+        boolean wear = false;
+
+        if (target == null) {
+            wear = true;
+        } else {
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (cap != null) {
+                ISorcererData data = cap.getSorcererData();
+                wear = data.getExperience() >= SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+            }
+        }
+        this.setItemSlot(EquipmentSlot.HEAD, wear ? this.blindfold : ItemStack.EMPTY);
     }
 }
