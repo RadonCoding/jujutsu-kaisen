@@ -328,6 +328,15 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onAttackEntity(AttackEntityEvent event) {
+            if (event.getTarget() instanceof JJKPartEntity<?>) {
+                Entity parent = ((JJKPartEntity<?>) event.getTarget()).getParent();
+                event.getEntity().attack(parent);
+                event.setCanceled(true);
+            }
+        }
+
+        @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
