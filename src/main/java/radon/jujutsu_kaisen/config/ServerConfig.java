@@ -1,7 +1,9 @@
 package radon.jujutsu_kaisen.config;
 
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
@@ -31,6 +33,7 @@ public class ServerConfig {
     public final ModConfigSpec.ConfigValue<List<? extends String>> chants;
     public final ModConfigSpec.DoubleValue forceFeedHealthRequirement;
     public final ModConfigSpec.BooleanValue realisticShikigami;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> ignoresCutEffect;
 
     public final ModConfigSpec.IntValue minimumVeilSize;
     public final ModConfigSpec.IntValue maximumVeilSize;
@@ -137,6 +140,12 @@ public class ServerConfig {
                 .defineInRange("forceFeedHealthRequirement", 0.25F, 0.0F, 1.0F);
         this.realisticShikigami = builder.comment("When enabled shikigami will die permanently")
                 .define("realisticShikigami", true);
+        this.ignoresCutEffect = builder.comment("Entities that won't be affected by the cut effect")
+                .defineList("ignoresCutEffect", () -> List.of(
+                            BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER).toString()
+                        ),
+                        ignored -> true
+                );
         builder.pop();
 
         builder.comment("Veils").push("veils");
@@ -242,5 +251,11 @@ public class ServerConfig {
         return this.unlockableTechniques.get().stream()
                 .map(key -> JJKCursedTechniques.getValue(new ResourceLocation(key)))
                 .collect(Collectors.toList());
+    }
+
+    public boolean ignoresCutEffect(EntityType<?> a) {
+        return this.ignoresCutEffect.get().stream()
+                .map(key -> BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(key)))
+                .anyMatch(b -> a == b);
     }
 }

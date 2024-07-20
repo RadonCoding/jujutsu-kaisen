@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.SlicedEntityParticle;
-import radon.jujutsu_kaisen.client.slice.Plane;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -236,7 +236,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 living.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()),
                         this.getDamage() * this.getPower());
 
-                if (!living.isDeadOrDying()) continue;
+                if (!living.isDeadOrDying() || ConfigHolder.SERVER.ignoresCutEffect(living.getType())) continue;
 
                 Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
