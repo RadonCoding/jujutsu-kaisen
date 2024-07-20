@@ -14,64 +14,28 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public class AbsorbedCurse {
+public record AbsorbedCurse(Component name, EntityType<?> type, CompoundTag data, Optional<GameProfile> profile) {
     public static Codec<AbsorbedCurse> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ComponentSerialization.FLAT_CODEC.fieldOf("name").forGetter(AbsorbedCurse::getName),
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("type").forGetter(AbsorbedCurse::getType),
-            CompoundTag.CODEC.fieldOf("data").forGetter(AbsorbedCurse::getData),
-            ExtraCodecs.GAME_PROFILE.fieldOf("profile").forGetter(AbsorbedCurse::getProfile)
+            ComponentSerialization.FLAT_CODEC.fieldOf("name").forGetter(AbsorbedCurse::name),
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("type").forGetter(AbsorbedCurse::type),
+            CompoundTag.CODEC.fieldOf("data").forGetter(AbsorbedCurse::data),
+            ExtraCodecs.GAME_PROFILE.optionalFieldOf("profile").forGetter(AbsorbedCurse::profile)
     ).apply(instance, AbsorbedCurse::new));
     public static StreamCodec<RegistryFriendlyByteBuf, AbsorbedCurse> STREAM_CODEC = StreamCodec.composite(
             ComponentSerialization.STREAM_CODEC,
-            AbsorbedCurse::getName,
+            AbsorbedCurse::name,
             ByteBufCodecs.registry(Registries.ENTITY_TYPE),
-            AbsorbedCurse::getType,
+            AbsorbedCurse::type,
             ByteBufCodecs.COMPOUND_TAG,
-            AbsorbedCurse::getData,
-            ByteBufCodecs.GAME_PROFILE,
-            AbsorbedCurse::getProfile,
+            AbsorbedCurse::data,
+            ByteBufCodecs.optional(ByteBufCodecs.GAME_PROFILE),
+            AbsorbedCurse::profile,
             AbsorbedCurse::new
     );
-
-    private final Component name;
-    private final EntityType<?> type;
-    private final CompoundTag data;
-
-    @Nullable
-    private GameProfile profile;
-
-    public AbsorbedCurse(Component name, EntityType<?> type, CompoundTag data) {
-        this.name = name;
-        this.type = type;
-        this.data = data;
-    }
-
-    public AbsorbedCurse(Component name, EntityType<?> type, CompoundTag data, @Nullable GameProfile profile) {
-        this(name, type, data);
-
-        this.profile = profile;
-    }
-
-    public Component getName() {
-        return this.name;
-    }
-
-    public EntityType<?> getType() {
-        return this.type;
-    }
-
-    public CompoundTag getData() {
-        return this.data;
-    }
-
-    @Nullable
-    public GameProfile getProfile() {
-        return this.profile;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -81,18 +45,4 @@ public class AbsorbedCurse {
                 Objects.equals(this.profile, other.profile);
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-
-        result = prime * result + this.name.hashCode();
-        result = prime * result + this.type.hashCode();
-        result = prime * result + this.data.hashCode();
-
-        if (this.profile != null) {
-            result = prime * result + this.profile.hashCode();
-        }
-        return result;
-    }
 }

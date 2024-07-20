@@ -156,7 +156,7 @@ public class JujutsuScreen extends Screen {
         int j = (this.height - WINDOW_HEIGHT) / 2;
 
         if (maxPages != 0) {
-            net.minecraft.network.chat.Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));
+            Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));
             int width = this.font.width(page);
             pGuiGraphics.drawString(this.font, page.getVisualOrderText(), i + (WINDOW_WIDTH / 2) - (width / 2), j - 44, -1);
         }

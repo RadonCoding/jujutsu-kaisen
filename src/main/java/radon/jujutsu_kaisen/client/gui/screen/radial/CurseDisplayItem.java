@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.client.util.RenderUtil;
 import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 
 import java.util.ArrayList;
@@ -49,9 +50,8 @@ public class CurseDisplayItem extends DisplayItem {
         if (!(CurseManipulationUtil.createCurse(this.minecraft.player, this.curse) instanceof LivingEntity instance))
             return;
 
-        float height = instance.getBbHeight();
         int scale = Math.round(Math.max(3.0F, 10.0F - instance.getBbHeight()));
-        InventoryScreen.renderEntityInInventoryFollowsAngle(graphics, x, y, Math.round(instance.getBbWidth()), Math.round(height),
+        RenderUtil.renderEntityInInventoryFollowsAngle(graphics, x, y,
                 scale, 0.0F, -1.0F, -0.5F, instance);
     }
 

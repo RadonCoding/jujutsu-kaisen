@@ -4,9 +4,14 @@ package radon.jujutsu_kaisen.data.mission;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.Level;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +24,7 @@ public class Mission {
     private final MissionGrade grade;
     private final BlockPos pos;
     private final Set<UUID> curses;
-    private final CopyOnWriteArraySet<BlockPos> spawns;
+    private final HashSet<BlockPos> spawns;
     private int total;
     private boolean initialized;
 
@@ -29,7 +34,7 @@ public class Mission {
         this.grade = grade;
         this.pos = pos;
         this.curses = new HashSet<>();
-        this.spawns = new CopyOnWriteArraySet<>();
+        this.spawns = new HashSet<>();
     }
 
     public Mission(CompoundTag nbt) {
@@ -44,10 +49,10 @@ public class Mission {
             this.curses.add(NbtUtils.loadUUID(key));
         }
 
-        this.spawns = new CopyOnWriteArraySet<>();
+        this.spawns = new HashSet<>();
 
-        for (Tag tag : nbt.getList("spawns", Tag.TAG_INT_ARRAY)) {
-            int[] data = ((IntArrayTag) tag).getAsIntArray();
+        for (Tag key : nbt.getList("spawns", Tag.TAG_INT_ARRAY)) {
+            int[] data = ((IntArrayTag) key).getAsIntArray();
             this.spawns.add(new BlockPos(data[0], data[1], data[2]));
         }
 

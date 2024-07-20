@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
 
+import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -16,7 +19,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -36,9 +41,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKStructureTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class SearchForMissionsC2SPacket implements CustomPacketPayload {
     public static final SearchForMissionsC2SPacket INSTANCE = new SearchForMissionsC2SPacket();
@@ -67,103 +70,92 @@ public class SearchForMissionsC2SPacket implements CustomPacketPayload {
 
             IMissionLevelData data = sender.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
 
-            Optional<HolderSet.Named<Structure>> optional = sender.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION);
+            HolderSet.Named<Structure> holders = sender.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(JJKStructureTags.IS_MISSION).orElseThrow();
 
-            if (optional.isEmpty()) return;
+            Map<StructurePlacement, Set<Holder<Structure>>> placements = new Object2ObjectArrayMap<>();
 
-            int found = 0;
-
-            // Locate structures that have not been registered yet, IMPORTANT: already known structures are skipped
-            for (Holder<Structure> holder : optional.get()) {
-                if (found >= LIMIT) break;
-
+            for (Holder<Structure> holder : holders) {
                 for (StructurePlacement placement : sender.serverLevel().getChunkSource().getGeneratorState().getPlacementsForStructure(holder)) {
-                    if (found >= LIMIT) break;
-
-                    if (placement instanceof ConcentricRingsStructurePlacement concentric) {
-                        List<ChunkPos> positions = sender.serverLevel().getChunkSource().getGeneratorState().getRingPositionsFor(concentric);
-
-                        if (positions == null) continue;
-
-                        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-
-                        for (ChunkPos chunk : positions) {
-                            if (found >= LIMIT) break;
-
-                            pos.set(SectionPos.sectionToBlockCoord(chunk.x, 8), 32, SectionPos.sectionToBlockCoord(chunk.z, 8));
-
-                            if (sender.serverLevel().isLoaded(pos)) continue;
-
-                            StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), concentric, true);
-
-                            if (result == StructureCheckResult.START_NOT_PRESENT) continue;
-
-                            ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
-                            StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
-
-                            if (start == null) continue;
-
-                            if (data.isRegistered(pos)) continue;
-
-                            RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                            data.register(HelperMethods.randomEnum(MissionType.class, random),
-                                    HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
-                                    new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
-                            found++;
-                        }
-                    } else if (placement instanceof RandomSpreadStructurePlacement spread) {
-                        int x = SectionPos.blockToSectionCoord(sender.getX());
-                        int z = SectionPos.blockToSectionCoord(sender.getZ());
-
-                        for (int y = 0; y <= SEARCH_RADIUS; y++) {
-                            if (found >= LIMIT) break;
-
-                            int i = spread.spacing();
-
-                            for (int j = -y; j <= y; j++) {
-                                if (found >= LIMIT) break;
-
-                                boolean flag = j == -y || j == y;
-
-                                for (int k = -y; k <= y; k++) {
-                                    if (found >= LIMIT) break;
-
-                                    if (flag || (k == -y || k == y)) {
-                                        int l = x + i * j;
-                                        int i1 = z + i * k;
-
-                                        if (sender.serverLevel().isLoaded(BlockPos.containing(l, 0, i1))) continue;
-
-                                        ChunkPos chunk = spread.getPotentialStructureChunk(sender.serverLevel().getChunkSource().getGeneratorState().getLevelSeed(), l, i1);
-
-                                        StructureCheckResult result = sender.serverLevel().structureManager().checkStructurePresence(chunk, holder.value(), spread, true);
-
-                                        if (result == StructureCheckResult.START_NOT_PRESENT) continue;
-
-                                        ChunkAccess access = sender.level().getChunk(chunk.x, chunk.z, ChunkStatus.STRUCTURE_STARTS);
-                                        StructureStart start = sender.serverLevel().structureManager().getStartForStructure(SectionPos.bottomOf(access), holder.value(), access);
-
-                                        if (start == null || !start.isValid() || !tryAddReference(sender.serverLevel().structureManager(), start))
-                                            continue;
-
-                                        BlockPos pos = spread.getLocatePos(start.getChunkPos());
-
-                                        if (data.isRegistered(pos)) continue;
-
-                                        RandomSource random = RandomSource.create(Mth.getSeed(pos));
-                                        data.register(HelperMethods.randomEnum(MissionType.class, random),
-                                                HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random),
-                                                new BlockPos(pos.getX(), start.getBoundingBox().maxY(), pos.getZ()));
-                                        found++;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    placements.computeIfAbsent(placement, ignored -> new ObjectArraySet<>()).add(holder);
                 }
             }
 
-            if (found > 0) {
+            ChunkGenerator generator = sender.serverLevel().getChunkSource().getGenerator();
+
+            Map<BlockPos, Holder<Structure>> structures = new HashMap<>();
+
+            List<Map.Entry<StructurePlacement, Set<Holder<Structure>>>> randoms = new ArrayList<>(placements.size());
+
+            for (Map.Entry<StructurePlacement, Set<Holder<Structure>>> entry : placements.entrySet()) {
+                StructurePlacement placement = entry.getKey();
+
+                if (placement instanceof ConcentricRingsStructurePlacement concentric) {
+                    Pair<BlockPos, Holder<Structure>> pair = generator.getNearestGeneratedStructure(
+                            entry.getValue(), sender.serverLevel(), sender.serverLevel().structureManager(),
+                            sender.blockPosition(), true, concentric
+                    );
+
+                    if (pair == null) continue;
+
+                    structures.put(pair.getFirst(), pair.getSecond());
+                } else if (placement instanceof RandomSpreadStructurePlacement) {
+                    randoms.add(entry);
+                }
+            }
+
+            int i = SectionPos.blockToSectionCoord(sender.blockPosition().getX());
+            int j = SectionPos.blockToSectionCoord(sender.blockPosition().getZ());
+
+            int found = 0;
+
+            for (int k = 0; k <= SEARCH_RADIUS; k++) {
+                if (found >= LIMIT) break;
+
+                for (Map.Entry<StructurePlacement, Set<Holder<Structure>>> entry : randoms) {
+                    RandomSpreadStructurePlacement random = (RandomSpreadStructurePlacement) entry.getKey();
+                    Pair<BlockPos, Holder<Structure>> pair = ChunkGenerator.getNearestGeneratedStructure(
+                            entry.getValue(), sender.serverLevel(), sender.serverLevel().structureManager(),
+                            i,
+                            j,
+                            k,
+                            true,
+                            sender.serverLevel().getChunkSource().getGeneratorState().getLevelSeed(),
+                            random
+                    );
+
+                    if (pair == null) continue;
+
+                    structures.put(pair.getFirst(), pair.getSecond());
+
+                    found++;
+                }
+            }
+
+            int registered = 0;
+
+            for (Map.Entry<BlockPos, Holder<Structure>> entry : structures.entrySet()) {
+                BlockPos pos = entry.getKey();
+
+                if (data.isRegistered(pos)) continue;
+
+                SectionPos section = SectionPos.of(new ChunkPos(pos), sender.level().getMinSection());
+                StructureStart start = sender.serverLevel().structureManager().getStartForStructure(
+                        section, entry.getValue().value(), sender.level().getChunk(section.x(), section.z(), ChunkStatus.STRUCTURE_STARTS)
+                );
+
+                if (start == null) continue;
+
+                BoundingBox bounds = start.getPieces().getFirst().getBoundingBox();
+                BlockPos center = new BlockPos(bounds.getCenter().getX(), bounds.minY(), bounds.getCenter().getZ());
+
+                RandomSource random = RandomSource.create(Mth.getSeed(center));
+                data.register(HelperMethods.randomEnum(MissionType.class, random),
+                        HelperMethods.randomEnum(MissionGrade.class, Set.of(MissionGrade.S), random), center);
+
+                registered++;
+            }
+
+            if (registered > 0) {
                 PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(sender.level().dimension(), data.serializeNBT(sender.registryAccess())));
             }
         });

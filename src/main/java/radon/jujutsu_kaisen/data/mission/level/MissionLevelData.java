@@ -13,15 +13,15 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.block.entity.CurseSpawnerBlockEntity;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.MissionGrade;
 import radon.jujutsu_kaisen.data.mission.MissionType;
 import radon.jujutsu_kaisen.data.mission.entity.IMissionEntityData;
+import radon.jujutsu_kaisen.network.packet.s2c.RemoveMissionCurseS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionLevelDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.AddMissionCurseS2CPacket;
 
 import java.util.*;
 
@@ -48,7 +48,6 @@ public class MissionLevelData implements IMissionLevelData {
             if (!mission.isInitialized()) continue;
 
             Set<BlockPos> spawns = mission.getSpawns();
-            spawns.removeIf(pos -> !(this.level.getBlockEntity(pos) instanceof CurseSpawnerBlockEntity));
 
             if (!spawns.isEmpty()) continue;
 
@@ -59,22 +58,23 @@ public class MissionLevelData implements IMissionLevelData {
                 continue;
             }
 
-            /*Iterator<UUID> cursesIter = curses.iterator();
+            Iterator<UUID> iter = curses.iterator();
 
-            while (cursesIter.hasNext()) {
-                UUID identifier = cursesIter.next();
+            while (iter.hasNext()) {
+                UUID identifier = iter.next();
 
                 Entity curse = serverLevel.getEntity(identifier);
 
                 if (curse == null || curse.isRemoved() || !curse.isAlive()) {
-                    cursesIter.remove();
+                    iter.remove();
 
-                    PacketDistributor.sendToAllPlayers(new SyncMissionS2CPacket(this.level.dimension(), mission.serializeNBT()));
+                    PacketDistributor.sendToAllPlayers(new RemoveMissionCurseS2CPacket(this.level.dimension(),
+                            mission.getPos(), identifier));
                 }
-            }*/
+            }
         }
 
-        /*if (!remove.isEmpty()) {
+        if (!remove.isEmpty()) {
             Iterator<Map.Entry<Mission, UUID>> iter = this.taken.entrySet().iterator();
 
             // Find missions that were removed
@@ -101,8 +101,9 @@ public class MissionLevelData implements IMissionLevelData {
 
                 iter.remove();
             }
-            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT(this.level.registryAccess())));
-        }*/
+            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(),
+                    this.serializeNBT(this.level.registryAccess())));
+        }
 
         // Remove missions that need to be removed
         this.missions.removeAll(remove);
@@ -110,15 +111,11 @@ public class MissionLevelData implements IMissionLevelData {
 
     @Override
     public void register(MissionType type, MissionGrade grade, BlockPos pos) {
-        this.register(new Mission(this.level.dimension(), type, grade, pos));
-    }
-
-    @Override
-    public void register(Mission mission) {
-        this.missions.add(mission);
+        this.missions.add(new Mission(this.level.dimension(), type, grade, pos));
 
         if (!this.level.isClientSide) {
-            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(), this.serializeNBT(this.level.registryAccess())));
+            PacketDistributor.sendToAllPlayers(new SyncMissionLevelDataS2CPacket(this.level.dimension(),
+                    this.serializeNBT(this.level.registryAccess())));
         }
     }
 

@@ -21,6 +21,8 @@ import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.item.registry.JJKItems;
 
+import java.util.Optional;
+
 // Attack non-sorcerers
 public class SuguruGetoEntity extends SorcererEntity {
     public SuguruGetoEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
@@ -61,7 +63,7 @@ public class SuguruGetoEntity extends SorcererEntity {
 
         ISorcererData data = cap.getSorcererData();
 
-        return new AbsorbedCurse(type.getDescription(), type, data.serializeNBT(this.registryAccess()));
+        return new AbsorbedCurse(type.getDescription(), type, data.serializeNBT(this.registryAccess()), Optional.empty());
     }
 
     private void tryAddCurse(EntityType<?> type) {

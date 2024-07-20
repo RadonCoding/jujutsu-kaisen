@@ -20,11 +20,6 @@ public class CurseSpawnerBlockEntity extends BlockEntity {
         return this.pos;
     }
 
-    public void setPos(BlockPos pos) {
-        this.pos = pos;
-        this.setChanged();
-    }
-
     @Override
     public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(pTag, pRegistries);

@@ -29,6 +29,8 @@ import radon.jujutsu_kaisen.item.registry.JJKItems;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
+import java.util.Optional;
+
 public class CurseAbsorption extends Ability implements IToggled {
     private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
         if (target.isRemoved()) return false;
@@ -79,9 +81,11 @@ public class CurseAbsorption extends Ability implements IToggled {
         ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
 
         if (victim instanceof Player player) {
-            stack.set(JJKDataComponentTypes.ABSORBED_CURSE, new AbsorbedCurse(victim.getName(), victim.getType(), victimData.serializeNBT(victim.registryAccess()), player.getGameProfile()));
+            stack.set(JJKDataComponentTypes.ABSORBED_CURSE, new AbsorbedCurse(victim.getName(), victim.getType(),
+                    victimData.serializeNBT(victim.registryAccess()), Optional.of(player.getGameProfile())));
         } else {
-            stack.set(JJKDataComponentTypes.ABSORBED_CURSE, new AbsorbedCurse(victim.getName(), victim.getType(), victimData.serializeNBT(victim.registryAccess())));
+            stack.set(JJKDataComponentTypes.ABSORBED_CURSE, new AbsorbedCurse(victim.getName(), victim.getType(),
+                    victimData.serializeNBT(victim.registryAccess()), Optional.empty()));
         }
 
         if (attacker instanceof Player player) {

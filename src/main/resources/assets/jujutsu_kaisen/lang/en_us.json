@@ -62,6 +62,7 @@
   "gui.jujutsu_kaisen.ability.points": "Ability Points: %1$d",
 
   "gui.jujutsu_kaisen.skills": "Skills",
+  "gui.jujutsu_kaisen.skills.max_level": "Maximum Level: %1$d",
   "gui.jujutsu_kaisen.skills.points": "Skill Points: %1$d",
   "gui.jujutsu_kaisen.skills.level": "Level: %1$d/%2$d",
 

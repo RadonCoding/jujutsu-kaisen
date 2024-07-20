@@ -25,6 +25,8 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
+import java.util.Optional;
+
 public class ReleaseCurse extends Ability {
     private static final double RANGE = 32.0D;
 
@@ -86,9 +88,11 @@ public class ReleaseCurse extends Ability {
         ISorcererData curseData = curseCap.getSorcererData();
 
         if (curse instanceof AbsorbedPlayerEntity absorbed) {
-            ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(curse.registryAccess()), absorbed.getPlayer()));
+            ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(),
+                    curseData.serializeNBT(curse.registryAccess()), Optional.of(absorbed.getPlayer())));
         } else {
-            ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(curse.registryAccess())));
+            ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(),
+                    curseData.serializeNBT(curse.registryAccess()), Optional.empty()));
         }
 
         if (owner instanceof ServerPlayer player) {

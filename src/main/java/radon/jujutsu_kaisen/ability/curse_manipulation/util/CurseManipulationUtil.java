@@ -27,23 +27,21 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 public class CurseManipulationUtil {
     @Nullable
     public static CursedSpirit createCurse(LivingEntity owner, AbsorbedCurse curse) {
-        CursedSpirit entity = curse.getType() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(owner.level()) :
-                (CursedSpirit) curse.getType().create(owner.level());
+        CursedSpirit entity = curse.type() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(owner.level()) :
+                (CursedSpirit) curse.type().create(owner.level());
 
         if (entity == null) return null;
 
         entity.setTame(true, false);
         entity.setOwner(owner);
 
-        GameProfile profile = curse.getProfile();
-
-        if (profile != null && entity instanceof AbsorbedPlayerEntity absorbed) {
-            absorbed.setPlayer(profile);
-        }
+        Optional<GameProfile> profile = curse.profile();
+        profile.ifPresent(gameProfile -> ((AbsorbedPlayerEntity) entity).setPlayer(gameProfile));
 
         Vec3 pos = owner.position()
                 .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
@@ -54,7 +52,7 @@ public class CurseManipulationUtil {
     }
 
     public static float getCurseExperience(AbsorbedCurse curse) {
-        return curse.getData().getFloat("experience");
+        return curse.data().getFloat("experience");
     }
 
     public static float getCurseCost(AbsorbedCurse curse) {
@@ -129,7 +127,7 @@ public class CurseManipulationUtil {
         if (curseCap == null) return null;
 
         ISorcererData curseData = curseCap.getSorcererData();
-        curseData.deserializeNBT(entity.registryAccess(), curse.getData());
+        curseData.deserializeNBT(entity.registryAccess(), curse.data());
 
         return entity;
     }

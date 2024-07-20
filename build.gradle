@@ -56,6 +56,7 @@ configurations {
 repositories {
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven' }
     maven { url 'https://maven.theillusivec4.top' }
+    maven { url 'https://cursemaven.com'}
 }
 
 dependencies {
@@ -63,6 +64,7 @@ dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
+    runtimeOnly "curse.maven:spark-361579:5302031"
 }
 
 tasks.withType(ProcessResources).configureEach {

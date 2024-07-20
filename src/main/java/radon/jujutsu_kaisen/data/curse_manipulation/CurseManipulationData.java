@@ -93,7 +93,7 @@ public class CurseManipulationData implements ICurseManipulationData {
     @Nullable
     public AbsorbedCurse getCurse(EntityType<?> type) {
         for (AbsorbedCurse curse : this.getCurses()) {
-            if (curse.getType() == type) return curse;
+            if (curse.type() == type) return curse;
         }
         return null;
     }
@@ -101,7 +101,7 @@ public class CurseManipulationData implements ICurseManipulationData {
     @Override
     public boolean hasCurse(EntityType<?> type) {
         for (AbsorbedCurse curse : this.getCurses()) {
-            if (curse.getType() == type) return true;
+            if (curse.type() == type) return true;
         }
         return false;
     }

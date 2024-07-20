@@ -282,7 +282,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.DINO_CURSE.get(), DinoCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.KO_GUY.get(), KoGuyRenderer::new);
-            event.registerEntityRenderer(JJKEntities.ABSORBED_PLAYER.get(), AbsorbedPlayerEntity::new);
+            event.registerEntityRenderer(JJKEntities.ABSORBED_PLAYER.get(), AbsorbedPlayerRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);

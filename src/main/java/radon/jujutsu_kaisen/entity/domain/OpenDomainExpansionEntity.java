@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity.domain.base;
+package radon.jujutsu_kaisen.entity.domain;
 
 
 import net.minecraft.core.BlockPos;

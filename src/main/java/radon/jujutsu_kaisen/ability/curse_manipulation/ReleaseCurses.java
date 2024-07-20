@@ -21,6 +21,8 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacke
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.Optional;
+
 public class ReleaseCurses extends Ability {
     private static void makePoofParticles(Entity entity) {
         for (int i = 0; i < 20; ++i) {
@@ -70,9 +72,11 @@ public class ReleaseCurses extends Ability {
             ISorcererData curseData = curseCap.getSorcererData();
 
             if (curse instanceof AbsorbedPlayerEntity absorbed) {
-                ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(curse.registryAccess()), absorbed.getPlayer()));
+                ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(),
+                        curseData.serializeNBT(curse.registryAccess()), Optional.of(absorbed.getPlayer())));
             } else {
-                ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(curse.registryAccess())));
+                ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(),
+                        curseData.serializeNBT(curse.registryAccess()), Optional.empty()));
             }
 
             if (owner instanceof ServerPlayer player) {

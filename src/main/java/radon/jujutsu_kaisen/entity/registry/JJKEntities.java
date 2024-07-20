@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.*;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.domain.*;
-import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.effect.*;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;

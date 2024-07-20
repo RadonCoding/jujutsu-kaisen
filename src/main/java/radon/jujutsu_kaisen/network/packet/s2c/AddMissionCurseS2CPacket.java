@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -11,6 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -19,14 +22,18 @@ import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 
-public record SyncMissionS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<SyncMissionS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "sync_mission_clientbound"));
-    public static final StreamCodec<? super RegistryFriendlyByteBuf, SyncMissionS2CPacket> STREAM_CODEC = StreamCodec.composite(
+import java.util.UUID;
+
+public record AddMissionCurseS2CPacket(ResourceKey<Level> dimension, BlockPos pos, UUID identifier) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<AddMissionCurseS2CPacket> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "add_mission_curse_clientbound"));
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, AddMissionCurseS2CPacket> STREAM_CODEC = StreamCodec.composite(
             ResourceKey.streamCodec(Registries.DIMENSION),
-            SyncMissionS2CPacket::dimension,
-            ByteBufCodecs.COMPOUND_TAG,
-            SyncMissionS2CPacket::nbt,
-            SyncMissionS2CPacket::new
+            AddMissionCurseS2CPacket::dimension,
+            BlockPos.STREAM_CODEC,
+            AddMissionCurseS2CPacket::pos,
+            UUIDUtil.STREAM_CODEC,
+            AddMissionCurseS2CPacket::identifier,
+            AddMissionCurseS2CPacket::new
     );
 
     public void handle(IPayloadContext ctx) {
@@ -39,9 +46,11 @@ public record SyncMissionS2CPacket(ResourceKey<Level> dimension, CompoundTag nbt
 
             IMissionLevelData data = player.level().getData(JJKAttachmentTypes.MISSION_LEVEL);
 
-            Mission mission = new Mission(this.nbt);
+            Mission mission = data.getMission(this.pos);
 
-            data.register(mission);
+            if (mission == null) return;
+
+            mission.addCurse(this.identifier);
         });
     }
 

@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.data.mission.Mission;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncMissionS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.AddMissionCurseS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 
 import java.util.ArrayList;
@@ -88,11 +88,14 @@ public class CurseSpawnerBlock extends Block implements EntityBlock {
 
                 mission.addCurse(curse.getUUID());
 
-                PacketDistributor.sendToAllPlayers(new SyncMissionS2CPacket(mission.getDimension(), mission.serializeNBT()));
+                PacketDistributor.sendToAllPlayers(new AddMissionCurseS2CPacket(mission.getDimension(),
+                        mission.getPos(), curse.getUUID()));
 
                 break;
             }
         }
+
+        mission.getSpawns().remove(pPos);
 
         pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 11);
     }

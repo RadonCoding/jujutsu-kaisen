@@ -831,9 +831,6 @@ public class SorcererData implements ISorcererData {
         return false;
     }
 
-    /**
-     * Where the randomization of the player happens when he spawns in the world
-     */
     @Override
     public void generate(ServerPlayer owner) {
         this.initialized = true;

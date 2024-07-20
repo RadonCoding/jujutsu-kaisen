@@ -40,7 +40,7 @@ public class FishSwarm extends Ability {
         int amount = 0;
 
         for (int i = 0; i < data.getCurses().size(); i++) {
-            if (data.getCurses().get(i).getType() != JJKEntities.FISH_CURSE.get()) continue;
+            if (data.getCurses().get(i).type() != JJKEntities.FISH_CURSE.get()) continue;
 
             amount++;
         }

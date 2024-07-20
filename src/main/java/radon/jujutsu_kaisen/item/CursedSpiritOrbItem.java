@@ -4,6 +4,7 @@ package radon.jujutsu_kaisen.item;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
@@ -21,6 +23,7 @@ import radon.jujutsu_kaisen.data.curse_manipulation.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
 
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class CursedSpiritOrbItem extends Item {
 
         if (curse == null) return;
 
-        pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID), curse.getName().copy().withStyle(ChatFormatting.DARK_RED)));
+        pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID), curse.name().copy().withStyle(ChatFormatting.DARK_RED)));
         pTooltipComponents.add(Component.translatable(String.format("item.%s.experience", JujutsuKaisen.MOD_ID),
                 Component.literal(Float.toString(CurseManipulationUtil.getCurseExperience(curse))).withStyle(ChatFormatting.GREEN)));
     }
@@ -72,6 +75,9 @@ public class CursedSpiritOrbItem extends Item {
         ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
         curseManipulationData.addCurse(curse);
 
+        if (pEntityLiving instanceof ServerPlayer player) {
+            PacketDistributor.sendToPlayer(player, new SyncCurseManipulationDataS2CPacket(curseManipulationData.serializeNBT(pEntityLiving.registryAccess())));
+        }
         return stack;
     }
 }

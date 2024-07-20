@@ -14,7 +14,9 @@ import radon.jujutsu_kaisen.client.gui.screen.widget.SkillWidget;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,8 +78,10 @@ public class SkillsTab extends JJKTab {
 
         ISorcererData data = cap.getSorcererData();
 
-        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.skills.points", JujutsuKaisen.MOD_ID), data.getSkillPoints()),
-                xOffset, yOffset, 16777215, true);
+        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.skills.max_level", JujutsuKaisen.MOD_ID),
+                        SorcererUtil.getMaximumSkillLevel(data.getExperience())), xOffset, yOffset, 16766720, true);
+        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.skills.points", JujutsuKaisen.MOD_ID),
+                        data.getSkillPoints()), xOffset, yOffset + this.minecraft.font.lineHeight, 16777215, true);
     }
 
     @Override
