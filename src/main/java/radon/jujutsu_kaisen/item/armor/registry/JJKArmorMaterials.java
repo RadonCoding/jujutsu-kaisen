@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.item.armor.registry;
 
 import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -24,7 +25,8 @@ public class JJKArmorMaterials {
                 defense.put(ArmorItem.Type.CHESTPLATE, 0);
                 defense.put(ArmorItem.Type.HELMET, 0);
                 defense.put(ArmorItem.Type.BODY, 0);
-            }), 0, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.EMPTY, List.of(), 0.0F, 0.0F));
+            }), 0, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.EMPTY,
+                    List.of(new ArmorMaterial.Layer(new ResourceLocation(""))), 0.0F, 0.0F));
     public static DeferredHolder<ArmorMaterial, ArmorMaterial> INVENTORY_CURSE = ARMOR_MATERIALS.register("inventory_curse", () ->
             new ArmorMaterial(Util.make(new EnumMap<>(ArmorItem.Type.class), defense -> {
                 defense.put(ArmorItem.Type.BOOTS, 0);
@@ -32,7 +34,8 @@ public class JJKArmorMaterials {
                 defense.put(ArmorItem.Type.CHESTPLATE, 0);
                 defense.put(ArmorItem.Type.HELMET, 0);
                 defense.put(ArmorItem.Type.BODY, 0);
-            }), 0, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.EMPTY, List.of(), 0.0F, 0.0F));
+            }), 0, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.EMPTY,
+                    List.of(new ArmorMaterial.Layer(new ResourceLocation(""))), 0.0F, 0.0F));
     public static DeferredHolder<ArmorMaterial, ArmorMaterial> BLINDFOLD = ARMOR_MATERIALS.register("blindfold", () ->
             new ArmorMaterial(Util.make(new EnumMap<>(ArmorItem.Type.class), defense -> {
                 defense.put(ArmorItem.Type.BOOTS, 0);
@@ -40,5 +43,6 @@ public class JJKArmorMaterials {
                 defense.put(ArmorItem.Type.CHESTPLATE, 0);
                 defense.put(ArmorItem.Type.HELMET, 0);
                 defense.put(ArmorItem.Type.BODY, 0);
-            }), 0, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.EMPTY, List.of(), 0.0F, 0.0F));
+            }), 0, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.EMPTY,
+                    List.of(new ArmorMaterial.Layer(new ResourceLocation(""))), 0.0F, 0.0F));
 }

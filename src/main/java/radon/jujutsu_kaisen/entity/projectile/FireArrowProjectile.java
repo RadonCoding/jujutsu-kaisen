@@ -59,7 +59,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (entity == owner) return;
 
-        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FURNACE_OPEN.get()), DAMAGE * this.getPower());
+        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DIVINE_FLAME.get()), DAMAGE * this.getPower());
     }
 
     @Override
@@ -142,7 +142,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             ExplosionHandler.spawn(this.level().dimension(), location, this.getExplosionRadius(), 2 * 20, this.getPower() * 0.1F,
-                    owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FURNACE_OPEN.get()), true);
+                    owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DIVINE_FLAME.get()), true);
         }
         this.discard();
     }

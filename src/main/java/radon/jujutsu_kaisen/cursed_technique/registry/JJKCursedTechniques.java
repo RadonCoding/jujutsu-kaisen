@@ -63,7 +63,7 @@ public class JJKCursedTechniques {
                             JJKAbilities.DISMANTLE_SKATING,
                             JJKAbilities.CLEAVE,
                             JJKAbilities.SPIDERWEB,
-                            JJKAbilities.FURNACE_OPEN
+                            JJKAbilities.DIVINE_FLAME
                     )
                     .domain(JJKAbilities.MALEVOLENT_SHRINE)
                     .build());

@@ -117,7 +117,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, DismantleSkating> DISMANTLE_SKATING = ABILITIES.register("dismantle_skating", DismantleSkating::new);
     public static DeferredHolder<Ability, Cleave> CLEAVE = ABILITIES.register("cleave", Cleave::new);
     public static DeferredHolder<Ability, Spiderweb> SPIDERWEB = ABILITIES.register("spiderweb", Spiderweb::new);
-    public static DeferredHolder<Ability, FurnaceOpen> FURNACE_OPEN = ABILITIES.register("furnace_open", FurnaceOpen::new);
+    public static DeferredHolder<Ability, DivineFlame> DIVINE_FLAME = ABILITIES.register("divine_flame", DivineFlame::new);
     public static DeferredHolder<Ability, MalevolentShrine> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
     public static DeferredHolder<Ability, Rika> RIKA = ABILITIES.register("rika", Rika::new);
