@@ -111,16 +111,10 @@ public class CutModelUtil {
         return num / denom;
     }
 
-    private static RigidBody.Triangle[] triangulate(Matrix4f matrix4f, ModelPart part, ModelPart.Cube cube) {
+    private static RigidBody.Triangle[] triangulate(Matrix4f matrix4f, ModelPart.Cube cube) {
         RigidBody.Triangle[] triangles = new RigidBody.Triangle[12];
 
         int i = 0;
-
-        PoseStack poseStack = new PoseStack();
-        poseStack.mulPose(matrix4f);
-        part.translateAndRotate(poseStack);
-
-        matrix4f = poseStack.last().pose();
 
         for (ModelPart.Polygon polygon : cube.polygons) {
             Vector3f tmp = new Vector3f();
@@ -149,31 +143,10 @@ public class CutModelUtil {
         return triangles;
     }
 
-    private static RigidBody.Triangle[] triangulate(Matrix4f matrix4f, GeoBone part, GeoCube cube) {
+    private static RigidBody.Triangle[] triangulate(Matrix4f matrix4f, GeoCube cube) {
         RigidBody.Triangle[] triangles = new RigidBody.Triangle[12];
 
         int i = 0;
-
-        PoseStack poseStack = new PoseStack();
-        poseStack.mulPose(matrix4f);
-
-        List<GeoBone> roots = new ArrayList<>();
-
-        GeoBone parent = part.getParent();
-
-        while (parent != null) {
-            roots.add(parent);
-
-            parent = parent.getParent();
-        }
-
-        for (GeoBone root : roots.reversed()) {
-            RenderUtil.prepMatrixForBone(poseStack, root);
-        }
-
-        RenderUtil.prepMatrixForBone(poseStack, part);
-
-        matrix4f = poseStack.last().pose();
 
         for (GeoQuad quad : cube.quads()) {
             GeoVertex[] vertices = quad.vertices();
@@ -204,12 +177,12 @@ public class CutModelUtil {
         return triangles;
     }
     
-    private static RigidBody.VertexData[] cutAndCapModelBox(Matrix4f matrix4f, ModelPart part, ModelPart.Cube cube, float[] plane) {
-        return cutAndCapConvex(triangulate(matrix4f, part, cube), plane);
+    private static RigidBody.VertexData[] cutAndCapModelBox(Matrix4f matrix4f, ModelPart.Cube cube, float[] plane) {
+        return cutAndCapConvex(triangulate(matrix4f, cube), plane);
     }
 
-    private static RigidBody.VertexData[] cutAndCapModelBox(Matrix4f matrix4f, GeoBone part, GeoCube cube, float[] plane) {
-        return cutAndCapConvex(triangulate(matrix4f, part, cube), plane);
+    private static RigidBody.VertexData[] cutAndCapModelBox(Matrix4f matrix4f, GeoCube cube, float[] plane) {
+        return cutAndCapConvex(triangulate(matrix4f, cube), plane);
     }
 
     private static Matrix3f eulerToMat(float yaw, float pitch, float roll) {
@@ -383,7 +356,7 @@ public class CutModelUtil {
 
             poseStack.translate(0.0F, ageable.babyYHeadOffset / 16.0F, ageable.babyZHeadOffset / 16.0F);
             ((IAgeableListModelAccessor) ageable).invokeHeadParts()
-                    .forEach(part -> boxes.add(Pair.of(part, poseStack.last().pose())));
+                    .forEach(part -> collect(poseStack, part, boxes));
             poseStack.popPose();
 
             poseStack.pushPose();
@@ -391,14 +364,36 @@ public class CutModelUtil {
             poseStack.scale(f11, f11, f11);
             poseStack.translate(0.0F, ageable.bodyYOffset / 16.0F, 0.0F);
             ((IAgeableListModelAccessor) ageable).invokeBodyParts()
-                    .forEach(part -> boxes.add(Pair.of(part, poseStack.last().pose())));
+                    .forEach(part -> collect(poseStack, part, boxes));
             poseStack.popPose();
         } else {
             ((IAgeableListModelAccessor) ageable).invokeHeadParts()
-                    .forEach(part -> boxes.add(Pair.of(part, poseStack.last().pose())));
+                    .forEach(part -> collect(poseStack, part, boxes));
             ((IAgeableListModelAccessor) ageable).invokeBodyParts()
-                    .forEach(part -> boxes.add(Pair.of(part, poseStack.last().pose())));
+                    .forEach(part -> collect(poseStack, part, boxes));
         }
+    }
+
+    private static void collect(PoseStack poseStack, ModelPart part, List<Pair<ModelPart, Matrix4f>> boxes) {
+        poseStack.pushPose();
+        part.translateAndRotate(poseStack);
+        boxes.add(Pair.of(part, poseStack.last().pose()));
+
+        for (ModelPart child : part.children.values()) {
+            collect(poseStack, child, boxes);
+        }
+        poseStack.popPose();
+    }
+
+    private static void collect(PoseStack poseStack, GeoBone bone, List<Pair<GeoBone, Matrix4f>> boxes) {
+        poseStack.pushPose();
+        RenderUtil.prepMatrixForBone(poseStack, bone);
+        boxes.add(Pair.of(bone, poseStack.last().pose()));
+
+        for (GeoBone child : bone.getChildBones()) {
+            collect(poseStack, child, boxes);
+        }
+        poseStack.popPose();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -470,6 +465,43 @@ public class CutModelUtil {
         } else if (model instanceof AgeableListModel<?> ageable) {
             collect(poseStack, ageable, boxes);
         }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static void collect(LivingEntity entity, GeoEntityRenderer renderer, float partialTicks, List<Pair<GeoBone, Matrix4f>> boxes) {
+        PoseStack poseStack = new PoseStack();
+
+        boolean shouldSit = entity.isPassenger() && (entity.getVehicle() != null);
+        float lerpBodyRot = Mth.rotLerp(partialTicks, entity.yBodyRotO, entity.yBodyRot);
+        float lerpHeadRot = Mth.rotLerp(partialTicks, entity.yHeadRotO, entity.yHeadRot);
+
+        if (shouldSit && entity.getVehicle() instanceof LivingEntity vehicle) {
+            lerpBodyRot = Mth.rotLerp(partialTicks, vehicle.yBodyRotO, vehicle.yBodyRot);
+            float netHeadYaw = lerpHeadRot - lerpBodyRot;
+            float clampedHeadYaw = Mth.clamp(Mth.wrapDegrees(netHeadYaw), -85.0F, 85.0F);
+            lerpBodyRot = lerpHeadRot - clampedHeadYaw;
+
+            if (clampedHeadYaw * clampedHeadYaw > 2500.0F) lerpBodyRot += clampedHeadYaw * 0.2F;
+        }
+
+        if (entity.getPose() == Pose.SLEEPING) {
+            Direction bedDirection = entity.getBedOrientation();
+
+            if (bedDirection != null) {
+                float eyePosOffset = entity.getEyeHeight(Pose.STANDING) - 0.1F;
+                poseStack.translate(-bedDirection.getStepX() * eyePosOffset, 0.0D, -bedDirection.getStepZ() * eyePosOffset);
+            }
+        }
+
+        float ageInTicks = entity.tickCount + partialTicks;
+        ((IGeoEntityRendererAccessor) renderer).invokeApplyRotations(entity, poseStack, ageInTicks, lerpBodyRot, partialTicks);
+
+        poseStack.translate(0, 0.01F, 0);
+
+        GeoModel<?> model = renderer.getGeoModel();
+        model.getAnimationProcessor().getRegisteredBones().forEach(bone -> {
+            if (bone.getParent() == null) collect(poseStack, bone, boxes);
+        });
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -553,7 +585,7 @@ public class CutModelUtil {
             if (!visible) continue;
 
             for (ModelPart.Cube cube : pair.first.cubes) {
-                RigidBody.VertexData[] data = cutAndCapModelBox(pair.second, pair.first, cube, new float[] { plane.x, plane.y, plane.z, -distance });
+                RigidBody.VertexData[] data = cutAndCapModelBox(pair.second, cube, new float[] { plane.x, plane.y, plane.z, -distance });
                 RigidBody.CutModelData tp = null;
                 RigidBody.CutModelData bt = null;
 
@@ -578,40 +610,7 @@ public class CutModelUtil {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void collect(LivingEntity entity, GeoEntityRenderer renderer, Vector3f plane, float distance, float partialTicks, List<RigidBody.CutModelData> top, List<RigidBody.CutModelData> bottom) {
         List<Pair<GeoBone, Matrix4f>> boxes = new ArrayList<>();
-
-        GeoModel<?> model = renderer.getGeoModel();
-
-        PoseStack poseStack = new PoseStack();
-
-        boolean shouldSit = entity.isPassenger() && (entity.getVehicle() != null);
-        float lerpBodyRot = Mth.rotLerp(partialTicks, entity.yBodyRotO, entity.yBodyRot);
-        float lerpHeadRot = Mth.rotLerp(partialTicks, entity.yHeadRotO, entity.yHeadRot);
-
-        if (shouldSit && entity.getVehicle() instanceof LivingEntity vehicle) {
-            lerpBodyRot = Mth.rotLerp(partialTicks, vehicle.yBodyRotO, vehicle.yBodyRot);
-            float netHeadYaw = lerpHeadRot - lerpBodyRot;
-            float clampedHeadYaw = Mth.clamp(Mth.wrapDegrees(netHeadYaw), -85.0F, 85.0F);
-            lerpBodyRot = lerpHeadRot - clampedHeadYaw;
-
-            if (clampedHeadYaw * clampedHeadYaw > 2500.0F) lerpBodyRot += clampedHeadYaw * 0.2F;
-        }
-
-        if (entity.getPose() == Pose.SLEEPING) {
-            Direction bedDirection = entity.getBedOrientation();
-
-            if (bedDirection != null) {
-                float eyePosOffset = entity.getEyeHeight(Pose.STANDING) - 0.1F;
-                poseStack.translate(-bedDirection.getStepX() * eyePosOffset, 0.0D, -bedDirection.getStepZ() * eyePosOffset);
-            }
-        }
-
-        float ageInTicks = entity.tickCount + partialTicks;
-        ((IGeoEntityRendererAccessor) renderer).invokeApplyRotations(entity, poseStack, ageInTicks, lerpBodyRot, partialTicks);
-
-        poseStack.translate(0, 0.01F, 0);
-        
-        model.getAnimationProcessor().getRegisteredBones().forEach(bone ->
-                boxes.add(Pair.of(bone, poseStack.last().pose())));
+        collect(entity, renderer, partialTicks, boxes);
 
         Minecraft mc = Minecraft.getInstance();
         ResourceLocation texture = renderer.getTextureLocation(entity);
@@ -691,7 +690,7 @@ public class CutModelUtil {
             if (!visible) continue;
 
             for (GeoCube cube : pair.first.getCubes()) {
-                RigidBody.VertexData[] data = cutAndCapModelBox(pair.second, pair.first, cube, new float[] { plane.x, plane.y, plane.z, -distance });
+                RigidBody.VertexData[] data = cutAndCapModelBox(pair.second, cube, new float[] { plane.x, plane.y, plane.z, -distance });
                 RigidBody.CutModelData tp = null;
                 RigidBody.CutModelData bt = null;
 

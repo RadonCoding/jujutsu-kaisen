@@ -71,16 +71,14 @@ public class SatoruGojoEntity extends SorcererEntity {
 
         LivingEntity target = this.getTarget();
 
-        boolean wear = false;
+        boolean wear = true;
 
-        if (target == null) {
-            wear = true;
-        } else {
+        if (target != null) {
             IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
                 ISorcererData data = cap.getSorcererData();
-                wear = data.getExperience() >= SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+                wear = data.getExperience() < SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
             }
         }
         this.setItemSlot(EquipmentSlot.HEAD, wear ? this.blindfold : ItemStack.EMPTY);
