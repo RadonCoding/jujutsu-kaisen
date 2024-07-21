@@ -31,10 +31,13 @@ import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvider, ICurioItem {
+    private static final int CAPACITY = 9;
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public InventoryCurseItem(Holder<ArmorMaterial> pMaterial, Type pType, Properties pProperties) {
@@ -84,7 +87,7 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
 
         if (inventory == null) return null;
 
-        SimpleContainer container = new SimpleContainer(9);
+        SimpleContainer container = new SimpleContainer(CAPACITY);
 
         for (ItemStack stack : inventory) {
             container.addItem(stack);
@@ -92,9 +95,9 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
 
         chest.set(JJKDataComponentTypes.HIDDEN_INVENTORY, container.getItems());
 
-        container.addListener(pContainer -> {
-            pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F);
-        });
-        return new ChestMenu(MenuType.GENERIC_9x1, pContainerId, pPlayerInventory, container, container.getContainerSize() / 9);
+        container.addListener(pContainer ->
+                pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(),
+                        JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F));
+        return new ChestMenu(MenuType.GENERIC_9x1, pContainerId, pPlayerInventory, container, container.getContainerSize() / CAPACITY);
     }
 }

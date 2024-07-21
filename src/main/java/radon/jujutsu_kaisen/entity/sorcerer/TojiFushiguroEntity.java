@@ -198,9 +198,9 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
         if (inventory == null) return;
 
-        inventory.set(PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
-        inventory.set(INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
-        inventory.set(SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
+        inventory.add(PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
+        inventory.add(INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
+        inventory.add(SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
 
         CuriosUtil.setItemInSlot(this, "body", chest);
     }
