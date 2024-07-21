@@ -30,7 +30,7 @@ public class OpenInventoryCurseC2SPacket implements CustomPacketPayload {
 
             if (sender.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem item) {
                 sender.openMenu(item);
-            } else if (CuriosUtil.findSlot(sender, "bodyDL").getItem() instanceof InventoryCurseItem item) {
+            } else if (CuriosUtil.findSlot(sender, "body").getItem() instanceof InventoryCurseItem item) {
                 sender.openMenu(item);
             }
         });

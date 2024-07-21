@@ -260,6 +260,8 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 ParticleUtil.sendParticles((ServerLevel) this.level(), new SlicedEntityParticle.Options(living.getId(), plane.toVector3f(), distance),
                         true, living.getX(), living.getY(), living.getZ(), 0.0D, 0.0D, 0.0D);
+
+                living.setInvisible(true);
             }
         }
         if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {

@@ -1031,12 +1031,12 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("unlocked", unlockedTag);
 
-        ListTag traitsTag = new ListTag();
+        List<Integer> traits = new ArrayList<>();
 
         for (Trait trait : this.traits) {
-            traitsTag.add(IntTag.valueOf(trait.ordinal()));
+            traits.add(trait.ordinal());
         }
-        nbt.put("traits", traitsTag);
+        nbt.putIntArray("traits", traits);
 
         ListTag summonsTag = new ListTag();
 
@@ -1090,8 +1090,8 @@ public class SorcererData implements ISorcererData {
 
         this.traits.clear();
 
-        for (Tag tag : nbt.getList("traits", Tag.TAG_INT)) {
-            this.traits.add(Trait.values()[((IntTag) tag).getAsInt()]);
+        for (int ordinal : nbt.getIntArray("traits")) {
+            this.traits.add(Trait.values()[ordinal]);
         }
 
         this.summons.clear();

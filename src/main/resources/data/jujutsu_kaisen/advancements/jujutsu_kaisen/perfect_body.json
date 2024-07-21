@@ -1,23 +1,24 @@
 {
   "parent": "jujutsu_kaisen:jujutsu_kaisen/root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
   "display": {
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.perfect_body.description"
+    },
     "icon": {
-      "item": "minecraft:diamond"
+      "count": 1,
+      "id": "minecraft:diamond"
     },
     "title": {
       "translate": "advancements.jujutsu_kaisen.perfect_body.title"
-    },
-    "description": {
-      "translate": "advancements.jujutsu_kaisen.perfect_body.description"
     },
     "frame": "challenge",
     "hidden": false,
     "show_toast": true,
     "announce_to_chat": true
-  },
-  "criteria": {
-    "impossible": {
-      "trigger": "minecraft:impossible"
-    }
   }
 }

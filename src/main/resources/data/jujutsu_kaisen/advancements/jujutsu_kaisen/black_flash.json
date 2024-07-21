@@ -1,23 +1,24 @@
 {
   "parent": "jujutsu_kaisen:jujutsu_kaisen/root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
   "display": {
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.black_flash.description"
+    },
     "icon": {
-      "item": "minecraft:black_glazed_terracotta"
+      "count": 1,
+      "id": "minecraft:black_glazed_terracotta"
     },
     "title": {
       "translate": "advancements.jujutsu_kaisen.black_flash.title"
-    },
-    "description": {
-      "translate": "advancements.jujutsu_kaisen.black_flash.description"
     },
     "frame": "challenge",
     "hidden": false,
     "show_toast": true,
     "announce_to_chat": true
-  },
-  "criteria": {
-    "impossible": {
-      "trigger": "minecraft:impossible"
-    }
   }
 }

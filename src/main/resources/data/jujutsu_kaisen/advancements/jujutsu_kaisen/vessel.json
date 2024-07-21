@@ -1,23 +1,24 @@
 {
   "parent": "jujutsu_kaisen:jujutsu_kaisen/root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
   "display": {
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.vessel.description"
+    },
     "icon": {
-      "item": "minecraft:iron_bars"
+      "count": 1,
+      "id": "minecraft:iron_bars"
     },
     "title": {
       "translate": "advancements.jujutsu_kaisen.vessel.title"
-    },
-    "description": {
-      "translate": "advancements.jujutsu_kaisen.vessel.description"
     },
     "frame": "challenge",
     "hidden": false,
     "show_toast": true,
     "announce_to_chat": true
-  },
-  "criteria": {
-    "impossible": {
-      "trigger": "minecraft:impossible"
-    }
   }
 }

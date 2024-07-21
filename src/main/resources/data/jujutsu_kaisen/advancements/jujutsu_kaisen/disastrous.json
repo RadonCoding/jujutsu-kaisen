@@ -1,20 +1,5 @@
 {
   "parent": "jujutsu_kaisen:jujutsu_kaisen/root",
-  "display": {
-    "icon": {
-      "item": "minecraft:tnt"
-    },
-    "title": {
-      "translate": "advancements.jujutsu_kaisen.disastrous.title"
-    },
-    "description": {
-      "translate": "advancements.jujutsu_kaisen.disastrous.description"
-    },
-    "frame": "challenge",
-    "hidden": false,
-    "show_toast": true,
-    "announce_to_chat": true
-  },
   "criteria": {
     "jogo": {
       "trigger": "minecraft:player_killed_entity",
@@ -40,6 +25,22 @@
         }
       }
     }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.disastrous.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:tnt"
+    },
+    "title": {
+      "translate": "advancements.jujutsu_kaisen.disastrous.title"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "show_toast": true,
+    "announce_to_chat": true
   },
   "requirements": [
     ["jogo"],

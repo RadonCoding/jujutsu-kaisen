@@ -1,20 +1,5 @@
 {
   "parent": "jujutsu_kaisen:jujutsu_kaisen/disastrous",
-  "display": {
-    "icon": {
-      "item": "minecraft:elytra"
-    },
-    "title": {
-      "translate": "advancements.jujutsu_kaisen.the_strongest_of_modern_times.title"
-    },
-    "description": {
-      "translate": "advancements.jujutsu_kaisen.the_strongest_of_modern_times.description"
-    },
-    "frame": "challenge",
-    "hidden": false,
-    "show_toast": true,
-    "announce_to_chat": true
-  },
   "criteria": {
     "satoru": {
       "trigger": "minecraft:player_killed_entity",
@@ -24,6 +9,22 @@
         }
       }
     }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.the_strongest_of_modern_times.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:elytra"
+    },
+    "title": {
+      "translate": "advancements.jujutsu_kaisen.the_strongest_of_modern_times.title"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "show_toast": true,
+    "announce_to_chat": true
   },
   "requirements": [
     [

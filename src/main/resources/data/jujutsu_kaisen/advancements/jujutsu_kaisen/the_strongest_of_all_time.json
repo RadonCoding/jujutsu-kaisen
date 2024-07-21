@@ -1,23 +1,24 @@
 {
   "parent": "jujutsu_kaisen:jujutsu_kaisen/the_strongest_of_modern_times",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
   "display": {
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.the_strongest_of_all_time.description"
+    },
     "icon": {
-      "item": "minecraft:netherite_sword"
+      "count": 1,
+      "id": "minecraft:netherite_sword"
     },
     "title": {
       "translate": "advancements.jujutsu_kaisen.the_strongest_of_all_time.title"
-    },
-    "description": {
-      "translate": "advancements.jujutsu_kaisen.the_strongest_of_all_time.description"
     },
     "frame": "challenge",
     "hidden": false,
     "show_toast": true,
     "announce_to_chat": true
-  },
-  "criteria": {
-    "impossible": {
-      "trigger": "minecraft:impossible"
-    }
   }
 }

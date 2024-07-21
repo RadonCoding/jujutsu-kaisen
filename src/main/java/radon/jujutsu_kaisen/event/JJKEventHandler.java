@@ -142,7 +142,7 @@ public class JJKEventHandler {
                 }
             }
 
-            // Perfect bodyDL generic melee increase
+            // Perfect body generic melee increase
             if (DamageUtil.isMelee(source)) {
                 if (source.getEntity() instanceof LivingEntity attacker) {
                     IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);

@@ -116,7 +116,7 @@ public class JJKClientEventHandler {
             if (mc.player == null) return;
 
             if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
-                    CuriosUtil.findSlot(mc.player, "bodyDL").is(JJKItems.INVENTORY_CURSE.get()))) {
+                    CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
                 PacketDistributor.sendToServer(OpenInventoryCurseC2SPacket.INSTANCE);
             }
         }

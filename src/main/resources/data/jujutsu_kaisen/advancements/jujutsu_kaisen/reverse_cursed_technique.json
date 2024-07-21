@@ -1,23 +1,24 @@
 {
   "parent": "jujutsu_kaisen:jujutsu_kaisen/root",
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
+    }
+  },
   "display": {
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.reverse_cursed_technique.description"
+    },
     "icon": {
-      "item": "minecraft:golden_apple"
+      "count": 1,
+      "id": "minecraft:golden_apple"
     },
     "title": {
       "translate": "advancements.jujutsu_kaisen.reverse_cursed_technique.title"
-    },
-    "description": {
-      "translate": "advancements.jujutsu_kaisen.reverse_cursed_technique.description"
     },
     "frame": "challenge",
     "hidden": false,
     "show_toast": true,
     "announce_to_chat": true
-  },
-  "criteria": {
-    "impossible": {
-      "trigger": "minecraft:impossible"
-    }
   }
 }
