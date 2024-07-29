@@ -17,7 +17,7 @@ public class StructureTemplateMixin {
     @Inject(method = "placeInWorld(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;Lnet/minecraft/util/RandomSource;I)Z", at = @At(value = "HEAD"))
     private void placeInWorld(ServerLevelAccessor pServerLevel, BlockPos pOffset, BlockPos pPos, StructurePlaceSettings pSettings, RandomSource pRandom, int pFlags, CallbackInfoReturnable<Boolean> cir) {
         if (pSettings.getProcessors().stream().anyMatch(processor ->
-                ((StructureProcessorAccessor) processor).getTypeAccessor() == JJKProcessors.WATERLOGGING_FIX_PROCESSOR.get())) {
+                ((IStructureProcessorAccessor) processor).getTypeAccessor() == JJKProcessors.WATERLOGGING_FIX_PROCESSOR.get())) {
             pSettings.setKeepLiquids(false);
         }
     }

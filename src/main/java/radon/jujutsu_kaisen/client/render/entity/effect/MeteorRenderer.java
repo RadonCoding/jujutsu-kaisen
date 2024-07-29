@@ -29,10 +29,8 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
     }
 
     @Override
-    public void render(@NotNull MeteorEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+    public void render(@NotNull MeteorEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int packedLight) {
         Minecraft mc = Minecraft.getInstance();
-
-        assert mc.level != null;
 
         int size = pEntity.getSize();
         BlockPos center = pEntity.blockPosition();
@@ -70,7 +68,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
                         for (RenderType type : model.getRenderTypes(state, rand, ModelData.EMPTY)) {
                             renderer.renderSingleBlock(state,
                                     pPoseStack,
-                                    bufferSource,
+                                    pBuffer,
                                     LightTexture.FULL_BRIGHT,
                                     OverlayTexture.NO_OVERLAY,
                                     ModelData.EMPTY,

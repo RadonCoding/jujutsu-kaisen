@@ -92,13 +92,15 @@ public class SorcererData implements ISorcererData {
     private int brainDamageTimer;
     private long lastBlackFlashTime;
     private int fingers;
+    private float domainScale;
 
     public SorcererData(LivingEntity owner) {
         this.owner = owner;
 
         this.unlocked = new HashSet<>();
-
         this.additional = new HashSet<>();
+        this.traits = new HashSet<>();
+        this.summons = new HashSet<>();
 
         this.nature = CursedEnergyNature.BASIC;
 
@@ -108,8 +110,7 @@ public class SorcererData implements ISorcererData {
 
         this.lastBlackFlashTime = -1;
 
-        this.traits = new HashSet<>();
-        this.summons = new HashSet<>();
+        this.domainScale = Math.clamp(1.0F, (float) ConfigHolder.SERVER.minimumDomainScale.getAsDouble(), (float) ConfigHolder.SERVER.maximumDomainScale.getAsDouble());
     }
 
     private void updateSummons() {
@@ -946,6 +947,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addFingers(int count) {
         this.fingers += count;
+    }
+
+    @Override
+    public int getDomainSize() {
+        return (int) (ConfigHolder.SERVER.domainSize.getAsInt() * this.domainScale);
     }
 
     @Override

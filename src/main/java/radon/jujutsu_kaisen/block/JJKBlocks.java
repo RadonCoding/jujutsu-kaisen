@@ -40,14 +40,6 @@ public class JJKBlocks {
                     .lightLevel(pState -> 14)
                     .noLootTable()
                     .sound(SoundType.GLASS)));
-    public static DeferredHolder<Block, DomainFloorBlock> DOMAIN_FLOOR = BLOCKS.register("domain_floor", () ->
-            new DomainFloorBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 3600000.8F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel(pState -> 14)
-                    .noLootTable()
-                    .sound(SoundType.GLASS)
-                    .noTerrainParticles()));
     public static DeferredHolder<Block, DomainAirBlock> DOMAIN_AIR = BLOCKS.register("domain_air", () ->
             new DomainAirBlock(BlockBehaviour.Properties.of()
                     .lightLevel(pState -> 14)
@@ -56,10 +48,8 @@ public class JJKBlocks {
                     .air()));
     public static DeferredHolder<Block, DomainTransparentBlock> DOMAIN_TRANSPARENT = BLOCKS.register("domain_transparent", () ->
             new DomainTransparentBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 3600000.8F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel(pState -> 14)
-                    .noLootTable()));
+                    .strength(0.6F)
+                    .sound(SoundType.GLASS)));
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->

@@ -37,7 +37,6 @@ import radon.jujutsu_kaisen.client.model.entity.effect.FireBeamModel;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.particle.registry.JJKParticles;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
-import radon.jujutsu_kaisen.client.render.block.DomainFloorRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
 import radon.jujutsu_kaisen.client.render.entity.effect.*;
@@ -256,8 +255,6 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-            event.registerBlockEntityRenderer(JJKBlockEntities.DOMAIN_FLOOR.get(), pContext -> new DomainFloorRenderer());
-
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.AUTHENTIC_MUTUAL_LOVE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);

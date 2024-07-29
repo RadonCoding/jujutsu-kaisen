@@ -20,11 +20,12 @@
     "client.IChunkGeneratorAccessor",
     "common.EnchantmentHelperMixin",
     "common.EntityMixin",
+    "common.IStructureProcessorAccessor",
     "common.ItemMixin",
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
+    "common.MinecraftServerMixin",
     "common.MobMixin",
-    "common.StructureProcessorAccessor",
     "common.StructureTemplateMixin"
   ],
   "minVersion": "0.8"

@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.data.domain;
 
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -25,18 +25,24 @@ import radon.jujutsu_kaisen.network.packet.s2c.UpdateDomainInfoS2CPacket;
 
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkState;
+
 public class DomainData implements IDomainData {
-    private final Set<DomainInfo> domains;
+    private final LinkedHashSet<DomainInfo> domains;
     private final Map<UUID, Vec3> spawns;
     private final Level level;
     @Nullable
     private ResourceKey<Level> original;
+
+    private final DomainCarver carver;
 
     public DomainData(Level level) {
         this.level = level;
 
         this.domains = new LinkedHashSet<>();
         this.spawns = new HashMap<>();
+
+        this.carver = new DomainCarver(this.domains);
     }
 
     @Override
@@ -51,6 +57,8 @@ public class DomainData implements IDomainData {
 
         this.domains.removeIf(info -> !(original.getEntity(info.identifier()) instanceof DomainExpansionEntity domain)
                 || domain.isRemoved());
+
+        this.carver.tick(serverLevel);
 
         if (this.domains.isEmpty()) {
             Iterable<Entity> entities = serverLevel.getEntities().getAll();

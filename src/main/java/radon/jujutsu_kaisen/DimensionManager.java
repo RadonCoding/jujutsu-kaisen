@@ -2,7 +2,7 @@ package radon.jujutsu_kaisen;
 
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +34,10 @@ public class DimensionManager {
     private static final Map<ResourceKey<Level>, BorderChangeListener> listeners = new HashMap<>();
 
     private static int index;
+
+    public static boolean isTemporary(ResourceKey<Level> key) {
+        return temporary.contains(key);
+    }
 
     public static void remove(ServerLevel level) {
         MinecraftServer server = level.getServer();

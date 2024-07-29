@@ -6,10 +6,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.flat.FlatLayerInfo;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
@@ -36,10 +36,8 @@ public class DomainHandler {
         Registry<Biome> registry = level.registryAccess().registryOrThrow(Registries.BIOME);
 
         FlatLevelGeneratorSettings settings = new FlatLevelGeneratorSettings(
-                Optional.empty(), registry.getHolderOrThrow(JJKBiomes.TEMPORARY), List.of()
+                Optional.empty(), registry.getHolderOrThrow(JJKBiomes.DOMAIN_EXPANSION), List.of()
         );
-        settings.getLayersInfo().add(new FlatLayerInfo(1, JJKBlocks.DOMAIN_FLOOR.get()));
-        settings.updateLayers();
 
         ServerLevel inside = DimensionManager.create(level.getServer(), JJKDimensionTypes.DOMAIN_EXPANSION, settings);
 

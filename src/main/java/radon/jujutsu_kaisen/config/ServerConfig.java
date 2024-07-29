@@ -37,8 +37,9 @@ public class ServerConfig {
 
     public final ModConfigSpec.IntValue minimumVeilSize;
     public final ModConfigSpec.IntValue maximumVeilSize;
-    public final ModConfigSpec.DoubleValue minimumDomainSize;
-    public final ModConfigSpec.DoubleValue maximumDomainSize;
+    public final ModConfigSpec.IntValue domainSize;
+    public final ModConfigSpec.DoubleValue minimumDomainScale;
+    public final ModConfigSpec.DoubleValue maximumDomainScale;
 
     public final ModConfigSpec.DoubleValue domainStrength;
 
@@ -156,10 +157,12 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Domains").push("domains");
-        this.minimumDomainSize = builder.comment("Minimum size for a domain")
-                .defineInRange("minimumDomainSize", 0.1F, 0.2F, 1.0F);
-        this.maximumDomainSize = builder.comment("Maximum size for a domain")
-                .defineInRange("maximumDomainSize", 1.5F, 1.0F, 10.0F);
+        this.domainSize = builder.comment("Base domain size")
+                .defineInRange("domainSize", 32, 4, 256);
+        this.minimumDomainScale = builder.comment("Minimum scale for a domain")
+                .defineInRange("minimumDomainScale", 0.1F, 0.2F, 1.0F);
+        this.maximumDomainScale = builder.comment("Maximum scale for a domain")
+                .defineInRange("maximumDomainScale", 1.5F, 1.0F, 10.0F);
         builder.pop();
 
         builder.comment("Barriers").push("barriers");

@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
@@ -45,7 +46,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.Set;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
-    public static final int RADIUS = 20;
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
     public static TicketController CONTROLLER = new TicketController(JJKEntities.CLOSED_DOMAIN_EXPANSION.getId());
     private int total;
@@ -64,12 +64,20 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public ClosedDomainExpansionEntity(EntityType<?> pType, LivingEntity owner, DomainExpansion ability) {
         super(pType, owner, ability);
 
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (cap == null) return;
+
+        ISorcererData data = cap.getSorcererData();
+
+        int radius = data.getDomainSize();
+
         float yaw = RotationUtil.getTargetAdjustedYRot(owner);
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
-        Vec3 behind = owner.position().subtract(0.0D, RADIUS, 0.0D).add(direction.scale(RADIUS - OFFSET));
+        Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
         this.moveTo(behind.x, behind.y, behind.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        this.entityData.set(DATA_RADIUS, RADIUS);
+        this.entityData.set(DATA_RADIUS, radius);
     }
 
     @Override
@@ -370,10 +378,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 IDomainData data = this.inside.getData(JJKAttachmentTypes.DOMAIN);
                 data.update(this);
 
+                int offset = ConfigHolder.SERVER.domainSize.getAsInt();
+
                 for (Entity entity : this.level().getEntities(this, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
                     data.addSpawn(entity.getUUID(), entity.position());
 
-                    entity.teleportTo(level, entity.getX(), 1.0D, entity.getZ(), Set.of(), 0.0F, 0.0F);
+                    Vec3 distance = entity.position().subtract(this.position());
+
+                    entity.teleportTo(level, distance.x, offset, distance.z, Set.of(), 0.0F, 0.0F);
                 }
             }
         }

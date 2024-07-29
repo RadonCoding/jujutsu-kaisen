@@ -25,10 +25,6 @@ public class DomainBlockEntity extends TemporaryBlockEntity {
         super(JJKBlockEntities.DOMAIN.get(), pPos, pBlockState);
     }
 
-    public DomainBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
-        super(pType, pPos, pBlockState);
-    }
-
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
         if (pBlockEntity.identifier == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain) || domain.isRemoved() || !domain.isAlive()) {
             pBlockEntity.death--;

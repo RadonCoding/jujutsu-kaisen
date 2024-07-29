@@ -81,7 +81,7 @@ public class SkillsTab extends JJKTab {
         pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.skills.max_level", JujutsuKaisen.MOD_ID),
                         SorcererUtil.getMaximumSkillLevel(data.getExperience())), xOffset, yOffset, 16766720, true);
         pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.skills.points", JujutsuKaisen.MOD_ID),
-                        data.getSkillPoints()), xOffset, yOffset + this.minecraft.font.lineHeight, 16777215, true);
+                        data.getSkillPoints()), xOffset, yOffset + this.minecraft.font.lineHeight + 2, 16777215, true);
     }
 
     @Override

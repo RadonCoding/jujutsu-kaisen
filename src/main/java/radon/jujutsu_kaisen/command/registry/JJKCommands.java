@@ -1,10 +1,11 @@
-package radon.jujutsu_kaisen.command;
+package radon.jujutsu_kaisen.command.registry;
 
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.command.*;
 
 @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class JJKCommands {

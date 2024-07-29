@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -46,7 +47,9 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         if (copied.isEmpty()) return;
 
-        int share = (RADIUS * 2) / copied.size();
+        int radius = this.getRadius();
+
+        int share = (radius * 2) / copied.size();
 
         List<CursedTechnique> all = new ArrayList<>();
 
@@ -54,15 +57,15 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
             all.addAll(Collections.nCopies(share, technique));
         }
 
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, RADIUS - 1, 0.0D));
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius - 1, 0.0D));
 
         List<BlockPos> floor = new ArrayList<>();
 
-        for (int x = -RADIUS; x <= RADIUS; x++) {
-            for (int z = -RADIUS; z <= RADIUS; z++) {
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
                 double distance = Math.sqrt(x * x + z * z);
 
-                if (distance > RADIUS) continue;
+                if (distance > radius) continue;
 
                 BlockPos pos = center.offset(x, 0, z);
 

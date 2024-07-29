@@ -15,6 +15,7 @@ import java.io.IOException;
 @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class JJKShaders {
     private static ShaderInstance domain;
+    private static ShaderInstance domainEdge;
 
     @SubscribeEvent
     public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {

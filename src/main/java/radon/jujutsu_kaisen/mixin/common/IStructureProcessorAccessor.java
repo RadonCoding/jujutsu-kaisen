@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(StructureProcessor.class)
-public interface StructureProcessorAccessor {
+public interface IStructureProcessorAccessor {
     @Invoker("getType")
     StructureProcessorType<?> getTypeAccessor();
 }

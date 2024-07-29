@@ -69,15 +69,16 @@ public abstract class DomainExpansion extends Ability implements IToggled {
             return domain.isInsideBarrier(target.blockPosition());
         } else {
             if (this instanceof IClosedDomain) {
+                int radius = sorcererData.getDomainSize();
                 float yaw = RotationUtil.getTargetAdjustedYRot(owner);
                 Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
-                Vec3 behind = owner.position().subtract(0.0D, ClosedDomainExpansionEntity.RADIUS, 0.0D)
-                        .add(direction.scale(ClosedDomainExpansionEntity.RADIUS - DomainExpansionEntity.OFFSET));
+                Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D)
+                        .add(direction.scale(radius - DomainExpansionEntity.OFFSET));
                 BlockPos center = BlockPos.containing(behind.x, behind.y, behind.z)
-                        .offset(0, ClosedDomainExpansionEntity.RADIUS, 0);
+                        .offset(0, radius, 0);
                 BlockPos relative = target.blockPosition().subtract(center);
 
-                if (relative.distSqr(Vec3i.ZERO) >= (ClosedDomainExpansionEntity.RADIUS - 1) * (ClosedDomainExpansionEntity.RADIUS - 1)) {
+                if (relative.distSqr(Vec3i.ZERO) >= (radius - 1) * (radius - 1)) {
                     return false;
                 }
             }

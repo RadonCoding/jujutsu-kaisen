@@ -13,16 +13,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.client.JJKShaders;
 import radon.jujutsu_kaisen.client.render.domain.DomainRenderDispatcher;
 import radon.jujutsu_kaisen.client.util.RenderUtil;
 import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.domain.DomainInfo;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -54,6 +59,14 @@ public class JJKDimensionSpecialEffects {
             float current = 0.0F;
 
             int divisions = domains.size() * 16;
+
+            float[] angles = new float[sorted.size()];
+
+            RandomSource source = RandomSource.create(123);
+
+            for (int i = 0; i < angles.length; i++) {
+                angles[i] = source.nextFloat();
+            }
 
             for (DomainInfo info : sorted) {
                 Minecraft mc = Minecraft.getInstance();
