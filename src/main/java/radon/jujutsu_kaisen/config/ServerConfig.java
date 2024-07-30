@@ -160,9 +160,9 @@ public class ServerConfig {
         this.domainSize = builder.comment("Base domain size")
                 .defineInRange("domainSize", 32, 4, 256);
         this.minimumDomainScale = builder.comment("Minimum scale for a domain")
-                .defineInRange("minimumDomainScale", 0.1F, 0.2F, 1.0F);
+                .defineInRange("minimumDomainScale", 0.1F, 0.1F, 1.0F);
         this.maximumDomainScale = builder.comment("Maximum scale for a domain")
-                .defineInRange("maximumDomainScale", 1.5F, 1.0F, 10.0F);
+                .defineInRange("maximumDomainScale", 2.0F, 1.0F, 10.0F);
         builder.pop();
 
         builder.comment("Barriers").push("barriers");

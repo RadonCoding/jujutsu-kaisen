@@ -44,13 +44,22 @@ public class JJKDimensionSpecialEffects {
 
             if (data.isEmpty()) return true;
 
-            Set<DomainInfo> domains = data.get().getDomains();
+            //Set<DomainInfo> domains = data.get().getDomains();
 
-            float total = 0.0F;
+            Minecraft mc = Minecraft.getInstance();
+
+            float total = 10.0F;
+
+            Set<DomainInfo> domains = new LinkedHashSet<>();
+            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.UNLIMITED_VOID.get(), total / 3));
+            //domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get(), total / 3));
+            //domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), total / 3));
+
+            /*float total = 0.0F;
 
             for (DomainInfo info : domains) {
                 total += info.strength();
-            }
+            }*/
 
             List<DomainInfo> sorted = new ArrayList<>(domains);
             sorted.sort((a, b) -> Float.compare(a.strength(), b.strength()));
@@ -60,17 +69,9 @@ public class JJKDimensionSpecialEffects {
 
             int divisions = domains.size() * 16;
 
-            float[] angles = new float[sorted.size()];
-
-            RandomSource source = RandomSource.create(123);
-
-            for (int i = 0; i < angles.length; i++) {
-                angles[i] = source.nextFloat();
-            }
+            float wave = (float) (level.getGameTime() % 20) / 20;
 
             for (DomainInfo info : sorted) {
-                Minecraft mc = Minecraft.getInstance();
-
                 Window window = mc.getWindow();
 
                 TextureTarget include = new TextureTarget(window.getWidth(), window.getHeight(), true, Minecraft.ON_OSX);
@@ -87,8 +88,6 @@ public class JJKDimensionSpecialEffects {
 
                 RenderSystem.setShader(GameRenderer::getPositionShader);
 
-                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-
                 for (int lat = 0; lat < divisions; lat++) {
                     float theta = lat * Mth.PI / divisions;
                     float sinTheta = Mth.sin(theta);
@@ -101,6 +100,7 @@ public class JJKDimensionSpecialEffects {
                     int start = Math.round(divisions * (current / total));
                     int end = Math.round(start + (divisions * (info.strength() / total)));
 
+                    // Only loop from start to end to render a section of a full sphere
                     for (int lon = start; lon < end; lon++) {
                         float phi = lon * 2 * Mth.PI / divisions;
                         float sinPhi = Mth.sin(phi);

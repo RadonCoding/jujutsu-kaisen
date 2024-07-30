@@ -48,6 +48,7 @@ import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
 import radon.jujutsu_kaisen.item.registry.JJKDataComponentTypes;
@@ -333,8 +334,25 @@ public class SorcererData implements ISorcererData {
 
         if (this.hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY)) multiplier += 0.5F;
 
-        if (this.hasSummonOfClass(SimpleDomainEntity.class) || this.hasSummonOfClass(DomainExpansionEntity.class)) {
-            multiplier += 0.2F;
+        IDomain domain = null;
+
+        if (this.hasSummonOfClass(DomainExpansionEntity.class)) {
+            domain = this.getSummonByClass(DomainExpansionEntity.class);
+        } else if (this.hasSummonOfClass(SimpleDomainEntity.class)) {
+            domain = this.getSummonByClass(SimpleDomainEntity.class);
+        }
+
+        if (domain != null) {
+            float scale = domain.getScale();
+
+            // Smaller domain = bigger output, bigger domain = smaller output
+            if (scale > 1.0F) {
+                multiplier += 1.2F / scale;
+            } else if (scale < 1.0F) {
+                multiplier += 1.2F * (1.0F / scale);
+            } else {
+                multiplier += 1.2F;
+            }
         }
 
         if (this.isInZone()) multiplier += 1.2F;

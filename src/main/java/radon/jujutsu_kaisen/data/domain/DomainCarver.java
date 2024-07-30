@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
@@ -24,6 +25,12 @@ public class DomainCarver {
         this.domains = domains;
     }
 
+    private static void setBlockIfRequired(ServerLevel level, BlockPos pos, Block block) {
+        if (level.getBlockState(pos).is(block)) return;
+
+        level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_KNOWN_SHAPE);
+    }
+
     public void tick(ServerLevel level) {
         int radius = ConfigHolder.SERVER.domainSize.getAsInt();
 
@@ -36,8 +43,8 @@ public class DomainCarver {
 
                     BlockPos pos = center.offset(x, y, z);
 
-                    if (distance >= radius - 1) {
-                        level.setBlock(pos, Blocks.BARRIER.defaultBlockState(), Block.UPDATE_KNOWN_SHAPE);
+                    if (distance <= radius && distance >= radius - 1) {
+                        setBlockIfRequired(level, pos, Blocks.BARRIER);
                     }
                 }
             }
@@ -60,7 +67,7 @@ public class DomainCarver {
 
                     if (distance < radius - 1) {
                         Block block = floor.get(HelperMethods.RANDOM.nextInt(floor.size()));
-                        level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_KNOWN_SHAPE);
+                        setBlockIfRequired(level, pos, block);
                     }
                 }
             }
