@@ -44,22 +44,13 @@ public class JJKDimensionSpecialEffects {
 
             if (data.isEmpty()) return true;
 
-            //Set<DomainInfo> domains = data.get().getDomains();
+            Set<DomainInfo> domains = data.get().getDomains();
 
-            Minecraft mc = Minecraft.getInstance();
-
-            float total = 10.0F;
-
-            Set<DomainInfo> domains = new LinkedHashSet<>();
-            domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.UNLIMITED_VOID.get(), total / 3));
-            //domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get(), total / 3));
-            //domains.add(new DomainInfo(mc.player.getUUID(), UUID.randomUUID(), JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), total / 3));
-
-            /*float total = 0.0F;
+            float total = 0.0F;
 
             for (DomainInfo info : domains) {
                 total += info.strength();
-            }*/
+            }
 
             List<DomainInfo> sorted = new ArrayList<>(domains);
             sorted.sort((a, b) -> Float.compare(a.strength(), b.strength()));
@@ -69,9 +60,9 @@ public class JJKDimensionSpecialEffects {
 
             int divisions = domains.size() * 16;
 
-            //float wave = (float) (level.getGameTime() % 20) / 20;
-
             for (DomainInfo info : sorted) {
+                Minecraft mc = Minecraft.getInstance();
+
                 Window window = mc.getWindow();
 
                 TextureTarget include = new TextureTarget(window.getWidth(), window.getHeight(), true, Minecraft.ON_OSX);
