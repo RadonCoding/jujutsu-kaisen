@@ -69,7 +69,7 @@ public class JJKDimensionSpecialEffects {
 
             int divisions = domains.size() * 16;
 
-            float wave = (float) (level.getGameTime() % 20) / 20;
+            //float wave = (float) (level.getGameTime() % 20) / 20;
 
             for (DomainInfo info : sorted) {
                 Window window = mc.getWindow();

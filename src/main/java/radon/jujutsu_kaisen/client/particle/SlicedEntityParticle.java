@@ -124,7 +124,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 List<RigidBody.CutModelData> top = new ArrayList<>();
                 List<RigidBody.CutModelData> bottom = new ArrayList<>();
 
-                CutModelUtil.collect(this.entity, this.plane, this.distance, pPartialTicks, top, bottom);
+                CutModelUtil.collect(this.entity, this.renderer, this.plane, this.distance, pPartialTicks, top, bottom);
 
                 List<List<RigidBody.CutModelData>> chunks = new ArrayList<>();
                 generateChunks(chunks, top);
@@ -150,13 +150,9 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         Minecraft mc = Minecraft.getInstance();
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
 
-        EntityRenderer<? super LivingEntity> renderer = dispatcher.getRenderer(this.entity);
-
-        ResourceLocation texture = renderer
-                .getTextureLocation(this.entity);
         int packedLight = dispatcher.getPackedLightCoords(this.entity, pPartialTicks);
 
-        for (RigidBody part : this.parts) part.render(texture, packedLight, pPartialTicks);
+        for (RigidBody part : this.parts) part.render(this.entity, packedLight, pPartialTicks);
     }
 
     @Override

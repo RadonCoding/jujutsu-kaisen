@@ -17,7 +17,6 @@
     "client.MinecraftMixin"
   ],
   "mixins": [
-    "client.IChunkGeneratorAccessor",
     "common.EnchantmentHelperMixin",
     "common.EntityMixin",
     "common.IStructureProcessorAccessor",

@@ -236,7 +236,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 living.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()),
                         this.getDamage() * this.getPower());
 
-                if (!living.isDeadOrDying() || ConfigHolder.SERVER.ignoresCutEffect(living.getType())) continue;
+                if (!living.isDeadOrDying() || !ConfigHolder.SERVER.entitySlicing.get()) continue;
 
                 Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 

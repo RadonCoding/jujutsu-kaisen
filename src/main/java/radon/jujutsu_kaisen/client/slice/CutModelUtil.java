@@ -2,7 +2,7 @@ package radon.jujutsu_kaisen.client.slice;
 
 import com.ibm.icu.impl.Pair;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
@@ -19,9 +19,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.client.FakeEntityRenderer;
 import radon.jujutsu_kaisen.mixin.client.IAgeableListModelAccessor;
 import radon.jujutsu_kaisen.mixin.client.IGeoEntityRendererAccessor;
 import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
@@ -34,16 +36,14 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class CutModelUtil {
     private static RigidBody.VertexData compress(RigidBody.Triangle[] triangles) {
         List<Vec3> vertices = new ArrayList<>(triangles.length * 3);
         int[] indices = new int[triangles.length * 3];
         float[] uv = new float[triangles.length * 6];
+        float[] alpha = new float[triangles.length * 3];
 
         for (int i = 0; i < triangles.length; i++) {
             RigidBody.Triangle triangle = triangles[i];
@@ -150,7 +150,7 @@ public class CutModelUtil {
 
         for (GeoQuad quad : cube.quads()) {
             GeoVertex[] vertices = quad.vertices();
-            
+
             Vector3f tmp = new Vector3f();
             Vec3 v0 = new Vec3(matrix4f.transformPosition(tmp.set(vertices[0].position()), tmp));
             Vec3 v1 = new Vec3(matrix4f.transformPosition(tmp.set(vertices[1].position()), tmp));
@@ -176,7 +176,7 @@ public class CutModelUtil {
 
         return triangles;
     }
-    
+
     private static RigidBody.VertexData[] cutAndCapModelBox(Matrix4f matrix4f, ModelPart.Cube cube, float[] plane) {
         return cutAndCapConvex(triangulate(matrix4f, cube), plane);
     }
@@ -209,7 +209,7 @@ public class CutModelUtil {
         return eulerToMat((float) Math.toRadians(euler.x), (float) Math.toRadians(euler.y + 90.0F), roll);
     }
 
-    private static Vec3 getNext(List<Vec3[]> edges, Vec3 first) {
+    private static @Nullable Vec3 getNext(List<Vec3[]> edges, Vec3 first) {
         Iterator<Vec3[]> iter = edges.iterator();
 
         while (iter.hasNext()) {
@@ -224,7 +224,7 @@ public class CutModelUtil {
                 return v[0];
             }
         }
-        throw new RuntimeException("Didn't find next in loop!");
+        return null;
     }
 
     private static RigidBody.VertexData[] cutAndCapConvex(RigidBody.Triangle[] triangles, float[] plane) {
@@ -264,16 +264,20 @@ public class CutModelUtil {
                 float interceptAC = (float) rayPlaneIntercept(a.pos, rAC, plane);
                 Vec3 d = a.pos.add(rAB.scale(interceptAB));
                 Vec3 e = a.pos.add(rAC.scale(interceptAC));
-                float[] deTex = new float[4];
-                deTex[0] = a.u + (b.u - a.u) * interceptAB;
-                deTex[1] = a.v + (b.v - a.v) * interceptAB;
-                deTex[2] = a.u + (c.u - a.u) * interceptAC;
-                deTex[3] = a.v + (c.v - a.v) * interceptAC;
+                float[] deUv = new float[4];
+                deUv[0] = a.u + (b.u - a.u) * interceptAB;
+                deUv[1] = a.v + (b.v - a.v) * interceptAB;
+                deUv[2] = a.u + (c.u - a.u) * interceptAC;
+                deUv[3] = a.v + (c.v - a.v) * interceptAC;
 
-                side2.add(new RigidBody.Triangle(d, b.pos, e, new float[]{deTex[0], deTex[1], b.u, b.v, deTex[2], deTex[3]}));
-                side2.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[]{b.u, b.v, c.u, c.v, deTex[2], deTex[3]}));
-                side1.add(new RigidBody.Triangle(a.pos, d, e, new float[]{a.u, a.v, deTex[0], deTex[1], deTex[2], deTex[3]}));
-                clippedEdges.add(new Vec3[]{d, e});
+                float[] deAlpha = new float[4];
+                deAlpha[0] = a.alpha + (b.alpha - a.alpha) * interceptAB;
+                deAlpha[1] = a.alpha + (c.alpha - a.alpha) * interceptAB;
+
+                side2.add(new RigidBody.Triangle(d, b.pos, e, new float[] { deUv[0], deUv[1], b.u, b.v, deUv[2], deUv[3] }));
+                side2.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deUv[2], deUv[3] }));
+                side1.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deUv[0], deUv[1], deUv[2], deUv[3] }));
+                clippedEdges.add(new Vec3[] { d, e } );
             } else { // Else one is negative, clip and add 2 triangles to side 1, 1 to side 2.
                 RigidBody.Triangle.TexVertex a, b, c;
 
@@ -302,6 +306,10 @@ public class CutModelUtil {
                 deTex[2] = a.u + (c.u - a.u) * interceptAC;
                 deTex[3] = a.v + (c.v - a.v) * interceptAC;
 
+                float[] deAlpha = new float[4];
+                deAlpha[0] = a.alpha + (b.alpha - a.alpha) * interceptAB;
+                deAlpha[1] = a.alpha + (c.alpha - a.alpha) * interceptAB;
+
                 side1.add(new RigidBody.Triangle(d, b.pos, e, new float[] { deTex[0], deTex[1], b.u, b.v, deTex[2], deTex[3] }));
                 side1.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deTex[2], deTex[3] }));
                 side2.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deTex[0], deTex[1], deTex[2], deTex[3] }));
@@ -316,7 +324,11 @@ public class CutModelUtil {
             orderedClipVertices.add(clippedEdges.getFirst()[0]);
 
             while (!clippedEdges.isEmpty()) {
-                orderedClipVertices.add(getNext(clippedEdges, orderedClipVertices.getLast()));
+                Vec3 next = getNext(clippedEdges, orderedClipVertices.getLast());
+
+                if (next == null) continue;
+
+                orderedClipVertices.add(next);
             }
 
             Vector3f uv1 = new Vector3f((float) orderedClipVertices.getFirst().x, (float) orderedClipVertices.getFirst().y, (float) orderedClipVertices.getFirst().z);
@@ -529,7 +541,7 @@ public class CutModelUtil {
 
             boolean visible = false;
 
-            // Go through every cube in the model and check if it has any non-transparent pixels
+            // Go through every cube in the bone and check if it has any non-transparent pixels
             for (ModelPart.Cube cube : pair.first.cubes) {
                 if (visible) break;
 
@@ -632,7 +644,7 @@ public class CutModelUtil {
 
             boolean visible = false;
 
-            // Go through every cube in the model and check if it has any non-transparent pixels
+            // Go through every cube in the bone and check if it has any non-transparent pixels
             for (GeoCube cube : pair.first.getCubes()) {
                 if (visible) break;
 
@@ -640,7 +652,7 @@ public class CutModelUtil {
                     if (visible) break;
 
                     GeoVertex[] vertices = quad.vertices();
-                    
+
                     float[] uv = new float[8];
                     uv[0] = vertices[0].texU();
                     uv[1] = vertices[0].texV();
@@ -711,9 +723,9 @@ public class CutModelUtil {
             }
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
-    public static void collect(LivingEntity entity, Vector3f plane, float distance, float partialTicks, List<RigidBody.CutModelData> top, List<RigidBody.CutModelData> bottom) {
+    public static void collect(LivingEntity entity, FakeEntityRenderer renderer, Vector3f plane, float distance, float partialTicks, List<RigidBody.CutModelData> top, List<RigidBody.CutModelData> bottom) {
         Minecraft mc = Minecraft.getInstance();
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
 

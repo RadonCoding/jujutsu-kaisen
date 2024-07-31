@@ -4,9 +4,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -14,7 +23,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 import radon.jujutsu_kaisen.util.MathUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.lang.Math;
 import java.util.ArrayList;
@@ -356,7 +370,8 @@ public class RigidBody {
         this.bounds = new AABB(tMinX, tMinY, tMinZ, tMaxX, tMaxY, tMaxZ);
     }
 
-    public void render(ResourceLocation texture, int packedLight, float partialTicks) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void render(LivingEntity entity, int packedLight, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
 
         PoseStack poseStack = new PoseStack();
@@ -382,27 +397,33 @@ public class RigidBody {
 
         RenderSystem.setShader(GameRenderer::getRendertypeEntityCutoutNoCullShader);
 
-        RenderSystem.setShaderTexture(0, texture);
-
         RenderSystem.disableCull();
 
-        builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
+        EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
+
+        EntityRenderer renderer = dispatcher.getRenderer(entity);
+
+        ResourceLocation texture = renderer.getTextureLocation(entity);
 
         for (RigidBody.CutModelData data : this.chunk) {
+            RenderSystem.setShaderTexture(0, texture);
+
+            builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
+
             data.data.tessellate(builder, matrix4f, packedLight);
-        }
-        tesselator.end();
 
-        RenderSystem.setShaderTexture(0, BLOOD);
+            tesselator.end();
 
-        builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
-
-        for (RigidBody.CutModelData data : this.chunk) {
             if (data.cap == null) continue;
 
+            RenderSystem.setShaderTexture(0, BLOOD);
+
+            builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
+
             data.cap.tessellate(builder, matrix4f, packedLight);
+
+            tesselator.end();
         }
-        tesselator.end();
 
         RenderSystem.enableCull();
     }
@@ -506,6 +527,7 @@ public class RigidBody {
         public static class TexVertex {
             public Vec3 pos;
             public float u, v;
+            public float alpha;
 
             public TexVertex(Vec3 pos) {
                 this.pos = pos;
