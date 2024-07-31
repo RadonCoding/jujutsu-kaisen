@@ -72,10 +72,10 @@ public class JJKDimensionSpecialEffects {
 
                 include.bindWrite(false);
 
-                RenderSystem.depthMask(false);
-
                 Tesselator tesselator = Tesselator.getInstance();
                 BufferBuilder builder = tesselator.getBuilder();
+
+                RenderSystem.depthMask(false);
 
                 RenderSystem.setShader(GameRenderer::getPositionShader);
 

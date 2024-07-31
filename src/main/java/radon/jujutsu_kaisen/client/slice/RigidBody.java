@@ -6,16 +6,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -23,12 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 import radon.jujutsu_kaisen.util.MathUtil;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.lang.Math;
 import java.util.ArrayList;
@@ -370,8 +358,7 @@ public class RigidBody {
         this.bounds = new AABB(tMinX, tMinY, tMinZ, tMaxX, tMaxY, tMaxZ);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void render(LivingEntity entity, int packedLight, float partialTicks) {
+    public void render(int packedLight, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
 
         PoseStack poseStack = new PoseStack();
@@ -395,46 +382,34 @@ public class RigidBody {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
 
-        RenderSystem.setShader(GameRenderer::getRendertypeEntityCutoutNoCullShader);
-
-        RenderSystem.disableCull();
-
-        EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
-
-        EntityRenderer renderer = dispatcher.getRenderer(entity);
-
-        ResourceLocation texture = renderer.getTextureLocation(entity);
-
         for (RigidBody.CutModelData data : this.chunk) {
-            RenderSystem.setShaderTexture(0, texture);
-
             builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
 
             data.data.tessellate(builder, matrix4f, packedLight);
 
-            tesselator.end();
+            data.type.end(builder, RenderSystem.getVertexSorting());
 
             if (data.cap == null) continue;
 
-            RenderSystem.setShaderTexture(0, BLOOD);
+            RenderType type = RenderType.entityCutoutNoCull(BLOOD);
 
             builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
 
             data.cap.tessellate(builder, matrix4f, packedLight);
 
-            tesselator.end();
+            type.end(builder, RenderSystem.getVertexSorting());
         }
-
-        RenderSystem.enableCull();
     }
 
     public static class CutModelData {
+        public RenderType type;
         public VertexData data;
         public VertexData cap;
         public boolean flip;
         public final ConvexMeshCollider collider;
 
-        public CutModelData(VertexData data, VertexData cap, boolean flip, ConvexMeshCollider collider) {
+        public CutModelData(RenderType type, VertexData data, VertexData cap, boolean flip, ConvexMeshCollider collider) {
+            this.type = type;
             this.data = data;
             this.cap = cap;
             this.flip = flip;
@@ -527,7 +502,6 @@ public class RigidBody {
         public static class TexVertex {
             public Vec3 pos;
             public float u, v;
-            public float alpha;
 
             public TexVertex(Vec3 pos) {
                 this.pos = pos;

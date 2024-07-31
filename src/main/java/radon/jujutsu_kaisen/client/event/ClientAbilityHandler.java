@@ -95,7 +95,7 @@ public class ClientAbilityHandler {
         public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
             Minecraft mc = Minecraft.getInstance();
 
-            assert mc.player != null;
+            if (mc.player == null) return;
 
             LivingEntity target = event.getEntity();
 

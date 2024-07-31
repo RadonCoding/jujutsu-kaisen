@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "jujutsu_kaisen.refmap.json",
   "client": [
+    "client.BufferBuilderMixin",
+    "client.BufferSourceMixin",
     "client.ClientSuggestionProviderMixin",
     "client.EntityRenderDispatcherMixin",
     "client.HumanoidArmorLayerMixin",

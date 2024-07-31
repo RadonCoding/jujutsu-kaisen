@@ -9,13 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -124,7 +122,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 List<RigidBody.CutModelData> top = new ArrayList<>();
                 List<RigidBody.CutModelData> bottom = new ArrayList<>();
 
-                CutModelUtil.collect(this.entity, this.renderer, this.plane, this.distance, pPartialTicks, top, bottom);
+                CutModelUtil.collect(this.renderer, this.plane, this.distance, pPartialTicks, top, bottom);
 
                 List<List<RigidBody.CutModelData>> chunks = new ArrayList<>();
                 generateChunks(chunks, top);
@@ -152,7 +150,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
 
         int packedLight = dispatcher.getPackedLightCoords(this.entity, pPartialTicks);
 
-        for (RigidBody part : this.parts) part.render(this.entity, packedLight, pPartialTicks);
+        for (RigidBody part : this.parts) part.render(packedLight, pPartialTicks);
     }
 
     @Override
