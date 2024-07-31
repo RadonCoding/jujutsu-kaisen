@@ -78,28 +78,29 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         List<RigidBody.CutModelData> chunk = new ArrayList<>();
         boolean removed;
 
-        while (!toSort.isEmpty()){
+        while (!toSort.isEmpty()) {
             removed = false;
 
-            List<RigidBody.CutModelData> toAdd = new ArrayList<>(2);
-            for (RigidBody.CutModelData c : chunk){
-                Iterator<RigidBody.CutModelData> itr = toSort.iterator();
+            List<RigidBody.CutModelData> toAdd = new ArrayList<>();
 
-                while (itr.hasNext()){
-                    RigidBody.CutModelData d = itr.next();
+            for (RigidBody.CutModelData a : chunk) {
+                Iterator<RigidBody.CutModelData> iter = toSort.iterator();
 
-                    if(d.collider.localBox.inflate(0.01F).intersects(c.collider.localBox)){
-                        if(GJK.collidesAny(null, null, c.collider, d.collider)){
+                while (iter.hasNext()) {
+                    RigidBody.CutModelData b = iter.next();
+
+                    if (b.collider.localBox.inflate(0.01F).intersects(a.collider.localBox)) {
+                        if (GJK.collidesAny(null, null, a.collider, b.collider)) {
                             removed = true;
-                            toAdd.add(d);
-                            itr.remove();
+                            toAdd.add(b);
+                            iter.remove();
                         }
                     }
                 }
             }
             chunk.addAll(toAdd);
 
-            if (!removed){
+            if (!removed) {
                 if (!chunk.isEmpty()){
                     chunks.add(chunk);
                     chunk = new ArrayList<>();
@@ -110,7 +111,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         if (!chunk.isEmpty()){
             chunks.add(chunk);
         }
-        GJK.margin = 0;
+        GJK.margin = 0.0F;
     }
 
     @Override

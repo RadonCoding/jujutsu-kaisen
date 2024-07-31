@@ -54,7 +54,7 @@ public class BoltRenderer {
     public void update(Object owner, BoltEffect newBoltData, float partialTicks) {
         if (this.minecraft.level == null) return;
 
-        BoltOwnerData data = this.boltOwners.computeIfAbsent(owner, o -> new BoltOwnerData());
+        BoltOwnerData data = this.boltOwners.computeIfAbsent(owner, ignored -> new BoltOwnerData());
         data.lastBolt = newBoltData;
         Timestamp timestamp = new Timestamp(this.minecraft.level.getGameTime(), partialTicks);
 

@@ -377,14 +377,16 @@ public class CutModelUtil {
             textures.put(capture.texture(), new TextureData(buffer, dimensions));
         }
 
-        for (VertexCapturer.Capture capture : VertexCapturer.captured) {
+        for (int i = 0; i < VertexCapturer.captured.size(); i++) {
+            VertexCapturer.Capture capture = VertexCapturer.captured.get(i);
+
             for (RigidBody.Triangle[] triangles : capture.triangles()) {
                 boolean visible = false;
 
                 // Each triangles array contains six polygons and each of them contains four quads
-                for (int i = 0; i < triangles.length; i += 2) {
-                    RigidBody.Triangle t1 = triangles[i];
-                    RigidBody.Triangle t2 = triangles[i + 1];
+                for (int j = 0; j < triangles.length; j += 2) {
+                    RigidBody.Triangle t1 = triangles[j];
+                    RigidBody.Triangle t2 = triangles[j + 1];
 
                     float[] uv = new float[8];
                     uv[0] = t1.p1.u;
@@ -404,9 +406,9 @@ public class CutModelUtil {
                     float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
                     float maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
 
-                    for (int j = 0; j < uv.length; j += 2) {
-                        float u = uv[j];
-                        float v = uv[j + 1];
+                    for (int k = 0; k < uv.length; k += 2) {
+                        float u = uv[k];
+                        float v = uv[k + 1];
 
                         if (u < minX) minX = u;
                         if (u > maxX) maxX = u;

@@ -6,7 +6,7 @@ import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 
 public class SorcererUtil {
     public static int getMaximumSkillLevel(float experience) {
-        int maxLevelForExperience = Math.round((float) Math.log10(experience + 1) * 10);
+        int maxLevelForExperience = Math.round(experience * 0.01F);
         return Math.min(ConfigHolder.SERVER.maximumSkillLevel.get(), maxLevelForExperience);
     }
 

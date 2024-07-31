@@ -15,41 +15,8 @@ public class ConvexMeshCollider extends Collider {
     private ConvexMeshCollider() {
     }
 
-    public ConvexMeshCollider(RigidBody.Triangle[] triangles) {
-        int[] indices = new int[triangles.length * 3];
-        float[] vertices = new float[triangles.length * 9];
-
-        for (int i = 0; i < triangles.length; i++) {
-            indices[i * 3] = i * 9;
-            indices[i * 3 + 1] = i * 9 + 3;
-            indices[i * 3 + 2] = i * 9 + 6;
-            vertices[i * 9] = (float) triangles[i].p1.pos.x;
-            vertices[i * 9 + 1] = (float) triangles[i].p1.pos.y;
-            vertices[i * 9 + 2] = (float) triangles[i].p1.pos.z;
-            vertices[i * 9 + 3] = (float) triangles[i].p2.pos.x;
-            vertices[i * 9 + 4] = (float) triangles[i].p2.pos.y;
-            vertices[i * 9 + 5] = (float) triangles[i].p2.pos.z;
-            vertices[i * 9 + 6] = (float) triangles[i].p3.pos.x;
-            vertices[i * 9 + 7] = (float) triangles[i].p3.pos.y;
-            vertices[i * 9 + 8] = (float) triangles[i].p3.pos.z;
-        }
-        this.fromData(indices, vertices);
-    }
-
-    public ConvexMeshCollider(RigidBody.Triangle[] triangles, float density) {
-        this(triangles);
-
-        this.localCentroid = this.computeCenterOfMass();
-        this.mass = this.computeVolume() * density;
-        this.localInertiaTensor = this.computeInertia(this.localCentroid, this.mass);
-    }
-
     public ConvexMeshCollider(int[] indices, float[] vertices, float density) {
         this.fromData(indices, vertices, density);
-    }
-
-    public ConvexMeshCollider(int[] indices, float[] vertices) {
-        this.fromData(indices, vertices);
     }
 
     private static Vec3 setVal(Vec3 vec, int idx, double val) {
@@ -126,9 +93,8 @@ public class ConvexMeshCollider extends Collider {
                     vol * (mat.m02 + mat.m12 + mat.m22));
             volume += vol;
         }
-        return center.scale(1.0D / (volume * 4.0F));
+        return center.scale(1.0D / (Math.max(1.0F, volume) * 4.0F));
     }
-
 
     private Matrix3f computeInertia(Vec3 com, float mass) {
         float volume = 0.0F;
@@ -155,9 +121,9 @@ public class ConvexMeshCollider extends Collider {
             }
         }
         float volume2 = volume * (60.0F / 6.0F);
-        diag = diag.scale(1.0D / volume2);
+        diag = diag.scale(1.0D / Math.max(1.0F, volume2));
         volume2 = volume * (120.0F / 6.0F);
-        offd = offd.scale(1.0D / volume2);
+        offd = offd.scale(1.0D / Math.max(1.0F, volume2));
         diag = diag.scale(mass);
         offd = offd.scale(mass);
         return new Matrix3f((float) (diag.y + diag.z), (float) -offd.z, (float) -offd.y,

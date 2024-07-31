@@ -20,7 +20,9 @@ import radon.jujutsu_kaisen.util.MathUtil;
 
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/blob/Custom-1.12.2/src/main/java/com/hbm/physics/RigidBody.java
 public class RigidBody {
@@ -152,14 +154,14 @@ public class RigidBody {
         this.localCentroid = Vec3.ZERO;
         this.mass = 0.0F;
 
-        for (Collider collider : this.colliders){
+        for (Collider collider : this.colliders) {
             this.mass += collider.mass;
             this.localCentroid = this.localCentroid.add(collider.localCentroid.scale(collider.mass));
         }
         this.invMass = 1.0F / this.mass;
         this.localCentroid = this.localCentroid.scale(this.invMass);
 
-        this.localInertiaTensor = new Matrix3f().zero();
+        this.localInertiaTensor = new Matrix3f();
 
         for (Collider collider : this.colliders) {
             // https://en.wikipedia.org/wiki/Parallel_axis_theorem
@@ -382,13 +384,26 @@ public class RigidBody {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
 
+        Map<RenderType, List<CutModelData>> grouped = new HashMap<>();
+
         for (RigidBody.CutModelData data : this.chunk) {
+            grouped.computeIfAbsent(data.type, ignored -> new ArrayList<>()).add(data);
+        }
+
+        for (Map.Entry<RenderType, List<RigidBody.CutModelData>> entry : grouped.entrySet()) {
+            RenderType type = entry.getKey();
+            List<RigidBody.CutModelData> dataList = entry.getValue();
+
             builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
 
-            data.data.tessellate(builder, matrix4f, packedLight);
+            for (RigidBody.CutModelData data : dataList) {
+                data.data.tessellate(builder, matrix4f, packedLight);
+            }
 
-            data.type.end(builder, RenderSystem.getVertexSorting());
+            type.end(builder, RenderSystem.getVertexSorting());
+        }
 
+        for (RigidBody.CutModelData data : this.chunk) {
             if (data.cap == null) continue;
 
             RenderType type = RenderType.entityCutoutNoCull(BLOOD);
@@ -426,6 +441,7 @@ public class RigidBody {
             this.tessellate(builder, matrix4f, false, packedLight);
         }
 
+        // TODO: Use correct color
         public void tessellate(BufferBuilder builder, Matrix4f matrix4f, boolean flip, int packedLight) {
             if (this.indices == null) return;
 
