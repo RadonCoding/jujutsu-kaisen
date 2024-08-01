@@ -48,7 +48,7 @@ public class ConvexMeshCollider extends Collider {
 
     public void fromData(int[] indices, float[] vertices) {
         this.indices = indices;
-         this.vertices = vertices;
+        this.vertices = vertices;
         this.triangles = new RigidBody.Triangle[indices.length / 3];
 
         for (int i = 0; i < indices.length; i += 3) {

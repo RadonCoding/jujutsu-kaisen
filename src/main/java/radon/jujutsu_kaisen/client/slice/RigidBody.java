@@ -379,23 +379,12 @@ public class RigidBody {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
 
-        Map<RenderType, List<CutModelData>> grouped = new HashMap<>();
-
         for (RigidBody.CutModelData data : this.chunk) {
-            grouped.computeIfAbsent(data.type, ignored -> new ArrayList<>()).add(data);
-        }
-
-        for (Map.Entry<RenderType, List<RigidBody.CutModelData>> entry : grouped.entrySet()) {
-            RenderType type = entry.getKey();
-            List<RigidBody.CutModelData> dataList = entry.getValue();
-
             builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
 
-            for (RigidBody.CutModelData data : dataList) {
-                data.data.tessellate(builder, matrix4f, packedLight);
-            }
+            data.data.tessellate(builder, matrix4f, packedLight);
 
-            type.end(builder, RenderSystem.getVertexSorting());
+            data.type.end(builder, RenderSystem.getVertexSorting());
         }
 
         for (RigidBody.CutModelData data : this.chunk) {

@@ -27,7 +27,7 @@ public abstract class BufferSourceMixin {
 
     @Shadow @Final protected BufferBuilder builder;
 
-    @Inject(method = "endBatch(Lnet/minecraft/client/renderer/RenderType;)V", at = @At(value = "TAIL", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V"))
+    @Inject(method = "endBatch(Lnet/minecraft/client/renderer/RenderType;)V", at = @At(value = "HEAD", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V"))
     public void endBatch(RenderType type, CallbackInfo ci) {
         if (!VertexCapturer.capture) return;
 
@@ -38,28 +38,28 @@ public abstract class BufferSourceMixin {
         List<RigidBody.Triangle.TexVertex> vertices = new ArrayList<>();
         List<RigidBody.Triangle[]> triangles = new ArrayList<>();
 
-        for (int nextElementByte = builder.nextElementByte; nextElementByte > 0;) {
-            nextElementByte -= DefaultVertexFormat.ELEMENT_PADDING.getByteSize();
-            nextElementByte -= DefaultVertexFormat.ELEMENT_NORMAL.getByteSize();
-            nextElementByte -= DefaultVertexFormat.ELEMENT_UV2.getByteSize();
-            nextElementByte -= DefaultVertexFormat.ELEMENT_UV1.getByteSize();
-            nextElementByte -= DefaultVertexFormat.ELEMENT_UV0.getByteSize();
+        for (int nextElementByte = 0; nextElementByte < builder.nextElementByte;) {
+            float x = builder.buffer.getFloat(nextElementByte);
+            float y = builder.buffer.getFloat(nextElementByte + 4);
+            float z = builder.buffer.getFloat(nextElementByte + 8);
 
-            float u = builder.buffer.getFloat(nextElementByte);
-            float v = builder.buffer.getFloat(nextElementByte + 4);
-
-            nextElementByte -= DefaultVertexFormat.ELEMENT_COLOR.getByteSize();
+            nextElementByte += DefaultVertexFormat.ELEMENT_POSITION.getByteSize();
 
             int r = builder.buffer.get(nextElementByte) & 0xFF;
             int g = builder.buffer.get(nextElementByte + 1) & 0xFF;
             int b = builder.buffer.get(nextElementByte + 2) & 0xFF;
             int a = builder.buffer.get(nextElementByte + 3) & 0xFF;
 
-            nextElementByte -= DefaultVertexFormat.ELEMENT_POSITION.getByteSize();
+            nextElementByte += DefaultVertexFormat.ELEMENT_COLOR.getByteSize();
 
-            float x = builder.buffer.getFloat(nextElementByte);
-            float y = builder.buffer.getFloat(nextElementByte + 4);
-            float z = builder.buffer.getFloat(nextElementByte + 8);
+            float u = builder.buffer.getFloat(nextElementByte);
+            float v = builder.buffer.getFloat(nextElementByte + 4);
+
+            nextElementByte += DefaultVertexFormat.ELEMENT_UV0.getByteSize();
+            nextElementByte += DefaultVertexFormat.ELEMENT_UV1.getByteSize();
+            nextElementByte += DefaultVertexFormat.ELEMENT_UV2.getByteSize();
+            nextElementByte += DefaultVertexFormat.ELEMENT_NORMAL.getByteSize();
+            nextElementByte += DefaultVertexFormat.ELEMENT_PADDING.getByteSize();
 
             vertices.add(new RigidBody.Triangle.TexVertex(new Vec3(x, y, z), u, v, FastColor.ARGB32.color(a, r, g, b)));
 
@@ -105,9 +105,6 @@ public abstract class BufferSourceMixin {
             }
         }
 
-        VertexCapturer.captured.add(new VertexCapturer.Capture(RenderSystem.getShaderTexture(0), type,
-                ImmutableList.copyOf(triangles)));
-
-        triangles.clear();
+        VertexCapturer.captured.add(new VertexCapturer.Capture(type, triangles));
     }
 }

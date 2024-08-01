@@ -14,5 +14,5 @@ public class VertexCapturer {
 
     public static List<Capture> captured = new ArrayList<>();
 
-    public record Capture(int texture, RenderType type, ImmutableList<RigidBody.Triangle[]> triangles) {}
+    public record Capture(RenderType type, List<RigidBody.Triangle[]> triangles) {}
 }

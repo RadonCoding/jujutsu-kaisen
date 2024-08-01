@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.slice;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
@@ -313,73 +314,83 @@ public class CutModelUtil {
 
         VertexCapturer.capture = false;
 
-        Map<Integer, TextureData> textures = new HashMap<>();
+        Map<RenderType, TextureData> textures = new HashMap<>();
 
         for (VertexCapturer.Capture capture : VertexCapturer.captured) {
-            if (textures.containsKey(capture.texture())) continue;
+            if (textures.containsKey(capture.type())) continue;
 
-            float[] buffer = readTextureData(capture.texture());
-            int[] dimensions = getTextureDimensions(capture.texture());
-            textures.put(capture.texture(), new TextureData(buffer, dimensions));
+            int previous = RenderSystem.getShaderTexture(0);
+
+            capture.type().setupRenderState();
+            int current = RenderSystem.getShaderTexture(0);
+            capture.type().clearRenderState();
+
+            if (previous == current) continue;
+
+            float[] buffer = readTextureData(current);
+            int[] dimensions = getTextureDimensions(current);
+            textures.put(capture.type(), new TextureData(buffer, dimensions));
         }
 
         for (int i = 0; i < VertexCapturer.captured.size(); i++) {
             VertexCapturer.Capture capture = VertexCapturer.captured.get(i);
 
             for (RigidBody.Triangle[] triangles : capture.triangles()) {
-                boolean visible = false;
+                if (textures.containsKey(capture.type())) {
+                    boolean visible = false;
 
-                // Each triangles array contains six polygons and each of them contains four quads
-                for (int j = 0; j < triangles.length; j += 2) {
-                    RigidBody.Triangle t1 = triangles[j];
-                    RigidBody.Triangle t2 = triangles[j + 1];
+                    TextureData data = textures.get(capture.type());
 
-                    float[] uv = new float[8];
-                    uv[0] = t1.p1.u;
-                    uv[1] = t1.p1.v;
-                    uv[2] = t1.p2.u;
-                    uv[3] = t1.p2.v;
-                    uv[4] = t1.p3.u;
-                    uv[5] = t1.p3.v;
-                    uv[6] = t2.p2.u;
-                    uv[7] = t2.p2.v;
+                    // Each triangles array contains six polygons and each of them contains four quads
+                    for (int j = 0; j < triangles.length; j += 2) {
+                        RigidBody.Triangle t1 = triangles[j];
+                        RigidBody.Triangle t2 = triangles[j + 1];
 
-                    TextureData data = textures.get(capture.texture());
+                        float[] uv = new float[8];
+                        uv[0] = t1.p1.u;
+                        uv[1] = t1.p1.v;
+                        uv[2] = t1.p2.u;
+                        uv[3] = t1.p2.v;
+                        uv[4] = t1.p3.u;
+                        uv[5] = t1.p3.v;
+                        uv[6] = t2.p2.u;
+                        uv[7] = t2.p2.v;
 
-                    int width = data.dimensions[0];
-                    int height = data.dimensions[1];
+                        int width = data.dimensions[0];
+                        int height = data.dimensions[1];
 
-                    float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
-                    float maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
+                        float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
+                        float maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
 
-                    for (int k = 0; k < uv.length; k += 2) {
-                        float u = uv[k];
-                        float v = uv[k + 1];
+                        for (int k = 0; k < uv.length; k += 2) {
+                            float u = uv[k];
+                            float v = uv[k + 1];
 
-                        if (u < minX) minX = u;
-                        if (u > maxX) maxX = u;
-                        if (v < minY) minY = v;
-                        if (v > maxY) maxY = v;
-                    }
+                            if (u < minX) minX = u;
+                            if (u > maxX) maxX = u;
+                            if (v < minY) minY = v;
+                            if (v > maxY) maxY = v;
+                        }
 
-                    int startX = Math.max(0, Math.round(minX * (width - 1)));
-                    int endX = Math.min(width - 1, Math.round(maxX * (width - 1)));
-                    int startY = Math.max(0, Math.round(minY * (height - 1)));
-                    int endY = Math.min(height - 1, Math.round(maxY * (height - 1)));
+                        int startX = Math.max(0, Math.round(minX * (width - 1)));
+                        int endX = Math.min(width - 1, Math.round(maxX * (width - 1)));
+                        int startY = Math.max(0, Math.round(minY * (height - 1)));
+                        int endY = Math.min(height - 1, Math.round(maxY * (height - 1)));
 
-                    for (int x = startX; x < endX; x++) {
-                        if (visible) break;
+                        for (int x = startX; x < endX; x++) {
+                            if (visible) break;
 
-                        for (int y = startY; y < endY; y++) {
-                            if (getAlphaValue(data.buffer, data.dimensions, x, y) == 0.0F) continue;
+                            for (int y = startY; y < endY; y++) {
+                                if (getAlphaValue(data.buffer, data.dimensions, x, y) == 0.0F) continue;
 
-                            visible = true;
-                            break;
+                                visible = true;
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (!visible) continue;
+                    if (!visible) continue;
+                }
 
                 RigidBody.VertexData[] data = cutAndCapConvex(triangles, new float[] { plane.x, plane.y, plane.z, -distance });
                 RigidBody.CutModelData tp = null;
