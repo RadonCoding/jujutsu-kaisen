@@ -107,7 +107,6 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xmaxerrs" << "999999"
 }
 
 idea {
