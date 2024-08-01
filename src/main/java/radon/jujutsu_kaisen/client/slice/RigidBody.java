@@ -24,7 +24,6 @@ import java.util.Map;
 
 // https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/blob/Custom-1.12.2/src/main/java/com/hbm/physics/RigidBody.java
 public class RigidBody {
-    private static final float SCALE = 3.5F;
     public static final Vec3[] cardinals = new Vec3[]{
             new Vec3(1.0D, 0.0D, 0.0D), new Vec3(0.0D, 1.0D, 0.0D), new Vec3(0.0D, 0.0D, 1.0D),
             new Vec3(-1.0D, 0.0D, 0.0D), new Vec3(0.0D, -1.0D, 0.0D), new Vec3(0.0D, 0.0D, -1.0D)
@@ -138,10 +137,6 @@ public class RigidBody {
 
         this.position = new Vec3(x, y, z);
         this.start = this.position;
-    }
-
-    public float getScale() {
-        return SCALE * (!this.chunk.isEmpty() && this.chunk.getFirst().flip ? -1.0F : 1.0F);
     }
     
     public void addChunk(List<CutModelData> chunk) {

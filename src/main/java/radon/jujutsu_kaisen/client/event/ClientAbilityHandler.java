@@ -91,6 +91,7 @@ public class ClientAbilityHandler {
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
     public static class ForgeEvents {
+        // TODO: Move to client visuals
         @SubscribeEvent
         public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
             Minecraft mc = Minecraft.getInstance();
@@ -155,25 +156,21 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            if (current != null) {
-                boolean possiblyChanneling = channeled != null;
+            if (current != null && channeled != null) {
+                boolean isHeld = current.isDown();
 
-                if (possiblyChanneling) {
-                    boolean isHeld = current.isDown();
-
-                    if (isHeld) {
-                        if (!isChanneling) {
-                            PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(channeled));
-                        }
-                        isChanneling = true;
-                    } else if (isChanneling) {
-                        AbilityHandler.untrigger(mc.player, channeled);
-                        PacketDistributor.sendToServer(new UntriggerAbilityC2SPacket(channeled));
-
-                        channeled = null;
-                        current = null;
-                        isChanneling = false;
+                if (isHeld) {
+                    if (!isChanneling) {
+                        PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(channeled));
                     }
+                    isChanneling = true;
+                } else if (isChanneling) {
+                    AbilityHandler.untrigger(mc.player, channeled);
+                    PacketDistributor.sendToServer(new UntriggerAbilityC2SPacket(channeled));
+
+                    channeled = null;
+                    current = null;
+                    isChanneling = false;
                 }
             }
 

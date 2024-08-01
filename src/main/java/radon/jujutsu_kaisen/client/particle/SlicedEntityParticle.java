@@ -136,9 +136,12 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 for (List<RigidBody.CutModelData> chunk : chunks) {
                     RigidBody part = new RigidBody(this.level, d0, d1, d2);
                     part.addChunk(chunk);
-                    part.impulseVelocityDirect(new Vec3(this.plane.x * part.getScale(),
-                            this.plane.y * part.getScale(),
-                            this.plane.z * part.getScale()), part.globalCentroid);
+
+                    float direction = chunk.getFirst().flip ? -1.0F : 1.0F;
+                    part.impulseVelocityDirect(new Vec3(this.plane.x * direction,
+                            this.plane.y * direction,
+                            this.plane.z * direction), part.globalCentroid);
+
                     this.parts.add(part);
                 }
             });
