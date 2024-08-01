@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.slice;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -53,7 +54,7 @@ public class GJK {
                     Vec3 ab = csoSimplex.points[1].v.subtract(csoSimplex.points[0].v);
                     Vec3 ao = csoSimplex.points[0].v.reverse();
 
-                    if (ab.dot(ao) > 0) {
+                    if (ab.dot(ao) > 0.0D) {
                         direction = ab.cross(ao).cross(ab);
                     } else {
                         csoSimplex.points[1] = null;
@@ -308,7 +309,7 @@ public class GJK {
         Vec3 ab = b.v.subtract(a.v);
         Vec3 ac = c.v.subtract(a.v);
         Vec3 ao = a.v.reverse();
-        Vec3 normal = ab.cross(ac).normalize();
+        Vec3 normal = LegacyMath.normalize(ab.cross(ac));
 
         if (normal.dot(ao) < 0) {
             return new Mkv[] { a, b, c, new Mkv(normal, null) };
@@ -318,9 +319,9 @@ public class GJK {
     }
 
     public static Vec3 barycentricCoords(Mkv[] face, Vec3 point) {
-        double u = face[1].v.subtract(point).cross(face[2].v.subtract(point)).length();
-        double v = face[0].v.subtract(point).cross(face[2].v.subtract(point)).length();
-        double w = face[0].v.subtract(point).cross(face[1].v.subtract(point)).length();
+        double u = (float) face[1].v.subtract(point).cross(face[2].v.subtract(point)).length();
+        double v = (float) face[0].v.subtract(point).cross(face[2].v.subtract(point)).length();
+        double w = (float) face[0].v.subtract(point).cross(face[1].v.subtract(point)).length();
         double uvw = u + v + w;
         return new Vec3(u, v, w).scale(1.0D / uvw);
     }

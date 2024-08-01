@@ -50,7 +50,22 @@ public class DomainCarver {
             }
         }
 
-        if (this.domains.size() > 1) return;
+        if (this.domains.size() > 1) {
+            for (int x = -radius; x <= radius; x++) {
+                for (int y = -radius; y < 0; y++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        double distance = Math.sqrt(x * x + z * z);
+
+                        BlockPos pos = center.offset(x, y, z);
+
+                        if (distance < radius - 1) {
+                            setBlockIfRequired(level, pos, JJKBlocks.DOMAIN_TRANSPARENT.get());
+                        }
+                    }
+                }
+            }
+            return;
+        }
 
         DomainExpansion domain = this.domains.getFirst().ability();
 

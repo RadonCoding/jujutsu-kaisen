@@ -21,55 +21,55 @@ public class MathUtil {
         return idx;
     }
 
-    public static void matrix3fFromQuaterionf(Matrix3f matrix3f, Quaternionf quaternionf) {
-        matrix3f.m00 = 1 - 2 * quaternionf.y * quaternionf.y - 2 * quaternionf.z * quaternionf.z;
-        matrix3f.m01 = 2 * quaternionf.x * quaternionf.y - 2 * quaternionf.z * quaternionf.w;
-        matrix3f.m02 = 2 * quaternionf.x * quaternionf.z + 2 * quaternionf.y * quaternionf.w;
+    public static void matFromQuat(Matrix3f mat, Quaternionf quat) {
+        mat.m00 = 1 - 2 * quat.y * quat.y - 2 * quat.z * quat.z;
+        mat.m01 = 2 * quat.x * quat.y - 2 * quat.z * quat.w;
+        mat.m02 = 2 * quat.x * quat.z + 2 * quat.y * quat.w;
 
-        matrix3f.m10 = 2 * quaternionf.x * quaternionf.y + 2 * quaternionf.z * quaternionf.w;
-        matrix3f.m11 = 1 - 2 * quaternionf.x * quaternionf.x - 2 * quaternionf.z * quaternionf.z;
-        matrix3f.m12 = 2 * quaternionf.y * quaternionf.z - 2 * quaternionf.x * quaternionf.w;
+        mat.m10 = 2 * quat.x * quat.y + 2 * quat.z * quat.w;
+        mat.m11 = 1 - 2 * quat.x * quat.x - 2 * quat.z * quat.z;
+        mat.m12 = 2 * quat.y * quat.z - 2 * quat.x * quat.w;
 
-        matrix3f.m20 = 2 * quaternionf.x * quaternionf.z - 2 * quaternionf.y * quaternionf.w;
-        matrix3f.m21 = 2 * quaternionf.y * quaternionf.z + 2 * quaternionf.x * quaternionf.w;
-        matrix3f.m22 = 1 - 2 * quaternionf.x * quaternionf.x - 2 * quaternionf.y * quaternionf.y;
+        mat.m20 = 2 * quat.x * quat.z - 2 * quat.y * quat.w;
+        mat.m21 = 2 * quat.y * quat.z + 2 * quat.x * quat.w;
+        mat.m22 = 1 - 2 * quat.x * quat.x - 2 * quat.y * quat.y;
     }
 
-    public static void quaternionfFromMatrix3f(Quaternionf quaternionf, Matrix3f matrix3f) {
+    public static void quatFromMat(Quaternionf quat, Matrix3f mat) {
         float s;
-        float tr = matrix3f.m00 + matrix3f.m11 + matrix3f.m22;
+        float tr = mat.m00 + mat.m11 + mat.m22;
 
         if (tr >= 0.0F) {
             s = Math.sqrt(tr + 1.0F);
-            quaternionf.w = s * 0.5F;
+            quat.w = s * 0.5F;
             s = 0.5F / s;
-            quaternionf.x = (matrix3f.m21 - matrix3f.m12) * s;
-            quaternionf.y = (matrix3f.m02 - matrix3f.m20) * s;
-            quaternionf.z = (matrix3f.m10 - matrix3f.m01) * s;
+            quat.x = (mat.m21 - mat.m12) * s;
+            quat.y = (mat.m02 - mat.m20) * s;
+            quat.z = (mat.m10 - mat.m01) * s;
         } else {
-            float max = Math.max(Math.max(matrix3f.m00, matrix3f.m11), matrix3f.m22);
+            float max = Math.max(Math.max(mat.m00, mat.m11), mat.m22);
 
-            if (max == matrix3f.m00) {
-                s = Math.sqrt(matrix3f.m00 - (matrix3f.m11 + matrix3f.m22) + 1.0F);
-                quaternionf.x = s * 0.5F;
+            if (max == mat.m00) {
+                s = Math.sqrt(mat.m00 - (mat.m11 + mat.m22) + 1.0F);
+                quat.x = s * 0.5F;
                 s = 0.5F / s;
-                quaternionf.y = (matrix3f.m01 + matrix3f.m10) * s;
-                quaternionf.z = (matrix3f.m20 + matrix3f.m02) * s;
-                quaternionf.w = (matrix3f.m21 - matrix3f.m12) * s;
-            } else if (max == matrix3f.m11) {
-                s = Math.sqrt(matrix3f.m11 - (matrix3f.m22 + matrix3f.m00) + 1.0F);
-                quaternionf.y = s * 0.5F;
+                quat.y = (mat.m01 + mat.m10) * s;
+                quat.z = (mat.m20 + mat.m02) * s;
+                quat.w = (mat.m21 - mat.m12) * s;
+            } else if (max == mat.m11) {
+                s = Math.sqrt(mat.m11 - (mat.m22 + mat.m00) + 1.0F);
+                quat.y = s * 0.5F;
                 s = 0.5F / s;
-                quaternionf.z = (matrix3f.m12 + matrix3f.m21) * s;
-                quaternionf.x = (matrix3f.m01 + matrix3f.m10) * s;
-                quaternionf.w = (matrix3f.m02 - matrix3f.m20) * s;
+                quat.z = (mat.m12 + mat.m21) * s;
+                quat.x = (mat.m01 + mat.m10) * s;
+                quat.w = (mat.m02 - mat.m20) * s;
             } else {
-                s = Math.sqrt(matrix3f.m22 - (matrix3f.m00 + matrix3f.m11) + 1.0F);
-                quaternionf.z = s * 0.5F;
+                s = Math.sqrt(mat.m22 - (mat.m00 + mat.m11) + 1.0F);
+                quat.z = s * 0.5F;
                 s = 0.5F / s;
-                quaternionf.x = (matrix3f.m20 + matrix3f.m02) * s;
-                quaternionf.y = (matrix3f.m12 + matrix3f.m21) * s;
-                quaternionf.w = (matrix3f.m10 - matrix3f.m01) * s;
+                quat.x = (mat.m20 + mat.m02) * s;
+                quat.y = (mat.m12 + mat.m21) * s;
+                quat.w = (mat.m10 - mat.m01) * s;
             }
         }
     }
@@ -83,19 +83,19 @@ public class MathUtil {
         );
     }
 
-    public static Vec3 transform(Vec3 vec, Matrix3f matrix3f) {
-        double x = Math.fma(matrix3f.m00(), vec.x, Math.fma(matrix3f.m01(), vec.y, matrix3f.m02() * vec.z));
-        double y = Math.fma(matrix3f.m10(), vec.x, Math.fma(matrix3f.m11(), vec.y, matrix3f.m12() * vec.z));
-        double z = Math.fma(matrix3f.m20(), vec.x, Math.fma(matrix3f.m21(), vec.y, matrix3f.m22() * vec.z));
+    public static Vec3 transform(Vec3 vec, Matrix3f mat) {
+        double x = mat.m00 * vec.x + mat.m01 * vec.y + mat.m02 * vec.z;
+        double y = mat.m10 * vec.x + mat.m11 * vec.y + mat.m12 * vec.z;
+        double z = mat.m20 * vec.x + mat.m21 * vec.y + mat.m22 * vec.z;
         return new Vec3(x, y, z);
     }
 
-    public static Matrix4f inverse(Matrix4f matrix4f) {
+    public static Matrix4f inverse(Matrix4f mat) {
         float
-                a00 = matrix4f.m00(), a01 = matrix4f.m01(), a02 = matrix4f.m02(), a03 = matrix4f.m03(),
-                a10 = matrix4f.m10(), a11 = matrix4f.m11(), a12 = matrix4f.m12(), a13 = matrix4f.m13(),
-                a20 = matrix4f.m20(), a21 = matrix4f.m21(), a22 = matrix4f.m22(), a23 = matrix4f.m23(),
-                a30 = matrix4f.m30(), a31 = matrix4f.m31(), a32 = matrix4f.m32(), a33 = matrix4f.m33(),
+                a00 = mat.m00(), a01 = mat.m01(), a02 = mat.m02(), a03 = mat.m03(),
+                a10 = mat.m10(), a11 = mat.m11(), a12 = mat.m12(), a13 = mat.m13(),
+                a20 = mat.m20(), a21 = mat.m21(), a22 = mat.m22(), a23 = mat.m23(),
+                a30 = mat.m30(), a31 = mat.m31(), a32 = mat.m32(), a33 = mat.m33(),
 
                 b00 = a00 * a11 - a01 * a10,
                 b01 = a00 * a12 - a02 * a10,

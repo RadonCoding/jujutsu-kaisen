@@ -48,7 +48,7 @@ public class ConvexMeshCollider extends Collider {
 
     public void fromData(int[] indices, float[] vertices) {
         this.indices = indices;
-        this.vertices = vertices;
+         this.vertices = vertices;
         this.triangles = new RigidBody.Triangle[indices.length / 3];
 
         for (int i = 0; i < indices.length; i += 3) {
@@ -68,15 +68,17 @@ public class ConvexMeshCollider extends Collider {
     }
 
     private float computeVolume() {
-        float vol = 0.0F;
+        float volume = 0.0F;
 
         for (RigidBody.Triangle triangle : this.triangles) {
-            vol += new Matrix3f((float) triangle.p1.pos.x, (float) triangle.p1.pos.y, (float) triangle.p1.pos.z,
+            Matrix3f mat = new Matrix3f((float) triangle.p1.pos.x, (float) triangle.p1.pos.y, (float) triangle.p1.pos.z,
                     (float) triangle.p2.pos.x, (float) triangle.p2.pos.y, (float) triangle.p2.pos.z,
-                    (float) triangle.p3.pos.x, (float) triangle.p3.pos.y, (float) triangle.p3.pos.z)
-                    .determinant();
+                    (float) triangle.p3.pos.x, (float) triangle.p3.pos.y, (float) triangle.p3.pos.z);
+            float vol = mat.m00 * (mat.m11 * mat.m22 - mat.m12 * mat.m21) + mat.m01 *
+                    (mat.m12 * mat.m20 - mat.m10 * mat.m22) + mat.m02 * (mat.m10 * mat.m21 - mat.m11 * mat.m20);
+            volume += vol;
         }
-        return vol / 6.0F;
+        return volume / 6.0F;
     }
 
     private Vec3 computeCenterOfMass() {
@@ -87,13 +89,17 @@ public class ConvexMeshCollider extends Collider {
             Matrix3f mat = new Matrix3f((float) triangle.p1.pos.x, (float) triangle.p1.pos.y, (float) triangle.p1.pos.z,
                     (float) triangle.p2.pos.x, (float) triangle.p2.pos.y, (float) triangle.p2.pos.z,
                     (float) triangle.p3.pos.x, (float) triangle.p3.pos.y, (float) triangle.p3.pos.z);
-            float vol = mat.determinant();
+            float vol = mat.m00 * (mat.m11 * mat.m22 - mat.m12 * mat.m21) + mat.m01 *
+                    (mat.m12 * mat.m20 - mat.m10 * mat.m22) + mat.m02 * (mat.m10 * mat.m21 - mat.m11 * mat.m20);
             center = center.add(vol * (mat.m00 + mat.m10 + mat.m20),
                     vol * (mat.m01 + mat.m11 + mat.m21),
                     vol * (mat.m02 + mat.m12 + mat.m22));
             volume += vol;
         }
-        return center.scale(1.0D / (Math.max(1.0F, volume) * 4.0F));
+
+        if (volume == 0.0F) return Vec3.ZERO;
+
+        return new Vec3(center.x / (volume * 4.0F), center.y / (volume * 4.0F), center.z / (volume * 4.0F));
     }
 
     private Matrix3f computeInertia(Vec3 com, float mass) {
@@ -105,27 +111,31 @@ public class ConvexMeshCollider extends Collider {
             Matrix3f mat = new Matrix3f((float) (t.p1.pos.x - com.x), (float) (t.p1.pos.y - com.y), (float) (t.p1.pos.z - com.z),
                     (float) (t.p2.pos.x - com.x), (float) (t.p2.pos.y - com.y), (float) (t.p2.pos.z - com.z),
                     (float) (t.p3.pos.x - com.x), (float) (t.p3.pos.y - com.y), (float) (t.p3.pos.z - com.z));
-            float d = mat.determinant();
-            volume += d;
+            float vol = mat.m00 * (mat.m11 * mat.m22 - mat.m12 * mat.m21) + mat.m01 *
+                    (mat.m12 * mat.m20 - mat.m10 * mat.m22) + mat.m02 * (mat.m10 * mat.m21 - mat.m11 * mat.m20);
+            volume += vol;
 
             for (int j = 0; j < 3; j++) {
                 int j1 = (j + 1) % 3;
                 int j2 = (j + 2) % 3;
                 diag = setVal(diag, j, val(diag, j) +
                         (mat.get(0, j) * mat.get(1, j) + mat.get(1, j) * mat.get(2, j) + mat.get(2, j) * mat.get(0, j) +
-                                mat.get(0, j) * mat.get(0, j) + mat.get(1, j) * mat.get(1, j) + mat.get(2, j) * mat.get(2, j)) * d);
+                                mat.get(0, j) * mat.get(0, j) + mat.get(1, j) * mat.get(1, j) + mat.get(2, j) * mat.get(2, j)) * vol);
                 offd = setVal(offd, j, val(offd, j) +
                         (mat.get(0, j1) * mat.get(1, j2) + mat.get(1, j1) * mat.get(2, j2) + mat.get(2, j1) * mat.get(0, j2) +
                                 mat.get(0, j1) * mat.get(2, j2) + mat.get(1, j1) * mat.get(0, j2) + mat.get(2, j1) * mat.get(1, j2) +
-                                mat.get(0, j1) * mat.get(0, j2) + mat.get(1, j1) * mat.get(1, j2) + mat.get(2, j1) * mat.get(2, j2)) * d);
+                                mat.get(0, j1) * mat.get(0, j2) + mat.get(1, j1) * mat.get(1, j2) + mat.get(2, j1) * mat.get(2, j2)) * vol);
             }
         }
-        float volume2 = volume * (60.0F / 6.0F);
-        diag = diag.scale(1.0D / Math.max(1.0F, volume2));
-        volume2 = volume * (120.0F / 6.0F);
-        offd = offd.scale(1.0D / Math.max(1.0F, volume2));
-        diag = diag.scale(mass);
-        offd = offd.scale(mass);
+
+        if (volume > 0.0F) {
+            float volume2 = volume * (60.0F / 6.0F);
+            diag = new Vec3(diag.x / volume2, diag.y / volume2, diag.z / volume2);
+            volume2 = volume * (120.0F / 6.0F);
+            offd = new Vec3(offd.x / volume2, offd.y / volume2, offd.z / volume2);
+            diag = diag.scale(mass);
+            offd = offd.scale(mass);
+        }
         return new Matrix3f((float) (diag.y + diag.z), (float) -offd.z, (float) -offd.y,
                 (float) -offd.z, (float) (diag.x + diag.z), (float) -offd.x,
                 (float) -offd.y, (float) -offd.x, (float) (diag.x + diag.y));

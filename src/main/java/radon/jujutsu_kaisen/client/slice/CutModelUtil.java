@@ -26,6 +26,7 @@ public class CutModelUtil {
         List<Vec3> vertices = new ArrayList<>(triangles.length * 3);
         int[] indices = new int[triangles.length * 3];
         float[] uv = new float[triangles.length * 6];
+        int[] color = new int[triangles.length * 3];
 
         for (int i = 0; i < triangles.length; i++) {
             RigidBody.Triangle triangle = triangles[i];
@@ -63,11 +64,16 @@ public class CutModelUtil {
             uv[i * 6 + 3] = triangle.p2.v;
             uv[i * 6 + 4] = triangle.p3.u;
             uv[i * 6 + 5] = triangle.p3.v;
+
+            color[i * 3] = triangle.p1.color;
+            color[i * 3 + 1] = triangle.p2.color;
+            color[i * 3 + 2] = triangle.p3.color;
         }
         RigidBody.VertexData data = new RigidBody.VertexData();
         data.positions = vertices.toArray(new Vec3[0]);
         data.indices = indices;
         data.uv = uv;
+        data.color = color;
         return data;
     }
 
@@ -91,79 +97,6 @@ public class CutModelUtil {
         double num = -(plane[0] * start.x + plane[1] * start.y + plane[2] * start.z + plane[3]);
         double denom = plane[0] * ray.x + plane[1] * ray.y + plane[2] * ray.z;
         return num / denom;
-    }
-
-    private static RigidBody.Triangle[] triangulate(Matrix4f matrix4f, ModelPart.Cube cube) {
-        RigidBody.Triangle[] triangles = new RigidBody.Triangle[12];
-
-        int i = 0;
-
-        for (ModelPart.Polygon polygon : cube.polygons) {
-            Vector3f tmp = new Vector3f();
-            Vec3 v0 = new Vec3(matrix4f.transformPosition(tmp.set(polygon.vertices[0].pos).div(16.0F), tmp));
-            Vec3 v1 = new Vec3(matrix4f.transformPosition(tmp.set(polygon.vertices[1].pos).div(16.0F), tmp));
-            Vec3 v2 = new Vec3(matrix4f.transformPosition(tmp.set(polygon.vertices[2].pos).div(16.0F), tmp));
-            Vec3 v3 = new Vec3(matrix4f.transformPosition(tmp.set(polygon.vertices[3].pos).div(16.0F), tmp));
-            float[] uv = new float[6];
-            uv[0] = polygon.vertices[0].u;
-            uv[1] = polygon.vertices[0].v;
-            uv[2] = polygon.vertices[1].u;
-            uv[3] = polygon.vertices[1].v;
-            uv[4] = polygon.vertices[2].u;
-            uv[5] = polygon.vertices[2].v;
-            triangles[i++] = new RigidBody.Triangle(v0, v1, v2, uv);
-            uv = new float[6];
-            uv[0] = polygon.vertices[2].u;
-            uv[1] = polygon.vertices[2].v;
-            uv[2] = polygon.vertices[3].u;
-            uv[3] = polygon.vertices[3].v;
-            uv[4] = polygon.vertices[0].u;
-            uv[5] = polygon.vertices[0].v;
-            triangles[i++] = new RigidBody.Triangle(v2, v3, v0, uv);
-        }
-        return triangles;
-    }
-
-    private static RigidBody.Triangle[] triangulate(Matrix4f matrix4f, GeoCube cube) {
-        RigidBody.Triangle[] triangles = new RigidBody.Triangle[12];
-
-        int i = 0;
-
-        for (GeoQuad quad : cube.quads()) {
-            GeoVertex[] vertices = quad.vertices();
-
-            Vector3f tmp = new Vector3f();
-            Vec3 v0 = new Vec3(matrix4f.transformPosition(tmp.set(vertices[0].position()), tmp));
-            Vec3 v1 = new Vec3(matrix4f.transformPosition(tmp.set(vertices[1].position()), tmp));
-            Vec3 v2 = new Vec3(matrix4f.transformPosition(tmp.set(vertices[2].position()), tmp));
-            Vec3 v3 = new Vec3(matrix4f.transformPosition(tmp.set(vertices[3].position()), tmp));
-            float[] uv = new float[6];
-            uv[0] = vertices[0].texU();
-            uv[1] = vertices[0].texV();
-            uv[2] = vertices[1].texU();
-            uv[3] = vertices[1].texV();
-            uv[4] = vertices[2].texU();
-            uv[5] = vertices[2].texV();
-            triangles[i++] = new RigidBody.Triangle(v0, v1, v2, uv);
-            uv = new float[6];
-            uv[0] = vertices[2].texU();
-            uv[1] = vertices[2].texV();
-            uv[2] = vertices[3].texU();
-            uv[3] = vertices[3].texV();
-            uv[4] = vertices[0].texU();
-            uv[5] = vertices[0].texV();
-            triangles[i++] = new RigidBody.Triangle(v2, v3, v0, uv);
-        }
-
-        return triangles;
-    }
-
-    private static RigidBody.VertexData[] cutAndCapModelBox(Matrix4f matrix4f, ModelPart.Cube cube, float[] plane) {
-        return cutAndCapConvex(triangulate(matrix4f, cube), plane);
-    }
-
-    private static RigidBody.VertexData[] cutAndCapModelBox(Matrix4f matrix4f, GeoCube cube, float[] plane) {
-        return cutAndCapConvex(triangulate(matrix4f, cube), plane);
     }
 
     private static Matrix3f eulerToMat(float yaw, float pitch, float roll) {
@@ -250,9 +183,15 @@ public class CutModelUtil {
                 deUv[1] = a.v + (b.v - a.v) * interceptAB;
                 deUv[2] = a.u + (c.u - a.u) * interceptAC;
                 deUv[3] = a.v + (c.v - a.v) * interceptAC;
-                side2.add(new RigidBody.Triangle(d, b.pos, e, new float[] { deUv[0], deUv[1], b.u, b.v, deUv[2], deUv[3] }));
-                side2.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deUv[2], deUv[3] }));
-                side1.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deUv[0], deUv[1], deUv[2], deUv[3] }));
+                int[] deColor = new int[4];
+                deColor[0] = (int) (a.color + (b.color - a.color) * interceptAB);
+                deColor[1] = (int) (a.color + (c.color - a.color) * interceptAC);
+                side2.add(new RigidBody.Triangle(d, b.pos, e, new float[] { deUv[0], deUv[1], b.u, b.v, deUv[2], deUv[3] },
+                        new int[] { deColor[0], b.color, deColor[1] }));
+                side2.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deUv[2], deUv[3] },
+                        new int[] { b.color, c.color, deColor[1] }));
+                side1.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deUv[0], deUv[1], deUv[2], deUv[3] },
+                        new int[] { a.color, deColor[0], deColor[1] }));
                 clippedEdges.add(new Vec3[] { d, e } );
             } else { // Else one is negative, clip and add 2 triangles to side 1, 1 to side 2.
                 RigidBody.Triangle.TexVertex a, b, c;
@@ -276,14 +215,20 @@ public class CutModelUtil {
                 float interceptAC = (float) rayPlaneIntercept(a.pos, rAC, plane);
                 Vec3 d = a.pos.add(rAB.scale(interceptAB));
                 Vec3 e = a.pos.add(rAC.scale(interceptAC));
-                float[] deTex = new float[4];
-                deTex[0] = a.u + (b.u - a.u) * interceptAB;
-                deTex[1] = a.v + (b.v - a.v) * interceptAB;
-                deTex[2] = a.u + (c.u - a.u) * interceptAC;
-                deTex[3] = a.v + (c.v - a.v) * interceptAC;
-                side1.add(new RigidBody.Triangle(d, b.pos, e, new float[] { deTex[0], deTex[1], b.u, b.v, deTex[2], deTex[3] }));
-                side1.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deTex[2], deTex[3] }));
-                side2.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deTex[0], deTex[1], deTex[2], deTex[3] }));
+                float[] deUv = new float[4];
+                deUv[0] = a.u + (b.u - a.u) * interceptAB;
+                deUv[1] = a.v + (b.v - a.v) * interceptAB;
+                deUv[2] = a.u + (c.u - a.u) * interceptAC;
+                deUv[3] = a.v + (c.v - a.v) * interceptAC;
+                int[] deColor = new int[4];
+                deColor[0] = (int) (a.color + (b.color - a.color) * interceptAB);
+                deColor[1] = (int) (a.color + (c.color - a.color) * interceptAC);
+                side1.add(new RigidBody.Triangle(d, b.pos, e, new float[] { deUv[0], deUv[1], b.u, b.v, deUv[2], deUv[3] },
+                        new int[] { deColor[0], b.color, deColor[1] }));
+                side1.add(new RigidBody.Triangle(b.pos, c.pos, e, new float[] { b.u, b.v, c.u, c.v, deUv[2], deUv[3] },
+                        new int[] { b.color, c.color, deColor[1] }));
+                side2.add(new RigidBody.Triangle(a.pos, d, e, new float[] { a.u, a.v, deUv[0], deUv[1], deUv[2], deUv[3] },
+                        new int[] { a.color, deColor[0], deColor[1] }));
                 clippedEdges.add(new Vec3[] { e, d });
             }
         }
@@ -311,9 +256,10 @@ public class CutModelUtil {
                 Vector3f uv3 = new Vector3f((float) orderedClipVertices.get(i + 1).x, (float) orderedClipVertices.get(i + 1).y, (float) orderedClipVertices.get(i + 1).z);
                 matrix3f.transform(uv3);
                 cap[i] = new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 2), orderedClipVertices.get(i + 1),
-                        new float[] { uv1.x, uv1.y, uv2.x, uv2.y, uv3.x, uv3.y });
-                side1.add(new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 2), orderedClipVertices.get(i + 1), new float[6]));
-                side2.add(new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 1), orderedClipVertices.get(i + 2), new float[6]));
+                        new float[] { uv1.x, uv1.y, uv2.x, uv2.y, uv3.x, uv3.y },
+                        new int[] { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF });
+                side1.add(new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 2), orderedClipVertices.get(i + 1), new float[6], new int[3]));
+                side2.add(new RigidBody.Triangle(orderedClipVertices.getFirst(), orderedClipVertices.get(i + 1), orderedClipVertices.get(i + 2), new float[6], new int[3]));
             }
             result[2] = compress(cap);
         }

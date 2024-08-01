@@ -12,3 +12,4 @@
 - Slicing entities with dismantle
 - GeckoLib model support for dismantle
 - Bug fixing
+- Ragdoll physics for entity slicing

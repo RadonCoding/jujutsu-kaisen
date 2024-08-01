@@ -3,8 +3,6 @@ package radon.jujutsu_kaisen.client.slice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -28,8 +26,8 @@ import java.util.Map;
 public class RigidBody {
     private static final float SCALE = 3.5F;
     public static final Vec3[] cardinals = new Vec3[]{
-            new Vec3(1.0F, 0.0F, 0.0F), new Vec3(0.0F, 1.0F, 0.0F), new Vec3(0.0F, 0.0F, 1.0F),
-            new Vec3(-1.0F, 0.0F, 0.0F), new Vec3(0.0F, -1.0F, 0.0F), new Vec3(0.0F, 0.0F, -1.0F)
+            new Vec3(1.0D, 0.0D, 0.0D), new Vec3(0.0D, 1.0D, 0.0D), new Vec3(0.0D, 0.0D, 1.0D),
+            new Vec3(-1.0D, 0.0D, 0.0D), new Vec3(0.0D, -1.0D, 0.0D), new Vec3(0.0D, 0.0D, -1.0D)
     };
     public static final RigidBody DUMMY = new RigidBody(null) {
         @Override
@@ -95,9 +93,9 @@ public class RigidBody {
 
     static {
         DUMMY.invRotation = new Matrix3f(DUMMY.rotation);
-        DUMMY.localInertiaTensor = new Matrix3f();
-        DUMMY.invLocalInertiaTensor = new Matrix3f();
-        DUMMY.invGlobalInertiaTensor = new Matrix3f();
+        DUMMY.localInertiaTensor = new Matrix3f().zero();
+        DUMMY.invLocalInertiaTensor = new Matrix3f().zero();
+        DUMMY.invGlobalInertiaTensor = new Matrix3f().zero();
         DUMMY.localCentroid = Vec3.ZERO;
         DUMMY.globalCentroid = Vec3.ZERO;
     }
@@ -111,6 +109,7 @@ public class RigidBody {
     public List<Collider> colliders = new ArrayList<>();
     public List<AABB> colliderBoundingBoxes = new ArrayList<>();
     public Vec3 position = Vec3.ZERO;
+    public Vec3 start = this.position;
     public Vec3 globalCentroid = Vec3.ZERO;
     public Matrix3f rotation = new Matrix3f();
     public Matrix3f invRotation;
@@ -138,12 +137,13 @@ public class RigidBody {
         this(level);
 
         this.position = new Vec3(x, y, z);
+        this.start = this.position;
     }
 
     public float getScale() {
         return SCALE * (!this.chunk.isEmpty() && this.chunk.getFirst().flip ? -1.0F : 1.0F);
     }
-
+    
     public void addChunk(List<CutModelData> chunk) {
         this.chunk.addAll(chunk);
 
@@ -161,7 +161,7 @@ public class RigidBody {
         this.invMass = 1.0F / this.mass;
         this.localCentroid = this.localCentroid.scale(this.invMass);
 
-        this.localInertiaTensor = new Matrix3f();
+        this.localInertiaTensor = new Matrix3f().zero();
 
         for (Collider collider : this.colliders) {
             // https://en.wikipedia.org/wiki/Parallel_axis_theorem
@@ -170,7 +170,6 @@ public class RigidBody {
             Matrix3f outer = MathUtil.outer(colliderToLocal, colliderToLocal);
 
             Matrix3f colliderToLocalMat = new Matrix3f();
-            colliderToLocalMat.identity();
             colliderToLocalMat.scale((float) dot);
             colliderToLocalMat.sub(outer);
             colliderToLocalMat.scale(collider.mass);
@@ -179,7 +178,8 @@ public class RigidBody {
             this.localInertiaTensor.add(cLocalIT);
         }
 
-        this.invLocalInertiaTensor = new Matrix3f(this.localInertiaTensor).invert();
+        this.invLocalInertiaTensor = new Matrix3f(this.localInertiaTensor);
+        LegacyMath.invert(this.invLocalInertiaTensor);
 
         this.invGlobalInertiaTensor = new Matrix3f();
         this.updateOrientation();
@@ -240,22 +240,22 @@ public class RigidBody {
         this.globalCentroid = this.globalCentroid.add(this.linearVelocity.scale(step));
 
         if (this.angularVelocity.lengthSqr() > 0.0D) {
-            Vec3 axis = this.angularVelocity.normalize();
-            double angle = this.angularVelocity.length() * step;
+            Vec3 axis = LegacyMath.normalize(this.angularVelocity);
+            double angle = ((double) (float) this.angularVelocity.length()) * step;
             Matrix3f turn = new Matrix3f();
-            turn.set(new AxisAngle4f((float) angle, axis.toVector3f()));
-            turn.mul(this.rotation);
+            LegacyMath.set(turn, new AxisAngle4f((float) angle, axis.toVector3f()));
+            LegacyMath.mul(turn, this.rotation);
             this.rotation = turn;
             this.updateOrientation();
         }
         this.updatePositionFromGlobalCentroid();
         this.updateAABBs();
-        this.addLinearVelocity(new Vec3(0.0D, -9.81F * step, 0.0D));
+        this.addLinearVelocity(new Vec3(0.0D, -9.81D * step, 0.0D));
     }
 
     public void setPrevData() {
         this.prevPosition = this.position;
-        MathUtil.quaternionfFromMatrix3f(this.prevRotation, this.rotation);
+        MathUtil.quatFromMat(this.prevRotation, this.rotation);
     }
 
     public void addContact(Contact contact) {
@@ -317,15 +317,15 @@ public class RigidBody {
 
     public void updateOrientation() {
         Quaternionf quaternionf = new Quaternionf();
-        MathUtil.quaternionfFromMatrix3f(quaternionf, this.rotation);
+        MathUtil.quatFromMat(quaternionf, this.rotation);
         quaternionf.normalize();
-        MathUtil.matrix3fFromQuaterionf(this.rotation, quaternionf);
+        MathUtil.matFromQuat(this.rotation, quaternionf);
 
         this.invRotation = new Matrix3f(this.rotation).transpose();
 
         this.invGlobalInertiaTensor.set(this.invRotation);
-        this.invGlobalInertiaTensor.mul(this.invLocalInertiaTensor);
-        this.invGlobalInertiaTensor.mul(this.rotation);
+        LegacyMath.mul(this.invGlobalInertiaTensor, this.invLocalInertiaTensor);
+        LegacyMath.mul(this.invGlobalInertiaTensor, this.rotation);
     }
 
     public void updatePositionFromGlobalCentroid() {
@@ -373,8 +373,8 @@ public class RigidBody {
         poseStack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         Quaternionf quaternionf = new Quaternionf();
-        MathUtil.quaternionfFromMatrix3f(quaternionf, this.rotation);
-        quaternionf.nlerp(this.prevRotation, 1.0F - partialTicks);
+        MathUtil.quatFromMat(quaternionf, this.rotation);
+        quaternionf.slerp(this.prevRotation, 1.0F - partialTicks);
         quaternionf.normalize();
 
         poseStack.mulPose(quaternionf);
@@ -436,6 +436,7 @@ public class RigidBody {
         public Vec3[] positions;
         public int @Nullable[] indices;
         public float[] uv;
+        public int[] color;
 
         public void tessellate(BufferBuilder builder, Matrix4f matrix4f, int packedLight) {
             this.tessellate(builder, matrix4f, false, packedLight);
@@ -464,21 +465,21 @@ public class RigidBody {
                 Vec3 normalized = b.subtract(a).cross(c.subtract(a)).normalize();
 
                 builder.vertex(matrix4f, (float) a.x, (float) a.y, (float) a.z)
-                        .color(255, 255, 255, 255)
+                        .color(this.color[i])
                         .uv(this.uv[i * 2], this.uv[i * 2 + 1])
                         .overlayCoords(OverlayTexture.NO_OVERLAY)
                         .uv2(packedLight)
                         .normal((float) normalized.x, (float) normalized.y, (float) normalized.z)
                         .endVertex();
                 builder.vertex(matrix4f, (float) b.x, (float) b.y, (float) b.z)
-                        .color(255, 255, 255, 255)
+                        .color(this.color[i + tOB])
                         .uv(this.uv[(i + tOB) * 2], this.uv[(i + tOB) * 2 + 1])
                         .overlayCoords(OverlayTexture.NO_OVERLAY)
                         .uv2(packedLight)
                         .normal((float) normalized.x, (float) normalized.y, (float) normalized.z)
                         .endVertex();
                 builder.vertex(matrix4f, (float) c.x, (float) c.y, (float) c.z)
-                        .color(255, 255, 255, 255)
+                        .color(this.color[i + tOC])
                         .uv(this.uv[(i + tOC) * 2], this.uv[(i + tOC) * 2 + 1])
                         .overlayCoords(OverlayTexture.NO_OVERLAY)
                         .uv2(packedLight)
@@ -509,24 +510,26 @@ public class RigidBody {
             this.p3 = new TexVertex(p3);
         }
 
-        public Triangle(Vec3 p1, Vec3 p2, Vec3 p3, float[] uv) {
-            this.p1 = new TexVertex(p1, uv[0], uv[1]);
-            this.p2 = new TexVertex(p2, uv[2], uv[3]);
-            this.p3 = new TexVertex(p3, uv[4], uv[5]);
+        public Triangle(Vec3 p1, Vec3 p2, Vec3 p3, float[] uv, int[] color) {
+            this.p1 = new TexVertex(p1, uv[0], uv[1], color[0]);
+            this.p2 = new TexVertex(p2, uv[2], uv[3], color[1]);
+            this.p3 = new TexVertex(p3, uv[4], uv[5], color[2]);
         }
 
         public static class TexVertex {
             public Vec3 pos;
             public float u, v;
+            public int color;
 
             public TexVertex(Vec3 pos) {
                 this.pos = pos;
             }
 
-            public TexVertex(Vec3 pos, float u, float v) {
+            public TexVertex(Vec3 pos, float u, float v, int color) {
                 this.pos = pos;
                 this.u = u;
                 this.v = v;
+                this.color = color;
             }
         }
     }
