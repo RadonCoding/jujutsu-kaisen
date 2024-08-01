@@ -18,9 +18,7 @@ import radon.jujutsu_kaisen.util.MathUtil;
 
 import java.lang.Math;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/blob/Custom-1.12.2/src/main/java/com/hbm/physics/RigidBody.java
 public class RigidBody {
@@ -103,6 +101,8 @@ public class RigidBody {
 
     private final List<CutModelData> chunk = new ArrayList<>();
 
+    private final List<RigidBody> parts = new ArrayList<>();
+
     public Level level;
     public AABB bounds;
     public List<Collider> colliders = new ArrayList<>();
@@ -183,6 +183,10 @@ public class RigidBody {
         this.updateAABBs();
     }
 
+    public void addParts(List<RigidBody> parts) {
+        this.parts.addAll(parts);
+    }
+
     public void tick() {
         // Clear contacts because if for example blocks have been destroyed
         for (int i = 0; i < this.contacts.contactCount; i++) {
@@ -215,6 +219,27 @@ public class RigidBody {
 
                 if (info.result == GJK.Result.COLLIDING) {
                     this.contacts.addContact(new Contact(this, null, a, b, info));
+                }
+            }
+        }
+
+        for (RigidBody part : this.parts) {
+            if (part == this) continue;
+
+            for (int i = 0; i < this.colliders.size(); i++) {
+                Collider a = this.colliders.get(i);
+
+                for (int j = 0; j < part.colliders.size(); j++) {
+                    if (!this.colliderBoundingBoxes.get(i).intersects(part.colliderBoundingBoxes.get(j))) {
+                        continue;
+                    }
+
+                    Collider b = part.colliders.get(j);
+                    GJK.GJKInfo info = GJK.colliding(this, part, a, b);
+
+                    if (info.result == GJK.Result.COLLIDING) {
+                        this.contacts.addContact(new Contact(this, part, a, b, info));
+                    }
                 }
             }
         }

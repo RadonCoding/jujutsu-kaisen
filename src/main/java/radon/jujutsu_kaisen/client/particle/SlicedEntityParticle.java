@@ -125,10 +125,8 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 CutModelUtil.collect(this.renderer, this.plane, this.distance, pPartialTicks, top, bottom);
 
                 List<List<RigidBody.CutModelData>> chunks = new ArrayList<>();
-                //generateChunks(chunks, top);
-                //generateChunks(chunks, bottom);
-                chunks.add(top);
-                chunks.add(bottom);
+                generateChunks(chunks, top);
+                generateChunks(chunks, bottom);
 
                 double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
                 double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
@@ -144,6 +142,10 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                             this.plane.z * direction), part.globalCentroid);
 
                     this.parts.add(part);
+                }
+
+                for (RigidBody part : this.parts) {
+                    part.addParts(this.parts);
                 }
             });
         }
