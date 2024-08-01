@@ -133,9 +133,9 @@ public class ConvexMeshCollider extends Collider {
             diag = new Vec3(diag.x / volume2, diag.y / volume2, diag.z / volume2);
             volume2 = volume * (120.0F / 6.0F);
             offd = new Vec3(offd.x / volume2, offd.y / volume2, offd.z / volume2);
-            diag = diag.scale(mass);
-            offd = offd.scale(mass);
         }
+        diag = diag.scale(mass);
+        offd = offd.scale(mass);
         return new Matrix3f((float) (diag.y + diag.z), (float) -offd.z, (float) -offd.y,
                 (float) -offd.z, (float) (diag.x + diag.z), (float) -offd.x,
                 (float) -offd.y, (float) -offd.x, (float) (diag.x + diag.y));
