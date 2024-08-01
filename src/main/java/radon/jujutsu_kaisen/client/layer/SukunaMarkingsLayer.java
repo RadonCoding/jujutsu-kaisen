@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,6 +25,10 @@ public class SukunaMarkingsLayer<T extends LivingEntity, M extends EntityModel<T
 
     @Override
     public void render(@NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, @NotNull T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null || pLivingEntity.isInvisibleTo(mc.player)) return;
+
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
         this.getParentModel().renderToBuffer(pMatrixStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
                 1.0F, 1.0F, 1.0F, 1.0F);

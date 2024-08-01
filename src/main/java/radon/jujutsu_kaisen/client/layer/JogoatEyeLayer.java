@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -23,6 +24,10 @@ public class JogoatEyeLayer extends GeoRenderLayer<JogoatEntity> {
 
     @Override
     public void render(PoseStack poseStack, JogoatEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null || animatable.isInvisibleTo(mc.player)) return;
+
         RenderType type = JJKRenderTypes.eyes(TEXTURE);
 
         this.getRenderer().reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, type,

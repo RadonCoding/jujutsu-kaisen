@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.layer;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -26,11 +27,12 @@ public class CuriosLayer<T extends LivingEntity, M extends EntityModel<T>> exten
     }
 
     @Override
-    public void render(@Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource renderTypeBuffer,
-                       int light, @Nonnull T livingEntity, float limbSwing, float limbSwingAmount,
-                       float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        matrixStack.pushPose();
-        CuriosApi.getCuriosInventory(livingEntity)
+    public void render(@Nonnull PoseStack pPoseStack, @Nonnull MultiBufferSource pBuffer, int pPackedLight, @Nonnull T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null || pLivingEntity.isInvisibleTo(mc.player)) return;
+
+        CuriosApi.getCuriosInventory(pLivingEntity)
                 .ifPresent(handler -> handler.getCurios().forEach((id, stacksHandler) -> {
                     IDynamicStackHandler stackHandler = stacksHandler.getStacks();
                     IDynamicStackHandler cosmeticStacksHandler = stacksHandler.getCosmeticStacks();
@@ -47,16 +49,15 @@ public class CuriosLayer<T extends LivingEntity, M extends EntityModel<T>> exten
                         }
 
                         if (!stack.isEmpty()) {
-                            SlotContext slotContext = new SlotContext(id, livingEntity, i, cosmetic, renderable);
+                            SlotContext slotContext = new SlotContext(id, pLivingEntity, i, cosmetic, renderable);
                             ItemStack finalStack = stack;
                             CuriosRendererRegistry.getRenderer(stack.getItem()).ifPresent(
                                     renderer -> renderer
-                                            .render(finalStack, slotContext, matrixStack, renderLayerParent,
-                                                    renderTypeBuffer, light, limbSwing, limbSwingAmount, partialTicks,
-                                                    ageInTicks, netHeadYaw, headPitch));
+                                            .render(finalStack, slotContext, pPoseStack, renderLayerParent,
+                                                    pBuffer, pPackedLight, pLimbSwing, pLimbSwingAmount, pPartialTicks,
+                                                    pAgeInTicks, pNetHeadYaw, pHeadPitch));
                         }
                     }
                 }));
-        matrixStack.popPose();
     }
 }

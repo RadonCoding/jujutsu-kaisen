@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -22,12 +23,16 @@ public class ScissorCurseOpenLayer extends GeoRenderLayer<KuchisakeOnnaEntity> {
 
     @Override
     public void render(PoseStack poseStack, KuchisakeOnnaEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        if (animatable.isOpen()) {
-            RenderType type = RenderType.entityCutoutNoCull(TEXTURE);
+        Minecraft mc = Minecraft.getInstance();
 
-            this.getRenderer().reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, type,
-                    bufferSource.getBuffer(type), partialTick, packedLight, OverlayTexture.NO_OVERLAY,
-                    1.0F, 1.0F, 1.0F, 1.0F);
-        }
+        if (mc.player == null || animatable.isInvisibleTo(mc.player)) return;
+
+        if (!animatable.isOpen()) return;
+
+        RenderType type = RenderType.entityCutoutNoCull(TEXTURE);
+
+        this.getRenderer().reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, type,
+                bufferSource.getBuffer(type), partialTick, packedLight, OverlayTexture.NO_OVERLAY,
+                1.0F, 1.0F, 1.0F, 1.0F);
     }
 }
