@@ -6,8 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.flat.FlatLayerInfo;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
@@ -24,13 +22,13 @@ import java.util.Optional;
 
 public class DomainHandler {
     public static @Nullable Level getOrCreateInside(ServerLevel level, DomainExpansionEntity domain) {
-        for (IBarrier barrier : VeilHandler.getBarriers(level, domain.getBounds())) {
+        for (IBarrier barrier : VeilHandler.getBarriers(level, domain.getPhysicalBounds())) {
             if (!(barrier instanceof IDomain other) || barrier instanceof ISimpleDomain) continue;
             if (other == domain) continue;
 
-            if (domain.getInside() == null) continue;
+            if (domain.getVirtual() == null) continue;
 
-            return domain.getInside();
+            return domain.getVirtual();
         }
 
         Registry<Biome> registry = level.registryAccess().registryOrThrow(Registries.BIOME);

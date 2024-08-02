@@ -5,7 +5,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public interface IDomain extends IBarrier {
-    @Nullable Level getInside();
+    @Nullable Level getVirtual();
 
     float getScale();
 

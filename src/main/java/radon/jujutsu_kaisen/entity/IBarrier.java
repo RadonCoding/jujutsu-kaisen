@@ -21,7 +21,7 @@ public interface IBarrier {
     LivingEntity getOwner();
 
     default boolean isAffected(BlockPos pos) {
-        return this.isOwned(pos) && this.isInsideBarrier(pos);
+        return this.isInsideVirtualBarrier(pos);
     }
 
     default boolean isOwned(BlockPos pos) {
@@ -36,11 +36,15 @@ public interface IBarrier {
         return VeilHandler.isOwnedNonDomain(level, pos);
     }
 
-    boolean isInsideBarrier(BlockPos pos);
+    boolean isInsidePhysicalBarrier(BlockPos pos);
 
-    boolean isBarrier(BlockPos pos);
+    boolean isPhysicalBarrier(BlockPos pos);
 
-    AABB getBounds();
+    boolean isInsideVirtualBarrier(BlockPos pos);
+
+    AABB getPhysicalBounds();
+
+    AABB getVirtualBounds();
 
     boolean hasSureHitEffect();
 
@@ -59,7 +63,7 @@ public interface IBarrier {
 
         int skill = data.getSkill(Skill.BARRIER) + 1;
 
-        return Math.round(skill * (this.isInsideBarrier(owner.blockPosition()) ? 1.0F : 1.5F) *
+        return Math.round(skill * (this.isInsidePhysicalBarrier(owner.blockPosition()) ? 1.0F : 1.5F) *
                 (this instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F)) *
                 (owner.getHealth() / owner.getMaxHealth());
     }

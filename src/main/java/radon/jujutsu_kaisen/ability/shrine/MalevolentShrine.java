@@ -43,7 +43,7 @@ public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
         int radius = 0;
 
         if (domain instanceof ClosedDomainExpansionEntity closed) {
-            radius = closed.getOutsideRadius();
+            radius = closed.getPhysicalRadius();
         }
 
         if (domain instanceof OpenDomainExpansionEntity open) {

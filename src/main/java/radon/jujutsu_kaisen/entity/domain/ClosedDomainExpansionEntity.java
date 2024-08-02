@@ -23,7 +23,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.DomainHandler;
-import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
@@ -31,14 +30,12 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.domain.DomainInfo;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.IBarrier;
-import radon.jujutsu_kaisen.entity.IDomain;
-import radon.jujutsu_kaisen.entity.ISimpleDomain;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -51,7 +48,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private int total;
 
     @Nullable
-    private Level inside;
+    private Level virtual;
 
     public ClosedDomainExpansionEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
@@ -70,26 +67,32 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         ISorcererData data = cap.getSorcererData();
 
-        int outsideRadius = data.getDomainSize();
+        int physicalRadius = data.getDomainSize();
 
         float yaw = RotationUtil.getTargetAdjustedYRot(owner);
         Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
-        Vec3 behind = owner.position().subtract(0.0D, outsideRadius, 0.0D).add(direction.scale(outsideRadius - OFFSET));
+        Vec3 behind = owner.position().subtract(0.0D, physicalRadius, 0.0D).add(direction.scale(physicalRadius - OFFSET));
         this.moveTo(behind.x, behind.y, behind.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        this.entityData.set(DATA_RADIUS, outsideRadius);
+        this.entityData.set(DATA_RADIUS, physicalRadius);
     }
 
     @Override
     public boolean shouldCollapse(float strength) {
-        int outsideRadius = this.getOutsideRadius();
-        boolean completed = this.getTime() >= outsideRadius * 2;
+        int physicalRadius = this.getPhysicalRadius();
+        boolean completed = this.getTime() >= physicalRadius * 2;
         return completed && super.shouldCollapse(strength);
     }
 
     @Override
-    public AABB getBounds() {
+    public AABB getPhysicalBounds() {
         return this.getBoundingBox();
+    }
+
+    @Override
+    public AABB getVirtualBounds() {
+        int diameter = ConfigHolder.SERVER.physicalDomainRadius.getAsInt() * 2;
+        return AABB.ofSize(Vec3.ZERO, diameter, diameter, diameter);
     }
 
     @Override
@@ -103,7 +106,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.entityData.set(DATA_RADIUS, pCompound.getInt("outsideRadius"));
+        this.entityData.set(DATA_RADIUS, pCompound.getInt("physicalRadius"));
         this.total = pCompound.getInt("total");
     }
 
@@ -111,32 +114,40 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("outsideRadius", this.getOutsideRadius());
+        pCompound.putInt("physicalRadius", this.getPhysicalRadius());
         pCompound.putInt("total", this.total);
     }
 
-    public int getOutsideRadius() {
+    public int getPhysicalRadius() {
         return this.entityData.get(DATA_RADIUS);
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
-        int outsideRadius = this.getOutsideRadius();
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, outsideRadius, 0.0D));
+    public boolean isInsidePhysicalBarrier(BlockPos pos) {
+        int physicalRadius = this.getPhysicalRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < (outsideRadius - 1) * (outsideRadius - 1);
+        return relative.distSqr(Vec3i.ZERO) < (physicalRadius - 1) * (physicalRadius - 1);
     }
 
     @Override
-    public boolean isBarrier(BlockPos pos) {
-        int outsideRadius = this.getOutsideRadius();
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, outsideRadius, 0.0D));
+    public boolean isPhysicalBarrier(BlockPos pos) {
+        int physicalRadius = this.getPhysicalRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < outsideRadius * outsideRadius;
+        return relative.distSqr(Vec3i.ZERO) < physicalRadius * physicalRadius;
     }
 
-    private void createBlock(int delay, BlockPos pos, int outsideRadius, double distance) {
-        if (distance > outsideRadius) return;
+    @Override
+    public boolean isInsideVirtualBarrier(BlockPos pos) {
+        int virtualRadius = ConfigHolder.SERVER.physicalDomainRadius.getAsInt();
+        BlockPos center = new BlockPos(0, virtualRadius, 0);
+        BlockPos relative = pos.subtract(center);
+        return relative.distSqr(Vec3i.ZERO) < (virtualRadius - 1) * (virtualRadius - 1);
+    }
+
+    private void createBlock(int delay, BlockPos pos, int radius, double distance) {
+        if (distance > radius) return;
 
         if (!this.level().isInWorldBounds(pos)) return;
 
@@ -162,40 +173,40 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         Block block = state.getCollisionShape(this.level(), pos).isEmpty() ? JJKBlocks.DOMAIN_AIR.get() : JJKBlocks.DOMAIN.get();
 
-        if (distance >= outsideRadius - 1) {
+        if (distance >= radius - 1) {
             block = JJKBlocks.DOMAIN.get();
         }
 
         boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
                 Block.UPDATE_CLIENTS);
 
-        if (distance >= outsideRadius - 1 && success) this.total++;
+        if (distance >= radius - 1 && success) this.total++;
 
         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
             be.create(this.uuid, delay, state, saved);
         }
     }
 
-    private void createOutsideBarrier() {
+    private void createPhysicalBarrier() {
         this.total = 0;
 
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
 
-        int outsideRadius = this.getOutsideRadius();
+        int physicalRadius = this.getPhysicalRadius();
 
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, outsideRadius, 0.0D));
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
 
         Vec3 direction = this.getLookAngle();
-        Vec3 behind = this.position().subtract(direction.scale(outsideRadius - OFFSET)).add(0.0D, outsideRadius, 0.0D);
+        Vec3 behind = this.position().subtract(direction.scale(physicalRadius - OFFSET)).add(0.0D, physicalRadius, 0.0D);
 
-        for (int x = -outsideRadius; x <= outsideRadius; x++) {
-            for (int y = -outsideRadius; y <= outsideRadius; y++) {
-                for (int z = -outsideRadius; z <= outsideRadius; z++) {
+        for (int x = -physicalRadius; x <= physicalRadius; x++) {
+            for (int y = -physicalRadius; y <= physicalRadius; y++) {
+                for (int z = -physicalRadius; z <= physicalRadius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance > outsideRadius) continue;
+                    if (distance > physicalRadius) continue;
 
                     BlockPos pos = center.offset(x, y, z);
 
@@ -206,35 +217,35 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                     if (cap == null) return;
 
                     if (delay == 0) {
-                        this.createBlock(outsideRadius - delay, pos, outsideRadius, distance);
+                        this.createBlock(physicalRadius - delay, pos, physicalRadius, distance);
                     } else {
                         IAbilityData data = cap.getAbilityData();
-                        data.delayTickEvent(() -> this.createBlock(outsideRadius - delay, pos, outsideRadius, distance), delay);
+                        data.delayTickEvent(() -> this.createBlock(physicalRadius - delay, pos, physicalRadius, distance), delay);
                     }
                 }
             }
         }
     }
 
-    private void createInsideBarrier() {
-        this.inside = DomainHandler.getOrCreateInside((ServerLevel) this.level(), this);
+    private void createVirtualBarrier() {
+        this.virtual = DomainHandler.getOrCreateInside((ServerLevel) this.level(), this);
 
-        if (this.inside == null) return;
+        if (this.virtual == null) return;
 
-        IDomainData data = this.inside.getData(JJKAttachmentTypes.DOMAIN);
+        IDomainData data = this.virtual.getData(JJKAttachmentTypes.DOMAIN);
         data.update(this);
     }
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        int outsideRadius = this.getOutsideRadius() * 2;
-        return EntityDimensions.fixed(outsideRadius, outsideRadius);
+        int physicalRadius = this.getPhysicalRadius() * 2;
+        return EntityDimensions.fixed(physicalRadius, physicalRadius);
     }
 
     private void doSureHitEffect(@NotNull LivingEntity owner) {
-        if (this.inside == null) return;
+        if (this.virtual == null) return;
 
-        for (LivingEntity entity : this.getAffected(this.inside)) {
+        for (LivingEntity entity : this.getAffected(this.virtual)) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
@@ -248,15 +259,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             this.ability.onHitEntity(this, owner, entity, false);
         }
 
-        int outsideRadius = this.getOutsideRadius();
-        BlockPos center = this.blockPosition().offset(0, outsideRadius / 2, 0);
+        int physicalRadius = this.getPhysicalRadius();
+        BlockPos center = this.blockPosition().offset(0, physicalRadius / 2, 0);
 
-        for (int x = -outsideRadius; x <= outsideRadius; x++) {
-            for (int y = -outsideRadius; y <= outsideRadius; y++) {
-                for (int z = -outsideRadius; z <= outsideRadius; z++) {
+        for (int x = -physicalRadius; x <= physicalRadius; x++) {
+            for (int y = -physicalRadius; y <= physicalRadius; y++) {
+                for (int z = -physicalRadius; z <= physicalRadius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < outsideRadius - 1) {
+                    if (distance < physicalRadius - 1) {
                         BlockPos pos = center.offset(x, y, z);
                         this.ability.onHitBlock(this, owner, pos, false);
                     }
@@ -267,23 +278,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        int outsideRadius = this.getOutsideRadius();
-        boolean completed = this.getTime() >= outsideRadius * 2;
+        if (this.virtual == null) return false;
 
-        if (!completed) return false;
-
-        Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
-
-        for (IBarrier barrier : barriers) {
-            if (!(barrier instanceof IDomain domain) || barrier instanceof ISimpleDomain) continue;
-            if (domain == this) continue;
-
-            if (this.shouldCollapse(domain.getStrength())) {
-                this.discard();
-            }
-            return false;
-        }
-        return true;
+        IDomainData data = this.virtual.getData(JJKAttachmentTypes.DOMAIN);
+        Set<DomainInfo> domains = data.getDomains();
+        return domains.size() == 1;
     }
 
     @Override
@@ -322,18 +321,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private void check() {
-        int outsideRadius = this.getOutsideRadius();
+        int physicalRadius = this.getPhysicalRadius();
 
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, outsideRadius, 0.0D));
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
 
         int count = 0;
 
-        for (int x = -outsideRadius; x <= outsideRadius; x++) {
-            for (int y = -outsideRadius; y <= outsideRadius; y++) {
-                for (int z = -outsideRadius; z <= outsideRadius; z++) {
+        for (int x = -physicalRadius; x <= physicalRadius; x++) {
+            for (int y = -physicalRadius; y <= physicalRadius; y++) {
+                for (int z = -physicalRadius; z <= physicalRadius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < outsideRadius && distance >= outsideRadius - 1) {
+                    if (distance < physicalRadius && distance >= physicalRadius - 1) {
                         BlockPos pos = center.offset(x, y, z);
 
                         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity) count++;
@@ -359,43 +358,48 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (this.level().isClientSide) return;
 
-        int outsideRadius = this.getOutsideRadius();
-        boolean completed = this.getTime() >= outsideRadius * 2;
+        int physicalRadius = this.getPhysicalRadius();
+        boolean completed = this.getTime() >= physicalRadius * 2;
 
         if (this.checkSureHitEffect()) {
             this.doSureHitEffect(owner);
         }
 
-        if (this.getTime() - 1 == 0) this.createOutsideBarrier();
-        if (this.getTime() == outsideRadius * 2) this.createInsideBarrier();
+        if (this.getTime() - 1 == 0) {
+            this.createPhysicalBarrier();
+        }
+
+        if (this.getTime() == physicalRadius * 2) {
+            this.createVirtualBarrier();
+        }
 
         if (completed) {
-            if (this.getTime() % 20 == 0) {
-                this.check();
-            }
-
-            if (this.inside instanceof ServerLevel level) {
-                IDomainData data = this.inside.getData(JJKAttachmentTypes.DOMAIN);
+            if (this.virtual instanceof ServerLevel level) {
+                IDomainData data = this.virtual.getData(JJKAttachmentTypes.DOMAIN);
                 data.update(this);
 
-                int insideRadius = ConfigHolder.SERVER.domainSize.getAsInt();
-                int diameter = (insideRadius - 1) * 2;
+                int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
+                int diameter = (virtualRadius - 1) * 2;
 
-                for (Entity entity : this.level().getEntities(this, this.getBounds(), entity -> this.isInsideBarrier(entity.blockPosition()))) {
+                for (Entity entity : this.level().getEntities(this, this.getPhysicalBounds(), entity -> this.isInsidePhysicalBarrier(entity.blockPosition()))) {
                     data.addSpawn(entity.getUUID(), entity.position());
 
                     Vec3 distance = entity.position().subtract(this.position());
 
-                    entity.teleportTo(level, Math.min(diameter, distance.x), insideRadius, Math.min(diameter, distance.z), Set.of(),
+                    entity.teleportTo(level, Math.min(diameter, distance.x), virtualRadius, Math.min(diameter, distance.z), Set.of(),
                             entity.getYRot(), entity.getXRot());
                 }
+            }
+
+            if (this.getTime() % 20 == 0) {
+                this.check();
             }
         }
     }
 
     @Nullable
     @Override
-    public Level getInside() {
-        return this.inside;
+    public Level getVirtual() {
+        return this.virtual;
     }
 }

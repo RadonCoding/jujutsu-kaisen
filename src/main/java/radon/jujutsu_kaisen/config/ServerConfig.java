@@ -1,9 +1,7 @@
 package radon.jujutsu_kaisen.config;
 
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
@@ -37,7 +35,8 @@ public class ServerConfig {
 
     public final ModConfigSpec.IntValue minimumVeilSize;
     public final ModConfigSpec.IntValue maximumVeilSize;
-    public final ModConfigSpec.IntValue domainSize;
+    public final ModConfigSpec.IntValue physicalDomainRadius;
+    public final ModConfigSpec.IntValue virtualDomainRadius;
     public final ModConfigSpec.DoubleValue minimumDomainScale;
     public final ModConfigSpec.DoubleValue maximumDomainScale;
 
@@ -153,8 +152,10 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Domains").push("domains");
-        this.domainSize = builder.comment("Base domain size")
-                .defineInRange("domainSize", 32, 4, 256);
+        this.physicalDomainRadius = builder.comment("Physical domain radius")
+                .defineInRange("physicalDomainRadius", 32, 4, 256);
+        this.virtualDomainRadius = builder.comment("Virtual domain radius")
+                .defineInRange("virtualDomainRadius", 64, 4, 256);
         this.minimumDomainScale = builder.comment("Minimum scale for a domain")
                 .defineInRange("minimumDomainScale", 0.1F, 0.1F, 1.0F);
         this.maximumDomainScale = builder.comment("Maximum scale for a domain")

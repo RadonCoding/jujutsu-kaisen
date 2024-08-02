@@ -50,7 +50,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public AABB getBounds() {
+    public AABB getPhysicalBounds() {
         int width = this.getWidth();
         int height = this.getHeight();
         return new AABB(this.getX() - width, this.getY() - height, this.getZ() - width,
@@ -58,7 +58,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
+    public boolean isInsidePhysicalBarrier(BlockPos pos) {
         int width = this.getWidth();
         int height = this.getHeight();
         BlockPos center = this.blockPosition();
@@ -128,9 +128,9 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds())) {
+        for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) this.level(), this.getPhysicalBounds())) {
             if (!(barrier instanceof IDomain domain)) continue;
-            if (domain == this || domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition()))
+            if (domain == this || domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsidePhysicalBarrier(this.blockPosition()))
                 continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
@@ -181,7 +181,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Nullable
     @Override
-    public ServerLevel getInside() {
+    public ServerLevel getVirtual() {
         return null;
     }
 }

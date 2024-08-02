@@ -39,7 +39,7 @@ public class VeilHandler {
 
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
-                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !barrier.isInsideBarrier(target))
+                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !barrier.isInsidePhysicalBarrier(target))
                     continue;
                 result.add(barrier);
             }
@@ -67,7 +67,7 @@ public class VeilHandler {
 
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
-                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !bounds.intersects(barrier.getBounds()))
+                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !bounds.intersects(barrier.getPhysicalBounds()))
                     continue;
                 result.add(barrier);
             }
@@ -115,7 +115,7 @@ public class VeilHandler {
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
                 if (!(level.getEntity(identifier) instanceof IBarrier current)) continue;
-                if (!current.isBarrier(target)) continue;
+                if (!current.isPhysicalBarrier(target)) continue;
 
                 if (strongest == null) {
                     strongest = current;

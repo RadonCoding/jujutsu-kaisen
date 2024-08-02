@@ -71,7 +71,7 @@ public class DomainBlock extends Block implements EntityBlock {
             UUID identifier = be.getIdentifier();
 
             if (identifier != null && ((ServerLevel) level).getEntity(identifier) instanceof DomainExpansionEntity domain
-                    && domain.isInsideBarrier(exploder.blockPosition())) return 3600000.8F;
+                    && domain.isInsidePhysicalBarrier(exploder.blockPosition())) return 3600000.8F;
         }
 
         float resistance = super.getExplosionResistance(state, level, pos, explosion);

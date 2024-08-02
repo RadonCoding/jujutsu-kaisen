@@ -254,12 +254,12 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
-        return this.isBarrier(pos);
+    public boolean isInsidePhysicalBarrier(BlockPos pos) {
+        return this.isPhysicalBarrier(pos);
     }
 
     @Override
-    public boolean isBarrier(BlockPos pos) {
+    public boolean isPhysicalBarrier(BlockPos pos) {
         float radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
@@ -267,8 +267,18 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     }
 
     @Override
-    public AABB getBounds() {
+    public boolean isInsideVirtualBarrier(BlockPos pos) {
+        return this.isInsidePhysicalBarrier(pos);
+    }
+
+    @Override
+    public AABB getPhysicalBounds() {
         return this.getBoundingBox();
+    }
+
+    @Override
+    public AABB getVirtualBounds() {
+        return this.getPhysicalBounds();
     }
 
     @Override
@@ -326,7 +336,7 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     }
 
     @Override
-    public @org.jetbrains.annotations.Nullable ServerLevel getInside() {
+    public @org.jetbrains.annotations.Nullable ServerLevel getVirtual() {
         return null;
     }
 

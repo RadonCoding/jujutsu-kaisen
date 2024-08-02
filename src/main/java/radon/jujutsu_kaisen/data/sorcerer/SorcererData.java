@@ -969,7 +969,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public int getDomainSize() {
-        return (int) (ConfigHolder.SERVER.domainSize.getAsInt() * this.domainScale);
+        return (int) (ConfigHolder.SERVER.physicalDomainRadius.getAsInt() * this.domainScale);
     }
 
     @Override

@@ -19,7 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.DimensionManager;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.IBarrier;
+import radon.jujutsu_kaisen.entity.IDomain;
+import radon.jujutsu_kaisen.entity.ISimpleDomain;
 import radon.jujutsu_kaisen.network.packet.s2c.RemoveDomainInfoS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.UpdateDomainInfoS2CPacket;
 
@@ -60,9 +64,28 @@ public class DomainData implements IDomainData {
 
         this.carver.tick(serverLevel);
 
-        if (this.domains.isEmpty()) {
-            Iterable<Entity> entities = serverLevel.getEntities().getAll();
+        List<Entity> entities = new ArrayList<>();
+        serverLevel.getEntities().getAll().forEach(entities::add);
 
+        Set<DomainExpansionEntity> domains = new HashSet<>();
+
+        for (Entity entity : entities) {
+            if (!(entity instanceof DomainExpansionEntity domain)) continue;
+
+            domains.add(domain);
+        }
+
+        for (DomainExpansionEntity first : domains) {
+            for (DomainExpansionEntity second : domains) {
+                if (second == first) continue;
+
+                if (first.shouldCollapse(second.getStrength())) {
+                    first.discard();
+                }
+            }
+        }
+
+        if (this.domains.isEmpty()) {
             for (Entity entity : entities) {
                 UUID identifier = entity.getUUID();
 

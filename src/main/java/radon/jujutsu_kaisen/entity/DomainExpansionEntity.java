@@ -15,6 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
@@ -123,7 +124,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     }
 
     public List<LivingEntity> getAffected(Level level) {
-        return level.getEntitiesOfClass(LivingEntity.class, this.getBounds(), this::isAffected);
+        return level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(Vec3.ZERO, 1000, 1000, 1000), this::isAffected);
     }
 
     @Override

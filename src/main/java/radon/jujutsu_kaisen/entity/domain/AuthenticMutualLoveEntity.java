@@ -46,7 +46,7 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
 
         if (copied.isEmpty()) return;
 
-        int radius = this.getOutsideRadius();
+        int radius = this.getPhysicalRadius();
 
         int share = (radius * 2) / copied.size();
 

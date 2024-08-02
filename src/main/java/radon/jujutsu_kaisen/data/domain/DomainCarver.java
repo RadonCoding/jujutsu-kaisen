@@ -4,15 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.LinkedHashSet;
@@ -21,6 +16,8 @@ import java.util.List;
 public class DomainCarver {
     private final LinkedHashSet<DomainInfo> domains;
 
+    private boolean built;
+
     public DomainCarver(LinkedHashSet<DomainInfo> domains) {
         this.domains = domains;
     }
@@ -28,11 +25,13 @@ public class DomainCarver {
     private static void setBlockIfRequired(ServerLevel level, BlockPos pos, Block block) {
         if (level.getBlockState(pos).is(block)) return;
 
-        level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_KNOWN_SHAPE);
+        level.setBlockAndUpdate(pos, block.defaultBlockState());
     }
 
     public void tick(ServerLevel level) {
-        int radius = ConfigHolder.SERVER.domainSize.getAsInt();
+        this.built = this.built && this.domains.size() == 1;
+
+        int radius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
 
         BlockPos center = BlockPos.containing(0.0D, radius, 0.0D);
 
@@ -69,6 +68,8 @@ public class DomainCarver {
 
         if (this.domains.isEmpty()) return;
 
+        if (this.built) return;
+
         DomainExpansion domain = this.domains.getFirst().ability();
 
         if (!(domain instanceof IClosedDomain closed)) return;
@@ -89,5 +90,6 @@ public class DomainCarver {
                 }
             }
         }
+        this.built = true;
     }
 }
