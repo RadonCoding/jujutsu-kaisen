@@ -74,7 +74,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
     }
 
     private static void generateChunks(List<List<RigidBody.CutModelData>> chunks, List<RigidBody.CutModelData> toSort) {
-        GJK.margin = 0.5F;
+        GJK.margin = 0.01F;
         List<RigidBody.CutModelData> chunk = new ArrayList<>();
         boolean removed;
 
@@ -89,7 +89,7 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 while (iter.hasNext()) {
                     RigidBody.CutModelData b = iter.next();
 
-                    if (b.collider.localBox.inflate(0.5F).intersects(a.collider.localBox) &&
+                    if (b.collider.localBox.inflate(0.01F).intersects(a.collider.localBox) &&
                             GJK.collidesAny(null, null, a.collider, b.collider)) {
                         removed = true;
                         toAdd.add(b);
