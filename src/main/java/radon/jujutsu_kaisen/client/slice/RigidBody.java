@@ -195,12 +195,7 @@ public class RigidBody {
 
         this.setPrevData();
 
-        int time = 8;
-        float step = 0.05F / (float) time;
-
-        for (int i = 0; i < time; i++) {
-            this.step(step);
-        }
+        this.step(1.0F / 20);
     }
 
     public void step(float step) {

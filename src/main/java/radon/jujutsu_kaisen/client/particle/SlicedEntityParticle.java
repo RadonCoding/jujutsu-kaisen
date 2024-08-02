@@ -52,6 +52,8 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         this.entityId = options.entityId;
         this.plane = options.plane;
         this.distance = options.distance;
+
+        this.lifetime = 60 * 20;
     }
 
     @Override
@@ -61,7 +63,8 @@ public class SlicedEntityParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        
+        super.tick();
+
         if (this.entity == null) {
             if (this.level.getEntity(this.entityId) instanceof LivingEntity living) {
                 this.entity = living;
