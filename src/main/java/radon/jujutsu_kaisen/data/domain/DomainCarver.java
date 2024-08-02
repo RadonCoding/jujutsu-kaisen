@@ -67,6 +67,8 @@ public class DomainCarver {
             return;
         }
 
+        if (this.domains.isEmpty()) return;
+
         DomainExpansion domain = this.domains.getFirst().ability();
 
         if (!(domain instanceof IClosedDomain closed)) return;

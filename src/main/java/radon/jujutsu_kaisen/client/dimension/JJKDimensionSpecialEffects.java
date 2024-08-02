@@ -79,6 +79,8 @@ public class JJKDimensionSpecialEffects {
 
                 RenderSystem.setShader(GameRenderer::getPositionShader);
 
+                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+
                 for (int lat = 0; lat < divisions; lat++) {
                     float theta = lat * Mth.PI / divisions;
                     float sinTheta = Mth.sin(theta);
