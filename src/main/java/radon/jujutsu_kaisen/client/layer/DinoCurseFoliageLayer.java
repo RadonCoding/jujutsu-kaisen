@@ -27,7 +27,7 @@ public class DinoCurseFoliageLayer extends GeoRenderLayer<DinoCurseEntity> {
 
         if (mc.player == null || animatable.isInvisibleTo(mc.player)) return;
 
-        RenderType type = RenderType.entityCutoutNoCull(TEXTURE);
+        RenderType type = RenderType.entityTranslucent(TEXTURE);
         this.getRenderer().reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, type,
                 bufferSource.getBuffer(type), partialTick, packedLight, OverlayTexture.NO_OVERLAY,
                 1.0F, 1.0F, 1.0F, 1.0F);
