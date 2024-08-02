@@ -52,7 +52,7 @@ public class RigidBody {
         }
 
         @Override
-        public void step(float step) {
+        public void step(float step, Iterable<VoxelShape> collisions) {
         }
 
         @Override
@@ -195,13 +195,20 @@ public class RigidBody {
 
         this.setPrevData();
 
-        this.step(1.0F / 20);
+        int time = 8;
+        float step = (1.0F / 20) / (float) time;
+
+        Iterable<VoxelShape> collisions = this.level.getBlockCollisions(null, this.bounds);
+
+        for (int i = 0; i < time; i++) {
+            this.step(step, collisions);
+        }
     }
 
-    public void step(float step) {
+    public void step(float step, Iterable<VoxelShape> collisions) {
         this.contacts.update();
 
-        for (VoxelShape shape : this.level.getCollisions(null, this.bounds)) {
+        for (VoxelShape shape : collisions) {
             for (int i = 0; i < this.colliders.size(); i++) {
                 Collider a = this.colliders.get(i);
 
