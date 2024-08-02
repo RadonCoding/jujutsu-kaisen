@@ -52,7 +52,7 @@ public class RigidBody {
         }
 
         @Override
-        public void step(float step, Iterable<VoxelShape> collisions) {
+        public void step(float step) {
         }
 
         @Override
@@ -108,7 +108,6 @@ public class RigidBody {
     public List<Collider> colliders = new ArrayList<>();
     public List<AABB> colliderBoundingBoxes = new ArrayList<>();
     public Vec3 position = Vec3.ZERO;
-    public Vec3 start = this.position;
     public Vec3 globalCentroid = Vec3.ZERO;
     public Matrix3f rotation = new Matrix3f();
     public Matrix3f invRotation;
@@ -136,7 +135,6 @@ public class RigidBody {
         this(level);
 
         this.position = new Vec3(x, y, z);
-        this.start = this.position;
     }
     
     public void addChunk(List<CutModelData> chunk) {
@@ -198,17 +196,17 @@ public class RigidBody {
         int time = 8;
         float step = (1.0F / 20) / (float) time;
 
-        Iterable<VoxelShape> collisions = this.level.getBlockCollisions(null, this.bounds);
-
         for (int i = 0; i < time; i++) {
-            this.step(step, collisions);
+            this.step(step);
         }
     }
 
-    public void step(float step, Iterable<VoxelShape> collisions) {
+    public void step(float step) {
         this.contacts.update();
 
-        for (VoxelShape shape : collisions) {
+        for (VoxelShape shape : this.level.getBlockCollisions(null, this.bounds)) {
+            if (shape.isEmpty()) continue;
+
             for (int i = 0; i < this.colliders.size(); i++) {
                 Collider a = this.colliders.get(i);
 
