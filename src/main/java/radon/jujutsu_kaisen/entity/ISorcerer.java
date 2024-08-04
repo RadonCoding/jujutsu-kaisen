@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -118,7 +119,7 @@ public interface ISorcerer {
         // Spread them evenly by giving each skill total_points / total_skill_count
 
         if (majors.isEmpty()) {
-            List<Skill> skills = new ArrayList<>();
+            Set<Skill> skills = new HashSet<>();
 
             for (Skill skill : Skill.values()) {
                 if (!skill.isValid((LivingEntity) this)) continue;
@@ -142,7 +143,7 @@ public interface ISorcerer {
                 }
             }
         } else {
-            List<Skill> skills = new ArrayList<>();
+            Set<Skill> skills = new HashSet<>();
 
             for (Skill skill : majors) {
                 if (!skill.isValid((LivingEntity) this)) continue;

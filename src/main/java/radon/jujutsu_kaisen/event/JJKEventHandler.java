@@ -167,10 +167,8 @@ public class JJKEventHandler {
                 float armor = skillData.getSkill(sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? Skill.SHIELDING : Skill.REINFORCEMENT) * 0.25F;
 
                 if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    armor *= 10.0F;
-                }
-
-                if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                    armor *= 7.5F;
+                } else if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                     float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 10.0F : 5.0F);
 
                     float toughness = shielded * 0.1F;
@@ -182,12 +180,12 @@ public class JJKEventHandler {
                     if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
                         float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
-                        if (sorcererData.getEnergy() >= cost) {
-                            sorcererData.useEnergy(cost);
+                        if (sorcererData.getEnergy() < cost) return;
 
-                            if (victim instanceof ServerPlayer player) {
-                                PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
-                            }
+                        sorcererData.useEnergy(cost);
+
+                        if (victim instanceof ServerPlayer player) {
+                            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
                         }
                     }
                     armor = shielded;

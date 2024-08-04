@@ -190,6 +190,11 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
+    public boolean canBeCollidedWith() {
+        return !this.isHiding() && super.canBeCollidedWith();
+    }
+
+    @Override
     public boolean shouldRender(double pX, double pY, double pZ) {
         return !this.isHiding() && super.shouldRender(pX, pY, pZ);
     }

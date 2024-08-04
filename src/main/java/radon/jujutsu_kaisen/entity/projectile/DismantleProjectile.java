@@ -40,6 +40,7 @@ import java.util.Set;
 public class DismantleProjectile extends JujutsuProjectile {
     public static final int MIN_LENGTH = 4;
     public static final int MAX_LENGTH = 12;
+    private static final EntityDataAccessor<Integer> DATA_DEATH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
     private boolean instant;
@@ -111,8 +112,21 @@ public class DismantleProjectile extends JujutsuProjectile {
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
 
+        pBuilder.define(DATA_DEATH, 0);
         pBuilder.define(DATE_ROLL, 0.0F);
         pBuilder.define(DATA_LENGTH, 0);
+    }
+
+    public boolean isDying() {
+        return this.getDeath() > 0;
+    }
+
+    public int getDeath() {
+        return this.entityData.get(DATA_DEATH);
+    }
+
+    public void setDeath(int death) {
+        this.entityData.set(DATA_DEATH, death);
     }
 
     public int getLength() {
@@ -136,6 +150,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
+        pCompound.putInt("death", this.getDeath());
         pCompound.putFloat("roll", this.getRoll());
         pCompound.putInt("length", this.getLength());
         pCompound.putBoolean("instant", this.instant);
@@ -147,6 +162,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
+        this.entityData.set(DATA_DEATH, pCompound.getInt("death"));
         this.entityData.set(DATE_ROLL, pCompound.getFloat("roll"));
         this.entityData.set(DATA_LENGTH, pCompound.getInt("length"));
         this.instant = pCompound.getBoolean("instant");
@@ -214,12 +230,17 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     @Override
     public void tick() {
-        if (!this.instant && this.getDeltaMovement().lengthSqr() <= 1.0E-7D) {
-            this.discard();
-            return;
+        if (this.isDying()) {
+            int death = this.getDeath();
+
+            if (--death == 0) {
+                this.discard();
+                return;
+            }
+            this.setDeath(death);
         }
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide && !this.isDying()) {
             for (Entity entity : this.getHits()) {
                 if (!(entity instanceof LivingEntity living)) continue;
                 if (!(this.getOwner() instanceof LivingEntity owner)) continue;
@@ -236,7 +257,12 @@ public class DismantleProjectile extends JujutsuProjectile {
                 living.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()),
                         this.getDamage() * this.getPower());
 
-                if (!living.isDeadOrDying() || !ConfigHolder.SERVER.entitySlicing.get()) continue;
+                if (!living.isDeadOrDying()) {
+                    this.setDeath(5);
+                    continue;
+                }
+
+                if (!ConfigHolder.SERVER.entitySlicing.get()) continue;
 
                 Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
 
@@ -263,9 +289,12 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 living.setInvisible(true);
             }
-        }
-        if (this.instant || (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {
-            this.discard();
+
+            if (this.instant || this.getDeltaMovement().lengthSqr() <= 1.0E-7D ||
+                    (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {
+                this.setDeath(5);
+                this.setDeltaMovement(Vec3.ZERO);
+            }
         }
         super.tick();
     }
