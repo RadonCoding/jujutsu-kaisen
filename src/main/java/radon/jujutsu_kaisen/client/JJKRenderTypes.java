@@ -30,7 +30,7 @@ public class JJKRenderTypes extends RenderType {
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false)));
     private static final Function<ResourceLocation, RenderType> EYES = Util.memoize((pLocation) ->
-            create("six_eyes", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, CompositeState.builder()
+            create("eyes", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, CompositeState.builder()
                     .setShaderState(RENDERTYPE_EYES_SHADER)
                     .setTextureState(new TextureStateShard(pLocation, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -48,12 +48,12 @@ public class JJKRenderTypes extends RenderType {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
 
-    public static RenderType glow(ResourceLocation pLocation) {
-        return GLOW.apply(pLocation);
+    public static RenderType glow(ResourceLocation location) {
+        return GLOW.apply(location);
     }
 
-    public static RenderType energy(ResourceLocation pLocation) {
-        return ENERGY.apply(pLocation);
+    public static RenderType energy(ResourceLocation location) {
+        return ENERGY.apply(location);
     }
 
     public static @NotNull RenderType eyes(@NotNull ResourceLocation pLocation) {

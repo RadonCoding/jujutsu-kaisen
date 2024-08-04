@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.slice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +15,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.util.MathUtil;
 
 import java.lang.Math;
@@ -406,9 +408,7 @@ public class RigidBody {
 
         for (RigidBody.CutModelData data : this.chunk) {
             builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
-
             data.data.tessellate(builder, matrix4f, packedLight);
-
             data.type.end(builder, RenderSystem.getVertexSorting());
         }
 
@@ -416,11 +416,8 @@ public class RigidBody {
             if (data.cap == null) continue;
 
             RenderType type = RenderType.entityCutoutNoCull(BLOOD);
-
             builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
-
             data.cap.tessellate(builder, matrix4f, packedLight);
-
             type.end(builder, RenderSystem.getVertexSorting());
         }
     }
