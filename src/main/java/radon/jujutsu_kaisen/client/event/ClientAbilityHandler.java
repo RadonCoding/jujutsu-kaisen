@@ -56,35 +56,34 @@ public class ClientAbilityHandler {
 
     public static Ability.Status trigger(Ability ability) {
         Minecraft mc = Minecraft.getInstance();
-        LocalPlayer owner = mc.player;
 
-        if (owner == null) return Ability.Status.FAILURE;
+        if (mc.player == null) return Ability.Status.FAILURE;
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return Ability.Status.FAILURE;
 
         IAbilityData data = cap.getAbilityData();
 
-        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
-            ability.charge(owner);
-            ability.addDuration(owner);
+        if (ability.getActivationType(mc.player) == Ability.ActivationType.INSTANT) {
+            ability.charge(mc.player);
+            ability.addDuration(mc.player);
 
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-            ability.run(owner);
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            ability.addDuration(owner);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(mc.player, ability));
+            ability.run(mc.player);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(mc.player, ability));
+        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
+            ability.addDuration(mc.player);
 
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(mc.player, ability));
             data.toggle(ability);
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-        } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            ability.addDuration(owner);
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(mc.player, ability));
+        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
+            ability.addDuration(mc.player);
 
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(mc.player, ability));
             data.channel(ability);
-            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+            NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(mc.player, ability));
         }
         return Ability.Status.SUCCESS;
     }
@@ -151,7 +150,7 @@ public class ClientAbilityHandler {
         }
 
         @SubscribeEvent
-        public static void onClientTickPre(ClientTickEvent.Pre event) {
+        public static void onClientTickPre(ClientTickEvent.Post event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
