@@ -40,6 +40,13 @@ public class JJKBlocks {
                     .lightLevel(pState -> 14)
                     .noLootTable()
                     .sound(SoundType.GLASS)));
+    public static DeferredHolder<Block, DomainBarrierBlock> DOMAIN_BARRIER = BLOCKS.register("domain_barrier", () ->
+            new DomainBarrierBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 1200.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel(pState -> 14)
+                    .noLootTable()
+                    .sound(SoundType.GLASS)));
     public static DeferredHolder<Block, DomainAirBlock> DOMAIN_AIR = BLOCKS.register("domain_air", () ->
             new DomainAirBlock(BlockBehaviour.Properties.of()
                     .lightLevel(pState -> 14)

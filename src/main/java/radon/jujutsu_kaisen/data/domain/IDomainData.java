@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.data.domain;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -28,6 +29,8 @@ public interface IDomainData extends INBTSerializable<CompoundTag> {
     void remove(UUID identifier);
 
     Set<DomainInfo> getDomains();
+
+    boolean tryTeleportBack(Entity entity);
 
     void addSpawn(UUID identifier, Vec3 pos);
 }

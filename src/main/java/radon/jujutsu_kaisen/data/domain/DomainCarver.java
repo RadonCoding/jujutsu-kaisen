@@ -43,7 +43,7 @@ public class DomainCarver {
                     BlockPos pos = center.offset(x, y, z);
 
                     if (distance <= radius && distance >= radius - 1) {
-                        setBlockIfRequired(level, pos, Blocks.BARRIER);
+                        setBlockIfRequired(level, pos, JJKBlocks.DOMAIN_BARRIER.get());
                     }
                 }
             }

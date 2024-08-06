@@ -134,16 +134,18 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (!owner.level().isClientSide) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return Status.FAILURE;
+            if (cap == null) return Status.FAILURE;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+            ISorcererData sorcererData = cap.getSorcererData();
 
-        if (!sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
-            Optional<IDomainData> domainData = DataProvider.getDataIfPresent(owner.level(), JJKAttachmentTypes.DOMAIN);
+            if (!sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
+                Optional<IDomainData> domainData = DataProvider.getDataIfPresent(owner.level(), JJKAttachmentTypes.DOMAIN);
 
-            if (domainData.isEmpty() || !domainData.get().hasDomain(owner.getUUID())) return Status.FAILURE;
+                if (domainData.isEmpty() || !domainData.get().hasDomain(owner.getUUID())) return Status.FAILURE;
+            }
         }
         return super.isStillUsable(owner);
     }

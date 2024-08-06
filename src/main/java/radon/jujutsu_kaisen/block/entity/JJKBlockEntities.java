@@ -14,6 +14,7 @@ public class JJKBlockEntities {
     public static DeferredHolder<BlockEntityType<?>, BlockEntityType<DomainBlockEntity>> DOMAIN = BLOCK_ENTITIES.register("domain", () ->
             BlockEntityType.Builder.of(DomainBlockEntity::new,
                     JJKBlocks.DOMAIN.get(),
+                    JJKBlocks.DOMAIN_BARRIER.get(),
                     JJKBlocks.DOMAIN_AIR.get(),
                     JJKBlocks.DOMAIN_TRANSPARENT.get(),
 

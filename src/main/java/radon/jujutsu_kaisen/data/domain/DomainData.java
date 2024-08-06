@@ -23,8 +23,6 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
-import radon.jujutsu_kaisen.entity.IBarrier;
-import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.packet.s2c.RemoveDomainInfoS2CPacket;
@@ -111,13 +109,7 @@ public class DomainData implements IDomainData {
 
         if (this.domains.isEmpty()) {
             for (Entity entity : entities) {
-                UUID identifier = entity.getUUID();
-
-                if (!this.spawns.containsKey(identifier)) continue;
-
-                Vec3 pos = this.spawns.get(identifier);
-
-                entity.teleportTo(original, pos.x, pos.y, pos.z, Set.of(), entity.getYRot(), entity.getXRot());
+                this.tryTeleportBack(entity);
             }
             DimensionManager.remove(serverLevel);
         }
@@ -168,6 +160,25 @@ public class DomainData implements IDomainData {
     @Override
     public Set<DomainInfo> getDomains() {
         return this.domains;
+    }
+
+    @Override
+    public boolean tryTeleportBack(Entity entity) {
+        if (!(this.level instanceof ServerLevel serverLevel)) return false;
+
+        if (this.original == null) return false;
+
+        ServerLevel original = serverLevel.getServer().getLevel(this.original);
+
+        if (original == null) return false;
+
+        UUID identifier = entity.getUUID();
+
+        if (!this.spawns.containsKey(identifier)) return false;
+
+        Vec3 pos = this.spawns.get(identifier);
+
+        return entity.teleportTo(original, pos.x, pos.y, pos.z, Set.of(), entity.getYRot(), entity.getXRot());
     }
 
     @Override

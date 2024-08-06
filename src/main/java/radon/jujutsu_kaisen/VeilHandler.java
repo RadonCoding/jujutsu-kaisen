@@ -34,6 +34,19 @@ public class VeilHandler {
         barriers.get(dimension).add(identifier);
     }
 
+    public static Set<IDomain> getDomains(ServerLevel level, BlockPos target) {
+        Set<IDomain> domains = new HashSet<>();
+
+        Set<IBarrier> barriers = getBarriers(level, target);
+
+        for (IBarrier barrier : barriers) {
+            if (!(barrier instanceof IDomain domain)) continue;
+
+            domains.add(domain);
+        }
+        return domains;
+    }
+
     public static Set<IBarrier> getBarriers(ServerLevel level, BlockPos target) {
         Set<IBarrier> result = new HashSet<>();
 
@@ -41,6 +54,7 @@ public class VeilHandler {
             for (UUID identifier : barriers.get(level.dimension())) {
                 if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !barrier.isInsidePhysicalBarrier(target))
                     continue;
+
                 result.add(barrier);
             }
         }

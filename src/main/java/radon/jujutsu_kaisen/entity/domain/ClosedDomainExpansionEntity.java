@@ -160,10 +160,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (this.isOwnedByNonDomain(pos)) return;
 
-        LivingEntity owner = this.getOwner();
-
-        if (owner == null) return;
-
         BlockEntity existing = this.level().getBlockEntity(pos);
 
         CompoundTag saved = null;
@@ -177,7 +173,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (distance >= radius - 1) block = JJKBlocks.DOMAIN.get();
         else if (distance >= radius - 2) block = JJKBlocks.DOMAIN_SKY.get();
 
-        boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
+        boolean success = this.level().setBlock(pos, block.defaultBlockState(),
                 Block.UPDATE_CLIENTS);
 
         if (distance >= radius - 1 && success) this.total++;

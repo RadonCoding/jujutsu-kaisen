@@ -195,7 +195,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
             IAbilityData data = cap.getAbilityData();
 
             if (!data.hasToggled(this.ability)) {
-                this.discard();
+                //this.discard();
                 return;
             }
         }
