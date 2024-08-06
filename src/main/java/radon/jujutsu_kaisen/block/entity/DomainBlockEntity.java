@@ -17,12 +17,16 @@ import java.util.UUID;
 
 public class DomainBlockEntity extends TemporaryBlockEntity {
     private boolean initialized;
-    private UUID identifier;
+    protected UUID identifier;
 
     private int death;
 
     public DomainBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.DOMAIN.get(), pPos, pBlockState);
+    }
+
+    public DomainBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+        super(pType, pPos, pBlockState);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {

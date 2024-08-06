@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.client;
 
 
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
@@ -8,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public class JJKRenderTypes extends RenderType {
@@ -43,6 +46,13 @@ public class JJKRenderTypes extends RenderType {
                     .setTransparencyState(LIGHTNING_TRANSPARENCY)
                     .setOutputState(WEATHER_TARGET)
                     .createCompositeState(false));
+    private static final Function<TextureTarget, RenderType> SKYBOX = Util.memoize((target) ->
+            create("skybox", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
+                    false, false, RenderType.CompositeState.builder()
+                            .setShaderState(new ShaderStateShard(JJKShaders::getSkyShader))
+                            .setTextureState(new EmptyTextureStateShard(() ->
+                                    RenderSystem.setShaderTexture(0, target.getColorTextureId()), () -> {}))
+                            .createCompositeState(false)));
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
@@ -62,5 +72,9 @@ public class JJKRenderTypes extends RenderType {
 
     public static @NotNull RenderType lightning() {
         return LIGHTNING;
+    }
+
+    public static RenderType skybox(TextureTarget target) {
+        return SKYBOX.apply(target);
     }
 }

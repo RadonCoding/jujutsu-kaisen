@@ -13,7 +13,6 @@ import radon.jujutsu_kaisen.block.base.TemporaryBlockEntity;
 public class DurationBlockEntity extends TemporaryBlockEntity {
     private int duration;
 
-
     public DurationBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }

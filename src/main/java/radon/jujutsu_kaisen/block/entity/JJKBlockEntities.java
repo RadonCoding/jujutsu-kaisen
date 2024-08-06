@@ -21,6 +21,10 @@ public class JJKBlockEntities {
 
                     JJKBlocks.CHIMERA_SHADOW_GARDEN.get()
             ).build(null));
+    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<DomainSkyBlockEntity>> DOMAIN_SKY = BLOCK_ENTITIES.register("domain_sky", () ->
+            BlockEntityType.Builder.of(DomainSkyBlockEntity::new,
+                    JJKBlocks.DOMAIN_SKY.get()
+            ).build(null));
 
     public static DeferredHolder<BlockEntityType<?>, BlockEntityType<VeilRodBlockEntity>> VEIL_ROD = BLOCK_ENTITIES.register("veil_rod", () ->
             BlockEntityType.Builder.of(VeilRodBlockEntity::new,

@@ -171,11 +171,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             saved = existing.saveWithFullMetadata(this.registryAccess());
         }
 
-        Block block = state.getCollisionShape(this.level(), pos).isEmpty() ? JJKBlocks.DOMAIN_AIR.get() : JJKBlocks.DOMAIN.get();
+        Block block = state.getCollisionShape(this.level(), pos).isEmpty() ? JJKBlocks.DOMAIN_AIR.get() : JJKBlocks.DOMAIN_SKY.get();
 
-        if (distance >= radius - 1) {
-            block = JJKBlocks.DOMAIN.get();
-        }
+        if (distance >= radius - 1) block = JJKBlocks.DOMAIN.get();
+        else if (distance >= radius - 2) block = JJKBlocks.DOMAIN_SKY.get();
 
         boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
                 Block.UPDATE_CLIENTS);

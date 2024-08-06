@@ -52,6 +52,14 @@ public class JJKBlocks {
                     .sound(SoundType.GLASS)));
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+    public static DeferredHolder<Block, DomainSkyBlock> DOMAIN_SKY = BLOCKS.register("domain_sky", () ->
+            new DomainSkyBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 12.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel(pState -> 14)
+                    .noLootTable()
+                    .sound(SoundType.GLASS)));
+
     public static DeferredHolder<Block, Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of()
                     .mapColor(state -> state.getValue(VeilBlock.COLOR).getMapColor())
