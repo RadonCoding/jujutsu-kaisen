@@ -46,10 +46,6 @@ public interface IBarrier {
 
     AABB getVirtualBounds();
 
-    boolean hasSureHitEffect();
-
-    boolean checkSureHitEffect();
-
     default float getStrength() {
         LivingEntity owner = this.getOwner();
 

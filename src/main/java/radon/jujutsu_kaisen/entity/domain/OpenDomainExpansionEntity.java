@@ -23,7 +23,6 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -110,7 +109,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         this.entityData.set(DATA_HEIGHT, pCompound.getInt("height"));
     }
 
-    protected void doSureHitEffect(@NotNull LivingEntity owner) {
+    @Override
+    public void doSureHitEffect(LivingEntity owner) {
         for (LivingEntity entity : this.getAffected(this.level())) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

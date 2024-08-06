@@ -4,6 +4,7 @@ package radon.jujutsu_kaisen.event;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -56,6 +57,7 @@ import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.CursedToolItem;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.pact.JJKPacts;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.CuriosUtil;
@@ -396,6 +398,11 @@ public class JJKEventHandler {
                 if (technique != null && data.getAbsorbed().contains(technique)) {
                     data.unabsorb(technique);
                 }
+            }
+
+            if (ability.getCost(owner) >= 500.0F) {
+                owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(),
+                        JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
             }
         }
     }

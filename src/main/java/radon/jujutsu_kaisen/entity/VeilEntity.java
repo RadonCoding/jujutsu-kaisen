@@ -186,16 +186,6 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    public boolean hasSureHitEffect() {
-        return false;
-    }
-
-    @Override
-    public boolean checkSureHitEffect() {
-        return false;
-    }
-
-    @Override
     public List<Modifier> getModifiers() {
         return this.modifiers;
     }

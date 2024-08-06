@@ -18,7 +18,7 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 
 import java.util.EnumSet;

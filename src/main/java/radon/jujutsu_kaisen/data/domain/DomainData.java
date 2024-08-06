@@ -19,11 +19,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import radon.jujutsu_kaisen.DimensionManager;
-import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.stat.ISkillData;
+import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
-import radon.jujutsu_kaisen.entity.ISimpleDomain;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.packet.s2c.RemoveDomainInfoS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.UpdateDomainInfoS2CPacket;
 
@@ -73,6 +76,27 @@ public class DomainData implements IDomainData {
             if (!(entity instanceof DomainExpansionEntity domain)) continue;
 
             domains.add(domain);
+        }
+
+        for (Entity entity : entities) {
+            if (!(entity instanceof SimpleDomainEntity simple)) continue;
+
+            for (DomainExpansionEntity domain : domains) {
+                if (!domain.checkSureHitEffect()) continue;
+
+                LivingEntity target = domain.getOwner();
+
+                if (target == null) continue;
+
+                IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (cap == null) continue;
+
+                ISkillData data = cap.getSkillData();
+
+                float damage = (1 + data.getSkill(Skill.BARRIER)) * 0.01F;
+                simple.setHealth(simple.getHealth() - damage);
+            }
         }
 
         for (DomainExpansionEntity first : domains) {

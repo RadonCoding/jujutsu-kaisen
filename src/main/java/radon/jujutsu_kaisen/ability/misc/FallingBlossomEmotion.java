@@ -25,15 +25,19 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.effect.registry.JJKEffects;
-import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.IBarrier;
+import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class FallingBlossomEmotion extends Ability implements IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (!barrier.hasSureHitEffect() || !barrier.checkSureHitEffect()) continue;
+            if (!(barrier instanceof IDomain domain)) continue;
+
+            if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
+
             return true;
         }
         return false;

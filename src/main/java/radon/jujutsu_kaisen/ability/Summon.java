@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.network.PacketDistributor;
+import radon.jujutsu_kaisen.ability.misc.SimpleDomain;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
@@ -193,7 +194,9 @@ public abstract class Summon<T extends Entity> extends Ability implements IToggl
         if (!owner.level().isClientSide) {
             IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap == null) return Status.FAILURE;
+            if (cap == null) {
+                return Status.FAILURE;
+            }
 
             ISorcererData data = cap.getSorcererData();
 

@@ -10,10 +10,9 @@ import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
-import radon.jujutsu_kaisen.entity.ISimpleDomain;
 import radon.jujutsu_kaisen.world.level.biome.JJKBiomes;
 import radon.jujutsu_kaisen.world.level.dimension.JJKDimensionTypes;
 
@@ -23,7 +22,8 @@ import java.util.Optional;
 public class DomainHandler {
     public static @Nullable Level getOrCreateInside(ServerLevel level, DomainExpansionEntity domain) {
         for (IBarrier barrier : VeilHandler.getBarriers(level, domain.getPhysicalBounds())) {
-            if (!(barrier instanceof IDomain other) || barrier instanceof ISimpleDomain) continue;
+            if (!(barrier instanceof IDomain other)) continue;
+
             if (other == domain) continue;
 
             if (domain.getVirtual() == null) continue;

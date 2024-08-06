@@ -1,36 +1,28 @@
 package radon.jujutsu_kaisen.data.sorcerer;
 
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
+
+import java.util.UUID;
 
 public class SummonData {
-    private final int id;
-    private final ResourceKey<Level> dimension;
+    private final UUID identifier;
     private Long chunkPos;
 
     public SummonData(Entity entity) {
-        this.id = entity.getId();
-        this.dimension = entity.level().dimension();
+        this.identifier = entity.getUUID();
         this.chunkPos = entity.chunkPosition().toLong();
     }
 
     public SummonData(CompoundTag nbt) {
-        this.id = nbt.getInt("id");
-        this.dimension = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("dimension")));
+        this.identifier = nbt.getUUID("identifier");
         this.chunkPos = nbt.getLong("chunk_pos");
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public ResourceKey<Level> getDimension() {
-        return this.dimension;
+    public UUID getIdentifier() {
+        return this.identifier;
     }
 
     public long getChunkPos() {
@@ -43,23 +35,21 @@ public class SummonData {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putInt("id", this.id);
-        nbt.putString("dimension", this.dimension.location().toString());
+        nbt.putUUID("identifier", this.identifier);
         nbt.putLong("chunk_pos", this.chunkPos);
         return nbt;
     }
-
 
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof SummonData other)) {
             return false;
         }
-        return this.getId() == other.getId();
+        return this.getIdentifier() == other.getIdentifier();
     }
 
     @Override
     public int hashCode() {
-        return this.getId();
+        return this.getIdentifier().hashCode();
     }
 }

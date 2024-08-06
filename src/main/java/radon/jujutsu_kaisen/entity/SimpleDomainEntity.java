@@ -22,18 +22,22 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
+import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
-public class SimpleDomainEntity extends Entity implements ISimpleDomain {
+public class SimpleDomainEntity extends Entity implements IDomain {
     public static final float RADIUS = 2.0F;
     public static final float MAX_RADIUS = 4.0F;
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
@@ -133,7 +137,7 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
         return this.entityData.get(DATA_HEALTH);
     }
 
-    private void setHealth(float health) {
+    public void setHealth(float health) {
         this.entityData.set(DATA_HEALTH, Mth.clamp(health, 0.0F, this.getMaxHealth()));
     }
 
@@ -193,27 +197,6 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
             if (owner == null) return;
 
             this.setPos(owner.position());
-
-            if (this.level() instanceof ServerLevel level) {
-                for (IBarrier barrier : VeilHandler.getBarriers(level, owner.blockPosition())) {
-                    if (barrier instanceof ISimpleDomain simple && simple == this) continue;
-
-                    if (!barrier.checkSureHitEffect()) continue;
-
-                    LivingEntity target = barrier.getOwner();
-
-                    if (target == null) continue;
-
-                    IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-                    if (cap == null) continue;
-
-                    ISkillData data = cap.getSkillData();
-
-                    float damage = (1 + data.getSkill(Skill.BARRIER)) * 0.01F;
-                    this.setHealth(this.getHealth() - damage);
-                }
-            }
 
             float factor = this.getHealth() / this.getMaxHealth();
 
@@ -336,12 +319,27 @@ public class SimpleDomainEntity extends Entity implements ISimpleDomain {
     }
 
     @Override
-    public @org.jetbrains.annotations.Nullable ServerLevel getVirtual() {
+    public @Nullable ServerLevel getVirtual() {
         return null;
     }
 
     @Override
     public float getScale() {
         return 1.0F + this.getEnlargement();
+    }
+
+    @Override
+    public void setInstant(boolean instant) {
+
+    }
+
+    @Override
+    public boolean isInstant() {
+        return false;
+    }
+
+    @Override
+    public void doSureHitEffect(LivingEntity owner) {
+
     }
 }

@@ -35,7 +35,6 @@ import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -140,7 +139,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean isInsideVirtualBarrier(BlockPos pos) {
-        int virtualRadius = ConfigHolder.SERVER.physicalDomainRadius.getAsInt();
+        if (this.instant) return this.isInsidePhysicalBarrier(pos);
+
+        int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
         BlockPos center = new BlockPos(0, virtualRadius, 0);
         BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < (virtualRadius - 1) * (virtualRadius - 1);
@@ -241,10 +242,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return EntityDimensions.fixed(physicalRadius, physicalRadius);
     }
 
-    private void doSureHitEffect(@NotNull LivingEntity owner) {
-        if (this.virtual == null) return;
+    @Override
+    public void doSureHitEffect(LivingEntity owner) {
+        Level barrier = this.instant ? this.level() : this.virtual;
 
-        for (LivingEntity entity : this.getAffected(this.virtual)) {
+        if (barrier == null) return;
+
+        for (LivingEntity entity : this.getAffected(barrier)) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
             if (cap != null) {
@@ -277,6 +281,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
+        if (this.instant) return true;
+
         if (this.virtual == null) return false;
 
         IDomainData data = this.virtual.getData(JJKAttachmentTypes.DOMAIN);
@@ -368,7 +374,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             this.createPhysicalBarrier();
         }
 
-        if (this.getTime() == physicalRadius * 2) {
+        if (!this.instant && this.getTime() == physicalRadius * 2) {
             this.createVirtualBarrier();
         }
 

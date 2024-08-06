@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity;
+package radon.jujutsu_kaisen.entity.domain;
 
 
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +27,8 @@ import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.entity.IDomain;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 
 import javax.annotation.Nullable;
@@ -43,6 +45,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     @Nullable
     private LivingEntity cachedOwner;
     private float scale = 1.0F;
+    protected boolean instant;
 
     protected DomainExpansionEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
@@ -59,6 +62,16 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     @Override
     public float getScale() {
         return this.scale;
+    }
+
+    @Override
+    public boolean isInstant() {
+        return this.instant;
+    }
+
+    @Override
+    public void setInstant(boolean instant) {
+        this.instant = instant;
     }
 
     @Override
@@ -105,6 +118,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         pCompound.putBoolean("first", this.first);
         pCompound.putInt("time", this.getTime());
         pCompound.putFloat("scale", this.scale);
+        pCompound.putBoolean("instant", this.instant);
     }
 
     @Override
@@ -116,6 +130,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         this.first = pCompound.getBoolean("first");
         this.setTime(pCompound.getInt("time"));
         this.scale = pCompound.getFloat("scale");
+        this.instant = pCompound.getBoolean("instant");
     }
 
     @Override
@@ -124,7 +139,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     }
 
     public List<LivingEntity> getAffected(Level level) {
-        return level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(Vec3.ZERO, 1000, 1000, 1000), this::isAffected);
+        return level.getEntitiesOfClass(LivingEntity.class, this.instant ? this.getPhysicalBounds() : this.getVirtualBounds(), this::isAffected);
     }
 
     @Override
@@ -207,6 +222,11 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
             ITenShadowsData data = cap.getTenShadowsData();
 
             if ((victim instanceof MahoragaEntity && data.isAdaptedTo(this.ability))) return false;
+        }
+
+        for (SimpleDomainEntity simple : victim.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(),
+                SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2))) {
+            if (victim.distanceTo(simple) < simple.getRadius()) return false;
         }
         return this.isAffected(victim.blockPosition());
     }
