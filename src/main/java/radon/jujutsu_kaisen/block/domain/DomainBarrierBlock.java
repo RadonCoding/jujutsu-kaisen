@@ -72,7 +72,7 @@ public class DomainBarrierBlock extends Block {
 
             if (domainData.isEmpty()) return Shapes.empty();
 
-            Vec3 direction = entity.position().normalize();
+            Vec3 direction = entity.position().subtract(Vec3.ZERO).normalize();
 
             if (!domainData.get().tryTeleportBack(entity)) return Shapes.empty();
 

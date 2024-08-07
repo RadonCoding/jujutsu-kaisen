@@ -11,6 +11,7 @@ public abstract class DomainRenderer {
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
+        // Bottom
         builder.vertex(-100.0F, -100.0F, -100.0F)
                 .uv(0.0F, 0.0F)
                 .endVertex();
@@ -24,6 +25,7 @@ public abstract class DomainRenderer {
                 .uv(1.0F / 3.0F, 0.0F)
                 .endVertex();
 
+        // Top
         builder.vertex(-100.0F, 100.0F, 100.0F)
                 .uv(1.0F / 3.0F, 0.0F)
                 .endVertex();
@@ -37,6 +39,7 @@ public abstract class DomainRenderer {
                 .uv(2.0F / 3.0F, 0.0F)
                 .endVertex();
 
+        // Back
         builder.vertex(-100.0F, 100.0F, 100.0F)
                 .uv(2.0F / 3.0F, 0.0F)
                 .endVertex();
@@ -50,19 +53,21 @@ public abstract class DomainRenderer {
                 .uv(1.0F, 0.0F)
                 .endVertex();
 
-        builder.vertex(100.0F, 100.0F, 100.0F)
+        // Front
+        builder.vertex(100.0F, 100.0F, -100.0F)
                 .uv(0.0F, 0.5F)
                 .endVertex();
-        builder.vertex(100.0F, -100.0F, 100.0F)
+        builder.vertex(100.0F, -100.0F, -100.0F)
                 .uv(0.0F, 1.0F)
                 .endVertex();
-        builder.vertex(-100.0F, -100.0F, 100.0F)
+        builder.vertex(100.0F, -100.0F, 100.0F)
                 .uv(1.0F / 3.0F, 1.0F)
                 .endVertex();
-        builder.vertex(-100.0F, 100.0F, 100.0F)
+        builder.vertex(100.0F, 100.0F, 100.0F)
                 .uv(1.0F / 3.0F, 0.5F)
                 .endVertex();
 
+        // Left
         builder.vertex(-100.0F, 100.0F, -100.0F)
                 .uv(1.0F / 3.0F, 0.5F)
                 .endVertex();
@@ -76,16 +81,17 @@ public abstract class DomainRenderer {
                 .uv(2.0F / 3.0F, 0.5F)
                 .endVertex();
 
-        builder.vertex(100.0F, 100.0F, -100.0F)
+        // Right
+        builder.vertex(100.0F, 100.0F, 100.0F)
                 .uv(2.0F / 3.0F, 0.5F)
                 .endVertex();
-        builder.vertex(100.0F, -100.0F, -100.0F)
+        builder.vertex(100.0F, -100.0F, 100.0F)
                 .uv(2.0F / 3.0F, 1.0F)
                 .endVertex();
-        builder.vertex(100.0F, -100.0F, 100.0F)
+        builder.vertex(-100.0F, -100.0F, 100.0F)
                 .uv(1.0F, 1.0F)
                 .endVertex();
-        builder.vertex(100.0F, 100.0F, 100.0F)
+        builder.vertex(-100.0F, 100.0F, 100.0F)
                 .uv(1.0F, 0.5F)
                 .endVertex();
 
