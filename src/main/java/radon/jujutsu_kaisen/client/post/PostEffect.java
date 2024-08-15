@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.post;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -26,5 +27,7 @@ public abstract class PostEffect {
 
     protected abstract ResourceLocation getEffect();
 
-    public abstract RenderTarget getCustomTarget();
+    public RenderTarget getCustomTarget() {
+        return this.getPostChain().getTempTarget(String.format("%s:target", JujutsuKaisen.MOD_ID));
+    }
 }

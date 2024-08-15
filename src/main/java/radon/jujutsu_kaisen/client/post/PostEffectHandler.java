@@ -20,11 +20,13 @@ public class PostEffectHandler {
     private static final List<PostEffect> active = new ArrayList<>();
 
     public static void bind(PostEffect effect) {
+        Minecraft mc = Minecraft.getInstance();
+
         RenderTarget target = effect.getCustomTarget();
 
-        target.copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
+        target.copyDepthFrom(mc.getMainRenderTarget());
 
-        Window window = Minecraft.getInstance().getWindow();
+        Window window = mc.getWindow();
         effect.getPostChain().resize(window.getWidth(), window.getHeight());
 
         target.bindWrite(false);
@@ -33,31 +35,26 @@ public class PostEffectHandler {
     }
 
     public static void unbind(PostEffect effect) {
+        Minecraft mc = Minecraft.getInstance();
+
         RenderTarget target = effect.getCustomTarget();
 
         target.unbindWrite();
-        Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
+        mc.getMainRenderTarget().bindWrite(false);
     }
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
             Iterator<PostEffect> iter = active.iterator();
 
             while (iter.hasNext()) {
                 PostEffect effect = iter.next();
-
-                effect.getPostChain().close();
-                mc.getMainRenderTarget().bindWrite(false);
-
-                iter.remove();
-            }
-        } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-            for (PostEffect effect : active) {
                 effect.getPostChain().process(event.getPartialTick());
                 mc.getMainRenderTarget().bindWrite(false);
+                iter.remove();
             }
         }
     }

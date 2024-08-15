@@ -14,9 +14,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
 
 public class FakeEntityRenderer {
-    private static final int BUFFER_BUILDER_CAPACITY = 786432;
-    private static final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(BUFFER_BUILDER_CAPACITY));
-
     public static boolean isFakeRender;
     public static boolean isCustomWalkAnimation;
     public static float walkAnimationPosition;
@@ -209,7 +206,7 @@ public class FakeEntityRenderer {
     }
 
     public void render(PoseStack poseStack, float partialTicks) {
-        this.setup(() -> {
+        this.setup(() -> MultiBufferSourceSingleton.use(buffer -> {
             Minecraft mc = Minecraft.getInstance();
 
             EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
@@ -219,17 +216,15 @@ public class FakeEntityRenderer {
 
             isFakeRender = true;
 
-            renderer.render(this.entity, this.entity.getYRot(), partialTicks, poseStack, bufferSource,
+            renderer.render(this.entity, this.entity.getYRot(), partialTicks, poseStack, buffer,
                     dispatcher.getPackedLightCoords(this.entity, partialTicks));
 
             isFakeRender = false;
 
             // For some reason this makes transparency work
-            if (this.alpha < 1.0F) bufferSource.getBuffer(RenderType.translucent());
+            if (this.alpha < 1.0F) buffer.getBuffer(RenderType.translucent());
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-            bufferSource.endBatch();
-        });
+        }));
     }
 }

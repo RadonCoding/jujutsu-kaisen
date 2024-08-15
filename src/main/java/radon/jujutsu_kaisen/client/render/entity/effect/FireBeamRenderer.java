@@ -53,8 +53,8 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
         this.clearerView = Minecraft.getInstance().player == pEntity.getOwner() &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
-        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
-        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+        float yaw = Mth.lerp(pPartialTick, pEntity.prevYaw, pEntity.renderYaw);
+        float pitch = Mth.lerp(pPartialTick, pEntity.prevPitch, pEntity.renderPitch);
 
         if (!this.clearerView) {
             Vector3f color = ParticleColors.FIRE_YELLOW;
@@ -63,7 +63,7 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
 
             pPoseStack.pushPose();
 
-            pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw * Mth.RAD_TO_DEG));
             pPoseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
 
             VertexConsumer charge = pBuffer.getBuffer(JJKRenderTypes.glow(CHARGE));
@@ -96,7 +96,7 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
 
             float brightness = 1.0F - ((float) pEntity.getTime() / (pEntity.getCharge() + pEntity.getDuration() + pEntity.getFrames()));
 
-            this.renderBeam(length, yaw, pitch, frame, pPoseStack, beam,
+            this.renderBeam(length, yaw * Mth.RAD_TO_DEG, pitch * Mth.RAD_TO_DEG, frame, pPoseStack, beam,
                     brightness, pPackedLight);
 
             pPoseStack.popPose();
