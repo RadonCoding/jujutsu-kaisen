@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 public class JJKCursedTechniques {
     public static ResourceKey<Registry<CursedTechnique>> CURSED_TECHNIQUE_KEY = ResourceKey.createRegistryKey(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_technique"));
-    public static Registry<CursedTechnique> CURSED_TECHNIQUE_REGISTRY = new RegistryBuilder<>(CURSED_TECHNIQUE_KEY).create();
+    public static Registry<CursedTechnique> CURSED_TECHNIQUE_REGISTRY = new RegistryBuilder<>(CURSED_TECHNIQUE_KEY).sync(true).create();
     public static DeferredRegister<CursedTechnique> CURSED_TECHNIQUES = DeferredRegister.create(CURSED_TECHNIQUE_REGISTRY, JujutsuKaisen.MOD_ID);
 
     public static DeferredHolder<CursedTechnique, CursedTechnique> SHOCKWAVE = CURSED_TECHNIQUES.register("shockwave", () ->

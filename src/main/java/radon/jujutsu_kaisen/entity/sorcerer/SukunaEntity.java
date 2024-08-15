@@ -54,6 +54,7 @@ public class SukunaEntity extends SorcererEntity {
     private static final EntityDataAccessor<String> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Optional<GameProfile>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class,
             JJKEntityDataSerializers.GAME_PROFILE.get());
+
     protected int fingers;
     @Nullable
     private UUID ownerUUID;
