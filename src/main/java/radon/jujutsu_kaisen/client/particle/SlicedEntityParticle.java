@@ -118,6 +118,10 @@ public class SlicedEntityParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
+
+    }
+
+    public void actuallyRender(float partialTicks) {
         if (this.entity == null || this.renderer == null) return;
 
         if (this.parts.isEmpty()) {
@@ -125,15 +129,15 @@ public class SlicedEntityParticle extends TextureSheetParticle {
                 List<RigidBody.CutModelData> top = new ArrayList<>();
                 List<RigidBody.CutModelData> bottom = new ArrayList<>();
 
-                CutModelUtil.collect(this.renderer, this.plane, this.distance, pPartialTicks, top, bottom);
+                CutModelUtil.collect(this.renderer, this.plane, this.distance, partialTicks, top, bottom);
 
                 List<List<RigidBody.CutModelData>> chunks = new ArrayList<>();
                 generateChunks(chunks, top);
                 generateChunks(chunks, bottom);
 
-                double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
-                double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
-                double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
+                double d0 = Mth.lerp(partialTicks, this.xo, this.x);
+                double d1 = Mth.lerp(partialTicks, this.yo, this.y);
+                double d2 = Mth.lerp(partialTicks, this.zo, this.z);
 
                 for (List<RigidBody.CutModelData> chunk : chunks) {
                     RigidBody part = new RigidBody(this.level, d0, d1, d2);
@@ -158,9 +162,9 @@ public class SlicedEntityParticle extends TextureSheetParticle {
         Minecraft mc = Minecraft.getInstance();
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
 
-        int packedLight = dispatcher.getPackedLightCoords(this.entity, pPartialTicks);
+        int packedLight = dispatcher.getPackedLightCoords(this.entity, partialTicks);
 
-        for (RigidBody part : this.parts) part.render(packedLight, pPartialTicks);
+        for (RigidBody part : this.parts) part.render(packedLight, partialTicks);
     }
 
     @Override
