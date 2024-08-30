@@ -9,8 +9,6 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class ChimeraShadowGardenEntity extends DomainExpansionCenterEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     public ChimeraShadowGardenEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }

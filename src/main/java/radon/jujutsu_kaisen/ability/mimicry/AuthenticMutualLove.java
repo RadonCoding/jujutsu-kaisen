@@ -4,6 +4,7 @@ package radon.jujutsu_kaisen.ability.mimicry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -34,14 +35,14 @@ public class AuthenticMutualLove extends DomainExpansion implements IClosedDomai
     }
 
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
+    public void onHitBlock(Level level, DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
         CursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
         if (!(technique.getDomain() instanceof DomainExpansion copied)) return;
 
-        copied.onHitBlock(domain, owner, pos, instant);
+        copied.onHitBlock(level, domain, owner, pos, instant);
     }
 
     @Override

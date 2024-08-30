@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -16,8 +17,6 @@ import java.util.List;
 public class DomainCarver {
     private final LinkedHashSet<DomainInfo> domains;
 
-    private boolean built;
-
     public DomainCarver(LinkedHashSet<DomainInfo> domains) {
         this.domains = domains;
     }
@@ -29,8 +28,6 @@ public class DomainCarver {
     }
 
     public void tick(ServerLevel level) {
-        this.built = this.built && this.domains.size() == 1;
-
         int radius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
 
         BlockPos center = BlockPos.containing(0.0D, radius, 0.0D);
@@ -68,8 +65,6 @@ public class DomainCarver {
 
         if (this.domains.isEmpty()) return;
 
-        if (this.built) return;
-
         DomainExpansion domain = this.domains.getFirst().ability();
 
         if (!(domain instanceof IClosedDomain closed)) return;
@@ -83,6 +78,10 @@ public class DomainCarver {
 
                     BlockPos pos = center.offset(x, y, z);
 
+                    BlockState state = level.getBlockState(pos);
+
+                    if (floor.contains(state.getBlock())) continue;
+
                     if (distance < radius - 1) {
                         Block block = floor.get(HelperMethods.RANDOM.nextInt(floor.size()));
                         setBlockIfRequired(level, pos, block);
@@ -90,6 +89,5 @@ public class DomainCarver {
                 }
             }
         }
-        this.built = true;
     }
 }

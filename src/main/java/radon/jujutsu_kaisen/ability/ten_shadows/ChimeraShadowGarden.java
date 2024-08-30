@@ -45,7 +45,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements IClosedDomai
         Vec3 pos = owner.position()
                 .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
                         .multiply(center.getBbWidth() / 2.0F, 0.0D, center.getBbWidth() / 2.0F));
-        center.moveTo(pos.x, pos.y, pos.z, 180.0F - RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
+        center.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
 
         owner.level().addFreshEntity(center);
 

@@ -292,10 +292,11 @@ public class DismantleProjectile extends JujutsuProjectile {
 
             if (this.instant || this.getDeltaMovement().lengthSqr() <= 1.0E-7D ||
                     (!this.isInfinite() && this.destroyed >= this.getLength() * 2)) {
-                this.setDeath(5);
+                this.setDeath(this.isDomain() ? 1 : 5);
                 this.setDeltaMovement(Vec3.ZERO);
             }
         }
+
         super.tick();
     }
 }

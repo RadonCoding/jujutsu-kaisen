@@ -126,6 +126,14 @@ public class DomainData implements IDomainData {
     }
 
     @Override
+    public boolean containsDomain(UUID identifier) {
+        for (DomainInfo info : this.domains) {
+            if (info.identifier().equals(identifier)) return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean hasDomain(UUID owner) {
         for (DomainInfo info : this.domains) {
             if (info.owner().equals(owner)) return true;

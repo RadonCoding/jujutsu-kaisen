@@ -118,7 +118,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    this.ability.onHitBlock(this, owner, entity.blockPosition(), false);
+                    this.ability.onHitBlock(this.level(), this, owner, entity.blockPosition(), false);
                     continue;
                 }
             }

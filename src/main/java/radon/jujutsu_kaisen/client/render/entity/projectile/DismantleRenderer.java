@@ -28,7 +28,7 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
 
     @Override
     public void render(@NotNull DismantleProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        if (!pEntity.isDying()) return;
+        if (!pEntity.isDomain() && !pEntity.isDying()) return;
 
         Minecraft mc = Minecraft.getInstance();
 

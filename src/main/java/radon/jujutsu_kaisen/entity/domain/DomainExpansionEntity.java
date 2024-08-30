@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class DomainExpansionEntity extends Entity implements IDomain {
-    public static final int OFFSET = 5;
+    public static final int OFFSET = 12;
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
     protected DomainExpansion ability;
     protected boolean first = true;

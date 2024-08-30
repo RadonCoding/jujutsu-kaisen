@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -90,8 +91,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public AABB getVirtualBounds() {
-        int diameter = ConfigHolder.SERVER.physicalDomainRadius.getAsInt() * 2;
-        return AABB.ofSize(Vec3.ZERO, diameter, diameter, diameter);
+        int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
+        int virtualDiameter = virtualRadius * 2;
+        return AABB.ofSize(new Vec3(0.0D, virtualRadius, 0.0D), virtualDiameter, virtualDiameter, virtualDiameter);
     }
 
     @Override
@@ -126,7 +128,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int physicalRadius = this.getPhysicalRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < (physicalRadius - 1) * (physicalRadius - 1);
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < physicalRadius - 1;
     }
 
     @Override
@@ -134,7 +136,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int physicalRadius = this.getPhysicalRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < physicalRadius * physicalRadius;
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < physicalRadius;
     }
 
     @Override
@@ -144,7 +146,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
         BlockPos center = new BlockPos(0, virtualRadius, 0);
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < (virtualRadius - 1) * (virtualRadius - 1);
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < virtualRadius - 1;
     }
 
     private void createBlock(int delay, BlockPos pos, int radius, double distance) {
@@ -234,8 +236,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        int physicalRadius = this.getPhysicalRadius() * 2;
-        return EntityDimensions.fixed(physicalRadius, physicalRadius);
+        int physicalDiameter = this.getPhysicalRadius() * 2;
+        return EntityDimensions.fixed(physicalDiameter, physicalDiameter);
     }
 
     @Override
@@ -251,24 +253,24 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    this.ability.onHitBlock(this, owner, entity.blockPosition(), false);
+                    this.ability.onHitBlock(this.virtual, this, owner, entity.blockPosition(), false);
                     continue;
                 }
             }
             this.ability.onHitEntity(this, owner, entity, false);
         }
 
-        int physicalRadius = this.getPhysicalRadius();
-        BlockPos center = this.blockPosition().offset(0, physicalRadius / 2, 0);
+        int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
+        BlockPos center = BlockPos.ZERO.offset(0, virtualRadius / 2, 0);
 
-        for (int x = -physicalRadius; x <= physicalRadius; x++) {
-            for (int y = -physicalRadius; y <= physicalRadius; y++) {
-                for (int z = -physicalRadius; z <= physicalRadius; z++) {
+        for (int x = -virtualRadius; x <= virtualRadius; x++) {
+            for (int y = -virtualRadius; y <= virtualRadius; y++) {
+                for (int z = -virtualRadius; z <= virtualRadius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < physicalRadius - 1) {
+                    if (distance < virtualRadius - 1) {
                         BlockPos pos = center.offset(x, y, z);
-                        this.ability.onHitBlock(this, owner, pos, false);
+                        this.ability.onHitBlock(this.virtual, this, owner, pos, false);
                     }
                 }
             }
@@ -380,14 +382,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 data.update(this);
 
                 int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
-                int diameter = (virtualRadius - 1) * 2;
 
                 for (Entity entity : this.level().getEntities(this, this.getPhysicalBounds(), entity -> this.isInsidePhysicalBarrier(entity.blockPosition()))) {
                     data.addSpawn(entity.getUUID(), entity.position());
 
-                    Vec3 distance = entity.position().subtract(this.position());
+                    Vec3 distance = entity.position().subtract(this.position())
+                            .scale(1.0D / physicalRadius)
+                            .scale(virtualRadius);
 
-                    entity.teleportTo(level, Math.min(diameter, distance.x), virtualRadius, Math.min(diameter, distance.z), Set.of(),
+                    entity.teleportTo(level, distance.x, virtualRadius, distance.z, Set.of(),
                             entity.getYRot(), entity.getXRot());
                 }
             }

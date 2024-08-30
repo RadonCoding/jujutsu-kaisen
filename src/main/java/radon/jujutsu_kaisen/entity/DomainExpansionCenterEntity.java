@@ -11,12 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.data.DataProvider;
+import radon.jujutsu_kaisen.data.domain.DomainData;
+import radon.jujutsu_kaisen.data.domain.IDomainData;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
@@ -43,7 +48,10 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
 
         DomainExpansionEntity domain = this.getDomain();
 
-        if (!this.level().isClientSide && (domain == null || domain.isRemoved() || !domain.isAlive())) {
+        Optional<IDomainData> data = DataProvider.getDataIfPresent(this.level(), JJKAttachmentTypes.DOMAIN);
+
+        if (!this.level().isClientSide && (domain == null || domain.isRemoved() || !domain.isAlive()) &&
+                (data.isEmpty() || !data.get().containsDomain(this.domainUUID))) {
             this.discard();
         } else {
             super.tick();

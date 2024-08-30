@@ -28,6 +28,7 @@ public class DomainRenderDispatcher {
 
     static {
         renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
+        renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
     }
 
     private static int skyWidth;

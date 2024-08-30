@@ -2,10 +2,12 @@ package radon.jujutsu_kaisen.ability.shrine;
 
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.*;
@@ -13,6 +15,7 @@ import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -61,7 +64,7 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
     }
 
     @Override
-    public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos, boolean instant) {
+    public void performBlock(Level level, LivingEntity owner, DomainExpansionEntity domain, BlockPos pos, boolean instant) {
         float power = this.getOutput(owner);
 
         int length = HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, (DismantleProjectile.MAX_LENGTH + 1) * 2);
@@ -71,7 +74,7 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
         boolean destroy = false;
 
         for (BlockPos target : BlockPos.betweenClosed((int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
-            if (!(owner.level().getBlockEntity(target) instanceof DomainBlockEntity)) continue;
+            if (!(level.getBlockEntity(target) instanceof DomainBlockEntity)) continue;
 
             destroy = true;
             break;
@@ -82,10 +85,10 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
                 destroy,
                 true);
         dismantle.setDomain(true);
-        owner.level().addFreshEntity(dismantle);
+        level.addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {
-            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
         }
     }
 

@@ -20,6 +20,8 @@ public interface IDomainData extends INBTSerializable<CompoundTag> {
 
     void setOriginal(ResourceKey<Level> original);
 
+    boolean containsDomain(UUID identifier);
+
     boolean hasDomain(UUID owner);
 
     void update(DomainExpansionEntity domain);
