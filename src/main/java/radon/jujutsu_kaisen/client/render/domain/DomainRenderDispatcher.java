@@ -50,8 +50,6 @@ public class DomainRenderDispatcher {
 
         if (ww <= 0 || wh <= 0) return;
 
-        RenderTarget current = mc.getMainRenderTarget();
-
         for (ResourceLocation key : renderers.keySet()) {
             boolean update = false;
 
@@ -82,7 +80,7 @@ public class DomainRenderDispatcher {
             cached.put(key, target);
         }
 
-        current.bindWrite(false);
+        mc.getMainRenderTarget().bindWrite(true);
     }
 
     public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, boolean finalize) {

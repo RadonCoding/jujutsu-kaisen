@@ -451,7 +451,6 @@ public class RigidBody {
             this.tessellate(builder, matrix4f, false, packedLight);
         }
 
-        // TODO: Use correct color
         public void tessellate(BufferBuilder builder, Matrix4f matrix4f, boolean flip, int packedLight) {
             if (this.indices == null) return;
 

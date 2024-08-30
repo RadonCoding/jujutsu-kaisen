@@ -77,7 +77,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
+        return this.getSpeed() * 0.1F;
     }
 
     @Override

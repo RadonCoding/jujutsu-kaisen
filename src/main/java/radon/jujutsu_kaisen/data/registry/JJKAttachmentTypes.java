@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.data.registry;
 
 
+import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -82,6 +83,9 @@ public class JJKAttachmentTypes {
             AttachmentType.<IMissionLevelData>builder(holder -> new MissionLevelData((Level) holder)).serialize(new MissionLevelDataSerializer())::build);
     public static final Supplier<AttachmentType<IMissionEntityData>> MISSION_ENTITY = ATTACHMENT_TYPES.register("mission_entity",
             AttachmentType.<IMissionEntityData>builder(holder -> new MissionEntityData((LivingEntity) holder)).serialize(new MissionEntityDataSerializer()).copyOnDeath()::build);
+
+    public static final Supplier<AttachmentType<Boolean>> CLEAVED = ATTACHMENT_TYPES.register("cleaved",
+            AttachmentType.builder(holder -> false).serialize(Codec.BOOL)::build);
 
     public static final Supplier<AttachmentType<IDomainData>> DOMAIN = ATTACHMENT_TYPES.register("domain",
             AttachmentType.<IDomainData>builder(holder -> new DomainData((Level) holder)).serialize(new DomainDataSerializer())::build);

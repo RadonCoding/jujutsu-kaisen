@@ -130,7 +130,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
+        return this.getSpeed() * 0.1F;
     }
 
     @Override
@@ -179,6 +179,11 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.NUE_TOTALITY_LIGHTNING.get());
+    }
+
+    @Override
+    protected float getRiddenSpeed(@NotNull Player pPlayer) {
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
     @Override

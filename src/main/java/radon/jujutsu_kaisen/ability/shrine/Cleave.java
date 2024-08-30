@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.DamageUtil;
@@ -66,7 +67,7 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
             data.delayTickEvent(() -> {
                 if (target.isDeadOrDying()) return;
 
-                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
+                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
                         domain == null ? 1.0F : 0.05F / 10, 1.0F);
             }, i * 2);
         }
@@ -82,8 +83,10 @@ public class Cleave extends Ability implements IDomainAttack, IAttack, IToggled 
 
             if (!success || !(target instanceof Mob) && !(target instanceof Player)) return;
 
-            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
+            target.level().playSound(null, target.getX(), target.getY(), target.getZ(),
                     JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
+            target.setData(JJKAttachmentTypes.CLEAVED, false);
         }, 20);
     }
 

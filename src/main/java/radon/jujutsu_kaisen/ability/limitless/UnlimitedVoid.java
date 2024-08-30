@@ -56,9 +56,4 @@ public class UnlimitedVoid extends DomainExpansion implements IClosedDomain {
 
         return domain;
     }
-
-    @Override
-    public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
-    }
 }

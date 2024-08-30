@@ -58,6 +58,11 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     }
 
     @Override
+    protected float getFlyingSpeed() {
+        return this.getSpeed() * 0.1F;
+    }
+
+    @Override
     public void setId(int id) {
         super.setId(id);
 
@@ -177,6 +182,11 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     }
 
     @Override
+    protected float getRiddenSpeed(@NotNull Player pPlayer) {
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED);
+    }
+
+    @Override
     protected @NotNull Vec3 getRiddenInput(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         if (this.onGround()) {
             return Vec3.ZERO;
@@ -272,11 +282,6 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     @Override
     public boolean isMultipartEntity() {
         return this.segments != null;
-    }
-
-    @Override
-    protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
     }
 
     @Override

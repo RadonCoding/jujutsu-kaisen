@@ -11,12 +11,14 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
@@ -29,15 +31,16 @@ import java.util.List;
 
 public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
     public static final int DELAY = 2 * 20;
-    private static final int INTERVAL = 10;
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        if (instant || domain.getTime() == DELAY || (domain.level().getGameTime() % INTERVAL == 0 && domain.getTime() >= DELAY)) {
+        if (!entity.getData(JJKAttachmentTypes.CLEAVED) && (instant || domain.getTime() >= DELAY)) {
             Cleave cleave = JJKAbilities.CLEAVE.get();
             cleave.performEntity(owner, entity, domain, instant);
+
+            entity.setData(JJKAttachmentTypes.CLEAVED, true);
         }
     }
 
@@ -84,6 +87,6 @@ public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
+        return List.of(Blocks.BLACK_CONCRETE);
     }
 }

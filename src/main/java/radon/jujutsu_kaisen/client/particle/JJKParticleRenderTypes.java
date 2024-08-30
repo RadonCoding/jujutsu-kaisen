@@ -27,6 +27,8 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator pTesselator) {
             pTesselator.end();
+
+            RenderSystem.depthMask(true);
         }
     };
 
@@ -56,6 +58,8 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator pTesselator) {
             pTesselator.end();
+
+            RenderSystem.depthMask(true);
         }
     };
 

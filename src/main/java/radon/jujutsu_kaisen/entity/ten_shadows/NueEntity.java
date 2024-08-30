@@ -104,7 +104,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? this.getSpeed() * 0.01F : this.getSpeed() * 0.1F;
+        return this.getSpeed() * 0.1F;
     }
 
     @Override
@@ -153,6 +153,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.NUE.get();
+    }
+
+    @Override
+    protected float getRiddenSpeed(@NotNull Player pPlayer) {
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
     @Override

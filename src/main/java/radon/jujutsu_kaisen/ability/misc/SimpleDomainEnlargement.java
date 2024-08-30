@@ -42,18 +42,19 @@ public class SimpleDomainEnlargement extends Ability implements IChanneled {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (!owner.level().isClientSide) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return false;
+            if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
-        SimpleDomainEntity domain = data.getSummonByClass(SimpleDomainEntity.class);
+            SimpleDomainEntity domain = data.getSummonByClass(SimpleDomainEntity.class);
 
-        if (domain == null) return false;
+            if (domain == null) return false;
 
-        if (!domain.canEnlarge()) return false;
-
+            if (!domain.canEnlarge()) return false;
+        }
         return super.isValid(owner);
     }
 

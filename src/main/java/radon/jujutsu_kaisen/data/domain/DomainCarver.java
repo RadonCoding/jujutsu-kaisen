@@ -2,6 +2,9 @@ package radon.jujutsu_kaisen.data.domain;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,6 +74,10 @@ public class DomainCarver {
 
         List<Block> floor = closed.getBlocks();
 
+        if (floor.isEmpty()) return;
+
+        RandomSource random = RandomSource.create(2048);
+
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y < 0; y++) {
                 for (int z = -radius; z <= radius; z++) {
@@ -78,12 +85,8 @@ public class DomainCarver {
 
                     BlockPos pos = center.offset(x, y, z);
 
-                    BlockState state = level.getBlockState(pos);
-
-                    if (floor.contains(state.getBlock())) continue;
-
                     if (distance < radius - 1) {
-                        Block block = floor.get(HelperMethods.RANDOM.nextInt(floor.size()));
+                        Block block = floor.get(random.nextInt(floor.size()));
                         setBlockIfRequired(level, pos, block);
                     }
                 }

@@ -253,24 +253,26 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    this.ability.onHitBlock(this.virtual, this, owner, entity.blockPosition(), false);
+                    this.ability.onHitBlock(this.virtual, this, owner, entity.blockPosition(), this.instant);
                     continue;
                 }
             }
-            this.ability.onHitEntity(this, owner, entity, false);
+            this.ability.onHitEntity(this, owner, entity, this.instant);
         }
 
-        int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
-        BlockPos center = BlockPos.ZERO.offset(0, virtualRadius / 2, 0);
+        if (this.virtual != null) {
+            int virtualRadius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
+            BlockPos center = BlockPos.ZERO.offset(0, virtualRadius / 2, 0);
 
-        for (int x = -virtualRadius; x <= virtualRadius; x++) {
-            for (int y = -virtualRadius; y <= virtualRadius; y++) {
-                for (int z = -virtualRadius; z <= virtualRadius; z++) {
-                    double distance = Math.sqrt(x * x + y * y + z * z);
+            for (int x = -virtualRadius; x <= virtualRadius; x++) {
+                for (int y = -virtualRadius; y <= virtualRadius; y++) {
+                    for (int z = -virtualRadius; z <= virtualRadius; z++) {
+                        double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < virtualRadius - 1) {
-                        BlockPos pos = center.offset(x, y, z);
-                        this.ability.onHitBlock(this.virtual, this, owner, pos, false);
+                        if (distance < virtualRadius - 1) {
+                            BlockPos pos = center.offset(x, y, z);
+                            this.ability.onHitBlock(this.virtual, this, owner, pos, this.instant);
+                        }
                     }
                 }
             }

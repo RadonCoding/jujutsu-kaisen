@@ -34,6 +34,11 @@ public class JJKDimensionSpecialEffects {
         }
 
         @Override
+        public boolean forceBrightLightmap() {
+            return true;
+        }
+
+        @Override
         public boolean renderSky(@NotNull ClientLevel level, int ticks, float partialTick, @NotNull Matrix4f modelViewMatrix, @NotNull Camera camera, @NotNull Matrix4f projectionMatrix, boolean isFoggy, @NotNull Runnable setupFog) {
             Optional<IDomainData> data = DataProvider.getDataIfPresent(level, JJKAttachmentTypes.DOMAIN);
 
