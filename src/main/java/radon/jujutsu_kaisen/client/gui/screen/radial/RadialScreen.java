@@ -115,11 +115,11 @@ public abstract class RadialScreen extends Screen {
             float x4 = centerX + RADIUS_IN * (float) Math.cos(angle2);
             float y4 = centerY + RADIUS_IN * (float) Math.sin(angle2);
 
-            Matrix4f pose = poseStack.last().pose();
-            buffer.vertex(pose, x2, y2, 0.0F).color(r, g, b, a).endVertex();
-            buffer.vertex(pose, x1, y1, 0.0F).color(r, g, b, a).endVertex();
-            buffer.vertex(pose, x4, y4, 0.0F).color(r, g, b, a).endVertex();
-            buffer.vertex(pose, x3, y3, 0.0F).color(r, g, b, a).endVertex();
+            Matrix4f matrix4f = poseStack.last().pose();
+            buffer.vertex(matrix4f, x2, y2, 0.0F).color(r, g, b, a).endVertex();
+            buffer.vertex(matrix4f, x1, y1, 0.0F).color(r, g, b, a).endVertex();
+            buffer.vertex(matrix4f, x4, y4, 0.0F).color(r, g, b, a).endVertex();
+            buffer.vertex(matrix4f, x3, y3, 0.0F).color(r, g, b, a).endVertex();
         }
     }
 

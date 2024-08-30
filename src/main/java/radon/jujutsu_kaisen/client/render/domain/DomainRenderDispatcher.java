@@ -5,20 +5,15 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexBuffer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.JJKShaders;
@@ -29,7 +24,6 @@ import java.util.Map;
 @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class DomainRenderDispatcher {
     private static final Map<ResourceLocation, DomainRenderer> renderers = new HashMap<>();
-    private static final Map<ResourceLocation, VertexBuffer> buffers = new HashMap<>();
     private static final Map<ResourceLocation, TextureTarget> cached = new HashMap<>();
 
     static {
@@ -45,7 +39,7 @@ public class DomainRenderDispatcher {
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SKY) return;
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) return;
 
         Minecraft mc = Minecraft.getInstance();
 
@@ -75,7 +69,9 @@ public class DomainRenderDispatcher {
                 target = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
             }
 
-            target.bindWrite(true);
+            target.clear(Minecraft.ON_OSX);
+
+            target.bindWrite(false);
 
             render(key, event.getModelViewMatrix(), event.getProjectionMatrix());
 
@@ -85,29 +81,25 @@ public class DomainRenderDispatcher {
             cached.put(key, target);
         }
 
-        current.bindWrite(true);
+        current.bindWrite(false);
     }
 
-    public static void render(DomainExpansion domain, Matrix4f modelViewStack, Matrix4f projectionMatrix, TextureTarget include) {
+    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, boolean finalize) {
         ResourceLocation key = JJKAbilities.getKey(domain);
         DomainRenderer renderer = renderers.get(key);
 
-        if (!buffers.containsKey(key)) {
-            VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-            renderer.renderToBuffer(buffer);
-            buffers.put(key, buffer);
-        }
-
         RenderSystem.enableBlend();
-
-        RenderSystem.setShader(JJKShaders::getDomainShader);
 
         RenderSystem.setShaderTexture(0, renderer.getTexture());
         RenderSystem.setShaderTexture(1, include.getColorTextureId());
 
-        VertexBuffer buffer = buffers.get(key);
-        buffer.bind();
-        buffer.drawWithShader(modelViewStack, projectionMatrix, RenderSystem.getShader());
+        RenderSystem.setShader(JJKShaders::getDomainShader);
+
+        renderer.render(modelViewMatrix, projectionMatrix);
+
+        if (finalize) {
+            renderer.renderPostEffects(modelViewMatrix, projectionMatrix);
+        }
 
         RenderSystem.disableBlend();
     }
@@ -115,18 +107,14 @@ public class DomainRenderDispatcher {
     public static void render(ResourceLocation key, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
         DomainRenderer renderer = renderers.get(key);
 
-        if (!buffers.containsKey(key)) {
-            VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-            renderer.renderToBuffer(buffer);
-            buffers.put(key, buffer);
-        }
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.enableBlend();
 
         RenderSystem.setShaderTexture(0, renderer.getTexture());
 
-        VertexBuffer buffer = buffers.get(key);
-        buffer.bind();
-        buffer.drawWithShader(modelViewMatrix, projectionMatrix, RenderSystem.getShader());
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
+        renderer.render(modelViewMatrix, projectionMatrix);
+
+        RenderSystem.disableBlend();
     }
 }

@@ -7,8 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.model.DefaultedTurnHeadEntityGeoModel;
 import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class DivineDogRenderer extends TenShadowsRenderer<DivineDogEntity> {
+public class DivineDogRenderer extends GeoEntityRenderer<DivineDogEntity> {
     public DivineDogRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedTurnHeadEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog")));
     }

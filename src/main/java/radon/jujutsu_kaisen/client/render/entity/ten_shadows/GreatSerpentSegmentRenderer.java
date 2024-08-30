@@ -17,14 +17,4 @@ public class GreatSerpentSegmentRenderer extends SegmentRenderer<GreatSerpentSeg
     public GreatSerpentSegmentRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent_segment")));
     }
-
-    @Override
-    public void actuallyRender(PoseStack poseStack, GreatSerpentSegmentEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        if (animatable.getParent().isClone()) {
-            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay,
-                    TenShadowsRenderer.COLOR.x, TenShadowsRenderer.COLOR.y, TenShadowsRenderer.COLOR.z, alpha);
-        } else {
-            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        }
-    }
 }

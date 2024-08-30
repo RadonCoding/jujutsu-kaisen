@@ -1,14 +1,17 @@
 package radon.jujutsu_kaisen.client.render.domain;
 
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
+import radon.jujutsu_kaisen.client.util.RenderUtil;
 
 public abstract class DomainRenderer {
-    protected abstract ResourceLocation getTexture();
-
-    public void renderToBuffer(VertexBuffer buffer) {
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
+    public final void render(Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         // Bottom
@@ -95,8 +98,10 @@ public abstract class DomainRenderer {
                 .uv(1.0F, 0.5F)
                 .endVertex();
 
-        buffer.bind();
-        buffer.upload(builder.end());
-        VertexBuffer.unbind();
+        RenderUtil.drawWithShader(modelViewMatrix, projectionMatrix, builder.end());
     }
+
+    public void renderPostEffects(Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {}
+
+    protected abstract ResourceLocation getTexture();
 }
