@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.DomainHandler;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -166,7 +167,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         CompoundTag saved = null;
 
-        if (existing != null) {
+        if (existing != null && !(existing instanceof ITemporaryBlockEntity)) {
             saved = existing.saveWithFullMetadata(this.registryAccess());
         }
 

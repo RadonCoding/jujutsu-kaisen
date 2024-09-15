@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.util.RenderUtil;
 
 public abstract class DomainRenderer {
@@ -100,8 +101,6 @@ public abstract class DomainRenderer {
 
         RenderUtil.drawWithShader(modelViewMatrix, projectionMatrix, builder.end());
     }
-
-    public void renderPostEffects(Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {}
 
     protected abstract ResourceLocation getTexture();
 }

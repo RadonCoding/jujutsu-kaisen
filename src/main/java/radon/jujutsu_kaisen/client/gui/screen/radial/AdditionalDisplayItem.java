@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.network.packet.c2s.RemoveAdditionalC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.SetAdditionalC2SPacket;
 
 public class AdditionalDisplayItem extends CursedTechniqueDisplayItem {
     public AdditionalDisplayItem(Minecraft minecraft, RadialScreen screen, Runnable select, CursedTechnique technique) {
@@ -17,20 +18,7 @@ public class AdditionalDisplayItem extends CursedTechniqueDisplayItem {
 
     @Override
     public void mouseClicked(int button) {
-        if (this.minecraft.player == null) return;
 
-        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return;
-
-        ISorcererData data = cap.getSorcererData();
-
-        if (button != InputConstants.MOUSE_BUTTON_RIGHT) return;
-
-        CursedTechnique additional = this.getTechnique();
-        PacketDistributor.sendToServer(new RemoveAdditionalC2SPacket(additional));
-        data.removeAdditional(additional);
-        this.screen.init();
     }
 
     @Override

@@ -275,7 +275,7 @@ public class VeilEntity extends Entity implements IVeil {
 
                         CompoundTag saved = null;
 
-                        if (existing != null) {
+                        if (existing != null && !(existing instanceof ITemporaryBlockEntity)) {
                             saved = existing.saveWithFullMetadata(this.registryAccess());
                         }
 

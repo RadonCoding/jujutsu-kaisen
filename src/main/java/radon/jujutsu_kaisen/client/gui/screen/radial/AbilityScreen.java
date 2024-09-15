@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.network.packet.c2s.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class AbilityScreen extends RadialScreen {
@@ -112,7 +113,7 @@ public class AbilityScreen extends RadialScreen {
 
         ISorcererData data = cap.getSorcererData();
 
-        if (!data.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get()) && data.getAdditional().isEmpty()) return;
+        if (!data.hasActiveTechnique(JJKCursedTechniques.MIMICRY.get())) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

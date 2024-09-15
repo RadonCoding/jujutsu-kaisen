@@ -5,8 +5,7 @@ import org.joml.AxisAngle4f;
 import org.joml.Matrix3f;
 
 public class LegacyMath {
-    public static Vec3 normalize(Vec3 vec)
-    {
+    public static Vec3 normalize(Vec3 vec) {
         double d0 = (float) Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
         return d0 < 1.0E-4D ? Vec3.ZERO : new Vec3(vec.x / d0, vec.y / d0, vec.z / d0);
     }

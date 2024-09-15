@@ -100,6 +100,7 @@ public class JJKCursedTechniques {
                             JJKAbilities.FIREBALL,
                             JJKAbilities.FIRE_BEAM
                     )
+                    .domain(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN)
                     .build());
     public static DeferredHolder<CursedTechnique, CursedTechnique> DISASTER_TIDES = CURSED_TECHNIQUES.register("disaster_tides", () ->
             new CursedTechnique.Builder()

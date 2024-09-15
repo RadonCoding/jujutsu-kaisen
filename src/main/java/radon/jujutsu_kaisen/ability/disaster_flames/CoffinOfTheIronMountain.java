@@ -16,10 +16,6 @@ import java.util.List;
 public class CoffinOfTheIronMountain extends DomainExpansion implements IClosedDomain {
     private static final float DAMAGE = 10.0F;
 
-    public List<Block> getBlocks() {
-        return List.of(Blocks.MAGMA_BLOCK, Blocks.BASALT, Blocks.BLACKSTONE);
-    }
-
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
@@ -43,7 +39,11 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements IClosedD
     protected DomainExpansionEntity summon(LivingEntity owner) {
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
-
         return domain;
+    }
+
+    @Override
+    public List<Block> getBlocks() {
+        return List.of(Blocks.MAGMA_BLOCK);
     }
 }

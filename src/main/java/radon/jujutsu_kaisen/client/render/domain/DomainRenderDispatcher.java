@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.render.domain;
 
 
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -29,6 +28,7 @@ public class DomainRenderDispatcher {
     static {
         renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
         renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
+        renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
     }
 
     private static int skyWidth;
@@ -70,7 +70,7 @@ public class DomainRenderDispatcher {
 
             target.clear(Minecraft.ON_OSX);
 
-            target.bindWrite(false);
+            target.bindWrite(true);
 
             render(key, event.getModelViewMatrix(), event.getProjectionMatrix());
 
@@ -83,7 +83,7 @@ public class DomainRenderDispatcher {
         mc.getMainRenderTarget().bindWrite(true);
     }
 
-    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, boolean finalize) {
+    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include) {
         ResourceLocation key = JJKAbilities.getKey(domain);
         DomainRenderer renderer = renderers.get(key);
 
@@ -95,10 +95,6 @@ public class DomainRenderDispatcher {
         RenderSystem.setShader(JJKShaders::getDomainShader);
 
         renderer.render(modelViewMatrix, projectionMatrix);
-
-        if (finalize) {
-            renderer.renderPostEffects(modelViewMatrix, projectionMatrix);
-        }
 
         RenderSystem.disableBlend();
     }
