@@ -2,8 +2,10 @@ package radon.jujutsu_kaisen.client.render.domain;
 
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -70,24 +72,25 @@ public class DomainRenderDispatcher {
 
             target.clear(Minecraft.ON_OSX);
 
-            target.bindWrite(true);
+            target.bindWrite(false);
 
             render(key, event.getModelViewMatrix(), event.getProjectionMatrix());
 
             target.unbindRead();
             target.unbindWrite();
 
+            mc.getMainRenderTarget().bindWrite(false);
+
             cached.put(key, target);
         }
-
-        mc.getMainRenderTarget().bindWrite(true);
     }
 
-    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include) {
+    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, float time) {
         ResourceLocation key = JJKAbilities.getKey(domain);
         DomainRenderer renderer = renderers.get(key);
 
         RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
         RenderSystem.setShaderTexture(0, renderer.getTexture());
         RenderSystem.setShaderTexture(1, include.getColorTextureId());
@@ -96,6 +99,13 @@ public class DomainRenderDispatcher {
 
         renderer.render(modelViewMatrix, projectionMatrix);
 
+        for (DomainRenderLayer layer : renderer.getLayers()) {
+            RenderSystem.setShaderTexture(0, layer.getTexture());
+
+            renderer.render(modelViewMatrix, projectionMatrix);
+        }
+
+        RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
     }
 

@@ -6,10 +6,24 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
+import org.joml.Vector2f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.util.RenderUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class DomainRenderer {
+    private final List<DomainRenderLayer> layers = new ArrayList<>();
+
+    public List<DomainRenderLayer> getLayers() {
+        return this.layers;
+    }
+
+    protected void addLayer(DomainRenderLayer layer) {
+        this.layers.add(layer);
+    }
+
     public final void render(Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();

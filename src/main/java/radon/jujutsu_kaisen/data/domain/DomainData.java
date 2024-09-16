@@ -147,7 +147,7 @@ public class DomainData implements IDomainData {
 
         if (owner == null) return;
 
-        DomainInfo info = new DomainInfo(owner.getUUID(), domain.getUUID(), domain.getAbility(), domain.getStrength());
+        DomainInfo info = new DomainInfo(owner.getUUID(), domain.getUUID(), domain.getAbility(), domain.getStrength(), domain.getTime());
         this.domains.add(info);
 
         PacketDistributor.sendToAllPlayers(new UpdateDomainInfoS2CPacket(this.level.dimension(), info));
@@ -155,6 +155,7 @@ public class DomainData implements IDomainData {
 
     @Override
     public void update(DomainInfo info) {
+        this.domains.remove(info);
         this.domains.add(info);
     }
 

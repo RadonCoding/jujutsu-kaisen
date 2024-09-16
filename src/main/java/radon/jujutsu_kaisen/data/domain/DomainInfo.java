@@ -13,14 +13,15 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 
 import java.util.UUID;
 
-public record DomainInfo(UUID owner, UUID identifier, DomainExpansion ability, float strength) {
+public record DomainInfo(UUID owner, UUID identifier, DomainExpansion ability, float strength, int time) {
     public static Codec<DomainInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.fieldOf("owner").forGetter(DomainInfo::owner),
             UUIDUtil.CODEC.fieldOf("identifier").forGetter(DomainInfo::identifier),
             JJKAbilities.ABILITY_REGISTRY.byNameCodec()
                     .xmap(ability -> (DomainExpansion) ability, ability -> ability)
                     .fieldOf("ability").forGetter(DomainInfo::ability),
-            Codec.FLOAT.fieldOf("strength").forGetter(DomainInfo::strength)
+            Codec.FLOAT.fieldOf("strength").forGetter(DomainInfo::strength),
+            Codec.INT.fieldOf("time").forGetter(DomainInfo::time)
     ).apply(instance, DomainInfo::new));
     public static StreamCodec<RegistryFriendlyByteBuf, DomainInfo> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
@@ -32,6 +33,8 @@ public record DomainInfo(UUID owner, UUID identifier, DomainExpansion ability, f
             DomainInfo::ability,
             ByteBufCodecs.FLOAT,
             DomainInfo::strength,
+            ByteBufCodecs.INT,
+            DomainInfo::time,
             DomainInfo::new
     );
 

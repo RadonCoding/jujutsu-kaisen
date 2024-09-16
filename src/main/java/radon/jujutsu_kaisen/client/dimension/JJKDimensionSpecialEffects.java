@@ -137,7 +137,7 @@ public class JJKDimensionSpecialEffects {
                 include.unbindWrite();
                 mc.getMainRenderTarget().bindWrite(false);
 
-                DomainRenderDispatcher.render(info.ability(), modelViewMatrix, projectionMatrix, include);
+                DomainRenderDispatcher.render(info.ability(), modelViewMatrix, projectionMatrix, include, info.time() + partialTick);
 
                 include.destroyBuffers();
                 mc.getMainRenderTarget().bindWrite(false);

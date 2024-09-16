@@ -15,6 +15,10 @@ import radon.jujutsu_kaisen.client.util.RenderUtil;
 public class UnlimitedVoidRenderer extends DomainRenderer {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/domain/unlimited_void.png");
 
+    public UnlimitedVoidRenderer() {
+        this.addLayer(new CumRenderLayer());
+    }
+
     @Override
     protected ResourceLocation getTexture() {
         return TEXTURE;
