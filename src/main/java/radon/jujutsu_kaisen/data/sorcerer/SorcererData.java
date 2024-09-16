@@ -1009,7 +1009,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void setCurrentAdditional(@Nullable CursedTechnique technique) {
-        this.currentAdditional = technique;
+        this.currentAdditional = this.currentAdditional == technique ? null : technique;
         ServerVisualHandler.sync(this.owner);
     }
 

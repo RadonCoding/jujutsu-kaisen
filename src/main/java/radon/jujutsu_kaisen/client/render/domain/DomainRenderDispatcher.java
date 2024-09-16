@@ -42,7 +42,7 @@ public class DomainRenderDispatcher {
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) return;
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SKY) return;
 
         Minecraft mc = Minecraft.getInstance();
 
@@ -85,7 +85,7 @@ public class DomainRenderDispatcher {
         }
     }
 
-    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, float time) {
+    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
         ResourceLocation key = JJKAbilities.getKey(domain);
         DomainRenderer renderer = renderers.get(key);
 
@@ -100,6 +100,8 @@ public class DomainRenderDispatcher {
         renderer.render(modelViewMatrix, projectionMatrix);
 
         for (DomainRenderLayer layer : renderer.getLayers()) {
+            if (!layer.shouldRender(time)) continue;
+
             RenderSystem.setShaderTexture(0, layer.getTexture());
 
             renderer.render(modelViewMatrix, projectionMatrix);
