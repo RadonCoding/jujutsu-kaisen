@@ -220,7 +220,7 @@
 		},
 		"move.run": {
 			"loop": true,
-			"animation_length": 0.83333,
+			"animation_length": 0.8333,
 			"bones": {
 				"body": {
 					"rotation": {
@@ -522,7 +522,7 @@
 				},
 				"right_forearm_2": {
 					"rotation": {
-						"vector": [-52.5, 0, 0]
+						"vector": [-85, 0, 0]
 					}
 				},
 				"left_arm_1": {
