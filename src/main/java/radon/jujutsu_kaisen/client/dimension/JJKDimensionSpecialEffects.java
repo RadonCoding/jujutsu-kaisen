@@ -17,6 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.client.render.domain.DomainRenderDispatcher;
 import radon.jujutsu_kaisen.client.util.RenderUtil;
 import radon.jujutsu_kaisen.data.DataProvider;

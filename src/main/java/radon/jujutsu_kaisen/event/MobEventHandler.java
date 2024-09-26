@@ -142,11 +142,12 @@ public class MobEventHandler {
             }
 
             // Making mobs use chants
-            if (owner.level() instanceof ServerLevel level) {
+            /*if (owner.level() instanceof ServerLevel level) {
                 if (owner instanceof Mob) {
                     List<String> chants = new ArrayList<>(chantData.getFirstChants(ability));
 
-                    if (!chants.isEmpty() && (ability == JJKAbilities.WORLD_SLASH.get() || HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * sorcererData.getMaximumOutput()))) == 0)) {
+                    if (!chants.isEmpty() && (ability == JJKAbilities.WORLD_SLASH.get() ||
+                            HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * sorcererData.getMaximumOutput()))) == 0)) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ServerChantHandler.onChant(owner, chants.get(i));
 
@@ -159,7 +160,7 @@ public class MobEventHandler {
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }

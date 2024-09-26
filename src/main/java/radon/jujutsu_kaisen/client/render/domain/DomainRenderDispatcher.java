@@ -31,6 +31,7 @@ public class DomainRenderDispatcher {
         renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
         renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
         renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
+        renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
     }
 
     private static int skyWidth;
@@ -42,7 +43,7 @@ public class DomainRenderDispatcher {
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SKY) return;
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
 
         Minecraft mc = Minecraft.getInstance();
 
@@ -72,14 +73,14 @@ public class DomainRenderDispatcher {
 
             target.clear(Minecraft.ON_OSX);
 
-            target.bindWrite(false);
+            target.bindWrite(true);
 
             render(key, event.getModelViewMatrix(), event.getProjectionMatrix());
 
             target.unbindRead();
             target.unbindWrite();
 
-            mc.getMainRenderTarget().bindWrite(false);
+            mc.getMainRenderTarget().bindWrite(true);
 
             cached.put(key, target);
         }

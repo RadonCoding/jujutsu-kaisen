@@ -2,9 +2,10 @@ package radon.jujutsu_kaisen.ability;
 
 
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
-public abstract class AbilityTriggerEvent extends LivingEvent {
+public abstract class AbilityTriggerEvent extends LivingEvent implements ICancellableEvent {
     private final Ability ability;
 
     protected AbilityTriggerEvent(LivingEntity entity, Ability ability) {
