@@ -68,13 +68,15 @@ public class SorcererGoal extends Goal {
         if (this.chanting == null && ability.isChantable() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * sorcererData.getMaximumOutput()))) == 0) {
             List<String> chants = new ArrayList<>(chantData.getFirstChants(ability));
 
-            for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
-                this.chants.add(chants.get(i));
-            }
+            if (!chants.isEmpty()) {
+                for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
+                    this.chants.add(chants.get(i));
+                }
 
-            this.chanting = ability;
-            this.nextChantTime = 0;
-            return;
+                this.chanting = ability;
+                this.nextChantTime = 0;
+                return;
+            }
         }
         AbilityHandler.trigger(this.mob, ability);
     }
