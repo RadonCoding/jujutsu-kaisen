@@ -393,7 +393,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                             .scale(1.0D / physicalRadius)
                             .scale(virtualRadius);
 
-                    entity.teleportTo(level, distance.x, 0, distance.z, Set.of(),
+                    entity.teleportTo(level, distance.x, virtualRadius, distance.z, Set.of(),
                             entity.getYRot(), entity.getXRot());
                 }
             }
