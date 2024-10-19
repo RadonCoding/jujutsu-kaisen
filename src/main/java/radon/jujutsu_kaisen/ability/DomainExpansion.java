@@ -109,12 +109,14 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        return false;
+
+        /*IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return false;
 
         ISorcererData data = cap.getSorcererData();
-        return data.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && super.isValid(owner);
+        return data.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && super.isValid(owner);*/
     }
 
     @Override
