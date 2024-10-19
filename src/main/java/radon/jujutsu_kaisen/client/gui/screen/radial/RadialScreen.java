@@ -35,7 +35,7 @@ public abstract class RadialScreen extends Screen {
 
         if (this.hovered == -1) return;
 
-        List<? extends DisplayItem> items = this.getItems();
+        List<? extends DisplayItem> items = this.pages.get(page);
 
         if (this.hovered >= items.size()) return;
 
