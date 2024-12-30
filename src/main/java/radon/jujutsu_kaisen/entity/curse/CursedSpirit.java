@@ -54,6 +54,11 @@ public abstract class CursedSpirit extends SummonEntity implements GeoEntity, IS
     }
 
     @Override
+    protected boolean requiresOwner() {
+        return false;
+    }
+
+    @Override
     public boolean isPushable() {
         return !this.isHiding() && super.isPushable();
     }

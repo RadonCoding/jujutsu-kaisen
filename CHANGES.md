@@ -13,3 +13,4 @@
 - GeckoLib model support for dismantle
 - Bug fixing
 - Ragdoll physics for entity slicing
+- Made curse manipulation curses get released upon death

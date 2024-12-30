@@ -50,6 +50,10 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         this.setPathfindingMalus(PathType.LEAVES, 0.0F);
     }
 
+    protected boolean requiresOwner() {
+        return true;
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
@@ -175,7 +179,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && this.isTame() && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && this.requiresOwner() && this.isTame() && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();

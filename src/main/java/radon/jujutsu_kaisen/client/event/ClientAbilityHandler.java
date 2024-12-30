@@ -150,7 +150,7 @@ public class ClientAbilityHandler {
         }
 
         @SubscribeEvent
-        public static void onClientTickPre(ClientTickEvent.Post event) {
+        public static void onClientTickPost(ClientTickEvent.Post event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
