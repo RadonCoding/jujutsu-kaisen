@@ -181,6 +181,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (distance >= radius - 1 && success) this.total++;
 
+        if (existing instanceof ITemporaryBlockEntity tmp) {
+            state = tmp.getOriginal();
+            saved = tmp.getSaved();
+        }
+
         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
             be.create(this.uuid, delay, state, saved);
         }

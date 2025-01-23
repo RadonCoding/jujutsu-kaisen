@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
@@ -55,5 +56,10 @@ public class UnlimitedVoid extends DomainExpansion implements IClosedDomain {
         owner.level().addFreshEntity(domain);
 
         return domain;
+    }
+
+    @Override
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
     }
 }

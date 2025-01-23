@@ -17,6 +17,7 @@ public class JJKParticleRenderTypes {
     public static ParticleRenderType GLOW = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder pBuilder, @NotNull TextureManager pTextureManager) {
+            RenderSystem.enableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
@@ -29,6 +30,7 @@ public class JJKParticleRenderTypes {
             pTesselator.end();
 
             RenderSystem.depthMask(true);
+            RenderSystem.disableDepthTest();
         }
     };
 
