@@ -53,7 +53,7 @@ public class DomainCarver {
             for (int x = -radius; x <= radius; x++) {
                 for (int y = -radius; y < 0; y++) {
                     for (int z = -radius; z <= radius; z++) {
-                        double distance = Math.sqrt(x * x + z * z);
+                        double distance = Math.sqrt(x * x + y * y + z * z);
 
                         BlockPos pos = center.offset(x, y, z);
 
@@ -81,7 +81,7 @@ public class DomainCarver {
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y < 0; y++) {
                 for (int z = -radius; z <= radius; z++) {
-                    double distance = Math.sqrt(x * x + z * z);
+                    double distance = Math.sqrt(x * x + y * y + z * z);
 
                     BlockPos pos = center.offset(x, y, z);
 
