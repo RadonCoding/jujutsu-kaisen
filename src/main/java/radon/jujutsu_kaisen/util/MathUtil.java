@@ -112,7 +112,7 @@ public class MathUtil {
 
                 det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
-        if (det == 0) throw new ArithmeticException("Matrix is singular and cannot be inverted.");
+        if (det == 0) throw new ArithmeticException("Matrix is singular and cannot be inverted");
 
         det = 1.0F / det;
 
