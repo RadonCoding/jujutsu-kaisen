@@ -34,11 +34,47 @@ public class DomainRenderDispatcher {
         renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
     }
 
+    // NOTE: Temporary until all domain renderers are implemented
+    private static final DomainRenderer DEFAULT_RENDERER = new DefaultDomainRenderer();
+
     private static int skyWidth;
     private static int skyHeight;
 
     public static TextureTarget get(ResourceLocation domain) {
-        return cached.get(domain);
+        TextureTarget target = cached.get(domain);
+
+        if (target == null) {
+            Minecraft mc = Minecraft.getInstance();
+            Window window = mc.getWindow();
+
+            int ww = window.getWidth();
+            int wh = window.getHeight();
+
+            if (ww <= 0 || wh <= 0) {
+                target = new TextureTarget(1, 1, true, Minecraft.ON_OSX);
+                cached.put(domain, target);
+                return target;
+            }
+
+            target = new TextureTarget(ww, wh, true, Minecraft.ON_OSX);
+            target.clear(Minecraft.ON_OSX);
+            target.bindWrite(true);
+
+            RenderSystem.enableBlend();
+            RenderSystem.setShaderTexture(0, DEFAULT_RENDERER.getTexture());
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            DEFAULT_RENDERER.render(new Matrix4f(), new Matrix4f());
+            RenderSystem.disableBlend();
+
+            target.unbindRead();
+            target.unbindWrite();
+
+            mc.getMainRenderTarget().bindWrite(true);
+
+            cached.put(domain, target);
+        }
+
+        return target;
     }
 
     @SubscribeEvent
@@ -88,7 +124,7 @@ public class DomainRenderDispatcher {
 
     public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
         ResourceLocation key = JJKAbilities.getKey(domain);
-        DomainRenderer renderer = renderers.get(key);
+        DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
 
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
@@ -113,7 +149,7 @@ public class DomainRenderDispatcher {
     }
 
     public static void render(ResourceLocation key, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
-        DomainRenderer renderer = renderers.get(key);
+        DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
 
         RenderSystem.enableBlend();
 
