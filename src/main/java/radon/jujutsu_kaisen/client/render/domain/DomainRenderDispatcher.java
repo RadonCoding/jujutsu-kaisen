@@ -5,7 +5,6 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +18,7 @@ import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.JJKShaders;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,43 +36,39 @@ public class DomainRenderDispatcher {
 
     // NOTE: Temporary until all domain renderers are implemented
     private static final DomainRenderer DEFAULT_RENDERER = new DefaultDomainRenderer();
+    @Nullable
+    private static TextureTarget fallback;
 
     private static int skyWidth;
     private static int skyHeight;
 
     public static TextureTarget get(ResourceLocation domain) {
-        TextureTarget target = cached.get(domain);
-
-        if (target == null) {
-            Minecraft mc = Minecraft.getInstance();
-            Window window = mc.getWindow();
-
-            int ww = window.getWidth();
-            int wh = window.getHeight();
-
-            if (ww <= 0 || wh <= 0) {
-                target = new TextureTarget(1, 1, true, Minecraft.ON_OSX);
-                cached.put(domain, target);
-                return target;
-            }
-
-            target = new TextureTarget(ww, wh, true, Minecraft.ON_OSX);
-            target.clear(Minecraft.ON_OSX);
-            target.bindWrite(true);
-
-            RenderSystem.enableBlend();
-            RenderSystem.setShaderTexture(0, DEFAULT_RENDERER.getTexture());
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            DEFAULT_RENDERER.render(new Matrix4f(), new Matrix4f());
-            RenderSystem.disableBlend();
-
-            target.unbindRead();
-            target.unbindWrite();
-
-            mc.getMainRenderTarget().bindWrite(true);
-
-            cached.put(domain, target);
+        if (!cached.containsKey(domain)) {
+            return fallback;
         }
+        return cached.get(domain);
+    }
+
+    private static TextureTarget update(@Nullable TextureTarget target, DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, boolean update) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (target == null || update) {
+            if (target != null) {
+                target.destroyBuffers();
+            }
+            target = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
+        }
+
+        target.clear(Minecraft.ON_OSX);
+
+        target.bindWrite(true);
+
+        render(renderer, modelViewMatrix, projectionMatrix);
+
+        target.unbindRead();
+        target.unbindWrite();
+
+        mc.getMainRenderTarget().bindWrite(true);
 
         return target;
     }
@@ -89,37 +85,23 @@ public class DomainRenderDispatcher {
 
         if (ww <= 0 || wh <= 0) return;
 
-        for (ResourceLocation key : renderers.keySet()) {
-            boolean update = false;
+        boolean update = false;
 
-            if (skyWidth != ww || skyHeight != wh) {
-                update = true;
-                skyWidth = ww;
-                skyHeight = wh;
-            }
-
-            TextureTarget target = cached.get(key);
-
-            if (target == null || update) {
-                if (target != null) {
-                    target.destroyBuffers();
-                }
-                target = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
-            }
-
-            target.clear(Minecraft.ON_OSX);
-
-            target.bindWrite(true);
-
-            render(key, event.getModelViewMatrix(), event.getProjectionMatrix());
-
-            target.unbindRead();
-            target.unbindWrite();
-
-            mc.getMainRenderTarget().bindWrite(true);
-
-            cached.put(key, target);
+        if (skyWidth != ww || skyHeight != wh) {
+            update = true;
+            skyWidth = ww;
+            skyHeight = wh;
         }
+
+        for (Map.Entry<ResourceLocation, DomainRenderer> entry : renderers.entrySet()) {
+            ResourceLocation key = entry.getKey();
+            DomainRenderer renderer = entry.getValue();
+            TextureTarget target = cached.get(key);
+            TextureTarget updated = update(target, renderer, event.getModelViewMatrix(), event.getProjectionMatrix(), update);
+            cached.put(key, updated);
+        }
+
+        fallback = update(fallback, DEFAULT_RENDERER, event.getModelViewMatrix(), event.getProjectionMatrix(), update);
     }
 
     public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
@@ -148,9 +130,7 @@ public class DomainRenderDispatcher {
         RenderSystem.disableBlend();
     }
 
-    public static void render(ResourceLocation key, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
-        DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
-
+    public static void render(DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
         RenderSystem.enableBlend();
 
         RenderSystem.setShaderTexture(0, renderer.getTexture());
