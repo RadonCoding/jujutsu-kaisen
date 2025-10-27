@@ -21,7 +21,11 @@ public interface IAbilityData extends INBTSerializable<CompoundTag> {
 
     boolean hasToggled(Ability ability);
 
+    boolean isDisrupted(Ability ability);
+
     void clear();
+
+    Set<Ability> getActive();
 
     Set<Ability> getToggled();
 

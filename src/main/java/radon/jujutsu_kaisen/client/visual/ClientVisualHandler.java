@@ -72,7 +72,7 @@ public class ClientVisualHandler {
             IAbilityData abilityData = cap.getAbilityData();
 
             ClientData client = new ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(), sorcererData.getActiveTechniques(),
-                    sorcererData.getTechnique(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
+                    sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
 
             synced.put(mc.player.getUUID(), client);
 
@@ -136,20 +136,17 @@ public class ClientVisualHandler {
         public Ability channeled;
         public Set<Trait> traits;
         public Set<CursedTechnique> techniques;
-        @Nullable
-        public CursedTechnique technique;
         public JujutsuType type;
         public float experience;
         public int cursedEnergyColor;
 
         public int mouth;
 
-        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
+        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type, float experience, int cursedEnergyColor) {
             this.toggled = toggled;
             this.channeled = channeled;
             this.traits = traits;
             this.techniques = techniques;
-            this.technique = technique;
             this.type = type;
             this.experience = experience;
             this.cursedEnergyColor = cursedEnergyColor;
@@ -161,8 +158,6 @@ public class ClientVisualHandler {
 
         public void deserializeNBT(CompoundTag nbt) {
             this.channeled = nbt.contains("channeled") ? JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled"))) : null;
-
-            this.technique = nbt.contains("technique") ? JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique"))) : null;
 
             this.toggled = new HashSet<>();
 
@@ -178,7 +173,7 @@ public class ClientVisualHandler {
 
             this.techniques = new HashSet<>();
 
-            for (Tag key : nbt.getList("techniques", Tag.TAG_INT)) {
+            for (Tag key : nbt.getList("techniques", Tag.TAG_STRING)) {
                 this.techniques.add(JJKCursedTechniques.getValue(new ResourceLocation(key.getAsString())));
             }
 
@@ -215,9 +210,6 @@ public class ClientVisualHandler {
             }
             nbt.put("techniques", techniquesTag);
 
-            if (this.technique != null) {
-                nbt.putString("technique", JJKCursedTechniques.getKey(this.technique).toString());
-            }
             nbt.putInt("type", this.type.ordinal());
             nbt.putFloat("experience", this.experience);
             nbt.putInt("cursed_energy_color", this.cursedEnergyColor);

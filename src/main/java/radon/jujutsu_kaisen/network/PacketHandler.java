@@ -44,9 +44,6 @@ public class PacketHandler {
         registrar.playToClient(RemoveMissionCurseS2CPacket.TYPE, RemoveMissionCurseS2CPacket.STREAM_CODEC, RemoveMissionCurseS2CPacket::handle);
         registrar.playToClient(AddDimensionS2CPacket.TYPE, AddDimensionS2CPacket.STREAM_CODEC, AddDimensionS2CPacket::handle);
         registrar.playToClient(RemoveDimensionS2CPacket.TYPE, RemoveDimensionS2CPacket.STREAM_CODEC, RemoveDimensionS2CPacket::handle);
-        registrar.playToClient(SyncDomainDataS2CPacket.TYPE, SyncDomainDataS2CPacket.STREAM_CODEC, SyncDomainDataS2CPacket::handle);
-        registrar.playToClient(UpdateDomainInfoS2CPacket.TYPE, UpdateDomainInfoS2CPacket.STREAM_CODEC, UpdateDomainInfoS2CPacket::handle);
-        registrar.playToClient(RemoveDomainInfoS2CPacket.TYPE, RemoveDomainInfoS2CPacket.STREAM_CODEC, RemoveDomainInfoS2CPacket::handle);
         registrar.playToClient(ClearChantsS2CPacket.TYPE, ClearChantsS2CPacket.STREAM_CODEC, ClearChantsS2CPacket::handle);
 
         // Serverbound packets

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -9,13 +10,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.data.DataProvider;
-import radon.jujutsu_kaisen.data.domain.IDomainData;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.IVeil;
@@ -34,43 +32,14 @@ public class VeilHandler {
         barriers.get(dimension).add(identifier);
     }
 
-    public static Set<IDomain> getDomains(ServerLevel level, BlockPos target) {
-        Set<IDomain> domains = new HashSet<>();
-
-        Set<IBarrier> barriers = getBarriers(level, target);
-
-        for (IBarrier barrier : barriers) {
-            if (!(barrier instanceof IDomain domain)) continue;
-
-            domains.add(domain);
-        }
-        return domains;
-    }
-
     public static Set<IBarrier> getBarriers(ServerLevel level, BlockPos target) {
         Set<IBarrier> result = new HashSet<>();
 
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
-                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !barrier.isInsidePhysicalBarrier(target))
+                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !barrier.isInsideBarrier(target))
                     continue;
-
                 result.add(barrier);
-            }
-        }
-
-        Optional<IDomainData> data = DataProvider.getDataIfPresent(level, JJKAttachmentTypes.DOMAIN);
-
-        if (data.isPresent()) {
-            ResourceKey<Level> key = data.get().getOriginal();
-
-            if (key != null) {
-                ServerLevel original = level.getServer().getLevel(key);
-
-                if (original != null) {
-                    result.addAll(getBarriers(original, BlockPos.containing(target.getCenter().scale(original.dimensionType().coordinateScale() /
-                            level.dimensionType().coordinateScale()))));
-                }
             }
         }
         return result;
@@ -81,7 +50,7 @@ public class VeilHandler {
 
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
-                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !bounds.intersects(barrier.getPhysicalBounds()))
+                if (!(level.getEntity(identifier) instanceof IBarrier barrier) || !bounds.intersects(barrier.getBounds()))
                     continue;
                 result.add(barrier);
             }
@@ -104,8 +73,7 @@ public class VeilHandler {
 
         IBarrier owner = getOwner(level, target);
 
-        if (owner instanceof IVeil veil && veil.isAllowed(attacker) && veil.isAllowed(victim))
-            return veil.canDamage(victim);
+        if (owner instanceof IVeil veil && veil.isAllowed(attacker) && veil.isAllowed(victim)) return veil.canDamage(victim);
 
         return true;
     }
@@ -129,7 +97,7 @@ public class VeilHandler {
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
                 if (!(level.getEntity(identifier) instanceof IBarrier current)) continue;
-                if (!current.isPhysicalBarrier(target)) continue;
+                if (!current.isBarrier(target)) continue;
 
                 if (strongest == null) {
                     strongest = current;

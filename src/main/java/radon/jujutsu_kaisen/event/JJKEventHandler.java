@@ -166,46 +166,49 @@ public class JJKEventHandler {
 
             IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cap != null) {
-                ISorcererData sorcererData = cap.getSorcererData();
-                IAbilityData abilityData = cap.getAbilityData();
-                ISkillData skillData = cap.getSkillData();
+            if (cap == null) return;
 
-                float armor = skillData.getSkill(sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? Skill.SHIELDING : Skill.REINFORCEMENT) * 0.25F;
+            ISorcererData sorcererData = cap.getSorcererData();
+            IAbilityData abilityData = cap.getAbilityData();
+            ISkillData skillData = cap.getSkillData();
 
-                if (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    armor *= 7.5F;
-                } else if (abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                    float shielded = armor * (abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 10.0F : 5.0F);
+            boolean heavenly = sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY);
 
-                    float toughness = shielded * 0.1F;
+            Skill skill = heavenly
+                    ? Skill.SHIELDING
+                    : Skill.REINFORCEMENT;
+            float armor = skillData.getSkill(skill);
 
-                    float f = 2.0F + toughness / 4.0F;
-                    float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
-                    float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
+            boolean flow = abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get());
+            boolean shield = abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());
 
-                    if (!(victim instanceof Player player) || !player.getAbilities().instabuild) {
-                        float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            if (flow) armor *= shield ? 10.0F : 5.0F;
+            else if (heavenly) armor *= 15.0F;
 
-                        if (sorcererData.getEnergy() < cost) return;
+            float blocked = event.getAmount() * (1.0F - (
+                    Mth.clamp(
+                            armor - event.getAmount() / (2.0F + armor * 0.1F / 4.0F),
+                            armor * 0.2F,
+                            23.75F
+                    ) / 25.0F)
+            );
 
-                        sorcererData.useEnergy(cost);
+            if (flow && !(victim instanceof Player player && player.getAbilities().instabuild)) {
+                float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
-                        if (victim instanceof ServerPlayer player) {
-                            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess())));
-                        }
-                    }
-                    armor = shielded;
+                if (sorcererData.getEnergy() < cost) return;
+
+                sorcererData.useEnergy(cost);
+
+                if (victim instanceof ServerPlayer player) {
+                    PacketDistributor.sendToPlayer(
+                            player,
+                            new SyncSorcererDataS2CPacket(sorcererData.serializeNBT(player.registryAccess()))
+                    );
                 }
-
-                float toughness = armor * 0.1F;
-
-                float f = 2.0F + toughness / 4.0F;
-                float f1 = Mth.clamp(armor - event.getAmount() / f, armor * 0.2F, 23.75F);
-                float blocked = event.getAmount() * (1.0F - f1 / 25.0F);
-
-                event.setAmount(blocked);
             }
+
+            event.setAmount(blocked);
         }
 
         @SubscribeEvent
@@ -420,11 +423,6 @@ public class JJKEventHandler {
             event.register(JJKCursedTechniques.CURSED_TECHNIQUE_REGISTRY);
             event.register(JJKBindingVows.BINDING_VOW_REGISTRY);
             event.register(JJKPacts.PACT_REGISTRY);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterTicketControllers(RegisterTicketControllersEvent event) {
-            event.register(ClosedDomainExpansionEntity.CONTROLLER);
         }
     }
 }

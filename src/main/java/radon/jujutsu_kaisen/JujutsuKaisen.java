@@ -1,10 +1,12 @@
 package radon.jujutsu_kaisen;
 
 
+import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import org.slf4j.Logger;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -33,6 +35,7 @@ import radon.jujutsu_kaisen.world.gen.structure.JJKStructureTypes;
 @Mod(JujutsuKaisen.MOD_ID)
 public class JujutsuKaisen {
     public static final String MOD_ID = "jujutsu_kaisen";
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public JujutsuKaisen(IEventBus bus, ModContainer container) {
         container.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);

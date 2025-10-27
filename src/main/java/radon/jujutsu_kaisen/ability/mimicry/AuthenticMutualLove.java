@@ -23,8 +23,6 @@ import radon.jujutsu_kaisen.item.registry.JJKItems;
 import java.util.List;
 
 public class AuthenticMutualLove extends DomainExpansion implements IClosedDomain {
-    private static final int COLOR = 0xD3B166;
-
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
@@ -39,14 +37,14 @@ public class AuthenticMutualLove extends DomainExpansion implements IClosedDomai
     }
 
     @Override
-    public void onHitBlock(Level level, DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
+    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
         CursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
         if (!(technique.getDomain() instanceof DomainExpansion copied)) return;
 
-        copied.onHitBlock(level, domain, owner, pos, instant);
+        copied.onHitBlock(domain, owner, pos, instant);
     }
 
     @Override

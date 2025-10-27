@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 
 public class JJKBlocks {
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, JujutsuKaisen.MOD_ID);
+
     public static final DeferredHolder<Block, Block> METEOR = BLOCKS.register("meteor", () -> new MagmaBlock(BlockBehaviour.Properties.of()
             .mapColor(MapColor.NETHER)
             .instrument(NoteBlockInstrument.BASEDRUM)
@@ -33,16 +34,10 @@ public class JJKBlocks {
             .lightLevel(pState -> 3)
             .hasPostProcess(JJKBlocks::always)
             .emissiveRendering(JJKBlocks::always)));
-    public static DeferredHolder<Block, DomainBlock> DOMAIN = BLOCKS.register("domain", () ->
-            new DomainBlock(BlockBehaviour.Properties.of()
+
+    public static DeferredHolder<Block, DomainSolidBlock> DOMAIN = BLOCKS.register("domain", () ->
+            new DomainSolidBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 12.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel(pState -> 14)
-                    .noLootTable()
-                    .sound(SoundType.GLASS)));
-    public static DeferredHolder<Block, DomainBarrierBlock> DOMAIN_BARRIER = BLOCKS.register("domain_barrier", () ->
-            new DomainBarrierBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 1200.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel(pState -> 14)
                     .noLootTable()
@@ -55,7 +50,10 @@ public class JJKBlocks {
                     .air()));
     public static DeferredHolder<Block, DomainTransparentBlock> DOMAIN_TRANSPARENT = BLOCKS.register("domain_transparent", () ->
             new DomainTransparentBlock(BlockBehaviour.Properties.of()
-                    .strength(0.6F)
+                    .strength(-1.0F, 1200.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel(pState -> 14)
+                    .noLootTable()
                     .sound(SoundType.GLASS)));
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));

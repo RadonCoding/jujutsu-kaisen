@@ -332,25 +332,10 @@ public class SorcererData implements ISorcererData {
 
         if (this.hasTrait(Trait.HEAVENLY_RESTRICTION_SORCERY)) multiplier += 0.5F;
 
-        IDomain domain = null;
-
         if (this.hasSummonOfClass(DomainExpansionEntity.class)) {
-            domain = this.getSummonByClass(DomainExpansionEntity.class);
+            multiplier += 1.2F;
         } else if (this.hasSummonOfClass(SimpleDomainEntity.class)) {
-            domain = this.getSummonByClass(SimpleDomainEntity.class);
-        }
-
-        if (domain != null) {
-            float scale = domain.getScale();
-
-            // Smaller domain = bigger output, bigger domain = smaller output
-            if (scale > 1.0F) {
-                multiplier += 1.2F / scale;
-            } else if (scale < 1.0F) {
-                multiplier += 1.2F * (1.0F / scale);
-            } else {
-                multiplier += 1.2F;
-            }
+            multiplier += 1.2F;
         }
 
         if (this.isInZone()) multiplier += 1.2F;
@@ -975,11 +960,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addFingers(int count) {
         this.fingers += count;
-    }
-
-    @Override
-    public int getDomainSize() {
-        return (int) (ConfigHolder.SERVER.physicalDomainRadius.getAsInt() * this.domainScale);
     }
 
     @Override

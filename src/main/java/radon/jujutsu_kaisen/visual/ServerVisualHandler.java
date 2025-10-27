@@ -21,8 +21,8 @@ public class ServerVisualHandler {
         ISorcererData sorcererData = cap.getSorcererData();
         IAbilityData abilityData = cap.getAbilityData();
 
-        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(), sorcererData.getActiveTechniques(), sorcererData.getTechnique(), sorcererData.getType(),
-                sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
+        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(),
+                sorcererData.getActiveTechniques(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
         PacketDistributor.sendToAllPlayers(new SyncVisualDataS2CPacket(entity.getUUID(), client.serializeNBT()));
     }
 }

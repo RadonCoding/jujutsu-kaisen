@@ -112,7 +112,7 @@ public class JujutsuProjectile extends Projectile {
 
         Entity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (this.getTime() >= MAX_DURATION || (owner == null || owner.isRemoved() || !owner.isAlive()))) {
+        if (!this.level().isClientSide && (this.getTime() >= MAX_DURATION || (owner == null || !owner.isAlive()))) {
             this.discard();
             return;
         }

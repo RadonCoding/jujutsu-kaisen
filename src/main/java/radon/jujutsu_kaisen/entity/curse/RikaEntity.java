@@ -179,7 +179,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             }
         }
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();

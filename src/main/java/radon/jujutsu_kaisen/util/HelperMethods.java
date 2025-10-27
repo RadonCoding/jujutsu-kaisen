@@ -60,7 +60,7 @@ public class HelperMethods {
         if (!destroyable && source != null && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();
             destroyable = identifier == null || !(level.getEntity(identifier) instanceof DomainExpansionEntity domain) ||
-                    !domain.isInsidePhysicalBarrier(real.blockPosition());
+                    !domain.isInsideBarrier(real.blockPosition());
         }
         return destroyable;
     }

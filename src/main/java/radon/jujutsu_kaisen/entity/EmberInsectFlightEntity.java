@@ -80,7 +80,7 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
             }
         }
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !this.isPassenger())) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive() || !this.isPassenger())) {
             this.discard();
         } else {
             super.tick();

@@ -19,9 +19,6 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.data.DataProvider;
-import radon.jujutsu_kaisen.data.domain.DomainData;
-import radon.jujutsu_kaisen.data.domain.DomainInfo;
-import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
@@ -40,28 +37,8 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (!(barrier instanceof IDomain domain)) continue;
-
-            if (barrier.getOwner() == owner || !domain.hasSureHitEffect()) continue;
-
+            if (barrier.getOwner() == owner || !barrier.hasSureHitEffect()) continue;
             return true;
-        }
-
-        Optional<IDomainData> data = DataProvider.getDataIfPresent(owner.level(), JJKAttachmentTypes.DOMAIN);
-
-        if (data.isPresent()) {
-            Set<DomainInfo> domains = data.get().getDomains();
-
-            boolean danger = !domains.isEmpty();
-
-            for (DomainInfo info : domains) {
-                if (info.owner().equals(owner.getUUID())) {
-                    danger = false;
-                    break;
-                }
-            }
-
-            if (danger) return true;
         }
 
         if (target == null || target.isDeadOrDying()) return false;

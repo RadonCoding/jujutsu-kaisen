@@ -11,6 +11,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -21,7 +23,7 @@ import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 
 
-public class DomainAirBlock extends Block implements EntityBlock {
+public class DomainAirBlock extends DomainBlock implements EntityBlock {
     public DomainAirBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -39,12 +41,18 @@ public class DomainAirBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return JJKBlockEntities.DOMAIN.get().create(pPos, pState);
+        if (pState.getValue(IS_ENTITY)) {
+            return JJKBlockEntities.DOMAIN.get().create(pPos, pState);
+        }
+        return null;
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN.get(), DomainBlockEntity::tick);
+        if (pState.getValue(IS_ENTITY)) {
+            return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN.get(), DomainBlockEntity::tick);
+        }
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
+import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -21,30 +22,32 @@ public interface IBarrier {
     LivingEntity getOwner();
 
     default boolean isAffected(BlockPos pos) {
-        return this.isInsideVirtualBarrier(pos);
+        return this.isOwned(pos) && this.isInsideBarrier(pos);
     }
 
     default boolean isOwned(BlockPos pos) {
         if (!(this.level() instanceof ServerLevel level)) return false;
-
         return VeilHandler.isOwnedBy(level, pos, this);
     }
 
     default boolean isOwnedByNonDomain(BlockPos pos) {
         if (!(this.level() instanceof ServerLevel level)) return false;
-
         return VeilHandler.isOwnedNonDomain(level, pos);
     }
 
-    boolean isInsidePhysicalBarrier(BlockPos pos);
+    boolean isInsideBarrier(BlockPos pos);
 
-    boolean isPhysicalBarrier(BlockPos pos);
+    boolean isBarrier(BlockPos pos);
 
-    boolean isInsideVirtualBarrier(BlockPos pos);
+    AABB getBounds();
 
-    AABB getPhysicalBounds();
+    default boolean hasSureHitEffect() {
+        return false;
+    }
 
-    AABB getVirtualBounds();
+    default boolean checkSureHitEffect() {
+        return false;
+    }
 
     default float getStrength() {
         LivingEntity owner = this.getOwner();
@@ -59,7 +62,7 @@ public interface IBarrier {
 
         int skill = data.getSkill(Skill.BARRIER) + 1;
 
-        return Math.round(skill * (this.isInsidePhysicalBarrier(owner.blockPosition()) ? 1.0F : 1.5F) *
+        return Math.round(skill * (this.isInsideBarrier(owner.blockPosition()) ? 1.0F : 1.5F) *
                 (this instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F)) *
                 (owner.getHealth() / owner.getMaxHealth());
     }

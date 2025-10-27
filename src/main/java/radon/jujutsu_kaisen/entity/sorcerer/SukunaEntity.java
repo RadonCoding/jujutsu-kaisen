@@ -168,7 +168,7 @@ public class SukunaEntity extends SorcererEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && this.vessel && this.getEntity() == EntityType.PLAYER && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && this.vessel && this.getEntity() == EntityType.PLAYER && (owner == null || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();

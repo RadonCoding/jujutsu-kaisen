@@ -112,7 +112,7 @@ public class WheelEntity extends Entity implements GeoEntity {
             }
         }
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !this.isPassenger())) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive() || !this.isPassenger())) {
             this.discard();
         } else {
             super.tick();

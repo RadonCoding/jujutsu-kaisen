@@ -11,7 +11,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
@@ -22,7 +21,6 @@ import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -45,19 +43,14 @@ public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
     }
 
     @Override
-    public void onHitBlock(Level level, DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
-        int radius = 0;
+    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
+        int radius = ConfigHolder.SERVER.domainRadius.getAsInt();
+        int volume = (int) ((4.0D / 3.0D) * Math.PI * Math.pow(radius, 3));
 
-        if (domain instanceof ClosedDomainExpansionEntity) {
-            radius = ConfigHolder.SERVER.virtualDomainRadius.getAsInt();
-        } else if (domain instanceof OpenDomainExpansionEntity open) {
-            radius = open.getWidth() * open.getHeight();
+        if (HelperMethods.RANDOM.nextInt(volume / 20) == 0) {
+            Dismantle dismantle = JJKAbilities.DISMANTLE.get();
+            dismantle.performBlock(owner, domain, pos, false);
         }
-
-        if (HelperMethods.RANDOM.nextInt(radius * 100) != 0) return;
-
-        Dismantle dismantle = JJKAbilities.DISMANTLE.get();
-        dismantle.performBlock(level, owner, domain, pos, false);
     }
 
     @Override
@@ -65,7 +58,7 @@ public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
 
-        for (LivingEntity entity : domain.getAffected(domain.level())) {
+        for (LivingEntity entity : domain.getAffected()) {
             if (!(entity instanceof ServerPlayer player)) continue;
 
             player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
@@ -87,6 +80,6 @@ public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(Blocks.BLACK_CONCRETE);
+        return List.of(JJKBlocks.DOMAIN.get());
     }
 }

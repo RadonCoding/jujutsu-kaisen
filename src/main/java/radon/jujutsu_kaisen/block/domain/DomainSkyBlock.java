@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.DomainSkyBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 
-public class DomainSkyBlock extends Block implements EntityBlock {
+public class DomainSkyBlock extends DomainBlock implements EntityBlock {
     public DomainSkyBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -29,12 +29,18 @@ public class DomainSkyBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return JJKBlockEntities.DOMAIN_SKY.get().create(pPos, pState);
+        if (pState.getValue(IS_ENTITY)) {
+            return JJKBlockEntities.DOMAIN_SKY.get().create(pPos, pState);
+        }
+        return null;
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN_SKY.get(), DomainSkyBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+        if (pState.getValue(IS_ENTITY)) {
+            return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN_SKY.get(), DomainSkyBlockEntity::tick);
+        }
+        return null;
     }
 }

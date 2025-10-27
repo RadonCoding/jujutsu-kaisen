@@ -8,12 +8,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -21,22 +19,17 @@ import radon.jujutsu_kaisen.ability.event.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.domain.IDomainData;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
+import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncAbilityDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.Optional;
 
 public abstract class DomainExpansion extends Ability implements IToggled {
     public static final int BURNOUT = 10 * 20;
@@ -67,10 +60,10 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
             if (domain == null) return false;
 
-            return domain.isInsidePhysicalBarrier(target.blockPosition());
+            return domain.isInsideBarrier(target.blockPosition());
         } else {
             if (this instanceof IClosedDomain) {
-                int radius = sorcererData.getDomainSize();
+                int radius = ConfigHolder.SERVER.domainRadius.getAsInt();
                 float yaw = RotationUtil.getTargetAdjustedYRot(owner);
                 Vec3 direction = RotationUtil.calculateViewVector(0.0F, yaw);
                 Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D)
@@ -123,13 +116,9 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
         if (cap == null) return Status.FAILURE;
 
-        ISorcererData sorcererData = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
-        if (sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
-            Optional<IDomainData> domainData = DataProvider.getDataIfPresent(owner.level(), JJKAttachmentTypes.DOMAIN);
-
-            if (domainData.isPresent() && domainData.get().hasDomain(owner.getUUID())) return Status.FAILURE;
-        }
+        if (data.hasSummonOfClass(DomainExpansionEntity.class)) return Status.FAILURE;
 
         return super.isTriggerable(owner);
     }
@@ -141,13 +130,9 @@ public abstract class DomainExpansion extends Ability implements IToggled {
 
             if (cap == null) return Status.FAILURE;
 
-            ISorcererData sorcererData = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
-            if (!sorcererData.hasSummonOfClass(DomainExpansionEntity.class)) {
-                Optional<IDomainData> domainData = DataProvider.getDataIfPresent(owner.level(), JJKAttachmentTypes.DOMAIN);
-
-                if (domainData.isEmpty() || !domainData.get().hasDomain(owner.getUUID())) return Status.FAILURE;
-            }
+            if (!data.hasSummonOfClass(DomainExpansionEntity.class)) return Status.FAILURE;
         }
         return super.isStillUsable(owner);
     }
@@ -211,7 +196,7 @@ public abstract class DomainExpansion extends Ability implements IToggled {
         NeoForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
     }
 
-    public void onHitBlock(Level level, DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
+    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
     }
 
     protected abstract DomainExpansionEntity summon(LivingEntity owner);

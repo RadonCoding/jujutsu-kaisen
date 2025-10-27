@@ -244,7 +244,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
             IAbilityData data = cap.getAbilityData();
 
-            for (Ability toggled : data.getToggled()) {
+            for (Ability toggled : data.getActive()) {
                 if (toggled.isTechnique()) {
                     result = INVERTED_SPEAR_OF_HEAVEN;
                     break;

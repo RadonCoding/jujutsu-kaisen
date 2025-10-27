@@ -43,7 +43,7 @@ public record RequestVisualDataC2SPacket(UUID src) implements CustomPacketPayloa
             IAbilityData abilityData = cap.getAbilityData();
 
             ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(abilityData.getToggled(), abilityData.getChanneled(), sorcererData.getTraits(),
-                    sorcererData.getActiveTechniques(), sorcererData.getTechnique(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
+                    sorcererData.getActiveTechniques(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
             PacketDistributor.sendToPlayer(sender, new ReceiveVisualDataS2CPacket(this.src, client.serializeNBT()));
         });
     }

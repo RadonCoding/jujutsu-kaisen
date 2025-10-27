@@ -71,7 +71,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Barrage> BARRAGE = ABILITIES.register("barrage", Barrage::new);
     public static DeferredHolder<Ability, DomainAmplification> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static DeferredHolder<Ability, SimpleDomain> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
-    public static DeferredHolder<Ability, SimpleDomainEnlargement> SIMPLE_DOMAIN_ENLARGE = ABILITIES.register("simple_domain_enlargement", SimpleDomainEnlargement::new);
     public static DeferredHolder<Ability, QuickDraw> QUICK_DRAW = ABILITIES.register("quick_draw", QuickDraw::new);
     public static DeferredHolder<Ability, FallingBlossomEmotion> FALLING_BLOSSOM_EMOTION = ABILITIES.register("falling_blossom_emotion", FallingBlossomEmotion::new);
     public static DeferredHolder<Ability, CursedEnergyFlow> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);

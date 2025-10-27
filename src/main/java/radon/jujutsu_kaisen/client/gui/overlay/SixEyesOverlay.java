@@ -44,7 +44,7 @@ public class SixEyesOverlay {
 
         List<Component> lines = new ArrayList<>();
 
-        if (client.technique != null) {
+        if (!client.techniques.isEmpty()) {
             Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_techniques", JujutsuKaisen.MOD_ID),
                     String.join(", ", client.techniques.stream().map(technique -> technique.getName().getString()).toList()));
             lines.add(techniqueText);

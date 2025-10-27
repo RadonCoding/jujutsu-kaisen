@@ -274,7 +274,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             }
         }
 
-        if (this.isTame() && !this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.shouldDespawn())) {
+        if (this.isTame() && !this.level().isClientSide && (owner == null || !owner.isAlive() || this.shouldDespawn())) {
             this.discard();
         } else {
             super.tick();

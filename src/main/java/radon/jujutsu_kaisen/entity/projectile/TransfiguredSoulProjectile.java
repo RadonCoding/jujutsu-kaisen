@@ -90,7 +90,7 @@ public class TransfiguredSoulProjectile extends Projectile {
 
         Entity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();

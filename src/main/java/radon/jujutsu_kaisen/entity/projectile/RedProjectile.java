@@ -137,7 +137,8 @@ public class RedProjectile extends JujutsuProjectile {
                         if (owner instanceof ServerPlayer player) {
                             PacketDistributor.sendToPlayer(player, new SyncAbilityDataS2CPacket(data.serializeNBT(player.registryAccess())));
                         }
-                        HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2, 0.0D));
+                        HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner,
+                                this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2, 0.0D));
                         this.level().addFreshEntity(explosion);
 
                         blue.discard();

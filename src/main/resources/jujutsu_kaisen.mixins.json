@@ -10,7 +10,6 @@
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
     "client.ILivingEntityRendererAccessor",
-    "client.LevelLoadStatusManagerMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
@@ -23,7 +22,6 @@
     "common.ItemMixin",
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
-    "common.MinecraftServerMixin",
     "common.MobMixin",
     "common.StructureTemplateMixin"
   ],

@@ -176,6 +176,11 @@ public class RigidBody {
             this.localInertiaTensor.add(cLocalIT);
         }
 
+        float epsilon = 1.0E-6F;
+        this.localInertiaTensor.m00 += epsilon;
+        this.localInertiaTensor.m11 += epsilon;
+        this.localInertiaTensor.m22 += epsilon;
+
         this.invLocalInertiaTensor = new Matrix3f(this.localInertiaTensor);
         LegacyMath.invert(this.invLocalInertiaTensor);
 

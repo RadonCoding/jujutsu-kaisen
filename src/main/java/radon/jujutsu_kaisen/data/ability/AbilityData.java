@@ -237,9 +237,24 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
+    public boolean isDisrupted(Ability ability) {
+        return this.disrupted.containsKey(ability);
+    }
+
+    @Override
     public void clear() {
         this.toggled.clear();
         this.channeled = null;
+    }
+
+    @Override
+    public Set<Ability> getActive() {
+        Set<Ability> active = new HashSet<>(this.toggled);
+
+        if (this.channeled != null) {
+            active.add(this.channeled);
+        }
+        return active;
     }
 
     @Override

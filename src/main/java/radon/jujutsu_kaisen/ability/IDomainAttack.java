@@ -10,6 +10,6 @@ public interface IDomainAttack {
     default void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain, boolean instant) {
     }
 
-    default void performBlock(Level level, LivingEntity owner, DomainExpansionEntity domain, BlockPos pos, boolean instant) {
+    default void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos, boolean instant) {
     }
 }

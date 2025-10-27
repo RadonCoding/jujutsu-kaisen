@@ -22,19 +22,15 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
-import radon.jujutsu_kaisen.data.DataProvider;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.domain.IDomainData;
-import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 import java.util.UUID;
 
 public class SimpleDomainEntity extends Entity implements IDomain {
@@ -92,37 +88,11 @@ public class SimpleDomainEntity extends Entity implements IDomain {
     }
 
     public float getRadius() {
-        return this.entityData.get(DATA_RADIUS) * (1.0F + this.getEnlargement());
+        return this.entityData.get(DATA_RADIUS);
     }
 
     private void setRadius(float radius) {
         this.entityData.set(DATA_RADIUS, radius);
-    }
-
-    public float getEnlargement() {
-        return this.entityData.get(DATA_ENLARGEMENT);
-    }
-
-    public void setEnlargement(float enlargement) {
-        this.entityData.set(DATA_ENLARGEMENT, enlargement);
-    }
-
-    public boolean canEnlarge() {
-        LivingEntity owner = this.getOwner();
-
-        if (owner == null) return false;
-
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISkillData data = cap.getSkillData();
-
-        return this.getEnlargement() < 1.0F + (data.getSkill(Skill.BARRIER) * 0.01F);
-    }
-
-    public void enlarge() {
-        this.setEnlargement(this.getEnlargement() + 0.1F);
     }
 
     private float getMaxHealth() {
@@ -189,7 +159,7 @@ public class SimpleDomainEntity extends Entity implements IDomain {
             }
         }
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -237,12 +207,12 @@ public class SimpleDomainEntity extends Entity implements IDomain {
     }
 
     @Override
-    public boolean isInsidePhysicalBarrier(BlockPos pos) {
-        return this.isPhysicalBarrier(pos);
+    public boolean isInsideBarrier(BlockPos pos) {
+        return this.isBarrier(pos);
     }
 
     @Override
-    public boolean isPhysicalBarrier(BlockPos pos) {
+    public boolean isBarrier(BlockPos pos) {
         float radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
@@ -250,18 +220,8 @@ public class SimpleDomainEntity extends Entity implements IDomain {
     }
 
     @Override
-    public boolean isInsideVirtualBarrier(BlockPos pos) {
-        return this.isInsidePhysicalBarrier(pos);
-    }
-
-    @Override
-    public AABB getPhysicalBounds() {
+    public AABB getBounds() {
         return this.getBoundingBox();
-    }
-
-    @Override
-    public AABB getVirtualBounds() {
-        return this.getPhysicalBounds();
     }
 
     @Override
@@ -285,7 +245,6 @@ public class SimpleDomainEntity extends Entity implements IDomain {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putFloat("radius", this.getRadius());
-        pCompound.putFloat("enlargement", this.getEnlargement());
         pCompound.putFloat("max_health", this.getMaxHealth());
         pCompound.putFloat("health", this.getHealth());
     }
@@ -296,7 +255,6 @@ public class SimpleDomainEntity extends Entity implements IDomain {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.setRadius(pCompound.getFloat("radius"));
-        this.setEnlargement(pCompound.getFloat("enlargement"));
         this.setMaxHealth(pCompound.getFloat("max_health"));
         this.setHealth(pCompound.getFloat("health"));
     }
@@ -316,16 +274,6 @@ public class SimpleDomainEntity extends Entity implements IDomain {
         if (owner != null) {
             this.setOwner(owner);
         }
-    }
-
-    @Override
-    public @Nullable ServerLevel getVirtual() {
-        return null;
-    }
-
-    @Override
-    public float getScale() {
-        return 1.0F + this.getEnlargement();
     }
 
     @Override

@@ -155,7 +155,7 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    public boolean isInsidePhysicalBarrier(BlockPos pos) {
+    public boolean isInsideBarrier(BlockPos pos) {
         int radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
@@ -163,7 +163,7 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    public boolean isPhysicalBarrier(BlockPos pos) {
+    public boolean isBarrier(BlockPos pos) {
         int radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
@@ -171,18 +171,8 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    public boolean isInsideVirtualBarrier(BlockPos pos) {
-        return this.isInsidePhysicalBarrier(pos);
-    }
-
-    @Override
-    public AABB getPhysicalBounds() {
+    public AABB getBounds() {
         return this.getBoundingBox();
-    }
-
-    @Override
-    public AABB getVirtualBounds() {
-        return this.getPhysicalBounds();
     }
 
     @Override

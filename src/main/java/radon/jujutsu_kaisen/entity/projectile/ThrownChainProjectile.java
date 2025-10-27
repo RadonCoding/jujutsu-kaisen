@@ -184,7 +184,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         Entity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.inGroundTime > DURATION)) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive() || this.inGroundTime > DURATION)) {
             this.discard();
         } else {
             if (owner == null) return;

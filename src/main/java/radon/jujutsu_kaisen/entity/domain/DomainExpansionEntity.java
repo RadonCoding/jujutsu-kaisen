@@ -41,10 +41,9 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     protected DomainExpansion ability;
     protected boolean first = true;
     @Nullable
-    private UUID ownerUUID;
+    protected UUID ownerUUID;
     @Nullable
-    private LivingEntity cachedOwner;
-    private float scale = 1.0F;
+    protected LivingEntity cachedOwner;
     protected boolean instant;
 
     protected DomainExpansionEntity(EntityType<?> pType, Level pLevel) {
@@ -57,11 +56,6 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         this.setOwner(owner);
 
         this.ability = ability;
-    }
-
-    @Override
-    public float getScale() {
-        return this.scale;
     }
 
     @Override
@@ -91,7 +85,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         if (owner == null) return;
 
-        for (LivingEntity entity : this.getAffected(this.level())) {
+        for (LivingEntity entity : this.getAffected()) {
             NeoForge.EVENT_BUS.post(new LivingInsideDomainEvent(entity, this.ability, owner));
         }
     }
@@ -117,7 +111,6 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         pCompound.putString("technique", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("first", this.first);
         pCompound.putInt("time", this.getTime());
-        pCompound.putFloat("scale", this.scale);
         pCompound.putBoolean("instant", this.instant);
     }
 
@@ -129,7 +122,6 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("technique")));
         this.first = pCompound.getBoolean("first");
         this.setTime(pCompound.getInt("time"));
-        this.scale = pCompound.getFloat("scale");
         this.instant = pCompound.getBoolean("instant");
     }
 
@@ -138,8 +130,8 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         return Vec3.ZERO;
     }
 
-    public List<LivingEntity> getAffected(Level level) {
-        return level.getEntitiesOfClass(LivingEntity.class, this.instant ? this.getPhysicalBounds() : this.getVirtualBounds(), this::isAffected);
+    public List<LivingEntity> getAffected() {
+        return this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), this::isAffected);
     }
 
     @Override
@@ -159,7 +151,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
     @Override
     @Nullable
     public LivingEntity getOwner() {
-        if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
+        if (this.cachedOwner != null) {
             return this.cachedOwner;
         } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
             this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
@@ -200,11 +192,12 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
             }
         }
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || owner.isDeadOrDying())) {
             this.discard();
-        } else {
-            super.tick();
+            return;
         }
+
+        super.tick();
     }
 
     public boolean isAffected(LivingEntity victim) {
@@ -231,8 +224,12 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         return this.isAffected(victim.blockPosition());
     }
 
-    public boolean shouldCollapse(float strength) {
-        return (strength / this.getStrength()) > 1.75F;
+    protected boolean isReadyToCollapse() {
+        return true;
+    }
+
+    public final boolean shouldCollapse(float strength) {
+        return this.isReadyToCollapse() && (strength / this.getStrength()) > 2.0F;
     }
 
     @Override

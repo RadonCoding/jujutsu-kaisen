@@ -24,7 +24,6 @@ import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.client.dimension.JJKDimensionSpecialEffects;
 import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
@@ -57,7 +56,6 @@ import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import radon.jujutsu_kaisen.world.level.dimension.JJKDimensionTypes;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 import java.awt.event.KeyEvent;
@@ -397,11 +395,6 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SLASH.get(), SlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SLICE.get(), SlicedEntityParticle.Provider::new);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterDimensionSpecialEffects(RegisterDimensionSpecialEffectsEvent event) {
-            event.register(JJKDimensionTypes.DOMAIN_EXPANSION.location(), new JJKDimensionSpecialEffects.DomainExpansionEffects());
         }
     }
 }

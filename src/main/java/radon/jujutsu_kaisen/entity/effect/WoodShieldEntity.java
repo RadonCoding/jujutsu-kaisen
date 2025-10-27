@@ -105,7 +105,7 @@ public class WoodShieldEntity extends Mob {
             }
         }
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();

@@ -35,8 +35,7 @@ public class ServerConfig {
 
     public final ModConfigSpec.IntValue minimumVeilSize;
     public final ModConfigSpec.IntValue maximumVeilSize;
-    public final ModConfigSpec.IntValue physicalDomainRadius;
-    public final ModConfigSpec.IntValue virtualDomainRadius;
+    public final ModConfigSpec.IntValue domainRadius;
     public final ModConfigSpec.DoubleValue minimumDomainScale;
     public final ModConfigSpec.DoubleValue maximumDomainScale;
 
@@ -152,10 +151,8 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Domains").push("domains");
-        this.physicalDomainRadius = builder.comment("Physical domain radius")
-                .defineInRange("physicalDomainRadius", 32, 4, 256);
-        this.virtualDomainRadius = builder.comment("Virtual domain radius")
-                .defineInRange("virtualDomainRadius", 64, 4, 256);
+        this.domainRadius = builder.comment("Domain radius")
+                .defineInRange("domainRadius", 32, 4, 256);
         this.minimumDomainScale = builder.comment("Minimum scale for a domain")
                 .defineInRange("minimumDomainScale", 0.1F, 0.1F, 1.0F);
         this.maximumDomainScale = builder.comment("Maximum scale for a domain")
@@ -163,8 +160,8 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Barriers").push("barriers");
-        this.domainStrength = builder.comment("The percentage of how much domain barriers are stronger than veil barriers (defaults to 150%)")
-                .defineInRange("domainStrength", 1.5F, 1.0F, 100000.0F);
+        this.domainStrength = builder.comment("The percentage of how much domain barriers are stronger than veil barriers (defaults to 200%)")
+                .defineInRange("domainStrength", 2.0F, 1.0F, 100000.0F);
         builder.pop();
 
         builder.comment("Chants").push("chants");

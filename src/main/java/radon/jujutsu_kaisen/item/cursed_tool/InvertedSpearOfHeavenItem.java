@@ -29,7 +29,7 @@ public class InvertedSpearOfHeavenItem extends CursedToolItem {
 
         IAbilityData data = cap.getAbilityData();
 
-        for (Ability ability : data.getToggled()) {
+        for (Ability ability : data.getActive()) {
             if (!ability.isTechnique() || ability instanceof Summon<?>) continue;
 
             data.disrupt(ability, 20);

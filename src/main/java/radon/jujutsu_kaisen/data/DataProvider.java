@@ -17,7 +17,6 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
-import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.mission.level.IMissionLevelData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
@@ -63,7 +62,6 @@ public class DataProvider {
         Level level = event.getLevel();
 
         getDataIfPresent(level, JJKAttachmentTypes.MISSION_LEVEL).ifPresent(IMissionLevelData::tick);
-        getDataIfPresent(level, JJKAttachmentTypes.DOMAIN).ifPresent(IDomainData::tick);
     }
 
     @SubscribeEvent
@@ -128,10 +126,6 @@ public class DataProvider {
         getDataIfPresent(player.level(), JJKAttachmentTypes.MISSION_LEVEL).ifPresent(data ->
                 PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(),
                         data.serializeNBT(player.registryAccess()))));
-
-        getDataIfPresent(player.level(), JJKAttachmentTypes.DOMAIN).ifPresent(data ->
-                PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(),
-                        data.serializeNBT(player.registryAccess()))));
     }
 
     @SubscribeEvent
@@ -157,10 +151,6 @@ public class DataProvider {
 
         getDataIfPresent(player.level(), JJKAttachmentTypes.MISSION_LEVEL).ifPresent(data ->
                 PacketDistributor.sendToPlayer(player, new SyncMissionLevelDataS2CPacket(player.level().dimension(),
-                        data.serializeNBT(player.registryAccess()))));
-
-        getDataIfPresent(player.level(), JJKAttachmentTypes.DOMAIN).ifPresent(data ->
-                PacketDistributor.sendToPlayer(player, new SyncDomainDataS2CPacket(player.level().dimension(),
                         data.serializeNBT(player.registryAccess()))));
     }
 

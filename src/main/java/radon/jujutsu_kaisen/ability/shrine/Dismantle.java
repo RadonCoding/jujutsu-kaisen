@@ -64,31 +64,22 @@ public class Dismantle extends Ability implements IChanneled, IDurationable, IDo
     }
 
     @Override
-    public void performBlock(Level level, LivingEntity owner, DomainExpansionEntity domain, BlockPos pos, boolean instant) {
+    public void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos, boolean instant) {
         float power = this.getOutput(owner);
 
         int length = HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, (DismantleProjectile.MAX_LENGTH + 1) * 2);
 
-        AABB bounds = AABB.ofSize(pos.getCenter(), length, length, length);
-
-        boolean destroy = false;
-
-        for (BlockPos target : BlockPos.betweenClosed((int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
-            if (!(level.getBlockEntity(target) instanceof DomainBlockEntity)) continue;
-
-            destroy = true;
-            break;
-        }
         DismantleProjectile dismantle = new DismantleProjectile(owner, power,
                 (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(),
                 length,
-                destroy,
-                true);
+                true,
+                true
+        );
         dismantle.setDomain(true);
-        level.addFreshEntity(dismantle);
+        owner.level().addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {
-            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
         }
     }
 

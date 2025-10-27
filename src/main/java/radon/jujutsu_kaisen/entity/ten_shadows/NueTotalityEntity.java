@@ -211,7 +211,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     public @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pPose) {
-        EntityDimensions dimensions = super.getDimensions(pPose);
+        EntityDimensions dimensions = super.getDefaultDimensions(pPose);
 
         LivingEntity passenger = this.getControllingPassenger();
 

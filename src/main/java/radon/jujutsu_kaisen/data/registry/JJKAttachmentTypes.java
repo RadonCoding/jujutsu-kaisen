@@ -23,9 +23,6 @@ import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.cursed_speech.CursedSpeechData;
 import radon.jujutsu_kaisen.data.cursed_speech.CursedSpeechDataSerializer;
 import radon.jujutsu_kaisen.data.cursed_speech.ICursedSpeechData;
-import radon.jujutsu_kaisen.data.domain.DomainData;
-import radon.jujutsu_kaisen.data.domain.DomainDataSerializer;
-import radon.jujutsu_kaisen.data.domain.IDomainData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IIdleTransfigurationData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationData;
 import radon.jujutsu_kaisen.data.idle_transfiguration.IdleTransfigurationDataSerialzer;
@@ -86,7 +83,4 @@ public class JJKAttachmentTypes {
 
     public static final Supplier<AttachmentType<Boolean>> CLEAVED = ATTACHMENT_TYPES.register("cleaved",
             AttachmentType.builder(holder -> false).serialize(Codec.BOOL)::build);
-
-    public static final Supplier<AttachmentType<IDomainData>> DOMAIN = ATTACHMENT_TYPES.register("domain",
-            AttachmentType.<IDomainData>builder(holder -> new DomainData((Level) holder)).serialize(new DomainDataSerializer())::build);
 }

@@ -54,12 +54,11 @@ public class UnlimitedVoid extends DomainExpansion implements IClosedDomain {
     protected DomainExpansionEntity summon(LivingEntity owner) {
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
         owner.level().addFreshEntity(domain);
-
         return domain;
     }
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
+        return List.of(JJKBlocks.DOMAIN_SKY.get());
     }
 }

@@ -221,7 +221,7 @@ public class SorcererGoal extends Goal {
 
             if (ability.getActivationType(this.mob) == Ability.ActivationType.TOGGLED) {
                 if (success) {
-                    if (!ownerAbilityData.hasToggled(ability)) {
+                    if (!ownerAbilityData.hasToggled(ability) && !ownerAbilityData.isDisrupted(ability)) {
                         this.trigger(ability);
                     }
                 } else if (ownerAbilityData.hasToggled(ability)) {

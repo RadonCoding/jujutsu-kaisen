@@ -157,7 +157,7 @@ public class BodyRepelEntity extends Projectile implements GeoEntity {
 
         Entity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();

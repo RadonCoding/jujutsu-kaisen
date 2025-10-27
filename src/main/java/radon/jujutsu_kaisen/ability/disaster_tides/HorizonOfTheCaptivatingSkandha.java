@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
@@ -55,6 +56,6 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements I
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(Blocks.SAND);
+        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
     }
 }
