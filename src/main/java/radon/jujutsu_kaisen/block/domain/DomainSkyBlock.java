@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.DomainSkyBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 
-public class DomainSkyBlock extends DomainBlock implements EntityBlock {
+public class DomainSkyBlock extends DomainSolidBlock implements EntityBlock {
     public DomainSkyBlock(Properties pProperties) {
         super(pProperties);
     }
