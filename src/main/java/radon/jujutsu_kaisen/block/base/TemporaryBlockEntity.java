@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,9 +35,11 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
 
         if (original != null) {
             if (original.isAir()) {
-                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+                this.level.setBlock(this.getBlockPos(), Blocks.AIR.defaultBlockState(),
+                        Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
             } else {
-                this.level.setBlockAndUpdate(this.getBlockPos(), original);
+                this.level.setBlock(this.getBlockPos(), original,
+                        Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
 
                 if (this.saved != null) {
                     BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
@@ -47,7 +50,8 @@ public class TemporaryBlockEntity extends BlockEntity implements ITemporaryBlock
                 }
             }
         } else {
-            this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+            this.level.setBlock(this.getBlockPos(), Blocks.AIR.defaultBlockState(),
+                    Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS);
         }
     }
 
