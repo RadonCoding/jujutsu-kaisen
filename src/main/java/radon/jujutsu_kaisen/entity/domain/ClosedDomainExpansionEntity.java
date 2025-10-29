@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.domain;
 
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -45,8 +46,6 @@ import java.util.*;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
-
-    private int total;
 
     private final Map<UUID, Vec3> positions = new HashMap<>();
 
@@ -98,7 +97,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super.readAdditionalSaveData(pCompound);
 
         this.entityData.set(DATA_RADIUS, pCompound.getInt("radius"));
-        this.total = pCompound.getInt("total");
 
         for (Tag tag : pCompound.getList("positions", Tag.TAG_COMPOUND)) {
             CompoundTag nbt = (CompoundTag) tag;
@@ -112,7 +110,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("radius", this.getRadius());
-        pCompound.putInt("total", this.total);
 
         ListTag positionsTag = new ListTag();
 
@@ -190,9 +187,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         BlockState next = block.defaultBlockState().setValue(DomainBlock.IS_ENTITY, true);
 
-        boolean success = this.level().setBlock(pos, next, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
-
-        if (distance >= radius - 1 && success) this.total++;
+        this.level().setBlock(pos, next, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
 
         if (existing instanceof ITemporaryBlockEntity tmp) {
             previous = tmp.getOriginal();
@@ -205,8 +200,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private void createBarrier(boolean instant) {
-        this.total = 0;
-
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -337,27 +330,70 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     private void check() {
         int radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position());
 
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        Map<Direction, Integer> counts = new EnumMap<>(Direction.class);
+        Map<Direction, Integer> totals = new EnumMap<>(Direction.class);
 
-        int count = 0;
+        for (Direction direction : Direction.values()) {
+            counts.put(direction, 0);
+            totals.put(direction, 0);
+        }
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < radius && distance >= radius - 1) {
-                        BlockPos pos = center.offset(x, y, z);
+                    if (distance < radius - 2 || distance > radius) continue;
 
-                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity) count++;
+                    BlockPos pos = center.offset(x, y, z);
+
+                    boolean intact = this.level().getBlockEntity(pos) instanceof DomainBlockEntity;
+
+                    if (y > 0) {
+                        totals.merge(Direction.UP, 1, Integer::sum);
+
+                        if (intact) counts.merge(Direction.UP, 1, Integer::sum);
+                    }
+                    if (y < 0) {
+                        totals.merge(Direction.DOWN, 1, Integer::sum);
+
+                        if (intact) counts.merge(Direction.DOWN, 1, Integer::sum);
+                    }
+                    if (z > 0) {
+                        totals.merge(Direction.SOUTH, 1, Integer::sum);
+
+                        if (intact) counts.merge(Direction.SOUTH, 1, Integer::sum);
+                    }
+                    if (z < 0) {
+                        totals.merge(Direction.NORTH, 1, Integer::sum);
+
+                        if (intact) counts.merge(Direction.NORTH, 1, Integer::sum);
+                    }
+                    if (x > 0) {
+                        totals.merge(Direction.EAST, 1, Integer::sum);
+
+                        if (intact) counts.merge(Direction.EAST, 1, Integer::sum);
+                    }
+                    if (x < 0) {
+                        totals.merge(Direction.WEST, 1, Integer::sum);
+
+                        if (intact) counts.merge(Direction.WEST, 1, Integer::sum);
                     }
                 }
             }
         }
 
-        if ((float) count / this.total < 0.75F) {
-            this.discard();
+        for (Direction direction : Direction.values()) {
+            int total = totals.get(direction);
+
+            if (total == 0) continue;
+
+            if (counts.get(direction) / (float) total < 0.75F) {
+                this.discard();
+                return;
+            }
         }
     }
 

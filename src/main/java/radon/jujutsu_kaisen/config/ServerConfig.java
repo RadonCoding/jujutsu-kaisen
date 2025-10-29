@@ -36,8 +36,6 @@ public class ServerConfig {
     public final ModConfigSpec.IntValue minimumVeilSize;
     public final ModConfigSpec.IntValue maximumVeilSize;
     public final ModConfigSpec.IntValue domainRadius;
-    public final ModConfigSpec.DoubleValue minimumDomainScale;
-    public final ModConfigSpec.DoubleValue maximumDomainScale;
 
     public final ModConfigSpec.DoubleValue domainStrength;
 
@@ -153,10 +151,6 @@ public class ServerConfig {
         builder.comment("Domains").push("domains");
         this.domainRadius = builder.comment("Domain radius")
                 .defineInRange("domainRadius", 32, 4, 256);
-        this.minimumDomainScale = builder.comment("Minimum scale for a domain")
-                .defineInRange("minimumDomainScale", 0.1F, 0.1F, 1.0F);
-        this.maximumDomainScale = builder.comment("Maximum scale for a domain")
-                .defineInRange("maximumDomainScale", 2.0F, 1.0F, 10.0F);
         builder.pop();
 
         builder.comment("Barriers").push("barriers");

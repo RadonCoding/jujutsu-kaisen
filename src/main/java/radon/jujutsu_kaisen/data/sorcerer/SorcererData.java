@@ -93,7 +93,6 @@ public class SorcererData implements ISorcererData {
     private int brainDamageTimer;
     private long lastBlackFlashTime;
     private int fingers;
-    private float domainScale;
 
     public SorcererData(LivingEntity owner) {
         this.owner = owner;
@@ -110,8 +109,6 @@ public class SorcererData implements ISorcererData {
         this.output = 1.0F;
 
         this.lastBlackFlashTime = -1;
-
-        this.domainScale = Math.clamp(1.0F, (float) ConfigHolder.SERVER.minimumDomainScale.getAsDouble(), (float) ConfigHolder.SERVER.maximumDomainScale.getAsDouble());
     }
 
     private void updateSummons() {

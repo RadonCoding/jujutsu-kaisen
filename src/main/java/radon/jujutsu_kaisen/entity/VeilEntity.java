@@ -241,7 +241,8 @@ public class VeilEntity extends Entity implements IVeil {
         if (this.getTime() - 1 == 0) {
             int diameter = radius * 2;
 
-            for (CursedSpirit curse : this.level().getEntitiesOfClass(CursedSpirit.class, AABB.ofSize(this.blockPosition().getCenter(), diameter, diameter, diameter))) {
+            for (CursedSpirit curse : this.level().getEntitiesOfClass(CursedSpirit.class,
+                    AABB.ofSize(this.blockPosition().getCenter(), diameter, diameter, diameter))) {
                 curse.setHiding(false);
             }
         }
@@ -282,7 +283,7 @@ public class VeilEntity extends Entity implements IVeil {
                             if (!this.charge(owner)) continue;
 
                             if (this.level().setBlock(pos, replacement,
-                                    Block.UPDATE_CLIENTS)) this.total++;
+                                    Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS)) this.total++;
                         }
 
                         if (existing instanceof ITemporaryBlockEntity tmp) {
