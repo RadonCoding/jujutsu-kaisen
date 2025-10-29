@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +15,8 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.IVeil;
+import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.OpenDomainExpansionEntity;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -93,22 +93,45 @@ public class VeilHandler {
     @Nullable
     private static IBarrier getOwner(ServerLevel level, BlockPos target) {
         IBarrier strongest = null;
+        boolean tie = false;
 
         if (barriers.containsKey(level.dimension())) {
             for (UUID identifier : barriers.get(level.dimension())) {
                 if (!(level.getEntity(identifier) instanceof IBarrier current)) continue;
-                if (!current.isBarrier(target)) continue;
+                if (!current.isBarrierOrInside(target)) continue;
 
                 if (strongest == null) {
                     strongest = current;
                     continue;
                 }
 
-                if (current.getStrength() > strongest.getStrength()) strongest = current;
+                if (strongest instanceof OpenDomainExpansionEntity && current instanceof ClosedDomainExpansionEntity closed) {
+                    // Open domain already strongest, closed domain is skipped if the block is on its outer shell
+                    if (closed.isBarrier(target)) continue;
+                } else if (strongest instanceof ClosedDomainExpansionEntity closed && current instanceof OpenDomainExpansionEntity open) {
+                    // Closed domain strongest, open domain overrides if block is on outer shell
+                    if (closed.isBarrier(target) && open.isInsideBarrier(target)) {
+                        strongest = current;
+                        tie = false;
+                        continue;
+                    }
+                }
+
+                float strengthA = current.getStrength();
+                float strengthB = strongest.getStrength();
+
+                if (strengthA > strengthB) {
+                    strongest = current;
+                    tie = false;
+                } else if (strengthA == strengthB) {
+                    tie = true;
+                }
             }
         }
-        return strongest;
+
+        return tie ? null : strongest;
     }
+
 
     public static boolean isOwnedBy(ServerLevel level, BlockPos target, IBarrier barrier) {
         return getOwner(level, target) == barrier;

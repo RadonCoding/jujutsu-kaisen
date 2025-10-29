@@ -135,19 +135,24 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
-        int physicalRadius = this.getRadius();
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
+    public boolean isBarrier(BlockPos pos) {
+        int radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < physicalRadius - 1;
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) >= radius - 2 && Math.sqrt(relative.distSqr(Vec3i.ZERO)) <= radius;
     }
 
     @Override
-    public boolean isBarrier(BlockPos pos) {
-        int physicalRadius = this.getRadius();
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, physicalRadius, 0.0D));
+    public boolean isInsideBarrier(BlockPos pos) {
+        int radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < physicalRadius;
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < radius - 2;
+    }
+
+    @Override
+    public boolean isBarrierOrInside(BlockPos pos) {
+        return this.isBarrier(pos) || this.isInsideBarrier(pos);
     }
 
     private void createBlock(int delay, BlockPos pos, int radius, double distance) {
@@ -185,7 +190,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         BlockState next = block.defaultBlockState().setValue(DomainBlock.IS_ENTITY, true);
 
-        boolean success = this.level().setBlock(pos, next, Block.UPDATE_CLIENTS);
+        boolean success = this.level().setBlock(pos, next, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
 
         if (distance >= radius - 1 && success) this.total++;
 
@@ -284,10 +289,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        int radius = this.getRadius();
-        boolean completed = this.getTime() >= radius * 2;
-
-        if (!completed) return false;
+        if (!this.isCompleted()) return false;
 
         Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
 
@@ -303,7 +305,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
         return true;
     }
-
 
     @Override
     public void onRemovedFromWorld() {

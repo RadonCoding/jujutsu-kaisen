@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -219,7 +220,16 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                 if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, current)) continue;
 
-                boolean destroyed = this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
+                BlockState state = this.level().getBlockState(current);
+
+                boolean destroyed;
+
+                if (state.getFluidState().isEmpty()) {
+                    destroyed = owner.level().setBlock(current, Blocks.AIR.defaultBlockState(),
+                            Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                } else {
+                    destroyed = this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
+                }
 
                 if (destroyed) {
                     this.destroyed++;

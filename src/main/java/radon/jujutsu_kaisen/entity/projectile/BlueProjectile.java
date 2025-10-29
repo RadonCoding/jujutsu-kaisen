@@ -13,6 +13,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -109,7 +110,8 @@ public class BlueProjectile extends JujutsuProjectile {
                         if (state.getFluidState().isEmpty()) {
                             this.level().destroyBlock(pos, false);
                         } else {
-                            this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                            this.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                    Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
                         }
                     }
                 }
@@ -125,7 +127,14 @@ public class BlueProjectile extends JujutsuProjectile {
                 if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
 
                 if (entity instanceof Attackable) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
+                    entity.hurt(
+                            JJKDamageSources.indirectJujutsuAttack(
+                                    this,
+                                    owner,
+                                    this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()
+                            ),
+                            DAMAGE * this.getPower()
+                    );
                 } else if (entity instanceof AbstractArrow || entity instanceof FallingBlockEntity) {
                     entity.discard();
                 }

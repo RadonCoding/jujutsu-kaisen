@@ -2,32 +2,21 @@ package radon.jujutsu_kaisen.ability.shrine;
 
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
+import radon.jujutsu_kaisen.ability.IOpenDomain;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
-import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.entity.domain.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
-import java.util.List;
-
-public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
+public class MalevolentShrine extends DomainExpansion implements IOpenDomain {
     public static final int DELAY = 2 * 20;
 
     @Override
@@ -44,42 +33,50 @@ public class MalevolentShrine extends DomainExpansion implements IClosedDomain {
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
-        int radius = ConfigHolder.SERVER.domainRadius.getAsInt();
-        int volume = (int) ((4.0D / 3.0D) * Math.PI * Math.pow(radius, 3));
+        if (owner.level().isEmptyBlock(pos)) return;
 
-        if (HelperMethods.RANDOM.nextInt(volume / 20) == 0) {
+        if (pos.getY() < domain.blockPosition().getY()) return;
+
+        double probability = 0.0D;
+
+        if (domain instanceof ClosedDomainExpansionEntity) {
+            int radius = ConfigHolder.SERVER.domainRadius.getAsInt();
+            double distance = Math.sqrt(domain.distanceToSqr(pos.getCenter()));
+            probability = 1.0D - distance / radius;
+        } else if (domain instanceof OpenDomainExpansionEntity open) {
+            BlockPos center = domain.blockPosition();
+            BlockPos relative = pos.subtract(center);
+
+            double nx = (double) Math.abs(relative.getX()) / open.getWidth();
+            double ny = (double) Math.abs(relative.getY()) / open.getHeight();
+            double nz = (double) Math.abs(relative.getZ()) / open.getWidth();
+
+            probability = 1.0D - (nx + ny + nz) / 3.0D;
+        }
+
+        probability /= 20;
+
+        if (HelperMethods.RANDOM.nextDouble() < probability) {
             Dismantle dismantle = JJKAbilities.DISMANTLE.get();
             dismantle.performBlock(owner, domain, pos, false);
         }
     }
 
+
     @Override
     protected DomainExpansionEntity summon(LivingEntity owner) {
-        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this);
+        MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, this.getWidth(), this.getHeight());
         owner.level().addFreshEntity(domain);
-
-        for (LivingEntity entity : domain.getAffected()) {
-            if (!(entity instanceof ServerPlayer player)) continue;
-
-            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
-            player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.getHolder(JJKSounds.MALEVOLENT_SHRINE.getKey()).orElseThrow(), SoundSource.MASTER,
-                    player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, HelperMethods.RANDOM.nextLong()));
-        }
-
-        MalevolentShrineEntity center = new MalevolentShrineEntity(domain);
-
-        Vec3 pos = owner.position()
-                .subtract(RotationUtil.calculateViewVector(0.0F, owner.getYRot())
-                        .multiply(center.getBbWidth() / 2.0F, 0.0D, center.getBbWidth() / 2.0F));
-        center.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), 0.0F);
-
-        owner.level().addFreshEntity(center);
-
         return domain;
     }
 
     @Override
-    public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN.get());
+    public int getWidth() {
+        return 64;
+    }
+
+    @Override
+    public int getHeight() {
+        return 32;
     }
 }

@@ -47,20 +47,18 @@ public class HelperMethods {
         boolean destroyable = !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
 
         if (direct instanceof JujutsuProjectile jujutsu) {
-            float power = jujutsu.getPower() * 20.0F;
+            if (jujutsu.isDomain() && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                UUID identifier = be.getIdentifier();
+                destroyable = identifier == null || !(level.getEntity(identifier) instanceof DomainExpansionEntity domain) ||
+                        !domain.isInsideBarrier(direct.blockPosition());
+            } else {
+                float power = jujutsu.getPower() * 20.0F;
 
-            float resistance = state.getExplosionResistance(level, pos, new Explosion(level, source == null ? direct : source,
-                    center.x, center.y, center.z, power, false, Explosion.BlockInteraction.DESTROY));
+                float resistance = state.getExplosionResistance(level, pos, new Explosion(level, source == null ? direct : source,
+                        center.x, center.y, center.z, power, false, Explosion.BlockInteraction.DESTROY));
 
-            if (resistance > power) return false;
-        }
-
-        Entity real = direct instanceof JujutsuProjectile jujutsu && jujutsu.isDomain() ? direct : source;
-
-        if (!destroyable && source != null && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-            UUID identifier = be.getIdentifier();
-            destroyable = identifier == null || !(level.getEntity(identifier) instanceof DomainExpansionEntity domain) ||
-                    !domain.isInsideBarrier(real.blockPosition());
+                if (resistance > power) return false;
+            }
         }
         return destroyable;
     }

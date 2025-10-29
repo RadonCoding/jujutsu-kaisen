@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.entity;
 
-import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,9 +33,11 @@ public interface IBarrier {
         return VeilHandler.isOwnedNonDomain(level, pos);
     }
 
+    boolean isBarrier(BlockPos pos);
+
     boolean isInsideBarrier(BlockPos pos);
 
-    boolean isBarrier(BlockPos pos);
+    boolean isBarrierOrInside(BlockPos pos);
 
     AABB getBounds();
 

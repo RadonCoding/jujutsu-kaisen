@@ -155,19 +155,24 @@ public class VeilEntity extends Entity implements IVeil {
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
-        int radius = this.getRadius();
-        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
-        BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < (radius - 2) * (radius - 2);
-    }
-
-    @Override
     public boolean isBarrier(BlockPos pos) {
         int radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < radius * radius;
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) >= radius - 1 && Math.sqrt(relative.distSqr(Vec3i.ZERO)) <= radius;
+    }
+
+    @Override
+    public boolean isInsideBarrier(BlockPos pos) {
+        int radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        BlockPos relative = pos.subtract(center);
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < radius - 1;
+    }
+
+    @Override
+    public boolean isBarrierOrInside(BlockPos pos) {
+        return this.isBarrier(pos) || this.isInsideBarrier(pos);
     }
 
     @Override

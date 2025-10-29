@@ -168,6 +168,27 @@ public class SimpleDomainEntity extends Entity implements IDomain {
 
             this.setPos(owner.position());
 
+            if (this.level() instanceof ServerLevel level) {
+                for (IBarrier barrier : VeilHandler.getBarriers(level, owner.blockPosition())) {
+                    if (barrier == this) continue;
+
+                    if (!barrier.checkSureHitEffect()) continue;
+
+                    LivingEntity target = barrier.getOwner();
+
+                    if (target == null) continue;
+
+                    IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                    if (cap == null) continue;
+
+                    ISkillData data = cap.getSkillData();
+
+                    float damage = (1 + data.getSkill(Skill.BARRIER)) * 0.01F;
+                    this.setHealth(this.getHealth() - damage);
+                }
+            }
+
             float factor = this.getHealth() / this.getMaxHealth();
 
             ParticleOptions particle = new VaporParticle.Options(ParticleColors.SIMPLE_DOMAIN, 1.0F,
@@ -207,16 +228,24 @@ public class SimpleDomainEntity extends Entity implements IDomain {
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
-        return this.isBarrier(pos);
-    }
-
-    @Override
     public boolean isBarrier(BlockPos pos) {
         float radius = this.getRadius();
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < radius * radius;
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) >= radius - 1 && Math.sqrt(relative.distSqr(Vec3i.ZERO)) <= radius;
+    }
+
+    @Override
+    public boolean isInsideBarrier(BlockPos pos) {
+        float radius = this.getRadius();
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+        BlockPos relative = pos.subtract(center);
+        return Math.sqrt(relative.distSqr(Vec3i.ZERO)) < radius - 1;
+    }
+
+    @Override
+    public boolean isBarrierOrInside(BlockPos pos) {
+        return this.isBarrier(pos) || this.isInsideBarrier(pos);
     }
 
     @Override
