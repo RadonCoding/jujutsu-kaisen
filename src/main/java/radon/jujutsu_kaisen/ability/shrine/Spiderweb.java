@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -18,6 +19,8 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.ICharged;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.client.ClientWrapper;
+import radon.jujutsu_kaisen.effect.JJKEffect;
+import radon.jujutsu_kaisen.effect.registry.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.SpiderwebEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -63,6 +66,8 @@ public class Spiderweb extends Ability implements ICharged {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
+        owner.addEffect(new MobEffectInstance(JJKEffects.STUN, 2, 1, false, false, false));
+
         ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
                 Math.round(((float) Math.min(MAX_CHARGE, this.getCharge(owner)) / MAX_CHARGE) * 100)), false);
     }
@@ -77,8 +82,6 @@ public class Spiderweb extends Ability implements ICharged {
                 hit.getBlockPos(), hit.getDirection());
 
         owner.level().addFreshEntity(spiderweb);
-
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
     }
 
     @Override
@@ -93,7 +96,7 @@ public class Spiderweb extends Ability implements ICharged {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F * ((float) this.getCharge(owner) / MAX_CHARGE);
+        return 100.0F * ((float) Math.min(MAX_CHARGE, this.getCharge(owner)) / MAX_CHARGE);
     }
 
     @Override

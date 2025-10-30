@@ -123,7 +123,7 @@ public class Slam extends Ability implements ICharged {
 
         float cost = data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 0.0F : 30.0F;
 
-        return cost * ((float) this.getCharge(owner) / MAX_CHARGE);
+        return cost * ((float) Math.min(MAX_CHARGE, this.getCharge(owner)) / MAX_CHARGE);
     }
 
     public int getCooldown() {

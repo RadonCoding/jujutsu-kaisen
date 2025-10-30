@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.projectile.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class SpiderwebEntity extends JujutsuProjectile {
@@ -158,6 +159,12 @@ public class SpiderwebEntity extends JujutsuProjectile {
         }
 
         this.charge = data.getCharge();
+
+        int time = this.getTime();
+
+        if (time < Spiderweb.MAX_CHARGE && time % 2 == 0) {
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+        }
 
         this.refreshDimensions();
 
