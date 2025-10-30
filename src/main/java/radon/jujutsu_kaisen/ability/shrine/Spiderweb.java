@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
@@ -34,9 +35,11 @@ public class Spiderweb extends Ability implements ICharged {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
-        if (!owner.hasLineOfSight(target)) return false;
 
-        return HelperMethods.RANDOM.nextInt(40) == 0;
+        if (owner.level().getGameRules().getRule(GameRules.RULE_MOBGRIEFING).get()) {
+            return owner.getNavigation().isStuck();
+        }
+        return false;
     }
 
     @Override
