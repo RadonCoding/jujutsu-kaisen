@@ -24,11 +24,10 @@ import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.effect.SpiderwebEntity;
 
 public class SpiderwebRenderer extends EntityRenderer<SpiderwebEntity> {
-
     private static final float PULL = 0.05F;
     private static final float CORE = 0.1F;
     private static final float SEGMENT_THICKNESS = 0.015F;
-    private static final float CHECK_STEP = 0.25F; // New: Check every 0.25 blocks for support
+    private static final float CHECK_STEP = 0.25F;
 
     public SpiderwebRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
