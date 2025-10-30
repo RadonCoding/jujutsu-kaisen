@@ -87,6 +87,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
             pCompound.putDouble("pos_y", this.pos.y);
             pCompound.putDouble("pos_z", this.pos.z);
         }
+
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }

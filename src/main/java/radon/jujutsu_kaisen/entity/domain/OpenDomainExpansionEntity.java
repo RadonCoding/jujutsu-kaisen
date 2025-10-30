@@ -146,6 +146,14 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
             }
             this.ability.onHitEntity(this, owner, entity, false);
         }
+
+        AABB bounds = this.getBounds();
+
+        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+            if (!this.isAffected(pos)) return;
+
+            this.ability.onHitBlock(this, owner, pos, false);
+        });
     }
 
     @Override

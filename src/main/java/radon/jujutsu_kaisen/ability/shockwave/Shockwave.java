@@ -65,7 +65,7 @@ public class Shockwave extends Ability {
                 }
 
                 for (Entity entity : EntityUtil.getTouchableEntities(Entity.class, owner.level(), owner, AABB.ofSize(owner.position(), radius, radius, radius))) {
-                    if (entity.distanceTo(owner) > RADIUS) continue;
+                    if (entity.distanceTo(owner) > radius) continue;
 
                     if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getOutput(owner))) {
                         entity.setDeltaMovement(entity.position().subtract(owner.position()));

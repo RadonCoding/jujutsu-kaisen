@@ -37,17 +37,18 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
         super(pType, pLevel);
     }
 
-    public VolcanoEntity(LivingEntity owner, float power, BlockPos pos, Direction dir) {
+    public VolcanoEntity(LivingEntity owner, float power, BlockPos pos, Direction face) {
         super(JJKEntities.VOLCANO.get(), owner.level(), owner, power);
 
-        Vec3 center = pos.relative(dir).getCenter();
-        center = center.subtract(dir.getStepX() * 0.5D, dir.getStepY() * 0.5D, dir.getStepZ() * 0.5D);
-        float xRot = (float) (Mth.atan2(dir.getStepY(), dir.getStepX()) * 180.0F / Mth.PI);
-        switch (dir) {
+        Vec3 center = pos.relative(face).getCenter();
+        center = center.subtract(face.getStepX() * 0.5D, face.getStepY() * 0.5D, face.getStepZ() * 0.5D);
+        float xRot = (float) (Mth.atan2(face.getStepY(), face.getStepX()) * 180.0F / Mth.PI);
+
+        switch (face) {
             case UP, DOWN -> xRot = -xRot;
             case WEST -> xRot -= 180.0F;
         }
-        this.moveTo(center.x, center.y - this.getBbHeight() / 2, center.z, dir.toYRot(), xRot);
+        this.moveTo(center.x(), center.y() - this.getBbHeight() / 2, center.z(), face.toYRot(), xRot);
     }
 
     @Override
@@ -89,6 +90,11 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean isProjectile() {
+        return false;
     }
 
     @Override

@@ -118,7 +118,7 @@ public class SimpleDomainEntity extends Entity implements IDomain {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        float radius = (float) (this.getRadius() * 2.0D);
+        float radius = this.getRadius() * 2;
         return EntityDimensions.fixed(radius, radius);
     }
 

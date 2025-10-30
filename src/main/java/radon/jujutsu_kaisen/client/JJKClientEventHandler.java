@@ -378,6 +378,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.ELECTRIC_BLAST.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.BODY_REPEL.get(), BodyRepelRenderer::new);
             event.registerEntityRenderer(JJKEntities.FEROCIOUS_BODY_REPEL.get(), FerociousBodyRepelRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SPIDERWEB.get(), SpiderwebRenderer::new);
         }
 
         @SubscribeEvent

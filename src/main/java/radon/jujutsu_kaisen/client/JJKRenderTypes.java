@@ -6,11 +6,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.Function;
 
 public class JJKRenderTypes extends RenderType {
@@ -27,7 +29,7 @@ public class JJKRenderTypes extends RenderType {
             create("energy", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, CompositeState.builder()
                     .setShaderState(RENDERTYPE_BEACON_BEAM_SHADER)
                     .setTextureState(new TextureStateShard(pLocation, false, false))
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setTransparencyState(ADDITIVE_TRANSPARENCY)
                     .setCullState(NO_CULL)
                     .setOverlayState(OVERLAY)
                     .setWriteMaskState(COLOR_WRITE)
@@ -53,6 +55,20 @@ public class JJKRenderTypes extends RenderType {
                             .setTextureState(new EmptyTextureStateShard(() ->
                                     RenderSystem.setShaderTexture(0, target.getColorTextureId()), () -> {}))
                             .createCompositeState(false)));
+    private static final RenderType SPIDERWEB = create("spiderweb",
+            DefaultVertexFormat.POSITION_COLOR,
+            VertexFormat.Mode.TRIANGLES,
+            1536,
+            false,
+            false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(POSITION_COLOR_SHADER)
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setLayeringState(VIEW_OFFSET_Z_LAYERING)
+                    .setOutputState(WEATHER_TARGET)
+                    .setWriteMaskState(COLOR_WRITE)
+                    .setCullState(NO_CULL)
+                    .createCompositeState(false));
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
@@ -76,5 +92,9 @@ public class JJKRenderTypes extends RenderType {
 
     public static RenderType skybox(TextureTarget target) {
         return SKYBOX.apply(target);
+    }
+
+    public static RenderType spiderweb() {
+        return SPIDERWEB;
     }
 }

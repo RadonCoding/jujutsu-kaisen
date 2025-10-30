@@ -88,12 +88,12 @@ public abstract class RadialScreen extends Screen {
 
     protected abstract List<? extends DisplayItem> getItems();
 
-    private void drawSlot(PoseStack poseStack, BufferBuilder buffer, float centerX, float centerY, float startAngle, float endAngle, int color) {
-        float angle = endAngle - startAngle;
+    private void drawSlot(PoseStack poseStack, BufferBuilder buffer, float centerX, float centerY, float start, float end, int color) {
+        float angle = end - start;
         float precision = 2.5F / 360.0F;
         int sections = Math.max(1, Mth.ceil(angle / precision));
 
-        angle = endAngle - startAngle;
+        angle = end - start;
 
         int r = (color >> 16) & 0xFF;
         int g = (color >> 8) & 0xFF;
@@ -103,8 +103,8 @@ public abstract class RadialScreen extends Screen {
         float slice = angle / sections;
 
         for (int i = 0; i < sections; i++) {
-            float angle1 = startAngle + i * slice;
-            float angle2 = startAngle + (i + 1) * slice;
+            float angle1 = start + i * slice;
+            float angle2 = start + (i + 1) * slice;
 
             float x1 = centerX + RADIUS_IN * (float) Math.cos(angle1);
             float y1 = centerY + RADIUS_IN * (float) Math.sin(angle1);
@@ -155,8 +155,8 @@ public abstract class RadialScreen extends Screen {
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         for (int i = 0; i < this.getCurrent().size(); i++) {
-            float startAngle = this.getAngleFor(i - 0.5F);
-            float endAngle = this.getAngleFor(i + 0.5F);
+            float start = this.getAngleFor(i - 0.5F);
+            float end = this.getAngleFor(i + 0.5F);
 
             DisplayItem item = this.getCurrent().get(i);
             int white = HelperMethods.toRGB24(255, 255, 255, 150);
@@ -169,7 +169,7 @@ public abstract class RadialScreen extends Screen {
             } else {
                 color = this.hovered == i ? white : black;
             }
-            this.drawSlot(pGuiGraphics.pose(), buffer, centerX, centerY, startAngle, endAngle, color);
+            this.drawSlot(pGuiGraphics.pose(), buffer, centerX, centerY, start, end, color);
         }
 
         tesselator.end();

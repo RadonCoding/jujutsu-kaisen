@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -18,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
@@ -43,7 +43,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public static final int MIN_LENGTH = 4;
     public static final int MAX_LENGTH = 12;
     private static final EntityDataAccessor<Integer> DATA_DEATH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
     private boolean instant;
     private boolean destroy = true;
@@ -115,7 +115,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         super.defineSynchedData(pBuilder);
 
         pBuilder.define(DATA_DEATH, 0);
-        pBuilder.define(DATE_ROLL, 0.0F);
+        pBuilder.define(DATA_ROLL, 0.0F);
         pBuilder.define(DATA_LENGTH, 0);
     }
 
@@ -141,11 +141,11 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     public float getRoll() {
-        return this.entityData.get(DATE_ROLL);
+        return this.entityData.get(DATA_ROLL);
     }
 
     private void setRoll(float roll) {
-        this.entityData.set(DATE_ROLL, roll);
+        this.entityData.set(DATA_ROLL, roll);
     }
 
     @Override
@@ -165,7 +165,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         super.readAdditionalSaveData(pCompound);
 
         this.entityData.set(DATA_DEATH, pCompound.getInt("death"));
-        this.entityData.set(DATE_ROLL, pCompound.getFloat("roll"));
+        this.entityData.set(DATA_ROLL, pCompound.getFloat("roll"));
         this.entityData.set(DATA_LENGTH, pCompound.getInt("length"));
         this.instant = pCompound.getBoolean("instant");
         this.destroy = pCompound.getBoolean("destroy");
@@ -173,9 +173,11 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     @Override
-    protected void onInsideBlock(@NotNull BlockState pState) {
-        if (pState.getBlock().defaultDestroyTime() <= -1.0F) {
-            this.discard();
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        super.onHitBlock(pResult);
+
+        if (pResult.isInside()) {
+            this.setDeltaMovement(Vec3.ZERO);
         }
     }
 

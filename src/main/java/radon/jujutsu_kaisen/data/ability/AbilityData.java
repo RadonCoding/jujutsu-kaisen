@@ -294,6 +294,10 @@ public class AbilityData implements IAbilityData {
             this.channeled = ability;
 
             if (this.channeled != null) {
+                if (this.channeled instanceof ICharged charged) {
+                    charged.onActivation(this.owner);
+                }
+
                 if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                     this.owner.sendSystemMessage(this.channeled.getEnableMessage());
                 }

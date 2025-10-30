@@ -2,6 +2,9 @@ package radon.jujutsu_kaisen.ability.shrine;
 
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,31 +13,32 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.ICharged;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.data.ability.IAbilityData;
-import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
-import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.client.ClientWrapper;
+import radon.jujutsu_kaisen.entity.effect.SpiderwebEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class Spiderweb extends Ability {
+public class Spiderweb extends Ability implements ICharged {
+    public static final int MAX_CHARGE = 20;
     private static final int RANGE = 3;
-    private static final float EXPLOSIVE_POWER = 2.0F;
-    private static final float MIN_EXPLOSIVE_POWER = 8.0F;
-    private static final float MAX_EXPLOSIVE_POWER = 24.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying()) return false;
         if (!owner.hasLineOfSight(target)) return false;
+
         return HelperMethods.RANDOM.nextInt(40) == 0;
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+        return ActivationType.CHANNELED;
     }
 
     @Nullable
@@ -49,47 +53,33 @@ public class Spiderweb extends Ability {
         } else if (result.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) result).getEntity();
             Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
-            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
+            return owner.level().clip(new ClipContext(entity.position(), offset,
+                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
         }
         return null;
     }
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level().isClientSide) return;
+        owner.swing(InteractionHand.MAIN_HAND);
 
-        owner.swing(InteractionHand.MAIN_HAND, true);
-
-        BlockHitResult hit = this.getBlockHit(owner);
-
-        if (hit != null) {
-            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-            if (cap == null) return;
-
-            IAbilityData data = cap.getAbilityData();
-
-            float radius = Math.max(MIN_EXPLOSIVE_POWER, Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getOutput(owner)));
-            float real = (radius % 2 == 0) ? radius + 1 : radius;
-
-            Vec3 center = hit.getBlockPos().getCenter().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(real * 0.5F));
-
-            AABB bounds = AABB.ofSize(center, real, real, real);
-
-            BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                Vec3 current = pos.getCenter();
-
-                if (HelperMethods.RANDOM.nextInt(Math.round(radius)) == 0) {
-                    data.delayTickEvent(() -> {
-                        owner.level().addFreshEntity(new DismantleProjectile(owner, this.getOutput(owner), (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F,
-                                current, HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1),
-                                true, true));
-                    }, (int) Math.round(Math.sqrt(owner.distanceToSqr(current))));
-                }
-            });
-        }
+        ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
+                Math.round(((float) Math.min(MAX_CHARGE, this.getCharge(owner)) / MAX_CHARGE) * 100)), false);
     }
 
+    @Override
+    public void onActivation(LivingEntity owner) {
+        BlockHitResult hit = this.getBlockHit(owner);
+
+        if (hit == null) return;
+
+        SpiderwebEntity spiderweb = new SpiderwebEntity(owner, this.getOutput(owner),
+                hit.getBlockPos(), hit.getDirection());
+
+        owner.level().addFreshEntity(spiderweb);
+
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+    }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
@@ -103,7 +93,7 @@ public class Spiderweb extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F;
+        return 100.0F * ((float) this.getCharge(owner) / MAX_CHARGE);
     }
 
     @Override

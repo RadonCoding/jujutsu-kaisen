@@ -106,13 +106,13 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     if (distance > radius) continue;
 
-                    if (HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) {
-                        if (state.getFluidState().isEmpty()) {
-                            this.level().destroyBlock(pos, false);
-                        } else {
-                            this.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                    Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
-                        }
+                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
+
+                    if (state.getFluidState().isEmpty()) {
+                        this.level().destroyBlock(pos, false);
+                    } else {
+                        this.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
                     }
                 }
             }
@@ -220,17 +220,17 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.entityData.set(DATA_MOTION, pCompound.getBoolean("motion"));
-    }
-
-    @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putBoolean("motion", this.entityData.get(DATA_MOTION));
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.entityData.set(DATA_MOTION, pCompound.getBoolean("motion"));
     }
 
     private void spin() {

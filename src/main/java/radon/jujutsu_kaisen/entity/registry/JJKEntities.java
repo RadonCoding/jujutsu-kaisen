@@ -589,6 +589,10 @@ public class JJKEntities {
                     .sized(0.5F, 0.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "ferocious_body_repel")
                             .toString()));
+    public static DeferredHolder<EntityType<?>, EntityType<SpiderwebEntity>> SPIDERWEB = ENTITIES.register("spiderweb", () ->
+            EntityType.Builder.<SpiderwebEntity>of(SpiderwebEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "spiderweb")
+                            .toString()));
 
     @SubscribeEvent
     public static void onSpawnPlacementsRegister(SpawnPlacementRegisterEvent event) {

@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Slam extends Ability implements ICharged {
+    private static final int MAX_CHARGE = 20;
     private static final double RANGE = 30.0D;
     private static final double LAUNCH_POWER = 2.0D;
     private static final float MAX_EXPLOSION = 5.0F;
@@ -92,6 +93,7 @@ public class Slam extends Ability implements ICharged {
     @Override
     public void run(LivingEntity owner) {
         if (!(owner instanceof Player) || !owner.level().isClientSide) return;
+
         ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
                 Math.round(((float) Math.min(20, this.getCharge(owner)) / 20) * 100)), false);
     }
@@ -119,7 +121,9 @@ public class Slam extends Ability implements ICharged {
 
         if (data == null) return 0.0F;
 
-        return data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 0.0F : 30.0F;
+        float cost = data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY) ? 0.0F : 30.0F;
+
+        return cost * ((float) this.getCharge(owner) / MAX_CHARGE);
     }
 
     public int getCooldown() {
@@ -161,7 +165,7 @@ public class Slam extends Ability implements ICharged {
         owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
 
         if (!owner.level().isClientSide) {
-            TARGETS.put(owner.getUUID(), ((float) Math.min(20, charge) / 20));
+            TARGETS.put(owner.getUUID(), ((float) Math.min(MAX_CHARGE, charge) / MAX_CHARGE));
         }
 
         data.delayTickEvent(() -> {

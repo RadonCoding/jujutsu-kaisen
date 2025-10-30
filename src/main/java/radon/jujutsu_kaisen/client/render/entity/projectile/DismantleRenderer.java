@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 
 public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/dismantle.png");
+    private static final float LENGTH_FACTOR = 32.0F / 22.0F;
 
     public DismantleRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -51,7 +52,7 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
         Matrix4f matrix4f = pPoseStack.last().pose();
 
-        float length = pEntity.getLength() / 2.0F;
+        float length = (pEntity.getLength() * LENGTH_FACTOR) / 2.0F;
 
         consumer.vertex(matrix4f, -length, 0.0F, -1.0F)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
