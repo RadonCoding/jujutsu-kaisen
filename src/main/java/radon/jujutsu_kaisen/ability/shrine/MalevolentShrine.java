@@ -28,12 +28,10 @@ public class MalevolentShrine extends DomainExpansion implements IOpenDomain {
 
     @Override
     public void onHitNonLiving(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean force, boolean instant) {
-        boolean perform = force;
+        boolean perform = false;
 
-        if (!perform) {
-            if (domain.level().getBlockState(pos).is(JJKBlockTags.BARRIER)) {
-                perform = (domain.getTime() + pos.asLong()) % 20 == 0;
-            }
+        if (force || domain.level().getBlockState(pos).is(JJKBlockTags.BARRIER)) {
+            perform = (domain.getTime() + pos.asLong()) % 20 == 0;
         }
 
         if (!perform) return;
