@@ -192,7 +192,7 @@ public class JJKEventHandler {
             boolean shield = abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());
 
             if (heavenly) {
-                reduction *= 8.0F;
+                reduction *= 4.0F;
             } else {
                 if (flow) {
                     reduction *= 2.0F;
