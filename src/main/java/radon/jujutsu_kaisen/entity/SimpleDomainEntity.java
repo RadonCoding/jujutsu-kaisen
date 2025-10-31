@@ -33,7 +33,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class SimpleDomainEntity extends Entity implements IDomain {
+public class SimpleDomainEntity extends Entity implements IBarrier {
     public static final float RADIUS = 2.0F;
     public static final float MAX_RADIUS = 4.0F;
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
@@ -118,8 +118,8 @@ public class SimpleDomainEntity extends Entity implements IDomain {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        float radius = this.getRadius() * 2;
-        return EntityDimensions.fixed(radius, radius);
+        float diameter = this.getRadius() * 2;
+        return EntityDimensions.fixed(diameter, diameter);
     }
 
     @Override
@@ -169,12 +169,10 @@ public class SimpleDomainEntity extends Entity implements IDomain {
             this.setPos(owner.position());
 
             if (this.level() instanceof ServerLevel level) {
-                for (IBarrier barrier : VeilHandler.getBarriers(level, owner.blockPosition())) {
-                    if (barrier == this) continue;
+                for (IDomain domain : VeilHandler.getDomains(level, owner.blockPosition())) {
+                    if (!domain.canAttack()) continue;
 
-                    if (!barrier.checkSureHitEffect()) continue;
-
-                    LivingEntity target = barrier.getOwner();
+                    LivingEntity target = domain.getOwner();
 
                     if (target == null) continue;
 
@@ -254,16 +252,6 @@ public class SimpleDomainEntity extends Entity implements IDomain {
     }
 
     @Override
-    public boolean hasSureHitEffect() {
-        return false;
-    }
-
-    @Override
-    public boolean checkSureHitEffect() {
-        return false;
-    }
-
-    @Override
     public boolean isInWall() {
         return false;
     }
@@ -303,20 +291,5 @@ public class SimpleDomainEntity extends Entity implements IDomain {
         if (owner != null) {
             this.setOwner(owner);
         }
-    }
-
-    @Override
-    public void setInstant(boolean instant) {
-
-    }
-
-    @Override
-    public boolean isInstant() {
-        return false;
-    }
-
-    @Override
-    public void doSureHitEffect(LivingEntity owner) {
-
     }
 }

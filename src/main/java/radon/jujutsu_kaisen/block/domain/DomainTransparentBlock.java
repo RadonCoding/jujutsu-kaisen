@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 
-public class DomainTransparentBlock extends DomainBlock implements EntityBlock {
+public class DomainTransparentBlock extends Block implements EntityBlock {
     public DomainTransparentBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -29,18 +29,12 @@ public class DomainTransparentBlock extends DomainBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        if (pState.getValue(IS_ENTITY)) {
-            return JJKBlockEntities.DOMAIN.get().create(pPos, pState);
-        }
-        return null;
+        return JJKBlockEntities.DOMAIN.get().create(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        if (pState.getValue(IS_ENTITY)) {
-            return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN.get(), DomainBlockEntity::tick);
-        }
-        return null;
+        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN.get(), DomainBlockEntity::tick);
     }
 }

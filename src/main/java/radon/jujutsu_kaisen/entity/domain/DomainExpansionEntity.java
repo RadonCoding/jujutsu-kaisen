@@ -85,7 +85,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         if (owner == null) return;
 
-        for (LivingEntity entity : this.getAffected()) {
+        for (LivingEntity entity : this.getInside()) {
             NeoForge.EVENT_BUS.post(new LivingInsideDomainEvent(entity, this.ability, owner));
         }
     }
@@ -134,9 +134,10 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         return this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), this::isAffected);
     }
 
-    @Override
-    public boolean hasSureHitEffect() {
-        return true;
+    public List<LivingEntity> getInside() {
+        return this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(),
+                entity -> this.isInsideBarrier(entity.blockPosition())
+        );
     }
 
     public DomainExpansion getAbility() {
@@ -219,7 +220,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
 
         for (SimpleDomainEntity simple : victim.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(),
                 SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2, SimpleDomainEntity.MAX_RADIUS * 2))) {
-            if (victim.distanceTo(simple) < simple.getRadius()) return false;
+            if (simple.isInsideBarrier(victim.blockPosition())) return false;
         }
         return this.isAffected(victim.blockPosition());
     }

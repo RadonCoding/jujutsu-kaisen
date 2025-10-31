@@ -59,19 +59,19 @@ public class ChainOfAThousandMilesItem extends CursedToolItem implements GeoItem
     public void onUseTick(@NotNull Level pLevel, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack pStack, int pRemainingUseDuration) {
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
 
-        ItemStack item = pLivingEntity.getOffhandItem();
+        ItemStack stack = pLivingEntity.getOffhandItem();
 
-        if (item.getItem() instanceof SwordItem || item.isEmpty() && pRemainingUseDuration == this.getUseDuration(pStack)) {
-            ThrownChainProjectile projectile = new ThrownChainProjectile(pLivingEntity, item.copy());
+        if (stack.getItem() instanceof SwordItem || stack.isEmpty() && pRemainingUseDuration == this.getUseDuration(pStack)) {
+            ThrownChainProjectile projectile = new ThrownChainProjectile(pLivingEntity, stack.copy());
             pLevel.addFreshEntity(projectile);
 
-            if (!item.isEmpty()) {
+            if (!stack.isEmpty()) {
                 if (!(pLivingEntity instanceof Player player && player.getAbilities().instabuild)) {
-                    item.hurtAndBreak(1, pLivingEntity, EquipmentSlot.OFFHAND);
+                    stack.hurtAndBreak(1, pLivingEntity, EquipmentSlot.OFFHAND);
                 }
-                item.shrink(1);
+                stack.shrink(1);
 
-                if (item.isEmpty()) {
+                if (stack.isEmpty()) {
                     pLivingEntity.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
                 }
             }

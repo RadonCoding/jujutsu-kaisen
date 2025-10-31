@@ -9,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +35,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.ability.event.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.binding_vow.JJKBindingVows;
@@ -52,6 +54,7 @@ import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.data.stat.ISkillData;
 import radon.jujutsu_kaisen.data.stat.Skill;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKPartEntity;
 import radon.jujutsu_kaisen.entity.curse.CursedSpirit;
 import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
@@ -126,6 +129,10 @@ public class JJKEventHandler {
 
             DamageSource source = event.getSource();
 
+            float amount = event.getAmount();
+
+            if (source.is(DamageTypes.FELL_OUT_OF_WORLD)) return;
+
             if (source.is(NeoForgeMod.POISON_DAMAGE)) {
                 IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -145,7 +152,7 @@ public class JJKEventHandler {
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
                 if (source.getEntity() == victim) {
-                    event.setAmount(event.getAmount() * 0.01F);
+                    event.setAmount(amount * 0.01F);
                 }
             }
 
@@ -158,7 +165,7 @@ public class JJKEventHandler {
                         ISorcererData data = cap.getSorcererData();
 
                         if (data.hasTrait(Trait.PERFECT_BODY)) {
-                            event.setAmount(event.getAmount() * 2.0F);
+                            event.setAmount(amount * 2.0F);
                         }
                     }
                 }
@@ -179,19 +186,22 @@ public class JJKEventHandler {
                     : Skill.REINFORCEMENT;
             float armor = skillData.getSkill(skill);
 
+            float reduction = (float) Math.log10(1.0D + armor);
+
             boolean flow = abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get());
             boolean shield = abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());
 
-            if (flow) armor *= shield ? 10.0F : 5.0F;
-            else if (heavenly) armor *= 15.0F;
+            if (heavenly) {
+                reduction *= 8.0F;
+            } else {
+                if (flow) {
+                    reduction *= 2.0F;
+                } else if (shield) {
+                    reduction *= 4.0F;
+                }
+            }
 
-            float blocked = event.getAmount() * (1.0F - (
-                    Mth.clamp(
-                            armor - event.getAmount() / (2.0F + armor * 0.1F / 4.0F),
-                            armor * 0.2F,
-                            23.75F
-                    ) / 25.0F)
-            );
+            float blocked = amount / (1.0F + reduction);
 
             if (flow && !(victim instanceof Player player && player.getAbilities().instabuild)) {
                 float cost = blocked * (sorcererData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);

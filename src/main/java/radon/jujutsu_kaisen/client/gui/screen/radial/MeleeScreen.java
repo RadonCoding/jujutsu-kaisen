@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen.radial;
 
 
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -15,6 +16,13 @@ public class MeleeScreen extends RadialScreen {
     private static Ability selected;
 
     public static @Nullable Ability getSelected() {
+        if (selected == null) return null;
+
+        Minecraft mc = Minecraft.getInstance();
+
+        if (!selected.isValid(mc.player)) {
+            selected = null;
+        }
         return selected;
     }
 

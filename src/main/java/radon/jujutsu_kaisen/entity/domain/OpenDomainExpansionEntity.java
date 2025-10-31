@@ -1,12 +1,10 @@
 package radon.jujutsu_kaisen.entity.domain;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,19 +14,16 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.IBarrier;
-import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
-    private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_DIAMETER = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_HEIGHT = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
 
     public OpenDomainExpansionEntity(EntityType<?> pType, Level pLevel) {
@@ -43,50 +38,39 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                         .multiply(this.getBbWidth() / 2.0F, 0.0D, this.getBbWidth() / 2.0F));
         this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        this.entityData.set(DATA_WIDTH, width);
+        this.entityData.set(DATA_DIAMETER, width);
         this.entityData.set(DATA_HEIGHT, height);
     }
 
     @Override
     public AABB getBounds() {
-        int width = this.getWidth();
-        int height = this.getHeight();
-        return new AABB(this.getX() - width, this.getY() - height, this.getZ() - width,
-                this.getX() + width, this.getY() + height, this.getZ() + width);
+        double radius = (double) this.getDiameter() / 2;
+        double height = (double) this.getHeight() / 2;
+        return new AABB(
+                this.getX() - radius, this.getY() - height, this.getZ() - radius,
+                this.getX() + radius, this.getY() + height, this.getZ() + radius
+        );
     }
 
     @Override
     public boolean isBarrier(BlockPos pos) {
-        int width = this.getWidth();
-        int height = this.getHeight();
-        BlockPos centerX = new BlockPos(this.getBlockX(), 0, this.getBlockZ());
-        BlockPos centerY = new BlockPos(0, this.getBlockY(), 0);
-        BlockPos relativeX = pos.subtract(centerX);
-        BlockPos relativeY = pos.subtract(centerY);
+        double dx = pos.getX() - this.getX();
+        double dz = pos.getZ() - this.getZ();
+        double dy = Math.abs(pos.getY() - this.getY());
 
-        double distanceX = Math.sqrt(relativeX.getX() * relativeX.getX() + relativeX.getZ() * relativeX.getZ());
-        double distanceY = Math.abs(relativeY.getY());
+        double radius = (double) this.getDiameter() / 2;
+        double height = (double) this.getHeight() / 2;
 
-        return (distanceX >= width - 1 && distanceX <= width && distanceY <= height) ||
-                (distanceY >= height - 1 && distanceY <= height && distanceX <= width);
+        return dx * dx + dz * dz <= radius * radius && dy <= height;
     }
-
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        int width = this.getWidth();
-        int height = this.getHeight();
-        BlockPos centerX = new BlockPos(this.getBlockX(), 0, this.getBlockZ());
-        BlockPos centerY = new BlockPos(0, this.getBlockY(), 0);
-        BlockPos relativeX = pos.subtract(centerX);
-        BlockPos relativeY = pos.subtract(centerY);
-        double distanceX = Math.sqrt(relativeX.getX() * relativeX.getX() + relativeX.getZ() * relativeX.getZ());
-        double distanceY = Math.abs(relativeY.getY());
-        return distanceX <= width && distanceY <= height;
+        return this.isBarrier(pos);
     }
 
     @Override
     public boolean isBarrierOrInside(BlockPos pos) {
-        return this.isBarrier(pos) || this.isInsideBarrier(pos);
+        return this.isBarrier(pos);
     }
 
     @Override
@@ -99,8 +83,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         return true;
     }
 
-    public int getWidth() {
-        return this.entityData.get(DATA_WIDTH);
+    public int getDiameter() {
+        return this.entityData.get(DATA_DIAMETER);
     }
 
     public int getHeight() {
@@ -111,7 +95,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
 
-        pBuilder.define(DATA_WIDTH, 0);
+        pBuilder.define(DATA_DIAMETER, 0);
         pBuilder.define(DATA_HEIGHT, 0);
     }
 
@@ -119,7 +103,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("width", this.getWidth());
+        pCompound.putInt("diameter", this.getDiameter());
         pCompound.putInt("height", this.getHeight());
     }
 
@@ -127,12 +111,16 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.entityData.set(DATA_WIDTH, pCompound.getInt("width"));
+        this.entityData.set(DATA_DIAMETER, pCompound.getInt("diameter"));
         this.entityData.set(DATA_HEIGHT, pCompound.getInt("height"));
     }
 
     @Override
-    public void doSureHitEffect(@NotNull LivingEntity owner) {
+    public void performAttack() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
         for (LivingEntity entity : this.getAffected()) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -140,11 +128,11 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    this.ability.onHitBlock(this, owner, entity.blockPosition(), false);
+                    this.ability.onHitNonLiving(this, owner, entity.blockPosition(), true, this.instant);
                     continue;
                 }
             }
-            this.ability.onHitEntity(this, owner, entity, false);
+            this.ability.onHitLiving(this, owner, entity, this.instant);
         }
 
         AABB bounds = this.getBounds();
@@ -152,12 +140,12 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
             if (!this.isAffected(pos)) return;
 
-            this.ability.onHitBlock(this, owner, pos, false);
+            this.ability.onHitNonLiving(this, owner, pos, false, this.instant);
         });
     }
 
     @Override
-    public boolean checkSureHitEffect() {
+    public boolean canAttack() {
         return true;
     }
 
@@ -194,8 +182,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
         if (this.level().isClientSide) return;
 
-        if (this.checkSureHitEffect()) {
-            this.doSureHitEffect(owner);
+        if (this.canAttack()) {
+            this.performAttack();
         }
     }
 }

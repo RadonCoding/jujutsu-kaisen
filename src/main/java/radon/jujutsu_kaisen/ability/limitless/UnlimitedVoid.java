@@ -6,7 +6,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.network.PacketDistributor;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
@@ -23,8 +22,8 @@ import java.util.List;
 
 public class UnlimitedVoid extends DomainExpansion implements IClosedDomain {
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-        super.onHitEntity(domain, owner, entity, instant);
+    public void onHitLiving(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitLiving(domain, owner, entity, instant);
 
         IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

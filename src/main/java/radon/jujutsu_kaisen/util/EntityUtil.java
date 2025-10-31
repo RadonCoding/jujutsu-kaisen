@@ -87,7 +87,7 @@ public class EntityUtil {
         return owner;
     }
 
-    public static <T extends Entity> List<T> getEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
+    public static <T extends Entity> List<T> getTargetableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
         return getter.getEntitiesOfClass(clazz, bounds, EntitySelector.ENTITY_STILL_ALIVE
                 .and(EntitySelector.NO_CREATIVE_OR_SPECTATOR)
                 // Add entities if owner is null or the entity is not owner and the entity is not a tame owned by the owner
@@ -97,13 +97,13 @@ public class EntityUtil {
     public static <T extends Entity> List<T> getTouchableEntities(Class<T> clazz, EntityGetter getter, @Nullable LivingEntity owner, AABB bounds) {
         List<T> entities = new ArrayList<>();
 
-        for (T entity : getEntities(clazz, getter, owner, bounds)) {
-            IJujutsuCapability entityCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        for (T entity : getTargetableEntities(clazz, getter, owner, bounds)) {
+            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (entityCap != null) {
-                IAbilityData entityData = entityCap.getAbilityData();
+            if (cap != null) {
+                IAbilityData data = cap.getAbilityData();
 
-                if (entityData.hasActive(JJKAbilities.INFINITY.get())) continue;
+                if (data.hasActive(JJKAbilities.INFINITY.get())) continue;
             }
             entities.add(entity);
         }
@@ -188,6 +188,7 @@ public class EntityUtil {
         AttributeModifier modifier = new AttributeModifier(identifier, name, amount, operation);
 
         if (instance == null) return false;
+
         AttributeModifier existing = instance.getModifier(identifier);
 
         if (existing == null) {

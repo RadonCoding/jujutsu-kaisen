@@ -41,14 +41,6 @@ public interface IBarrier {
 
     AABB getBounds();
 
-    default boolean hasSureHitEffect() {
-        return false;
-    }
-
-    default boolean checkSureHitEffect() {
-        return false;
-    }
-
     default float getStrength() {
         LivingEntity owner = this.getOwner();
 
@@ -62,8 +54,7 @@ public interface IBarrier {
 
         int skill = data.getSkill(Skill.BARRIER) + 1;
 
-        return Math.round(skill * (this.isInsideBarrier(owner.blockPosition()) ? 1.0F : 1.5F) *
-                (this instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F)) *
+        return Math.round(skill * (this instanceof IDomain ? ConfigHolder.SERVER.domainStrength.get().floatValue() : 1.0F)) *
                 (owner.getHealth() / owner.getMaxHealth());
     }
 }

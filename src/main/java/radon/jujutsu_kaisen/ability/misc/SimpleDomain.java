@@ -36,8 +36,9 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (barrier.getOwner() == owner || !barrier.hasSureHitEffect()) continue;
+        for (IDomain domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+            if (domain.getOwner() == owner) continue;
+
             return true;
         }
 

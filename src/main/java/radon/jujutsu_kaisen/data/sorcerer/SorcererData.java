@@ -166,6 +166,14 @@ public class SorcererData implements ISorcererData {
             PlayerUtil.giveAdvancement(player, "perfect_body");
     }
 
+    private void clearModifiers() {
+        EntityUtil.removeModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID);
+        EntityUtil.removeModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID);
+        EntityUtil.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
+        EntityUtil.removeModifier(this.owner, Attributes.MAX_HEALTH, HEALTH_UUID);
+        EntityUtil.removeModifier(this.owner, Attributes.SCALE, SCALE_UUID);
+    }
+
     @Override
     public void tick() {
         this.updateSummons();
@@ -357,7 +365,10 @@ public class SorcererData implements ISorcererData {
         if (cap == null) return 0.0F;
 
         ISkillData data = cap.getSkillData();
-        return 1.0F + (data.getSkill(this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY) ? Skill.STRENGTH : Skill.OUTPUT) * 0.1F);
+
+        int skill = data.getSkill(this.traits.contains(Trait.HEAVENLY_RESTRICTION_BODY) ? Skill.STRENGTH : Skill.OUTPUT);
+
+        return 1.0F + (float) Math.log10(1.0D + skill);
     }
 
     @Override
@@ -548,6 +559,7 @@ public class SorcererData implements ISorcererData {
     public void removeTrait(Trait trait) {
         this.traits.remove(trait);
         ServerVisualHandler.sync(this.owner);
+        this.clearModifiers();
     }
 
     @Override
@@ -560,6 +572,7 @@ public class SorcererData implements ISorcererData {
         this.traits.clear();
         this.traits.addAll(traits);
         ServerVisualHandler.sync(this.owner);
+        this.clearModifiers();
     }
 
     @Override

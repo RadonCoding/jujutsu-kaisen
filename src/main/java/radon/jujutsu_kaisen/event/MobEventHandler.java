@@ -5,10 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -45,8 +42,10 @@ public class MobEventHandler {
         public static void onLivingInsideDomain(LivingInsideDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (victim instanceof ISorcerer && victim instanceof Mob mob && mob.canAttack(event.getAttacker()))
-                mob.setTarget(event.getAttacker());
+            if (victim instanceof ISorcerer && victim instanceof NeutralMob mob && mob.canAttack(event.getAttacker())) {
+                LivingEntity attacker = event.getAttacker();
+                mob.setTarget(attacker);
+            }
         }
 
         @SubscribeEvent

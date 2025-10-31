@@ -13,6 +13,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
@@ -28,12 +29,12 @@ import javax.annotation.Nullable;
 
 public class ThrownChainProjectile extends AbstractArrow {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> DATA_STACK = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Boolean> DATA_RELEASED = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.BOOLEAN);
 
     private static final int DURATION = 2 * 20;
 
-    private boolean dealtDamage;
+    private boolean damaged;
 
     private Entity pulled;
 
@@ -49,7 +50,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter);
         this.setPos(new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2), pShooter.getZ()).add(look));
 
-        this.entityData.set(DATA_ITEM, stack);
+        this.entityData.set(DATA_STACK, stack);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         super.defineSynchedData(pBuilder);
 
         pBuilder.define(DATA_TIME, 0);
-        pBuilder.define(DATA_ITEM, ItemStack.EMPTY);
+        pBuilder.define(DATA_STACK, ItemStack.EMPTY);
         pBuilder.define(DATA_RELEASED, false);
     }
 
@@ -67,6 +68,10 @@ public class ThrownChainProjectile extends AbstractArrow {
 
     public void setTime(int time) {
         this.entityData.set(DATA_TIME, time);
+    }
+
+    public ItemStack getStack() {
+        return this.entityData.get(DATA_STACK);
     }
 
     public boolean isReleased() {
@@ -83,7 +88,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         pCompound.putInt("time", this.getTime());
         pCompound.putBoolean("released", this.isReleased());
-        pCompound.putBoolean("dealt_damage", this.dealtDamage);
+        pCompound.putBoolean("damaged", this.damaged);
     }
 
     @Override
@@ -92,7 +97,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         this.setTime(pCompound.getInt("time"));
         this.setReleased(pCompound.getBoolean("released"));
-        this.dealtDamage = pCompound.getBoolean("dealt_damage");
+        this.damaged = pCompound.getBoolean("damaged");
     }
 
     @Override
@@ -103,14 +108,14 @@ public class ThrownChainProjectile extends AbstractArrow {
     @Override
     @Nullable
     protected EntityHitResult findHitEntity(@NotNull Vec3 pStartVec, @NotNull Vec3 pEndVec) {
-        return this.dealtDamage ? null : super.findHitEntity(pStartVec, pEndVec);
+        return this.damaged ? null : super.findHitEntity(pStartVec, pEndVec);
     }
 
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
-        if (this.dealtDamage) return;
+        if (this.damaged) return;
 
         Entity owner = this.getOwner();
 
@@ -119,7 +124,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         if (!this.getStack().isEmpty()) return;
 
         this.pulled = owner;
-        this.dealtDamage = true;
+        this.damaged = true;
     }
 
     @Override
@@ -132,14 +137,14 @@ public class ThrownChainProjectile extends AbstractArrow {
             if (owner != null) {
                 if (target.isPushable()) {
                     this.pulled = target;
-                    this.dealtDamage = true;
+                    this.damaged = true;
 
                     this.setDeltaMovement(Vec3.ZERO);
                 }
             }
         } else {
             DamageSource source = this.damageSources().arrow(this, owner == null ? this : owner);
-            this.dealtDamage = true;
+            this.damaged = true;
 
             double speed = this.getDeltaMovement().lengthSqr();
 
@@ -161,6 +166,7 @@ public class ThrownChainProjectile extends AbstractArrow {
                 return;
             }
         }
+
         this.spawnAtLocation(this.getStack(), 0.1F);
     }
 
@@ -193,10 +199,10 @@ public class ThrownChainProjectile extends AbstractArrow {
                 super.tick();
 
                 if (this.inGroundTime > 4) {
-                    this.dealtDamage = true;
+                    this.damaged = true;
                 }
 
-                if (this.dealtDamage && this.pulled != null) {
+                if (this.damaged && this.pulled != null) {
                     if (this.pulled == owner) {
                         owner.setDeltaMovement(this.position().subtract(owner.position()).normalize());
 
@@ -264,7 +270,8 @@ public class ThrownChainProjectile extends AbstractArrow {
         return ItemStack.EMPTY;
     }
 
-    public ItemStack getStack() {
-        return this.entityData.get(DATA_ITEM);
+    @Override
+    protected boolean tryPickup(@NotNull Player pPlayer) {
+        return false;
     }
 }

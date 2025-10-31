@@ -29,18 +29,12 @@ public class DomainSkyBlock extends DomainSolidBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        if (pState.getValue(IS_ENTITY)) {
-            return JJKBlockEntities.DOMAIN_SKY.get().create(pPos, pState);
-        }
-        return null;
+        return JJKBlockEntities.DOMAIN_SKY.get().create(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        if (pState.getValue(IS_ENTITY)) {
-            return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN_SKY.get(), DomainSkyBlockEntity::tick);
-        }
-        return null;
+        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN_SKY.get(), DomainSkyBlockEntity::tick);
     }
 }

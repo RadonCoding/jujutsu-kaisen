@@ -18,8 +18,8 @@ import java.util.List;
 
 public class SelfEmbodimentOfPerfection extends DomainExpansion implements IClosedDomain {
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-        super.onHitEntity(domain, owner, entity, instant);
+    public void onHitLiving(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitLiving(domain, owner, entity, instant);
 
         if (IdleTransfiguration.checkSukuna(owner, entity)) return;
 

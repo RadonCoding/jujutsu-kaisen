@@ -123,7 +123,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
                 DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
-                if (domain == null || !domain.checkSureHitEffect()) {
+                if (domain == null || !domain.canAttack()) {
                     this.discard();
                 }
             }

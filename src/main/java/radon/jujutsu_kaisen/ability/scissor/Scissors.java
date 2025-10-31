@@ -34,7 +34,7 @@ public class Scissors extends Ability {
     }
 
     private List<LivingEntity> getTargets(LivingEntity owner) {
-        return EntityUtil.getEntities(LivingEntity.class, owner.level(), owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE));
+        return EntityUtil.getTargetableEntities(LivingEntity.class, owner.level(), owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE));
     }
 
     @Override

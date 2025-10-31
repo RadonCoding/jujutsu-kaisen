@@ -2,26 +2,21 @@ package radon.jujutsu_kaisen.ability.shrine;
 
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
-import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.ability.IOpenDomain;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
-import radon.jujutsu_kaisen.entity.domain.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
-import radon.jujutsu_kaisen.entity.domain.OpenDomainExpansionEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.tags.JJKBlockTags;
 
 public class MalevolentShrine extends DomainExpansion implements IOpenDomain {
     public static final int DELAY = 2 * 20;
 
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-        super.onHitEntity(domain, owner, entity, instant);
+    public void onHitLiving(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitLiving(domain, owner, entity, instant);
 
         if (!entity.getData(JJKAttachmentTypes.CLEAVED) && (instant || domain.getTime() >= DELAY)) {
             Cleave cleave = JJKAbilities.CLEAVE.get();
@@ -32,46 +27,30 @@ public class MalevolentShrine extends DomainExpansion implements IOpenDomain {
     }
 
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
-        if (owner.level().isEmptyBlock(pos)) return;
+    public void onHitNonLiving(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean force, boolean instant) {
+        boolean perform = force;
 
-        if (pos.getY() < domain.blockPosition().getY()) return;
-
-        double probability = 0.0D;
-
-        if (domain instanceof ClosedDomainExpansionEntity) {
-            int radius = ConfigHolder.SERVER.domainRadius.getAsInt();
-            double distance = Math.sqrt(domain.distanceToSqr(pos.getCenter()));
-            probability = 1.0D - distance / radius;
-        } else if (domain instanceof OpenDomainExpansionEntity open) {
-            BlockPos center = domain.blockPosition();
-            BlockPos relative = pos.subtract(center);
-
-            double nx = (double) Math.abs(relative.getX()) / open.getWidth();
-            double ny = (double) Math.abs(relative.getY()) / open.getHeight();
-            double nz = (double) Math.abs(relative.getZ()) / open.getWidth();
-
-            probability = 1.0D - (nx + ny + nz) / 3.0D;
+        if (!perform) {
+            if (domain.level().getBlockState(pos).is(JJKBlockTags.BARRIER)) {
+                perform = (domain.getTime() + pos.asLong()) % 20 == 0;
+            }
         }
 
-        probability /= 20;
+        if (!perform) return;
 
-        if (HelperMethods.RANDOM.nextDouble() < probability) {
-            Dismantle dismantle = JJKAbilities.DISMANTLE.get();
-            dismantle.performBlock(owner, domain, pos, false);
-        }
+        Dismantle dismantle = JJKAbilities.DISMANTLE.get();
+        dismantle.performBlock(owner, domain, pos, false);
     }
-
 
     @Override
     protected DomainExpansionEntity summon(LivingEntity owner) {
-        MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, this.getWidth(), this.getHeight());
+        MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, this.getDiameter(), this.getHeight());
         owner.level().addFreshEntity(domain);
         return domain;
     }
 
     @Override
-    public int getWidth() {
+    public int getDiameter() {
         return 64;
     }
 

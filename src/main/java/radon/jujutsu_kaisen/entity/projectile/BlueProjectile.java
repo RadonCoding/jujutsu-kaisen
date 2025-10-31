@@ -165,14 +165,14 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     if (distance > radius) continue;
 
-                    if (HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) {
-                        if (this.level().destroyBlock(pos, false)) {
-                            FallingBlockEntity entity = FallingBlockEntity.fall(this.level(), pos, state);
-                            entity.noPhysics = true;
+                    if (!HelperMethods.isDestroyable((ServerLevel) this.level(), this, owner, pos)) continue;
 
-                            if (((ServerLevel) this.level()).getEntity(entity.getUUID()) == null) {
-                                this.level().addFreshEntity(entity);
-                            }
+                    if (this.level().destroyBlock(pos, false)) {
+                        FallingBlockEntity entity = FallingBlockEntity.fall(this.level(), pos, state);
+                        entity.noPhysics = true;
+
+                        if (((ServerLevel) this.level()).getEntity(entity.getUUID()) == null) {
+                            this.level().addFreshEntity(entity);
                         }
                     }
                 }

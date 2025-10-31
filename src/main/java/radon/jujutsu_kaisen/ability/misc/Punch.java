@@ -121,7 +121,7 @@ public class Punch extends Ability {
 
         boolean hit = false;
 
-        for (LivingEntity entity : EntityUtil.getEntities(LivingEntity.class, owner.level(), owner, bounds)) {
+        for (LivingEntity entity : EntityUtil.getTargetableEntities(LivingEntity.class, owner.level(), owner, bounds)) {
             if (!owner.hasLineOfSight(entity) || Math.sqrt(entity.distanceToSqr(bounds.getCenter())) > RANGE) continue;
 
             hit = true;

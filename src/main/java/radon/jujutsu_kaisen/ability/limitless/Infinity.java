@@ -149,11 +149,10 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
 
                 Entity target = level.getEntity(nbt.getTarget());
 
-                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner) || owner.isRemoved() || owner.isDeadOrDying()) {
+                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner) || owner.isDeadOrDying()) {
                     if (target != null) {
                         target.setDeltaMovement(nbt.getMovement());
                         target.hurtMarked = true;
-                        target.setNoGravity(nbt.isNoGravity());
                     }
                     iter.remove();
                     this.setDirty();
@@ -169,27 +168,27 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
                 if (target == null) {
                     iter.remove();
                     this.setDirty();
+                    continue;
+                }
+
+                Vec3 forward = target.getLookAngle();
+
+                Vec3 start = owner.position().add(forward.scale(owner.getBbWidth() / 2.0F));
+                Vec3 end = target.position().add(forward.scale(-target.getBbWidth() / 2.0F));
+                float dx = (float) (start.x - end.x);
+                float dy = (float) (start.y - end.y);
+                float dz = (float) (start.z - end.z);
+                float distance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                if (data.hasActive(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
+                    Vec3 original = nbt.getMovement();
+                    target.setDeltaMovement(original.scale(Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR)));
+                    target.hurtMarked = true;
                 } else {
-                    Vec3 forward = target.getLookAngle();
-
-                    Vec3 start = owner.position().add(forward.scale(owner.getBbWidth() / 2.0F));
-                    Vec3 end = target.position().add(forward.scale(-target.getBbWidth() / 2.0F));
-                    float dx = (float) (start.x - end.x);
-                    float dz = (float) (start.z - end.z);
-                    float distance = (float) Math.sqrt(dx * dx + dz * dz);
-
-                    if (data.hasActive(JJKAbilities.INFINITY.get()) && distance <= RANGE) {
-                        Vec3 original = nbt.getMovement();
-                        target.setDeltaMovement(original.scale(Math.min(SLOWING_FACTOR, distance * SLOWING_FACTOR)));
-                        target.hurtMarked = true;
-                        target.setNoGravity(true);
-                    } else {
-                        target.setDeltaMovement(nbt.getMovement());
-                        target.hurtMarked = true;
-                        target.setNoGravity(nbt.isNoGravity());
-                        iter.remove();
-                        this.setDirty();
-                    }
+                    target.setDeltaMovement(nbt.getMovement());
+                    target.hurtMarked = true;
+                    iter.remove();
+                    this.setDirty();
                 }
             }
         }
@@ -198,8 +197,6 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
             public FrozenProjectileNBT(LivingEntity source, Entity target) {
                 this.putUUID("source", source.getUUID());
                 this.putUUID("target", target.getUUID());
-
-                this.putBoolean("no_gravity", target.isNoGravity());
 
                 Vec3 movement = target.getDeltaMovement();
                 this.putDouble("movement_x", movement.x);
@@ -210,8 +207,6 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
             public FrozenProjectileNBT(CompoundTag nbt) {
                 this.putUUID("source", nbt.getUUID("source"));
                 this.putUUID("target", nbt.getUUID("target"));
-
-                this.putBoolean("no_gravity", nbt.getBoolean("no_gravity"));
 
                 this.putDouble("movement_x", nbt.getDouble("movement_x"));
                 this.putDouble("movement_y", nbt.getDouble("movement_y"));
@@ -224,10 +219,6 @@ public class Infinity extends Ability implements IToggled, IChanneled, IDuration
 
             public UUID getTarget() {
                 return this.getUUID("target");
-            }
-
-            public boolean isNoGravity() {
-                return this.getBoolean("no_gravity");
             }
 
             public Vec3 getMovement() {

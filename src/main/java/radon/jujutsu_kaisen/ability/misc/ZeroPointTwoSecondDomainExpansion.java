@@ -115,7 +115,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
             domain.setInstant(true);
 
             abilityData.delayTickEvent(() -> {
-                domain.doSureHitEffect(owner);
+                domain.performAttack();
                 domain.discard();
             }, 4);
         }, 20);

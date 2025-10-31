@@ -77,13 +77,10 @@ public abstract class DomainExpansion extends Ability implements IToggled {
                 }
             }
 
-            boolean result = owner.onGround() && sorcererData.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(owner) ?
-                    owner.getHealth() / owner.getMaxHealth() < 0.8F : owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
+            boolean result = owner.getHealth() / owner.getMaxHealth() < 0.5F;
 
             if (!result) {
-                for (IBarrier barrier : VeilHandler.getBarriers((ServerLevel) owner.level(), owner.blockPosition())) {
-                    if (!(barrier instanceof IDomain)) continue;
-
+                for (IDomain ignored : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
                     result = true;
                     break;
                 }
@@ -192,11 +189,11 @@ public abstract class DomainExpansion extends Ability implements IToggled {
         return data.hasToggled(this) ? 2.0F : 1000.0F;
     }
 
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+    public void onHitLiving(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         NeoForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
     }
 
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
+    public void onHitNonLiving(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean force, boolean instant) {
     }
 
     protected abstract DomainExpansionEntity summon(LivingEntity owner);

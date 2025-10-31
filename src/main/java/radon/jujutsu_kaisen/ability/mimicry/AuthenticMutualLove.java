@@ -2,15 +2,12 @@ package radon.jujutsu_kaisen.ability.mimicry;
 
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
@@ -24,8 +21,8 @@ import java.util.List;
 
 public class AuthenticMutualLove extends DomainExpansion implements IClosedDomain {
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-        super.onHitEntity(domain, owner, entity, instant);
+    public void onHitLiving(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitLiving(domain, owner, entity, instant);
 
         CursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
@@ -33,18 +30,18 @@ public class AuthenticMutualLove extends DomainExpansion implements IClosedDomai
 
         if (!(technique.getDomain() instanceof DomainExpansion copied)) return;
 
-        copied.onHitEntity(domain, owner, entity, instant);
+        copied.onHitLiving(domain, owner, entity, instant);
     }
 
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean instant) {
+    public void onHitNonLiving(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean force, boolean instant) {
         CursedTechnique technique = ((AuthenticMutualLoveEntity) domain).getTechnique();
 
         if (technique == null) return;
 
         if (!(technique.getDomain() instanceof DomainExpansion copied)) return;
 
-        copied.onHitBlock(domain, owner, pos, instant);
+        copied.onHitNonLiving(domain, owner, pos, force, instant);
     }
 
     @Override

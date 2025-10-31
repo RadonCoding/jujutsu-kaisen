@@ -27,7 +27,6 @@ import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.base.ITemporaryBlockEntity;
-import radon.jujutsu_kaisen.block.domain.DomainBlock;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -35,7 +34,6 @@ import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.IBarrier;
 import radon.jujutsu_kaisen.entity.IDomain;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -185,9 +183,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         else if (pos.getY() < center.getY()) block = blocks.get(HelperMethods.RANDOM.nextInt(blocks.size()));
         else block = JJKBlocks.DOMAIN_AIR.get();
 
-        BlockState next = block.defaultBlockState().setValue(DomainBlock.IS_ENTITY, true);
-
-        this.level().setBlock(pos, next, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+        this.level().setBlock(pos, block.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
 
         if (existing instanceof ITemporaryBlockEntity tmp) {
             previous = tmp.getOriginal();
@@ -248,7 +244,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public void doSureHitEffect(LivingEntity owner) {
+    public void performAttack() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
         for (LivingEntity entity : this.getAffected()) {
             IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
@@ -256,11 +256,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 ISorcererData data = cap.getSorcererData();
 
                 if (data.hasTrait(Trait.HEAVENLY_RESTRICTION_BODY)) {
-                    this.ability.onHitBlock(this, owner, entity.blockPosition(), this.instant);
+                    this.ability.onHitNonLiving(this, owner, entity.blockPosition(), true, this.instant);
                     continue;
                 }
             }
-            this.ability.onHitEntity(this, owner, entity, this.instant);
+            this.ability.onHitLiving(this, owner, entity, this.instant);
         }
 
         int virtualRadius = ConfigHolder.SERVER.domainRadius.getAsInt();
@@ -273,7 +273,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (distance < virtualRadius - 1) {
                         BlockPos pos = center.offset(x, y, z);
-                        this.ability.onHitBlock(this, owner, pos, this.instant);
+                        this.ability.onHitNonLiving(this, owner, pos, false, this.instant);
                     }
                 }
             }
@@ -281,14 +281,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean checkSureHitEffect() {
+    public boolean canAttack() {
         if (!this.isCompleted()) return false;
 
-        Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
+        Set<IDomain> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds());
 
-        for (IBarrier barrier : barriers) {
-            if (!(barrier instanceof IDomain domain)) continue;
-
+        for (IDomain domain : domains) {
             if (domain == this) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
@@ -313,11 +311,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (cap == null) return;
 
-        ISorcererData sorcrerData = cap.getSorcererData();
-        sorcrerData.setBurnout(DomainExpansion.BURNOUT);
+        ISorcererData data = cap.getSorcererData();
+        data.setBurnout(DomainExpansion.BURNOUT);
 
         if (owner instanceof ServerPlayer player) {
-            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(sorcrerData.serializeNBT(player.registryAccess())));
+            PacketDistributor.sendToPlayer(player, new SyncSorcererDataS2CPacket(data.serializeNBT(player.registryAccess())));
         }
     }
 
@@ -330,7 +328,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     private void check() {
         int radius = this.getRadius();
-        BlockPos center = BlockPos.containing(this.position());
+
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
         Map<Direction, Integer> counts = new EnumMap<>(Direction.class);
         Map<Direction, Integer> totals = new EnumMap<>(Direction.class);
@@ -401,10 +400,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
 
-        Set<IBarrier> barriers = VeilHandler.getBarriers((ServerLevel) this.level(), this.getBounds());
+        Set<IDomain> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds());
 
-        for (IBarrier barrier : barriers) {
-            if (!(barrier instanceof IDomain domain)) continue;
+        for (IDomain domain : domains) {
             if (domain == this || !(domain instanceof ClosedDomainExpansionEntity closed)) continue;
 
             closed.createBarrier(true);
@@ -453,8 +451,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             }
         }
 
-        if (this.checkSureHitEffect()) {
-            this.doSureHitEffect(owner);
+        if (this.canAttack()) {
+            this.performAttack();
         }
 
         if (this.isCompleted()) {

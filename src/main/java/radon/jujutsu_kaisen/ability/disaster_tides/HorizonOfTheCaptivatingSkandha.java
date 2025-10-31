@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.ability.disaster_tides;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IClosedDomain;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -22,8 +21,8 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements I
     private static final float DAMAGE = 10.0F;
 
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-        super.onHitEntity(domain, owner, entity, instant);
+    public void onHitLiving(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitLiving(domain, owner, entity, instant);
 
         if (instant || owner.level().getGameTime() % 20 == 0) {
             float power = this.getOutput(owner) * (instant ? 0.5F : 1.0F);
