@@ -19,8 +19,11 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
+import radon.jujutsu_kaisen.ability.IAttack;
+import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.cursed_technique.CursedTechnique;
 import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
+import radon.jujutsu_kaisen.data.ability.IAbilityData;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -49,9 +52,9 @@ public class MimicryKatanaItem extends KatanaItem {
 
         if (cap == null) return;
 
-        ISorcererData data = cap.getSorcererData();
+        IAbilityData data = cap.getAbilityData();
 
-        if (!data.hasSummonOfClass(DomainExpansionEntity.class)) {
+        if (!data.hasToggled(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.get())) {
             pStack.shrink(1);
         }
     }
@@ -79,7 +82,7 @@ public class MimicryKatanaItem extends KatanaItem {
 
             if (technique == null) return;
 
-            if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
+            if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT || ability instanceof IAttack) {
                 List<ItemStack> stacks = new ArrayList<>();
                 stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
                 stacks.addAll(CuriosUtil.findSlots(owner, owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));

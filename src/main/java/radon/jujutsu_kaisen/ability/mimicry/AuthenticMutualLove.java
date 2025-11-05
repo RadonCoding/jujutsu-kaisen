@@ -48,13 +48,12 @@ public class AuthenticMutualLove extends DomainExpansion implements IClosedDomai
     protected DomainExpansionEntity summon(LivingEntity owner) {
         AuthenticMutualLoveEntity domain = new AuthenticMutualLoveEntity(owner, this);
         owner.level().addFreshEntity(domain);
-
         return domain;
     }
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN_TRANSPARENT.get());
+        return List.of(JJKBlocks.DOMAIN_SKY.get());
     }
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)

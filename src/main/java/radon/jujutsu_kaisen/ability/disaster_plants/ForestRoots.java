@@ -8,13 +8,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.effect.ForestRootsEntity;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ForestRoots extends Ability {
     public static final double RANGE = 15.0D;
-
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -45,5 +45,8 @@ public class ForestRoots extends Ability {
         return 5 * 20;
     }
 
-
+    @Override
+    public MenuType getMenuType(LivingEntity owner) {
+        return MenuType.MELEE;
+    }
 }

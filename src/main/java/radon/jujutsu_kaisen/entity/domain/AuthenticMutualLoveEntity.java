@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.cursed_technique.registry.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
 import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.mimicry.IMimicryData;
+import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
 import radon.jujutsu_kaisen.entity.registry.JJKEntities;
 
 import java.util.*;
@@ -119,6 +120,16 @@ public class AuthenticMutualLoveEntity extends ClosedDomainExpansionEntity {
         for (Tag tag : pCompound.getList("offsets", Tag.TAG_COMPOUND)) {
             CompoundTag nbt = (CompoundTag) tag;
             this.offsets.put(NbtUtils.readBlockPos(nbt, "pos").orElseThrow(), JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique"))));
+        }
+    }
+
+    @Override
+    protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
+        super.createBlock(delay, pos, radius, distance);
+
+        if (this.offsets.containsKey(pos)) {
+            this.level().addFreshEntity(new MimicryKatanaEntity(this, this.offsets.get(pos), pos.getCenter().add(0.0D, 0.5D, 0.0D)));
+            this.offsets.remove(pos);
         }
     }
 }

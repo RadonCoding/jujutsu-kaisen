@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.IOpenDomain;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.registry.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.domain.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
@@ -30,8 +31,8 @@ public class MalevolentShrine extends DomainExpansion implements IOpenDomain {
     public void onHitNonLiving(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos, boolean force, boolean instant) {
         boolean perform = false;
 
-        if (force || domain.level().getBlockState(pos).is(JJKBlockTags.BARRIER)) {
-            perform = (domain.getTime() + pos.asLong()) % 20 == 0;
+        if (force || domain.level().getBlockState(pos).is(JJKBlocks.DOMAIN)) {
+            perform = (domain.getTime() + pos.asLong()) % (5 * 20) == 0;
         }
 
         if (!perform) return;

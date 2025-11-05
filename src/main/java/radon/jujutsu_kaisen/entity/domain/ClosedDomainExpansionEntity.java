@@ -150,7 +150,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return this.isBarrier(pos) || this.isInsideBarrier(pos);
     }
 
-    private void createBlock(int delay, BlockPos pos, int radius, double distance) {
+    protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
         if (distance > radius) return;
 
         if (!this.level().isInWorldBounds(pos)) return;

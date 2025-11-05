@@ -98,6 +98,7 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
         container.addListener(pContainer ->
                 pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(),
                         JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F));
+
         return new ChestMenu(MenuType.GENERIC_9x1, pContainerId, pPlayerInventory, container, container.getContainerSize() / CAPACITY);
     }
 }
