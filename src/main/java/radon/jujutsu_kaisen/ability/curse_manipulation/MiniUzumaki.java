@@ -35,13 +35,16 @@ public class MiniUzumaki extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (!owner.level().isClientSide) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return false;
+            if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
-        return data.hasSummonOfClass(CursedSpirit.class) && super.isValid(owner);
+            if (!data.hasSummonOfClass(CursedSpirit.class)) return false;
+        }
+        return super.isValid(owner);
     }
 
     @Override

@@ -20,13 +20,7 @@ public class MaximumUzumaki extends Ability {
         if (target == null || target.isDeadOrDying()) return false;
         if (!owner.hasLineOfSight(target)) return false;
 
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
-
-        if (cap == null) return false;
-
-        ISorcererData data = cap.getSorcererData();
-
-        return (data.getType() == JujutsuType.CURSE || JJKAbilities.RCT1.get().isUnlocked(owner) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
+        return owner.getHealth() / owner.getMaxHealth() < 0.5F;
     }
 
     @Override
@@ -49,13 +43,16 @@ public class MaximumUzumaki extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (!owner.level().isClientSide) {
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (cap == null) return false;
+            if (cap == null) return false;
 
-        ISorcererData data = cap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
-        return data.hasSummonOfClass(CursedSpirit.class) && super.isValid(owner);
+            if (!data.hasSummonOfClass(CursedSpirit.class)) return false;
+        }
+        return super.isValid(owner);
     }
 
     @Override
