@@ -124,7 +124,10 @@ public class SkyStrikeEntity extends JujutsuProjectile {
     public void hurtEntities(double radius) {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        AABB bounds = new AABB(this.getX() - radius, this.getY() - 0.5D, this.getZ() - radius, this.getX() + radius, Double.POSITIVE_INFINITY, this.getZ() + radius);
+        AABB bounds = new AABB(
+                this.getX() - radius, this.getY() - 0.5D, this.getZ() - radius,
+                this.getX() + radius, this.level().getMaxBuildHeight(), this.getZ() + radius
+        );
         List<Entity> entities = EntityUtil.getTouchableEntities(Entity.class, this.level(), owner, bounds);
         double radiusSq = radius * radius;
 
