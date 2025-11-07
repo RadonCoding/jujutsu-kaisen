@@ -35,7 +35,7 @@ public interface IAbilityData extends INBTSerializable<CompoundTag> {
 
     boolean isChanneling(Ability ability);
 
-    int getCharge();
+    int getCharge(Ability ability);
 
     void addCooldown(Ability ability);
 

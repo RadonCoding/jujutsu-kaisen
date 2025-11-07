@@ -54,6 +54,16 @@ public class ClientAbilityHandler {
     private static boolean isChanneling;
     private static boolean isRightDown;
 
+    private static void channel(@Nullable Ability ability, @Nullable KeyMapping key) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null) return;
+
+        channeled = ability;
+        current = key;
+        isChanneling = false;
+    }
+
     public static Ability.Status trigger(Ability ability) {
         Minecraft mc = Minecraft.getInstance();
 
@@ -167,9 +177,7 @@ public class ClientAbilityHandler {
                     AbilityHandler.untrigger(mc.player, channeled);
                     PacketDistributor.sendToServer(new UntriggerAbilityC2SPacket(channeled));
 
-                    channeled = null;
-                    current = null;
-                    isChanneling = false;
+                    channel(null, null);
                 }
             }
 
@@ -231,34 +239,37 @@ public class ClientAbilityHandler {
                 data.decreaseOutput();
             }
 
-            if (JJKKeys.ACTIVATE_ABILITY.consumeClick()) {
+            if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
                 Ability ability = AbilityOverlay.getSelected();
 
                 if (ability != null) {
                     if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
-                        channeled = ability;
-                        current = JJKKeys.ACTIVATE_ABILITY;
-                    } else {
+                        if (channeled == null) {
+                            channel(ability, JJKKeys.ACTIVATE_ABILITY);
+                        }
+                    } else if (JJKKeys.ACTIVATE_ABILITY.consumeClick()){
                         PacketDistributor.sendToServer(new TriggerAbilityC2SPacket(ability));
                     }
                 }
             }
 
-            if (JJKKeys.ACTIVATE_RCT_OR_HEAL.consumeClick()) {
+            if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
                 Ability rct = EntityUtil.getRCTTier(mc.player);
+                Ability ability = data.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : rct;
 
-                if (data.getType() == JujutsuType.CURSE) {
-                    channeled = JJKAbilities.HEAL.get();
-                    current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
-                } else if (rct != null) {
-                    channeled = rct;
-                    current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
+                if (ability != null) {
+                    if (channeled == null) {
+                        channel(ability, JJKKeys.ACTIVATE_RCT_OR_HEAL);
+                    }
                 }
             }
 
-            if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.consumeClick()) {
-                channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
-                current = JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD;
+            if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
+                Ability shield = JJKAbilities.CURSED_ENERGY_SHIELD.get();
+
+                if (channeled == null) {
+                    channel(shield, JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD);
+                }
             }
 
             if (JJKKeys.DASH.consumeClick()) {

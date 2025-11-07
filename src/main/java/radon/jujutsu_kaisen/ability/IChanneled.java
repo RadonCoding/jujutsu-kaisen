@@ -17,6 +17,6 @@ public interface IChanneled {
 
         IAbilityData data = cap.getAbilityData();
 
-        return data.getCharge();
+        return data.getCharge((Ability) this);
     }
 }

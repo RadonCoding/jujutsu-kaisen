@@ -312,8 +312,8 @@ public class AbilityData implements IAbilityData {
     }
 
     @Override
-    public int getCharge() {
-        return this.charge;
+    public int getCharge(Ability ability) {
+        return this.channeled == ability ? this.charge : 0;
     }
 
     @Override

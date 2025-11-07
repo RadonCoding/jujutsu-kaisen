@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
 import radon.jujutsu_kaisen.ability.shrine.Spiderweb;
 import radon.jujutsu_kaisen.data.ability.IAbilityData;
@@ -152,13 +153,15 @@ public class SpiderwebEntity extends JujutsuProjectile {
 
         IAbilityData data = cap.getAbilityData();
 
-        if (!data.isChanneling(JJKAbilities.SPIDERWEB.get())) {
+        Spiderweb ability = JJKAbilities.SPIDERWEB.get();
+
+        if (!data.isChanneling(ability)) {
             this.explode();
             this.discard();
             return;
         }
 
-        this.charge = data.getCharge();
+        this.charge = ability.getCharge(owner);
 
         int time = this.getTime();
 
