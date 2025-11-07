@@ -186,7 +186,7 @@ public class JJKEventHandler {
                     : Skill.REINFORCEMENT;
             float armor = skillData.getSkill(skill);
 
-            float reduction = (float) Math.log10(1.0D + armor);
+            float reduction = (float) Math.log1p(1.0D + armor);
 
             boolean flow = abilityData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get());
             boolean shield = abilityData.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get());

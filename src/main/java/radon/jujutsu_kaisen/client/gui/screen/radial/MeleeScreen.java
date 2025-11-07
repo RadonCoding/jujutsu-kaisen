@@ -16,13 +16,6 @@ public class MeleeScreen extends RadialScreen {
     private static Ability selected;
 
     public static @Nullable Ability getSelected() {
-        if (selected == null) return null;
-
-        Minecraft mc = Minecraft.getInstance();
-
-        if (!selected.isValid(mc.player)) {
-            selected = null;
-        }
         return selected;
     }
 
