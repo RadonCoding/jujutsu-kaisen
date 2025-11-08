@@ -60,7 +60,7 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
     @Override
     public @NotNull Vec3 getVehicleAttachmentPoint(@NotNull Entity pEntity) {
         return super.getVehicleAttachmentPoint(pEntity)
-                .subtract(0.0D, pEntity.getBbHeight() * 0.25F, 0.0D);
+                .add(0.0D, pEntity.getBbHeight() * 0.25F, 0.0D);
     }
 
     @Override

@@ -104,7 +104,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, ICont
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getSpeed() * 0.1F;
+        return this.getSpeed() * 0.5F;
     }
 
     @Override

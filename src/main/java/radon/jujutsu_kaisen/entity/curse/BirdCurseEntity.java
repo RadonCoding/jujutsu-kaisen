@@ -71,7 +71,7 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, ICo
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getSpeed() * 0.1F;
+        return this.getSpeed() * 0.5F;
     }
 
     @Override
