@@ -20,15 +20,8 @@ public class JJKShaders {
     @SubscribeEvent
     public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                        new ResourceLocation(JujutsuKaisen.MOD_ID, "domain"), DefaultVertexFormat.POSITION_TEX),
-                shader -> domain = shader);
-        event.registerShader(new ShaderInstance(event.getResourceProvider(),
                         new ResourceLocation(JujutsuKaisen.MOD_ID, "sky"), DefaultVertexFormat.POSITION_TEX),
                 shader -> sky = shader);
-    }
-
-    public static ShaderInstance getDomainShader() {
-        return domain;
     }
 
     public static ShaderInstance getSkyShader() {

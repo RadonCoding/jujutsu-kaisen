@@ -14,9 +14,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.registry.JJKAbilities;
-import radon.jujutsu_kaisen.client.JJKShaders;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -25,6 +23,7 @@ import java.util.Map;
 @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class DomainRenderDispatcher {
     private static final Map<ResourceLocation, DomainRenderer> renderers = new HashMap<>();
+    private static final Map<ResourceLocation, TextureTarget> backgrounds = new HashMap<>();
     private static final Map<ResourceLocation, TextureTarget> cached = new HashMap<>();
 
     static {
@@ -96,38 +95,12 @@ public class DomainRenderDispatcher {
         for (Map.Entry<ResourceLocation, DomainRenderer> entry : renderers.entrySet()) {
             ResourceLocation key = entry.getKey();
             DomainRenderer renderer = entry.getValue();
-            TextureTarget target = cached.get(key);
+            TextureTarget target = backgrounds.get(key);
             TextureTarget updated = update(target, renderer, event.getModelViewMatrix(), event.getProjectionMatrix(), update);
-            cached.put(key, updated);
+            backgrounds.put(key, updated);
         }
 
         fallback = update(fallback, DEFAULT_RENDERER, event.getModelViewMatrix(), event.getProjectionMatrix(), update);
-    }
-
-    public static void render(DomainExpansion domain, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, TextureTarget include, int time) {
-        ResourceLocation key = JJKAbilities.getKey(domain);
-        DomainRenderer renderer = renderers.getOrDefault(key, DEFAULT_RENDERER);
-
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-
-        RenderSystem.setShaderTexture(0, renderer.getTexture());
-        RenderSystem.setShaderTexture(1, include.getColorTextureId());
-
-        RenderSystem.setShader(JJKShaders::getDomainShader);
-
-        renderer.render(modelViewMatrix, projectionMatrix);
-
-        for (DomainRenderLayer layer : renderer.getLayers()) {
-            if (!layer.shouldRender(time)) continue;
-
-            RenderSystem.setShaderTexture(0, layer.getTexture());
-
-            renderer.render(modelViewMatrix, projectionMatrix);
-        }
-
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableBlend();
     }
 
     public static void render(DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
@@ -138,6 +111,16 @@ public class DomainRenderDispatcher {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         renderer.render(modelViewMatrix, projectionMatrix);
+
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
+        for (DomainRenderLayer layer : renderer.getLayers()) {
+            RenderSystem.setShaderTexture(0, layer.getTexture());
+
+            renderer.render(modelViewMatrix, projectionMatrix);
+        }
+
+        RenderSystem.defaultBlendFunc();
 
         RenderSystem.disableBlend();
     }
