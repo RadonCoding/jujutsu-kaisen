@@ -1,17 +1,16 @@
 plugins {
     id 'java-library'
-    id 'eclipse'
-    id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.145'
+    id 'net.neoforged.gradle.userdev' version '7.1.27'
+    id 'idea'
 }
 
-version = mod_version
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = "${minecraft_version}-${mod_version}"
 group = mod_group_id
-
-repositories {
-    mavenLocal()
-}
 
 base {
     archivesName = mod_id
@@ -19,89 +18,93 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+sourceSets.main.resources {
+    srcDir('src/generated/resources')
+}
+
+repositories {
+    mavenLocal()
+
+    maven {
+        name = 'GeckoLib'
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup 'software.bernie.geckolib'
+        }
+    }
+
+    maven {
+        url = 'https://maven.theillusivec4.top'
+    }
+
+    maven {
+        url = 'https://cursemaven.com'
+    }
+}
+
+minecraft.accessTransformers.file rootProject.file(
+        'src/main/resources/META-INF/accesstransformer.cfg'
+)
 
 runs {
     configureEach {
         systemProperty 'forge.logging.markers', 'REGISTRIES'
         systemProperty 'forge.logging.console.level', 'debug'
+
+        workingDirectory project.layout.projectDirectory.dir('run').dir(name)
+
         modSource project.sourceSets.main
     }
 
     client {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArguments '--username', 'Dev####'
+        argument '--username'
+        argument 'Dev'
     }
 
     server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        argument '--nogui'
     }
 
     data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        arguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
-repositories {
-    maven {
-        name = 'GeckoLib'
-        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-        content {
-            includeGroup("software.bernie.geckolib")
-        }
-    }
-    maven { url 'https://maven.theillusivec4.top' }
-    maven { url 'https://cursemaven.com'}
-}
-
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
+
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
-    runtimeOnly "curse.maven:spark-361579:5302031"
+    localRuntime  "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
+
+    localRuntime  "curse.maven:spark-361579:5302031"
 }
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
-            minecraft_version     : minecraft_version, minecraft_version_range: minecraft_version_range,
-            neo_version           : neo_version, neo_version_range: neo_version_range,
-            loader_version_range  : loader_version_range,
-            geckolib_version      : geckolib_version,
-            geckolib_version_range: geckolib_version_range,
-            curios_version        : curios_version,
-            curios_version_range  : curios_version_range,
-            mod_id                : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors           : mod_authors, mod_description: mod_description, pack_format_number: pack_format_number,
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            curios_version_range   : curios_version_range,
+            geckolib_version_range : geckolib_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+            mod_license            : mod_license,
+            version                : version
     ]
+
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
-
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/repo"
-        }
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
     }
 }
 
