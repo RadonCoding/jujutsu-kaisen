@@ -24,7 +24,6 @@ import java.util.Map;
 public class DomainRenderDispatcher {
     private static final Map<ResourceLocation, DomainRenderer> renderers = new HashMap<>();
     private static final Map<ResourceLocation, TextureTarget> backgrounds = new HashMap<>();
-    private static final Map<ResourceLocation, TextureTarget> cached = new HashMap<>();
 
     static {
         renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
@@ -42,10 +41,10 @@ public class DomainRenderDispatcher {
     private static int skyHeight;
 
     public static TextureTarget get(ResourceLocation domain) {
-        if (!cached.containsKey(domain)) {
+        if (!backgrounds.containsKey(domain)) {
             return fallback;
         }
-        return cached.get(domain);
+        return backgrounds.get(domain);
     }
 
     private static TextureTarget update(@Nullable TextureTarget target, DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, boolean update) {
