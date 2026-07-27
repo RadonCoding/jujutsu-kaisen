@@ -15,6 +15,7 @@ public class JJKBlockEntities {
             BlockEntityType.Builder.of(DomainBlockEntity::new,
                     JJKBlocks.DOMAIN.get(),
                     JJKBlocks.DOMAIN_AIR.get(),
+                    JJKBlocks.DOMAIN_TRANSPARENT.get(),
 
                     JJKBlocks.FAKE_WATER_DOMAIN.get(),
 

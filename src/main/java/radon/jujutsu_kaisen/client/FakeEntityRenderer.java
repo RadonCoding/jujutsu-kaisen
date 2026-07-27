@@ -80,9 +80,9 @@ public class FakeEntityRenderer {
 
         Vec3 offset = renderer.getRenderOffset(this.entity, partialTicks);
 
-        Vec3 cam = mc.gameRenderer.getMainCamera().getPosition();
+        Vec3 camera = mc.gameRenderer.getMainCamera().getPosition();
 
-        poseStack.translate(-cam.x + offset.x, -cam.y + offset.y, -cam.z + offset.z);
+        poseStack.translate(-camera.x + offset.x, -camera.y + offset.y, -camera.z + offset.z);
     }
 
     public void render(Vec3 pos, float partialTicks) {

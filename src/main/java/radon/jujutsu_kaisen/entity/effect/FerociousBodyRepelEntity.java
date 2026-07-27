@@ -85,7 +85,7 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("time", this.getTime());
+        pCompound.putInt("timeOfDay", this.getTime());
         pCompound.putInt("variant", this.getVariant());
         pCompound.putInt("souls", this.souls);
     }
@@ -94,7 +94,7 @@ public class FerociousBodyRepelEntity extends Projectile implements GeoEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.setTime(pCompound.getInt("time"));
+        this.setTime(pCompound.getInt("timeOfDay"));
         this.setVariant(pCompound.getInt("variant"));
         this.souls = pCompound.getInt("souls");
     }

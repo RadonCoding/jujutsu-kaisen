@@ -110,7 +110,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         }
         pCompound.putString("technique", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("first", this.first);
-        pCompound.putInt("time", this.getTime());
+        pCompound.putInt("timeOfDay", this.getTime());
         pCompound.putBoolean("instant", this.instant);
     }
 
@@ -121,7 +121,7 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         }
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("technique")));
         this.first = pCompound.getBoolean("first");
-        this.setTime(pCompound.getInt("time"));
+        this.setTime(pCompound.getInt("timeOfDay"));
         this.instant = pCompound.getBoolean("instant");
     }
 

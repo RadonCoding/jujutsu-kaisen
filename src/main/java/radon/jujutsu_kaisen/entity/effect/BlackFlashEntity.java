@@ -72,7 +72,7 @@ public class BlackFlashEntity extends Entity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putInt("time", this.getTime());
+        pCompound.putInt("timeOfDay", this.getTime());
 
         Vector3f start = this.entityData.get(DATA_START);
         pCompound.putFloat("start_x", start.x);
@@ -88,7 +88,7 @@ public class BlackFlashEntity extends Entity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.setTime(pCompound.getInt("time"));
+        this.setTime(pCompound.getInt("timeOfDay"));
         this.entityData.set(DATA_START, new Vector3f(
                 pCompound.getFloat("start_x"),
                 pCompound.getFloat("start_y"),

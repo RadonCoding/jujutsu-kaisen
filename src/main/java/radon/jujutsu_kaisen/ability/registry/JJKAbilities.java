@@ -119,6 +119,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, DivineFlame> DIVINE_FLAME = ABILITIES.register("divine_flame", DivineFlame::new);
     public static DeferredHolder<Ability, MalevolentShrine> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
+
     public static DeferredHolder<Ability, Rika> RIKA = ABILITIES.register("rika", Rika::new);
     public static DeferredHolder<Ability, Mimicry> MIMICRY = ABILITIES.register("mimicry", Mimicry::new);
     public static DeferredHolder<Ability, Refill> REFILL = ABILITIES.register("refill", Refill::new);

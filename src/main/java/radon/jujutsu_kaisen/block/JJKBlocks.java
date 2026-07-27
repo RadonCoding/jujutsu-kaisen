@@ -54,7 +54,8 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel(pState -> 14)
                     .noLootTable()
-                    .sound(SoundType.GLASS)));
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()));
     public static DeferredHolder<Block, ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
     public static DeferredHolder<Block, DomainSkyBlock> DOMAIN_SKY = BLOCKS.register("domain_sky", () ->

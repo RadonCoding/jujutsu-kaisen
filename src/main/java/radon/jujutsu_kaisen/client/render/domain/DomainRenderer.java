@@ -24,7 +24,7 @@ public abstract class DomainRenderer {
         this.layers.add(layer);
     }
 
-    public final void render(Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
+    public void render(Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -115,6 +115,4 @@ public abstract class DomainRenderer {
 
         RenderUtil.drawWithShader(modelViewMatrix, projectionMatrix, builder.end());
     }
-
-    protected abstract ResourceLocation getTexture();
 }

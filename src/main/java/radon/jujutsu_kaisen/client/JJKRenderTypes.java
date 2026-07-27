@@ -6,6 +6,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -69,6 +71,37 @@ public class JJKRenderTypes extends RenderType {
                     .setWriteMaskState(COLOR_WRITE)
                     .setCullState(NO_CULL)
                     .createCompositeState(false));
+    private static final ResourceLocation CLOUDS_LOCATION = new ResourceLocation("textures/environment/clouds.png");
+    public static final RenderType CLOUDS = RenderType.create(
+            "clouds",
+            DefaultVertexFormat.POSITION_TEX_COLOR_NORMAL,
+            VertexFormat.Mode.QUADS,
+            786432,
+            false,
+            false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderType.ShaderStateShard(GameRenderer::getRendertypeCloudsShader))
+                    .setTextureState(new RenderStateShard.TextureStateShard(CLOUDS_LOCATION, false, false))
+                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                    .setCullState(RenderStateShard.NO_CULL)
+                    .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                    .createCompositeState(true)
+    );
+    public static final RenderType CLOUDS_DEPTH_ONLY = RenderType.create(
+            "clouds_depth_only",
+            DefaultVertexFormat.POSITION_TEX_COLOR_NORMAL,
+            VertexFormat.Mode.QUADS,
+            786432,
+            false,
+            false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderType.ShaderStateShard(GameRenderer::getRendertypeCloudsShader))
+                    .setTextureState(new RenderStateShard.TextureStateShard(CLOUDS_LOCATION, false, false))
+                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                    .setCullState(RenderStateShard.NO_CULL)
+                    .setWriteMaskState(RenderStateShard.DEPTH_WRITE)
+                    .createCompositeState(true)
+    );
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
@@ -96,5 +129,13 @@ public class JJKRenderTypes extends RenderType {
 
     public static RenderType spiderweb() {
         return SPIDERWEB;
+    }
+
+    public static @NotNull RenderType clouds() {
+        return CLOUDS;
+    }
+
+    public static @NotNull RenderType cloudsDepthOnly() {
+        return CLOUDS_DEPTH_ONLY;
     }
 }

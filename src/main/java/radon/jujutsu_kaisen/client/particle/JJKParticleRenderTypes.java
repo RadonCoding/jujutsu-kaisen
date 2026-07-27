@@ -18,10 +18,15 @@ public class JJKParticleRenderTypes {
         @Override
         public void begin(BufferBuilder pBuilder, @NotNull TextureManager pTextureManager) {
             RenderSystem.enableDepthTest();
+
             RenderSystem.depthMask(false);
+
             RenderSystem.enableBlend();
+
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+
             pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
@@ -38,8 +43,11 @@ public class JJKParticleRenderTypes {
         @Override
         public void begin(BufferBuilder pBuilder, @NotNull TextureManager pTextureManager) {
             RenderSystem.enableBlend();
+
             RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+
             pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 

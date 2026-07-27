@@ -28,8 +28,9 @@ public class DomainRenderDispatcher {
     static {
         renderers.put(JJKAbilities.UNLIMITED_VOID.getId(), new UnlimitedVoidRenderer());
         renderers.put(JJKAbilities.MALEVOLENT_SHRINE.getId(), new MalevolentShrineRenderer());
-        renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
         renderers.put(JJKAbilities.AUTHENTIC_MUTUAL_LOVE.getId(), new AuthenticMutualLoveRenderer());
+        renderers.put(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.getId(), new CoffinOfTheIronMountainRenderer());
+        renderers.put(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.getId(), new HorizonOfTheCaptivatingSkandhaRenderer());
     }
 
     // NOTE: Temporary until all domain renderers are implemented
@@ -103,13 +104,9 @@ public class DomainRenderDispatcher {
     }
 
     public static void render(DomainRenderer renderer, Matrix4f modelViewMatrix, Matrix4f projectionMatrix) {
-        RenderSystem.enableBlend();
-
-        RenderSystem.setShaderTexture(0, renderer.getTexture());
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-
         renderer.render(modelViewMatrix, projectionMatrix);
+
+        RenderSystem.enableBlend();
 
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 

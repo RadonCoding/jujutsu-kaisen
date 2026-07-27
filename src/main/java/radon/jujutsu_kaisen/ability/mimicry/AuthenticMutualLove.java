@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
@@ -53,7 +54,12 @@ public class AuthenticMutualLove extends DomainExpansion implements IClosedDomai
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN_SKY.get());
+        return List.of(
+                Blocks.DEEPSLATE,
+                Blocks.COBBLED_DEEPSLATE,
+                Blocks.CRACKED_DEEPSLATE_BRICKS,
+                Blocks.BASALT
+        );
     }
 
     @EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = EventBusSubscriber.Bus.GAME)

@@ -1,13 +1,11 @@
 package radon.jujutsu_kaisen.client.render.domain;
 
-import net.minecraft.resources.ResourceLocation;
-import radon.jujutsu_kaisen.JujutsuKaisen;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import radon.jujutsu_kaisen.client.SkyHandler;
 
-public class AuthenticMutualLoveRenderer extends DomainRenderer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/domain/authentic_mutual_love.png");
-
+public class AuthenticMutualLoveRenderer extends SkyDomainRenderer {
     @Override
-    protected ResourceLocation getTexture() {
-        return TEXTURE;
+    protected TextureTarget getTarget() {
+        return SkyHandler.getAuthenticMutualLoveTarget();
     }
 }

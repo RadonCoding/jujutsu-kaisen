@@ -174,6 +174,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
         IClosedDomain closed = ((IClosedDomain) this.ability);
+
         List<Block> blocks = closed.getBlocks();
 
         Block block;

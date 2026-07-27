@@ -86,7 +86,7 @@ public class ThrownChainProjectile extends AbstractArrow {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("time", this.getTime());
+        pCompound.putInt("timeOfDay", this.getTime());
         pCompound.putBoolean("released", this.isReleased());
         pCompound.putBoolean("damaged", this.damaged);
     }
@@ -95,7 +95,7 @@ public class ThrownChainProjectile extends AbstractArrow {
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.setTime(pCompound.getInt("time"));
+        this.setTime(pCompound.getInt("timeOfDay"));
         this.setReleased(pCompound.getBoolean("released"));
         this.damaged = pCompound.getBoolean("damaged");
     }

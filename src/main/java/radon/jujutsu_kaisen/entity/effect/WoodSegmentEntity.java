@@ -119,11 +119,11 @@ public class WoodSegmentEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        pCompound.putInt("time", this.getTime());
+        pCompound.putInt("timeOfDay", this.getTime());
     }
 
     @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        this.setTime(pCompound.getInt("time"));
+        this.setTime(pCompound.getInt("timeOfDay"));
     }
 }

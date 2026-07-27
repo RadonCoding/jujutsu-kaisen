@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.client.render.domain;
 import net.minecraft.resources.ResourceLocation;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
-public class CoffinOfTheIronMountainRenderer extends DomainRenderer {
+public class CoffinOfTheIronMountainRenderer extends TextureDomainRenderer {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/domain/coffin_of_the_iron_mountain.png");
 
     @Override
