@@ -64,14 +64,14 @@ public class TransfiguredSoulProjectile extends Projectile {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("timeOfDay", this.getTime());
+        pCompound.putInt("time", this.getTime());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.setTime(pCompound.getInt("timeOfDay"));
+        this.setTime(pCompound.getInt("time"));
     }
 
     @Override

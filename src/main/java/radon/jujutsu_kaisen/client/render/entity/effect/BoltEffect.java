@@ -209,7 +209,7 @@ public class BoltEffect {
         SpawnFunction NO_DELAY = (rand) -> Pair.of(0.0F, 0.0F);
 
         /**
-         * Will re-spawn a bolt each timeOfDay one expires.
+         * Will re-spawn a bolt each time one expires.
          */
         SpawnFunction CONSECUTIVE = new SpawnFunction() {
             @Override

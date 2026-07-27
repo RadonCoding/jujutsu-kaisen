@@ -111,7 +111,7 @@ public class VeilEntity extends Entity implements IVeil {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putInt("total", this.total);
-        pCompound.putInt("timeOfDay", this.getTime());
+        pCompound.putInt("time", this.getTime());
         pCompound.putInt("radius", this.getRadius());
         pCompound.put("modifiers", ModifierUtils.serialize(this.modifiers));
 
@@ -126,7 +126,7 @@ public class VeilEntity extends Entity implements IVeil {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.total = pCompound.getInt("total");
-        this.setTime(pCompound.getInt("timeOfDay"));
+        this.setTime(pCompound.getInt("time"));
         this.setRadius(pCompound.getInt("radius"));
         this.modifiers = ModifierUtils.deserialize(pCompound.getList("modifiers", CompoundTag.TAG_LIST));
 

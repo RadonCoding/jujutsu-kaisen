@@ -27,9 +27,9 @@ public class AbilityOverlay {
     public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.player == null) return;
+        if (mc.options.hideGui) return;
 
-        if (mc.player.isSpectator()) return;
+        if (mc.player == null) return;
 
         if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.SCROLL) {
             abilities = JJKAbilities.getAbilities(mc.player);

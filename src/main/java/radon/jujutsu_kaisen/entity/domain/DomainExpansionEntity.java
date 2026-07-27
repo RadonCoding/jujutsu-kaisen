@@ -108,9 +108,9 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putString("technique", JJKAbilities.getKey(this.ability).toString());
+        pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("first", this.first);
-        pCompound.putInt("timeOfDay", this.getTime());
+        pCompound.putInt("time", this.getTime());
         pCompound.putBoolean("instant", this.instant);
     }
 
@@ -119,9 +119,9 @@ public abstract class DomainExpansionEntity extends Entity implements IDomain {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("technique")));
+        this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.first = pCompound.getBoolean("first");
-        this.setTime(pCompound.getInt("timeOfDay"));
+        this.setTime(pCompound.getInt("time"));
         this.instant = pCompound.getBoolean("instant");
     }
 

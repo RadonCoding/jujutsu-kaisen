@@ -55,10 +55,9 @@ public class AuthenticMutualLove extends DomainExpansion implements IClosedDomai
     @Override
     public List<Block> getBlocks() {
         return List.of(
-                Blocks.DEEPSLATE,
-                Blocks.COBBLED_DEEPSLATE,
-                Blocks.CRACKED_DEEPSLATE_BRICKS,
-                Blocks.BASALT
+                Blocks.NETHERRACK,
+                Blocks.STRIPPED_MANGROVE_WOOD,
+                Blocks.PINK_TERRACOTTA
         );
     }
 

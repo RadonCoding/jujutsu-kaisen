@@ -90,7 +90,7 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
         if (this.domainUUID != null) {
             pCompound.putUUID("domain", this.domainUUID);
         }
-        pCompound.putInt("timeOfDay", this.getTime());
+        pCompound.putInt("time", this.getTime());
     }
 
     @Override
@@ -98,7 +98,7 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
         if (pCompound.hasUUID("domain")) {
             this.domainUUID = pCompound.getUUID("domain");
         }
-        this.setTime(pCompound.getInt("timeOfDay"));
+        this.setTime(pCompound.getInt("time"));
     }
 
     @Override

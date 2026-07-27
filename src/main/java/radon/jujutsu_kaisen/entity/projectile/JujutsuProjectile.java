@@ -78,7 +78,7 @@ public class JujutsuProjectile extends Projectile {
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("timeOfDay", this.getTime());
+        pCompound.putInt("time", this.getTime());
         pCompound.putFloat("power", this.getPower());
         pCompound.putBoolean("domain", this.isDomain());
     }
@@ -87,7 +87,7 @@ public class JujutsuProjectile extends Projectile {
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.setTime(pCompound.getInt("timeOfDay"));
+        this.setTime(pCompound.getInt("time"));
         this.setPower(pCompound.getFloat("power"));
         this.setDomain(pCompound.getBoolean("domain"));
     }

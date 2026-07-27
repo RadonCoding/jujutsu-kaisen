@@ -158,7 +158,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putInt("timeOfDay", this.getTime());
+        pCompound.putInt("time", this.getTime());
     }
 
     @Override
@@ -170,7 +170,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.setTime(pCompound.getInt("timeOfDay"));
+        this.setTime(pCompound.getInt("time"));
     }
 
     @Override

@@ -85,7 +85,7 @@ public class ProjectionFrameEntity extends Entity {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putFloat("power", this.power);
-        pCompound.putInt("timeOfDay", this.getTime());
+        pCompound.putInt("time", this.getTime());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ProjectionFrameEntity extends Entity {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.power = pCompound.getFloat("power");
-        this.setTime(pCompound.getInt("timeOfDay"));
+        this.setTime(pCompound.getInt("time"));
     }
 
     public float getPower() {

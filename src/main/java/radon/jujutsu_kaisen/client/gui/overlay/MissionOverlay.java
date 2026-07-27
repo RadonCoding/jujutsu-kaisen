@@ -17,6 +17,8 @@ public class MissionOverlay {
     public static LayeredDraw.Layer OVERLAY = (pGuiGraphics, pPartialTick) -> {
         Minecraft mc = Minecraft.getInstance();
 
+        if (mc.options.hideGui) return;
+
         if (mc.player == null) return;
 
         IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);

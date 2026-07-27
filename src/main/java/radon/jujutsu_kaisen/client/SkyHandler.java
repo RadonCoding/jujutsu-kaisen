@@ -45,21 +45,18 @@ public class SkyHandler {
     private static VertexBuffer lightBuffer;
 
     public record SkyStyle(
-            int time,
+            int timeOfDay,
             int skyColor,
             int cloudColor,
             float cloudHeight,
-            boolean clouds,
             int sunriseColor
     ) {
         public static final SkyStyle HORIZON_OF_THE_CAPTIVATING_SKANDHA = new SkyStyle(
-                1000, 0x78A7FF, 0xFFFFFF, 192.0F, true,
-                0x000000
+                1000, 0x78A7FF, 0xFFFFFF, 192.0F, 0x000000
         );
 
         public static final SkyStyle AUTHENTIC_MUTUAL_LOVE = new SkyStyle(
-                12500, 0xC9A876, 0xB8996E, 192.0F, true,
-                0xCC9966
+                12500, 0xF8B37A, 0xAC525C, 192.0F, 0xFED97E
         );
     }
 
@@ -183,7 +180,7 @@ public class SkyHandler {
             overworld = new ClientLevel(connection, new ClientLevel.ClientLevelData(Difficulty.NORMAL, false, false),
                     Level.OVERWORLD, holder, 0, 0, mc::getProfiler, mc.levelRenderer, false, 0);
         }
-        overworld.setDayTime(style.time());
+        overworld.setDayTime(style.timeOfDay());
 
         Camera camera = mc.gameRenderer.getMainCamera();
         int color = style.skyColor();
@@ -319,30 +316,28 @@ public class SkyHandler {
 
         poseStack.popPose();
 
-        if (style.clouds()) {
-            renderStyleClouds(mc, projectionMatrix, modelViewMatrix, style, camera.getPosition(), partialTick);
-        }
+        renderClouds(mc, projectionMatrix, modelViewMatrix, style, camera.getPosition(), partialTick);
 
         FogRenderer.setupNoFog();
     }
 
-    private static void renderStyleClouds(Minecraft mc, Matrix4f projectionMatrix, Matrix4f modelViewMatrix,
-                                          SkyStyle style, Vec3 camPos, float partialTick) {
+    private static void renderClouds(Minecraft mc, Matrix4f projectionMatrix, Matrix4f modelViewMatrix,
+                                     SkyStyle style, Vec3 camPos, float partialTick) {
         int ticks = mc.levelRenderer.getTicks();
         double d1 = (ticks + partialTick) * 0.03F;
-        double x = (camPos.x + d1) / 12.0;
+        double x = (camPos.x + d1) / 12.0D;
         double y = style.cloudHeight() - (float) camPos.y + 0.33F;
-        double z = camPos.z / 12.0 + 0.33F;
+        double z = camPos.z / 12.0D + 0.33F;
 
-        x -= Mth.floor(x / 2048.0) * 2048;
-        z -= Mth.floor(z / 2048.0) * 2048;
+        x -= Mth.floor(x / 2048.0D) * 2048;
+        z -= Mth.floor(z / 2048.0D) * 2048;
 
         float fracX = (float) (x - Mth.floor(x));
-        float fracY = (float) (y / 4.0 - Mth.floor(y / 4.0)) * 4.0F;
+        float fracY = (float) (y / 4.0D - Mth.floor(y / 4.0D)) * 4.0F;
         float fracZ = (float) (z - Mth.floor(z));
 
         int cellX = (int) Math.floor(x);
-        int cellY = (int) Math.floor(y / 4.0);
+        int cellY = (int) Math.floor(y / 4.0D);
         int cellZ = (int) Math.floor(z);
 
         Cloud cache = CLOUDS.computeIfAbsent(style, s -> new Cloud());
